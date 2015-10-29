@@ -1,7 +1,7 @@
 # Tvarkau Vilnių
 ## Intro/įžanga
 ### Lietuviškai
-Repozitoja naujos Android programėlės programiniam kodui.
+Repozitorija naujos Android programėlės programiniam kodui.
 Visa tolimesnė vidinė komunikacija vyksta angliškai, nes komandoje yra ir užsieniečių.
 
 ### English
