@@ -10,3 +10,8 @@ Since there are foreigners in the team, all other further communication will be 
 
 ## IM
 For instant messaging with team join [Tvarkau-Vilnių channel on Slack](https://codeforvilnius.slack.com/messages/tvarkau-vilniu/).
+
+## Tasks, issues
+Some tasks are in [Trello board](https://trello.com/b/PE4yjVzw/tvarkau-vilniu).
+
+Post new issues, suggestions, questions or ideas here in [Github's issues section](https://github.com/vilnius/tvarkau-vilniu/issues).
