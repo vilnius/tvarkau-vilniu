@@ -29,9 +29,15 @@ public class DummyProblems {
             problem.id = i;
             problem.title = "Gatvių priežiūra ir tvarkymas";
             problem.description = "Klinikų g. jau du mėnesiai nenaudojama pilnai pilnai įrengta automobilių parkavimo....";
-            problem.statusCode = Problem.STATUS_IN_PROGRESS;
-            problem.statusDescription = "Vykdoma";
-            problem.updatedAt = new Date(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15));
+
+            if (Math.random() < 0.5) {
+                problem.statusCode = Problem.STATUS_IN_PROGRESS;
+                problem.statusDescription = "Vykdoma";
+            } else {
+                problem.statusCode = Problem.STATUS_DONE;
+                problem.statusDescription = "Atlikta";
+            }
+            problem.updatedAt = new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5));
 
             problems.add(problem);
         }

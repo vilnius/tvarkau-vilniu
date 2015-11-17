@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -115,16 +116,20 @@ public class ProblemListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.titleView.setText(String.valueOf(mValues.get(position).id));
-            holder.descriptionView.setText(mValues.get(position).title);
+            Problem item = mValues.get(position);
+            holder.item = item;
+            holder.titleView.setText(item.title);
+            holder.descriptionView.setText(item.description);
+            holder.statusView.setText(item.statusDescription);
+            holder.statusView.setBackgroundColor(getResources().getColor(item.getColor()));
+            holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.updatedAt.getTime()));
 
             holder.content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putInt(ProblemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putInt(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
                         ProblemDetailFragment fragment = new ProblemDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -133,7 +138,7 @@ public class ProblemListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ProblemDetailActivity.class);
-                        intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
 
                         context.startActivity(intent);
                     }
@@ -150,8 +155,10 @@ public class ProblemListActivity extends AppCompatActivity {
             @Bind(R.id.problem_list_content) public View content;
             @Bind(R.id.problem_list_content_title) public TextView titleView;
             @Bind(R.id.problem_list_content_description) public TextView descriptionView;
+            @Bind(R.id.problem_list_content_status) public TextView statusView;
+            @Bind(R.id.problem_list_content_time) public TextView timeView;
 
-            public Problem mItem;
+            public Problem item;
 
             public ViewHolder(View view) {
                 super(view);

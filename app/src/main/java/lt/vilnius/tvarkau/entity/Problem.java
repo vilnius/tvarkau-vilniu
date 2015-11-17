@@ -1,8 +1,11 @@
 package lt.vilnius.tvarkau.entity;
 
+import android.support.annotation.ColorRes;
 import android.support.annotation.IntDef;
 
 import java.util.Date;
+
+import lt.vilnius.tvarkau.R;
 
 /**
  * @author Vilius Kraujutis
@@ -19,6 +22,16 @@ public class Problem {
     public String statusDescription;
     public Date updatedAt;
 
+    @ColorRes
+    public int getColor() {
+        switch (statusCode) {
+            case STATUS_IN_PROGRESS:
+                return R.color.problem_status_in_progress;
+            case STATUS_DONE:
+            default:
+                return R.color.problem_status_in_done;
+        }
+    }
 
     @IntDef({STATUS_IN_PROGRESS, STATUS_DONE})
     public @interface StatusCode {
