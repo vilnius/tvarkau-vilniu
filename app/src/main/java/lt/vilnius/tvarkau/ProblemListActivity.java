@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.factory.DummyProblems;
 
@@ -114,15 +116,15 @@ public class ProblemListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).title);
+            holder.titleView.setText(String.valueOf(mValues.get(position).id));
+            holder.descriptionView.setText(mValues.get(position).title);
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
+            holder.content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(ProblemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putInt(ProblemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                         ProblemDetailFragment fragment = new ProblemDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -145,21 +147,20 @@ public class ProblemListActivity extends AppCompatActivity {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
+            @Bind(R.id.problem_list_content) public View content;
+            @Bind(R.id.problem_list_content_title) public TextView titleView;
+            @Bind(R.id.problem_list_content_description) public TextView descriptionView;
+
             public Problem mItem;
 
             public ViewHolder(View view) {
                 super(view);
-                mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                ButterKnife.bind(this, view);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + descriptionView.getText() + "'";
             }
         }
     }

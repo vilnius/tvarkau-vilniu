@@ -26,6 +26,7 @@ public class DummyProblems {
         for (int i = 0; i < COUNT; i++) {
             Problem problem = new Problem();
 
+            problem.id = i;
             problem.title = "Gatvių priežiūra ir tvarkymas";
             problem.description = "Klinikų g. jau du mėnesiai nenaudojama pilnai pilnai įrengta automobilių parkavimo....";
             problem.statusCode = Problem.STATUS_IN_PROGRESS;
