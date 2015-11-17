@@ -2,4 +2,6 @@
     <string name="app_name">Tvarkau Vilnių</string>
     <string name="new_report">Pranešk apie problemą</string>
     <string name="report_list">Problemų sąrašas</string>
+    <string name="title_problem_list">Problems</string>
+    <string name="title_problem_detail">Problem Detail</string>
 </resources>

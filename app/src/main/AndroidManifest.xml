@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest package="lt.vilnius.tvarkau"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -7,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <activity android:name="lt.vilnius.tvarkau.StartActivity" />
+        <activity android:name=".StartActivity"/>
 
         <!-- This strangely named alias is here for backwards compatibility.
              Renaming activity with LAUNCHER category means that shortcuts created by users
@@ -15,13 +16,32 @@
         <activity-alias
             android:name="apps.factory.emiestas.MainActivity"
             android:label="@string/app_name"
-            android:targetActivity="lt.vilnius.tvarkau.StartActivity">
+            android:targetActivity=".StartActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
 
+        <activity
+            android:name=".ProblemListActivity"
+            android:label="@string/title_problem_list"
+            android:parentActivityName=".StartActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="lt.vilnius.tvarkau.StartActivity"/>
+        </activity>
+        <activity
+            android:name=".ProblemDetailActivity"
+            android:label="@string/title_problem_detail"
+            android:parentActivityName=".ProblemListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="lt.vilnius.tvarkau.ProblemListActivity"/>
+        </activity>
     </application>
 
 </manifest>
