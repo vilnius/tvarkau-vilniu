@@ -1,4 +1,7 @@
 # Tvarkau Vilnių
+
+[![Build Status](https://travis-ci.org/vilnius/tvarkau-vilniu)](https://travis-ci.org/vilnius/tvarkau-vilniu)
+
 ## Intro/įžanga
 ### Lietuviškai
 Repozitorija naujos Android programėlės programiniam kodui.

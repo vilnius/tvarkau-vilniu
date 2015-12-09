@@ -1,0 +1,12 @@
+language: android
+android:
+   components:
+   - android-23
+   - tools
+   - build-tools-23.0.2
+   - extra
+
+jdk: oraclejdk7
+
+script:
+  - ./gradlew clean build connectedCheck
