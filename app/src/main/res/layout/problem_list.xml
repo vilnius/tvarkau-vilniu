@@ -9,4 +9,6 @@
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
     tools:context="lt.vilnius.tvarkau.ProblemListActivity"
-    tools:listitem="@layout/problem_list_content"/>
+    tools:listitem="@layout/problem_list_content"
+    android:background="#fff"
+    />
