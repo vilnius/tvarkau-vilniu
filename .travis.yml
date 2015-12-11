@@ -9,4 +9,4 @@ android:
 jdk: oraclejdk7
 
 script:
-  - ./gradlew clean build connectedCheck
+  - ./gradlew clean build
