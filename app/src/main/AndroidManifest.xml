@@ -27,7 +27,7 @@
         </activity-alias>
 
         <activity
-            android:name=".ProblemListActivity"
+            android:name=".MainActivity"
             android:label="@string/title_problem_list"
             android:parentActivityName=".StartActivity">
             <meta-data
@@ -37,10 +37,10 @@
         <activity
             android:name=".ProblemDetailActivity"
             android:label="@string/title_problem_detail"
-            android:parentActivityName=".ProblemListActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="lt.vilnius.tvarkau.ProblemListActivity"/>
+                android:value=".MainActivity"/>
         </activity>
     </application>
 

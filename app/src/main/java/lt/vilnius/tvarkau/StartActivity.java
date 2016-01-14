@@ -23,6 +23,6 @@ public class StartActivity extends AppCompatActivity {
 
     @OnClick(R.id.report_list)
     public void onOpenProblemsListClicked() {
-        startActivity(new Intent(this, ProblemListActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

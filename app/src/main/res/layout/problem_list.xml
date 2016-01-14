@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="lt.vilnius.tvarkau.ProblemListActivity"
+    tools:context=".MainActivity"
     tools:listitem="@layout/problem_list_content"
     android:background="#fff"
     />

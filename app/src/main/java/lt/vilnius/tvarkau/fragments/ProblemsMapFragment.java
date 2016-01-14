@@ -7,4 +7,8 @@ import com.google.android.gms.maps.SupportMapFragment;
  */
 public class ProblemsMapFragment extends SupportMapFragment {
 
+    public static ProblemsMapFragment getInstance() {
+        return new ProblemsMapFragment();
+    }
+
 }

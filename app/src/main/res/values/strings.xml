@@ -7,6 +7,14 @@
     <string name="title_problem_detail">Problemos informacija</string>
     <string name="choose_problem_type">Tipas</string>
 
+    <string name="open">Atidaryti</string>
+    <string name="close">Uždaryti</string>
+
+    <string name="title.problems_list">Problemų sąrašas</string>
+    <string name="title.my_problems_list">Mano problemos</string>
+
+    <string name="title.problems_map">Problemų žemėlapis</string>
+
 <string-array name="problem_types">
     <item>Eismo organizavimas</item>
     <item>Energetika ir inžineriniai tinklai</item>
