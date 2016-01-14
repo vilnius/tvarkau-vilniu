@@ -1,9 +1,9 @@
 package lt.vilnius.tvarkau;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
@@ -16,6 +16,7 @@ import android.view.View;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
 import lt.vilnius.tvarkau.fragments.ProblemsMapFragment;
 
@@ -55,16 +56,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open,
                 R.string.close);
@@ -121,5 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft.replace(R.id.mainFrameLayout, fragment);
 
         ft.commit();
+    }
+
+    @OnClick(R.id.fab)
+    public void onNewProblemClicked(View view) {
+        startActivityForResult(new Intent(this, NewProblemActivity.class), 0);
     }
 }
