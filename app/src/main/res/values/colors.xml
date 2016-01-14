@@ -3,7 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <!--TO DO review problem status colors-->
     <color name="problem_status_in_progress">#FF4081</color>
-    <color name="problem_status_in_done">#FF4081</color>
+    <color name="problem_status_in_done">#39b54a</color>
 </resources>

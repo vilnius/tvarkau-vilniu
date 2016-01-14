@@ -2,17 +2,20 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,25 +31,13 @@ import lt.vilnius.tvarkau.fragments.ProblemsMapFragment;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    @Bind(R.id.navigation)
-    NavigationView mNavigationView;
-    @Bind(R.id.main_drawer_layout)
-    DrawerLayout mDrawerLayout;
+public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, AccountHeader.OnAccountHeaderListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.fab)
-    FloatingActionButton fab;
 
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
-    protected ActionBarDrawerToggle mDrawerToggle;
+    Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,40 +48,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setSupportActionBar(toolbar);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open,
-                R.string.close);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
-
-        mNavigationView.setNavigationItemSelectedListener(this);
-
         setFrameFragment(R.id.main_nav_problems_list);
+        setNavigationDrawer(savedInstanceState);
+    }
+
+    public void setNavigationDrawer(Bundle savedInstanceState) {
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.header)
+                .addProfiles(
+                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile_photo))
+                )
+                .withOnAccountHeaderListener(this)
+                .build();
+
+
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerResult)
+                .withSavedInstance(savedInstanceState)
+                .withOnDrawerItemClickListener(this)
+                .withShowDrawerOnFirstLaunch(true)
+                .inflateMenu(R.menu.main_navigation_menu)
+                .build();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        setFrameFragment(item.getItemId());
-
-        mDrawerLayout.closeDrawers();
-        return true;
-    }
 
     protected void setFrameFragment(int itemId) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = ProblemsListFragment.getInstance();
                 break;
             default:
-                throw new IllegalArgumentException("Can't find fragment for given navigation item id");
+                throw new IllegalArgumentException("Can't find fragment for given navigation item id " + itemId);
         }
 
         ft.replace(R.id.mainFrameLayout, fragment);
@@ -117,5 +121,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @OnClick(R.id.fab)
     public void onNewProblemClicked(View view) {
         startActivityForResult(new Intent(this, NewProblemActivity.class), 0);
+    }
+
+    @Override
+    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+        setFrameFragment(drawerItem.getIdentifier());
+        drawer.closeDrawer();
+        return true;
+    }
+
+    @Override
+    public boolean onProfileChanged(View view, IProfile profile, boolean current) {
+        return false;
     }
 }
