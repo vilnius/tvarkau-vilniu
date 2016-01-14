@@ -14,6 +14,7 @@
     <string name="title.my_problems_list">Mano problemos</string>
 
     <string name="title.problems_map">Problemų žemėlapis</string>
+    <string name="problem_search">Problemos paieška</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>

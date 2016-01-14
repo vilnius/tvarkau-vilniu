@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -31,11 +35,12 @@ import lt.vilnius.tvarkau.fragments.ProblemsMapFragment;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, AccountHeader.OnAccountHeaderListener {
+public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, AccountHeader.OnAccountHeaderListener, SearchView.OnQueryTextListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
+    SearchView searchView;
 
     Drawer drawer;
 
@@ -76,8 +81,10 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen()) {
+        if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
+        } else if (searchView != null && !searchView.isIconified()) {
+            searchView.setIconified(true);
         } else {
             super.onBackPressed();
         }
@@ -95,6 +102,16 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
+
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
 
     protected void setFrameFragment(int itemId) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -132,6 +149,17 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
 
     @Override
     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(this, "Searched for: " + query, Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
         return false;
     }
 }
