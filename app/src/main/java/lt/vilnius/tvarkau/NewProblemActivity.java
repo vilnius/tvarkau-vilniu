@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,18 +21,21 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import icepick.State;
 import lt.vilnius.tvarkau.utils.FileUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 
-public class NewProblemActivity extends AppCompatActivity {
+public class NewProblemActivity extends BaseActivity {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-
-    @Bind(R.id.add_problem_photo)
-    ImageView mProblemPhoto;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int PERMISSION_REQUEST_CODE = 10;
 
     @Bind(R.id.add_problem_photo_frame)
     FrameLayout mPhotoFrame;
+
+    @State
+    File lastPhotoFile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +45,6 @@ public class NewProblemActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
     }
-
-    File lastPhotoFile;
-
-    private static final int permissionRequestCode = 10;
 
     public void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -71,7 +69,7 @@ public class NewProblemActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_problem_take_photo)
     public void onTakePhotoClicked() {
-        if (PermissionUtils.verifyAndRequestPermissions(this, permissionRequestCode,
+        if (PermissionUtils.verifyAndRequestPermissions(this, PERMISSION_REQUEST_CODE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -82,7 +80,7 @@ public class NewProblemActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case permissionRequestCode:
+            case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
