@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,6 +31,9 @@ public class NewProblemActivity extends AppCompatActivity {
 
     @Bind(R.id.add_problem_photo)
     ImageView mProblemPhoto;
+
+    @Bind(R.id.add_problem_photo_frame)
+    FrameLayout mPhotoFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +101,14 @@ public class NewProblemActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bp = BitmapFactory.decodeFile(lastPhotoFile.getPath());
 
-            // TODO change to real problem image view
-            mProblemPhoto.setImageBitmap(bp);
+            LayoutInflater inflater = (LayoutInflater)
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView imageView = (ImageView) inflater.inflate(R.layout.new_problem_photo, null);
+
+            imageView.setImageBitmap(bp);
+
+            mPhotoFrame.removeAllViewsInLayout();
+            mPhotoFrame.addView(imageView);
         }
     }
 

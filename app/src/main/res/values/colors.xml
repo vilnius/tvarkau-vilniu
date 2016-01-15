@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="problem_status_in_progress">#FF4081</color>
     <color name="problem_status_in_done">#39b54a</color>
+    <color name="new_problem_photo_background">#e7e7e7</color>
 </resources>

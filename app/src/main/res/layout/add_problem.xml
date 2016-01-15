@@ -13,32 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
+            <FrameLayout
+                android:id="@+id/add_problem_photo_frame"
                 android:layout_width="match_parent"
-                android:layout_height="205dp"
-                android:background="#e7e7e7" />
+                android:layout_height="205dp">
 
-            <ImageView
-                android:id="@+id/add_problem_photo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:paddingTop="45dp"
-                android:scaleType="center"
-                android:src="@drawable/ic_collections" />
+                <include layout="@layout/no_image" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/add_problem_photo"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="sans-serif-medium"
-                android:paddingTop="16dp"
-                android:text="Nera nuotraukos"
-                android:textAllCaps="true"
-                android:textColor="#61000000"
-                android:textSize="14sp" />
-
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/add_problem_take_photo"
