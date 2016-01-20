@@ -1,6 +1,7 @@
 # Tvarkau Vilnių
 
 [![Build Status](https://travis-ci.org/vilnius/tvarkau-vilniu.svg?branch=master)](https://travis-ci.org/vilnius/tvarkau-vilniu)
+[![Build Status](https://www.bitrise.io/app/5090fdc91fb4c2df.svg?token=FCegO6CX1S_BY3-u4FX5LQ&branch=master)](https://www.bitrise.io/app/5090fdc91fb4c2df)
 
 ## Intro/įžanga
 ### Lietuviškai
