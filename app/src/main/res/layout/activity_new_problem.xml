@@ -2,47 +2,29 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="#fff"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/AppTheme">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="10">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
+            <FrameLayout
+                android:id="@+id/add_problem_photo_frame"
                 android:layout_width="match_parent"
-                android:layout_height="205dp"
-                android:background="#e7e7e7" />
+                android:layout_height="205dp">
+
+                <include layout="@layout/no_image" />
+
+            </FrameLayout>
 
             <ImageView
-                android:id="@+id/ic_collections"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:paddingTop="45dp"
-                android:scaleType="center"
-                android:src="@drawable/ic_collections" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ic_collections"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="sans-serif-medium"
-                android:paddingTop="16dp"
-                android:text="Nera nuotraukos"
-                android:textAllCaps="true"
-                android:textColor="#61000000"
-                android:textSize="14sp" />
-
-
-            <ImageView
-                android:id="@+id/private_chat"
+                android:id="@+id/add_problem_take_photo"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_alignParentEnd="true"
@@ -64,55 +46,6 @@
             android:paddingLeft="24dp"
             android:paddingRight="16dp"
             android:paddingTop="28dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_add_problem" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="24dp"
-                    android:hint="Vieta"
-                    android:textColor="#000"
-                    android:textColorHint="#959292"
-                    android:textSize="18sp"
-                    android:visibility="visible" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Location"
-                    android:src="@drawable/ic_description" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="24dp"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="sans-serif-light"
-                    android:hint="Aprašymas"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:maxLength="140"
-                    android:textColor="#000"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,15 +89,60 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location_add_problem" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="24dp"
+                    android:background="@null"
+                    android:hint="Vieta"
+                    android:textColor="#000"
+                    android:textColorHint="#959292"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Location"
+                    android:src="@drawable/ic_description" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="24dp"
+                    android:background="@null"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="sans-serif-light"
+                    android:hint="Aprašymas"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="140"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="right"
                 android:orientation="horizontal">
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel"
-                    android:textAllCaps="true" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -173,10 +151,6 @@
                     android:textAllCaps="true" />
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-
-
 </ScrollView>

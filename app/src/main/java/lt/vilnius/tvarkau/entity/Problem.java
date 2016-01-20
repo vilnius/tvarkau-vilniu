@@ -33,6 +33,18 @@ public class Problem {
         }
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     @IntDef({STATUS_IN_PROGRESS, STATUS_DONE})
     public @interface StatusCode {
     }
