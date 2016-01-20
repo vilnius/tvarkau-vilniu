@@ -1,7 +1,8 @@
 # Tvarkau Vilnių
 
 [![Build Status](https://travis-ci.org/vilnius/tvarkau-vilniu.svg?branch=master)](https://travis-ci.org/vilnius/tvarkau-vilniu)
-[![Build Status](https://www.bitrise.io/app/5090fdc91fb4c2df.svg?token=FCegO6CX1S_BY3-u4FX5LQ&branch=master)](https://www.bitrise.io/artifact/39663/p/ea386dc8de7f2989f7869ae3c94a2e51)
+
+[![Build Status](https://www.bitrise.io/app/5090fdc91fb4c2df.svg?token=FCegO6CX1S_BY3-u4FX5LQ&branch=master)](https://www.bitrise.io/artifact/39663/p/ea386dc8de7f2989f7869ae3c94a2e51) - download latest build from [Bitrise](https://www.bitrise.io/artifact/39663/p/ea386dc8de7f2989f7869ae3c94a2e51).
 
 ## Intro/įžanga
 ### Lietuviškai
