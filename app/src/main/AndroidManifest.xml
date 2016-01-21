@@ -22,6 +22,10 @@
         <activity
             android:name=".ProblemsListActivity"
             android:theme="@style/AppTheme.Drawer" />
+        
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--
              This strangely named alias is here for backwards compatibility.
