@@ -20,7 +20,7 @@
             android:value="AIzaSyDdwFCwNh1c5bTI_sreT4BKI3oXpEjwQSM" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ProblemsListActivity"
             android:theme="@style/AppTheme.Drawer" />
 
         <!--
@@ -42,18 +42,18 @@
         <activity
             android:name=".ProblemDetailActivity"
             android:label="@string/title_problem_detail"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ProblemsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ProblemsListActivity" />
         </activity>
         <activity
             android:name=".NewProblemActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".ProblemsListActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ProblemsListActivity" />
         </activity>
     </application>
 
