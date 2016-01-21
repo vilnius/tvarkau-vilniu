@@ -60,6 +60,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ProblemsListActivity" />
         </activity>
+
+        <activity
+            android:name=".ProblemsMapActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_problems_map"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <activity
             android:name=".NewProblemActivity"
             android:configChanges="orientation|keyboardHidden"
