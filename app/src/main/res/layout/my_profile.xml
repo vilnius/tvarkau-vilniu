@@ -55,12 +55,13 @@
                     android:src="@drawable/ic_person" />
 
                 <EditText
+                    android:id="@+id/profile_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="24dp"
-                    android:hint="Name"
-                    android:text="Gintaras Steponavičius"
+                    android:background="@null"
+                    android:hint="@string/profile_hint_name"
                     android:textColor="#000"
                     android:textColorHint="#959292"
                     android:textSize="18dp"
@@ -80,11 +81,14 @@
                     android:src="@drawable/ic_email" />
 
                 <EditText
+                    android:id="@+id/profile_email"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="22dp"
-                    android:hint="E-mail"
+                    android:background="@null"
+                    android:hint="@string/profile_hint_email"
+                    android:inputType="textEmailAddress"
                     android:textColor="#000"
                     android:textColorHint="#959292"
                     android:textSize="18dp"
@@ -104,15 +108,18 @@
                     android:src="@drawable/ic_phone" />
 
                 <EditText
+                    android:id="@+id/profile_telephone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="24dp"
-                    android:hint="Telefonas"
+                    android:background="@null"
+                    android:hint="@string/profile_telephone"
                     android:textColor="#000"
                     android:textColorHint="#959292"
                     android:textSize="18dp"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:inputType="phone" />
 
             </LinearLayout>
 
