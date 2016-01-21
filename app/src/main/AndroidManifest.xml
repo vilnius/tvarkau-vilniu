@@ -19,13 +19,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDdwFCwNh1c5bTI_sreT4BKI3oXpEjwQSM" />
 
-        <activity
-            android:name=".ProblemsListActivity"
-            android:theme="@style/AppTheme.Drawer" />
-        
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MainActivity" />
 
         <!--
              This strangely named alias is here for backwards compatibility.
@@ -44,6 +38,14 @@
         </activity-alias>
 
         <activity
+            android:name=".ProblemsListActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
             android:name=".ProblemDetailActivity"
             android:label="@string/title_problem_detail"
             android:parentActivityName=".ProblemsListActivity">
@@ -53,11 +55,11 @@
         </activity>
         <activity
             android:name=".NewProblemActivity"
-            android:parentActivityName=".ProblemsListActivity"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProblemsListActivity" />
+                android:value=".MainActivity" />
         </activity>
     </application>
 

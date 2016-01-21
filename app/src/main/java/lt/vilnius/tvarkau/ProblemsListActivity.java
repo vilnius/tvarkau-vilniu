@@ -2,8 +2,6 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -13,19 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
-import lt.vilnius.tvarkau.fragments.ProblemsMapFragment;
 
 /**
  * An activity representing a list of Problems. This activity
@@ -35,14 +24,12 @@ import lt.vilnius.tvarkau.fragments.ProblemsMapFragment;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ProblemsListActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, AccountHeader.OnAccountHeaderListener, SearchView.OnQueryTextListener {
+public class ProblemsListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
     SearchView searchView;
-
-    Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,42 +40,11 @@ public class ProblemsListActivity extends AppCompatActivity implements Drawer.On
 
         setSupportActionBar(toolbar);
 
-        setFrameFragment(R.id.main_nav_problems_list);
-        setNavigationDrawer(savedInstanceState);
+        setProblemListFragment();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void setNavigationDrawer(Bundle savedInstanceState) {
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.header)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile_photo))
-                )
-                .withOnAccountHeaderListener(this)
-                .build();
-
-
-        drawer = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withAccountHeader(headerResult)
-                .withSavedInstance(savedInstanceState)
-                .withOnDrawerItemClickListener(this)
-                .withShowDrawerOnFirstLaunch(true)
-                .inflateMenu(R.menu.main_navigation_menu)
-                .build();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer != null && drawer.isDrawerOpen()) {
-            drawer.closeDrawer();
-        } else if (searchView != null && !searchView.isIconified()) {
-            searchView.setIconified(true);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -113,26 +69,10 @@ public class ProblemsListActivity extends AppCompatActivity implements Drawer.On
         return true;
     }
 
-    protected void setFrameFragment(int itemId) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        Fragment fragment;
-
-        switch (itemId) {
-            case R.id.main_naw_problems_map:
-                fragment = ProblemsMapFragment.getInstance();
-                break;
-            case R.id.main_nav_my_problems_list:
-            case R.id.main_nav_problems_list:
-                fragment = ProblemsListFragment.getInstance();
-                break;
-            default:
-                throw new IllegalArgumentException("Can't find fragment for given navigation item id " + itemId);
-        }
-
-        ft.replace(R.id.mainFrameLayout, fragment);
-
-        ft.commit();
+    protected void setProblemListFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.problems_list_frame, ProblemsListFragment.getInstance())
+                .commit();
     }
 
     @OnClick(R.id.fab)
@@ -140,17 +80,6 @@ public class ProblemsListActivity extends AppCompatActivity implements Drawer.On
         startActivityForResult(new Intent(this, NewProblemActivity.class), 0);
     }
 
-    @Override
-    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-        setFrameFragment(drawerItem.getIdentifier());
-        drawer.closeDrawer();
-        return true;
-    }
-
-    @Override
-    public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-        return false;
-    }
 
     @Override
     public boolean onQueryTextSubmit(String query) {

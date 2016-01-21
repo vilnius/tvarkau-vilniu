@@ -153,5 +153,18 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/btn_login"
+        android:gravity="center"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"
+        android:text="Sign in with Google"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+
 
 </LinearLayout>
