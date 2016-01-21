@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "lt.vilnius.tvarkau"
+        applicationId "lt.vilnius.tvarkaudemo"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 1
@@ -43,4 +43,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'frankiesardo:icepick:3.1.0'
     provided 'frankiesardo:icepick-processor:3.1.0'
+
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
 }
+

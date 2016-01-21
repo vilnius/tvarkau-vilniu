@@ -16,6 +16,7 @@
     <string name="close">Uždaryti</string>
 
     <string name="problem_search">Problemos paieška</string>
+    <string name="progress_dialog_loading">Kraunama</string>
 
     <string name="profile_hint_email">E-mail</string>
     <string name="profile_hint_name">Vardas</string>

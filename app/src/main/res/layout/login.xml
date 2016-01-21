@@ -15,7 +15,11 @@
         android:paddingBottom="112dp"
         />
 
+
+
+
     <TextView
+        android:id="@+id/signIn"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_login"
@@ -33,6 +37,7 @@
         />
 
     <TextView
+        android:id="@+id/annonEnter"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_login_guest"

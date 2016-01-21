@@ -24,6 +24,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
 
+
         <!--
              This strangely named alias is here for backwards compatibility.
              Renaming activity with LAUNCHER category means that shortcuts created by users
@@ -41,6 +42,7 @@
         </activity-alias>
 
         <activity
+
             android:name=".ProblemsListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_problem_list"
@@ -50,6 +52,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+            android:name=".SignInActivity"
+            android:theme="@style/AppTheme"
+            />
+
 
         <activity
             android:name=".ProblemDetailActivity"
