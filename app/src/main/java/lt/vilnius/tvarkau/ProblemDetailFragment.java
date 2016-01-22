@@ -15,7 +15,7 @@ import lt.vilnius.tvarkau.factory.DummyProblems;
 
 /**
  * A fragment representing a single Problem detail screen.
- * This fragment is either contained in a {@link MainActivity}
+ * This fragment is either contained in a {@link ProblemsListActivity}
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */

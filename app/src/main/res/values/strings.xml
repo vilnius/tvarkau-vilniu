@@ -5,16 +5,21 @@
     <string name="report_list">Problemų sąrašas</string>
     <string name="title_problem_list">Problemos</string>
     <string name="title_problem_detail">Problemos informacija</string>
+    <string name="title_problems_map">Problemų žemėlapis</string>
+    <string name="title_my_profile">Mano profilis</string>
+    <string name="title_new_problem">Nauja problema</string>
+
+
     <string name="choose_problem_type">Tipas</string>
 
     <string name="open">Atidaryti</string>
     <string name="close">Uždaryti</string>
 
-    <string name="title.problems_list">Problemų sąrašas</string>
-    <string name="title.my_problems_list">Mano problemos</string>
-
-    <string name="title.problems_map">Problemų žemėlapis</string>
     <string name="problem_search">Problemos paieška</string>
+
+    <string name="profile_hint_email">E-mail</string>
+    <string name="profile_hint_name">Vardas</string>
+    <string name="profile_telephone">Telefonas</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>
