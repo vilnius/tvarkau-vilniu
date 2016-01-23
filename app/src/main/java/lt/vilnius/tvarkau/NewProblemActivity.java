@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau;
 
-import android.Manifest;
+ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,8 +36,13 @@ public class NewProblemActivity extends BaseActivity {
     @Bind(R.id.add_problem_photo_frame)
     FrameLayout mPhotoFrame;
 
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+
     @State
     File lastPhotoFile;
+
+
 
 
     @Override
@@ -42,8 +50,42 @@ public class NewProblemActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_problem);
 
-
         ButterKnife.bind(this);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_send:
+                sendProblem();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.new_problem_toolbar_menu, menu);
+
+
+        return true;
+    }
+
+
+    public void sendProblem(){
+        showToast("Should implement send behaviour");
     }
 
     public void takePhoto() {
@@ -108,6 +150,10 @@ public class NewProblemActivity extends BaseActivity {
             mPhotoFrame.removeAllViewsInLayout();
             mPhotoFrame.addView(imageView);
         }
+    }
+
+    private void showToast(String text){
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
 }

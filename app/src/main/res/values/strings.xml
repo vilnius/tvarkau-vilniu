@@ -21,6 +21,11 @@
     <string name="profile_hint_email">E-mail</string>
     <string name="profile_hint_name">Vardas</string>
     <string name="profile_telephone">Telefonas</string>
+    <string name="message_notsigned">Norint pasiekti profilio informacija prašome prisijungti</string>
+    <string name="title_notsigned">Vartotojas neprisijungęs</string>
+    <string name="problem_send">Pranešti apie problemą</string>
+    <string name="login_sign_in">Sign in with Google</string>
+    <string name="login_enter_anon">enter anonymously</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -16,6 +15,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
 /*
@@ -30,16 +30,18 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     private GoogleApiClient mGoogleApiClient;
 
-    private boolean isLoginAnon = true;
-    @OnClick(R.id.signIn)
+    //Should be true only if user has entered app as anonymous
+
+    @OnClick(R.id.login_tv_sign_in)
     public void handleGoogleSignIn(View view){
         Toast.makeText(this, "Handling login with google", Toast.LENGTH_SHORT).show();
         signIn();
     }
 
-    @OnClick(R.id.annonEnter)
+    @OnClick(R.id.login_tv_annon_enter)
     public void handleAnonymousUser(View view){
-        Toast.makeText(this, "Handling login with google", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Handling login anonymously", Toast.LENGTH_SHORT).show();
+        SharedPrefsManager.instance(this).setUserAnonymous(true);
         startActivity(new Intent(this, MainActivity.class));
     }
 
@@ -50,6 +52,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         setContentView(R.layout.login);
         ButterKnife.bind(this);
+
+        //make sure that application will try to login.
 
         //Configure google sign in to request user email. Is ID and photo is included in Default Sign In.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -77,11 +81,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     protected void handleSignInResult(GoogleSignInResult result) {
         Log.d(this.getPackageName(), "handleSignInResult: " + result.isSuccess());
         if(result.isSuccess()){
-            GoogleSignInAccount acct = result.getSignInAccount();
-
-            Log.d(this.getPackageName(), "signedInUserName: " + acct.getDisplayName());
-            isLoginAnon = false;
-            startActivity(new Intent(this, MainActivity.class));
+            SharedPrefsManager.instance(this).setUserAnonymous(false);
+            Intent intent = new Intent(this, MainActivity.class);
+            //Clearing backstack after login. User does not need to go back to SignInActivity.
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
     }

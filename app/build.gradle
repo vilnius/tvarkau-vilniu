@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "lt.vilnius.tvarkaudemo"
+        applicationId "lt.vilnius.tvarkau"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 1

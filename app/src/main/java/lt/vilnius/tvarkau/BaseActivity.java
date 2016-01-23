@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
 import icepick.Icepick;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 /**
  * Created by Karolis Vycius on 2016-01-15.
@@ -30,13 +32,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements GoogleA
 
 
     protected GoogleApiClient mGoogleApiClient;
-    protected GoogleSignInAccount mGoogleSignInAccount;
+    public GoogleSignInAccount mGoogleSignInAccount; //Lets us access user information.
 
     private ProgressDialog mProgressDialog;
-
-
-    //This means how we will draw our main menu.
-    protected boolean isLoginAnon = false;
 
 
     @Override
@@ -64,35 +62,20 @@ public abstract class BaseActivity extends AppCompatActivity  implements GoogleA
     @Override
     protected void onStart() {
         super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if(opr.isDone()){
-            //User sign in is cached and available we can proceed directly to handling Sign In
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        }else{
-            showProgressDialog();
-            //trying to log in silently.
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-
+        //isLoginAnon should only be true if user has explicitly clicked browse anonymously button.
+        if(!SharedPrefsManager.instance(this).getIsUserAnonymous()) {
+            connectToGoogle();
         }
     }
+
 
 
     protected void handleSignInResult(GoogleSignInResult result) {
         Log.d(this.getPackageName(), "handleSignInResult: " + result.isSuccess());
         if(result.isSuccess()){
-            GoogleSignInAccount mGoogleSignInAccount = result.getSignInAccount();
-
-            Log.d(this.getPackageName(), "signedInUserName: " + mGoogleSignInAccount.getDisplayName());
-            isLoginAnon = false;
+            mGoogleSignInAccount = result.getSignInAccount();
         }else {
+            //Logging google+ sign in has failed, let user try to login again.
             startActivity(new Intent(this, SignInActivity.class));
         }
 
@@ -118,4 +101,45 @@ public abstract class BaseActivity extends AppCompatActivity  implements GoogleA
             mProgressDialog.hide();
         }
     }
+
+
+    protected AlertDialog createAlertDialog(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(message)
+                .setTitle(title);
+
+        return builder.create();
+    }
+    protected  void showSignInFailed(){
+        Log.d(getClass().getSimpleName(), "Sign In failed");
+        createAlertDialog(getString(R.string.title_notsigned), getString(R.string.message_notsigned));
+        startActivity(new Intent(this, SignInActivity.class));
+    }
+
+    private void connectToGoogle() {
+
+            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+            if (opr.isDone()) {
+                //User sign in is cached and available we can proceed directly to handling Sign In
+                GoogleSignInResult result = opr.get();
+                handleSignInResult(result);
+            } else {
+                showProgressDialog();
+                //trying to log in silently.
+                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                    @Override
+                    public void onResult(GoogleSignInResult googleSignInResult) {
+                        hideProgressDialog();
+                        handleSignInResult(googleSignInResult);
+                    }
+                });
+
+            }
+        }
+
+
+
+
+
 }
