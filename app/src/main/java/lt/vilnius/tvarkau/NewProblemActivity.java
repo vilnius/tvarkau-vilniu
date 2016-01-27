@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau;
 
- import android.Manifest;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,8 +43,6 @@ public class NewProblemActivity extends BaseActivity {
     File lastPhotoFile;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,8 +82,8 @@ public class NewProblemActivity extends BaseActivity {
     }
 
 
-    public void sendProblem(){
-        showToast("Should implement send behaviour");
+    public void sendProblem() {
+        Toast.makeText(this, "Should implement send behaviour", Toast.LENGTH_SHORT).show();
     }
 
     public void takePhoto() {
@@ -152,8 +150,5 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
-    private void showToast(String text){
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
 
 }

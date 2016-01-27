@@ -1,9 +1,8 @@
 package lt.vilnius.tvarkau;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import android.widget.Toast;
 
 import lt.vilnius.tvarkau.fragments.MyProfileFragment;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
@@ -19,30 +18,18 @@ public class MyProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(SharedPrefsManager.instance(this).getIsUserAnonymous()){
-            showSignInFailed();
-        }
-        //User has logged in as anonymous user, lets open sign in screen for him
-
         setContentView(R.layout.profile_activity);
 
-    }
-
-    //If we were unable to sign user in, lets show him signInActivity
-    @Override
-    protected void handleSignInResult(GoogleSignInResult result) {
-        Log.d(getClass().getSimpleName(), "Google sign in successful " + result.isSuccess());
-        if(result.isSuccess()){
-                mGoogleSignInAccount = result.getSignInAccount();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.profile_frame, MyProfileFragment.getInstance())
-                        .commit();
-        }else{
-           showSignInFailed();
+        if (SharedPrefsManager.instance(this).getIsUserAnonymous()) {
+            Toast.makeText(this, "anonymous profile not developed", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.profile_frame, MyProfileFragment.getInstance())
+                    .commit();
         }
+
     }
-
-
 
 
 }

@@ -13,7 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lt.vilnius.tvarkau.BaseActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
 
@@ -56,13 +55,13 @@ public class MyProfileFragment extends Fragment {
 
     private void setUpUserProfile(){
         Profile profile;
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-        if(baseActivity!=null){
-            profile = new Profile(baseActivity.mGoogleSignInAccount);
 
-            mProfileName.setHint(profile.getName());
-            mProfileEmail.setHint(profile.getEmail());
-            Picasso.with(baseActivity).load(profile.getPictureUrl()).into(mProfilePicture);
+        if(getActivity()!=null){
+            profile = Profile.returnProfile(getActivity());
+
+            mProfileName.setText(profile.getName());
+            mProfileEmail.setText(profile.getEmail());
+            Picasso.with(getActivity()).load(profile.getPictureUrl()).into(mProfilePicture);
 
         }
 
