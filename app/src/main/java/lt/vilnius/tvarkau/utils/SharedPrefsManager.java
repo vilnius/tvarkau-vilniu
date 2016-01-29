@@ -25,29 +25,26 @@ public class SharedPrefsManager {
 
 
     private SharedPrefsManager(Context context) {
-        mSharedPrefences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        mSharedPrefences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static void initializeInstance(Context context) {
+    private static void initializeInstance(Context context) {
         if (mSingleton == null) {
             mSingleton = new SharedPrefsManager(context);
         }
     }
 
-    public static SharedPrefsManager getInstance() {
-        if (mSingleton == null) {
-            throw new IllegalStateException(SharedPrefsManager.class.getSimpleName() +
-                    " is not initialized, call initializeInstance method first.");
-        }
+    public static SharedPrefsManager getInstance(Context context) {
+        initializeInstance(context.getApplicationContext());
         return mSingleton;
     }
 
 
-    public static Boolean getIsUserAnonymous() {
+    public Boolean getIsUserAnonymous() {
         return null == mSharedPrefences.getString(PREF_USER_PROFILE, null);
     }
 
-    public static void saveUserDetails(Profile profile) {
+    public void saveUserDetails(Profile profile) {
         SharedPreferences.Editor edit = mSharedPrefences.edit();
         String json = profile.createJsonData();
         edit.putString(PREF_USER_PROFILE, json);
@@ -55,7 +52,7 @@ public class SharedPrefsManager {
     }
 
     @Nullable
-    public static Profile getUserProfile() {
+    public Profile getUserProfile() {
         try {
             Gson gson = new Gson();
             String json = mSharedPrefences.getString(PREF_USER_PROFILE, null);

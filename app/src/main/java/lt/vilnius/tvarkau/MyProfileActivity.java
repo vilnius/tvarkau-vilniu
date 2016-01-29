@@ -14,13 +14,15 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
  * in a {@link ProblemsListActivity}.
  */
 public class MyProfileActivity extends BaseActivity {
+    SharedPrefsManager prefsManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.profile_activity);
-        SharedPrefsManager.initializeInstance(getApplicationContext());
-        if (SharedPrefsManager.getIsUserAnonymous()) {
+        prefsManager = SharedPrefsManager.getInstance(this);
+        if (prefsManager.getIsUserAnonymous()) {
             Toast.makeText(this, "anonymous profile not developed", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
         } else {

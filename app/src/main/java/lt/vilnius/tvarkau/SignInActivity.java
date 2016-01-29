@@ -8,10 +8,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.utils.GoogleSignInHelper;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
 /*
@@ -24,6 +27,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleSignInHel
 
 
     private GoogleSignInHelper googleSignInHelper;
+    private SharedPrefsManager prefsManager;
 
     @OnClick(R.id.login_tv_sign_in)
     public void handleGoogleSignIn(View view) {
@@ -45,23 +49,35 @@ public class SignInActivity extends AppCompatActivity implements GoogleSignInHel
         setContentView(R.layout.login);
         ButterKnife.bind(this);
 
-        googleSignInHelper = new GoogleSignInHelper(this);
-        googleSignInHelper.setSignInInterface(this);
+        googleSignInHelper = new GoogleSignInHelper(this, this);
+        prefsManager = SharedPrefsManager.getInstance(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        googleSignInHelper.Connect();
+        googleSignInHelper.connect();
     }
 
     @Override
     protected void onStop() {
-        googleSignInHelper.Disconnect();
+        googleSignInHelper.disconnect();
         super.onStop();
     }
 
-    //Result requested from GoogleSignInHelper class.
+
+    private void saveUserDetailsInPrefs(GoogleSignInResult result) {
+        prefsManager.saveUserDetails(new Profile(result.getSignInAccount()));
+        Intent intent = new Intent(this, MainActivity.class);
+        // Clearing backstack after login. User does not need to go back to SignInActivity.
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    /*
+        Result requested from GoogleSignInHelper class. onActivityResult should not be used in any other classes that are using google sign in, as it is used only for authentication
+        If any other class will have to use google sign in result, it will have to use
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -69,7 +85,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleSignInHel
         // Result returned from account select intent.
         if (requestCode == GoogleSignInHelper.RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            googleSignInHelper.saveUserDetailsInPrefs(result);
+            googleSignInHelper.checkSignInResult(result);
         }
     }
 
@@ -77,5 +93,21 @@ public class SignInActivity extends AppCompatActivity implements GoogleSignInHel
     @Override
     public void startGoogleActivityForResult() {
         startActivityForResult(googleSignInHelper.getSignInIntent(), GoogleSignInHelper.RC_SIGN_IN);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(this, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    // Should not happen in this activity.
+    @Override
+    public void onAuthenticationFailed(GoogleSignInResult result) {
+        Toast.makeText(this, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAuthenticationSuccessful(GoogleSignInResult signInResult) {
+        saveUserDetailsInPrefs(signInResult);
     }
 }

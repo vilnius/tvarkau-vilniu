@@ -23,6 +23,8 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.home_btn_sign_in)
     TextView mLoginButton;
 
+    SharedPrefsManager prefsManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +32,12 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
+        prefsManager = SharedPrefsManager.getInstance(this);
         handleSignInButton();
     }
 
     private void handleSignInButton() {
-        SharedPrefsManager.initializeInstance(this);
-        if(!SharedPrefsManager.getIsUserAnonymous()){
+        if (!prefsManager.getIsUserAnonymous()) {
             mLoginButton.setVisibility(View.GONE);
         }
     }
@@ -48,7 +50,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick(R.id.home_btn_sign_in)
-    protected void onSignInButtonClicked(){
+    protected void onSignInButtonClicked() {
         startNewActivity(SignInActivity.class);
     }
 

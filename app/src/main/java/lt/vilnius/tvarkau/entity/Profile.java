@@ -64,8 +64,7 @@ public class Profile {
     }
 
     public static Profile returnProfile(Context con) {
-        SharedPrefsManager.initializeInstance(con.getApplicationContext());
-        return SharedPrefsManager.getUserProfile();
+        return SharedPrefsManager.getInstance(con).getUserProfile();
     }
 
     public String createJsonData() {

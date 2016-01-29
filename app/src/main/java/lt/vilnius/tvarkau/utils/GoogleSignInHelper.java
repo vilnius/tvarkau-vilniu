@@ -2,39 +2,39 @@ package lt.vilnius.tvarkau.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import lt.vilnius.tvarkau.MainActivity;
-import lt.vilnius.tvarkau.R;
-import lt.vilnius.tvarkau.entity.Profile;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 
 
 public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedListener {
     public static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient googleApiClient;
-    private Context context;
+
+    private GooglePlusSignInInterface signInInterface;
+
 
     // Parent activity has to call startActivityForResult() method to launch connection intent by itself.
     public interface GooglePlusSignInInterface {
         void startGoogleActivityForResult();
+
+        void onConnectionFailed(ConnectionResult connectionResult);
+
+        void onAuthenticationFailed(GoogleSignInResult result);
+
+        void onAuthenticationSuccessful(GoogleSignInResult signInResult);
     }
 
-    GooglePlusSignInInterface signInInterface;
 
-    public void setSignInInterface(GooglePlusSignInInterface signInInterface) {
+    public GoogleSignInHelper(Context context, GooglePlusSignInInterface signInInterface) {
         this.signInInterface = signInInterface;
-    }
-
-
-    public GoogleSignInHelper(Context context) {
-        this.context = context;
 
         //Configure google sign in to request user email. Is ID and photo is included in Default Sign In.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -52,32 +52,60 @@ public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedLis
     }
 
 
-    public void saveUserDetailsInPrefs(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            SharedPrefsManager.initializeInstance(context.getApplicationContext());
-            SharedPrefsManager.saveUserDetails(new Profile(result.getSignInAccount()));
-            Intent intent = new Intent(context, MainActivity.class);
-            //Clearing backstack after login. User does not need to go back to SignInActivity.
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            context.startActivity(intent);
-        }
-    }
-
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(context, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        signInInterface.onConnectionFailed(connectionResult);
     }
 
-    public void Connect() {
+    public void onAuthenticationSuccessful(GoogleSignInResult data) {
+        signInInterface.onAuthenticationSuccessful(data);
+    }
+
+    public void connect() {
         googleApiClient.connect();
     }
 
-    public void Disconnect() {
+    public void disconnect() {
         googleApiClient.disconnect();
     }
 
     public Intent getSignInIntent() {
         return Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+    }
+
+    /*
+        Silent log in which should be used my all other classes that are using google sign in api. If returned false,
+        silent log in has failed, and user should be returned back to sign in activity.
+     */
+    private void trySilentLogIn() {
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+
+            GoogleSignInResult result = opr.get();
+            checkSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+
+                    checkSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
+
+    public void checkSignInResult(GoogleSignInResult signInResult) {
+        if (signInResult.isSuccess()) {
+            signInInterface.onAuthenticationSuccessful(signInResult);
+        } else {
+            signInInterface.onAuthenticationFailed(signInResult);
+        }
     }
 
 
