@@ -19,8 +19,8 @@ public class MyProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.profile_activity);
-
-        if (SharedPrefsManager.instance(this).getIsUserAnonymous()) {
+        SharedPrefsManager.initializeInstance(getApplicationContext());
+        if (SharedPrefsManager.getIsUserAnonymous()) {
             Toast.makeText(this, "anonymous profile not developed", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
         } else {

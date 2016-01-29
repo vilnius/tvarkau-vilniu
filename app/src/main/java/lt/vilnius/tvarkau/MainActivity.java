@@ -34,7 +34,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void handleSignInButton() {
-        if(!SharedPrefsManager.instance(this).getIsUserAnonymous()){
+        SharedPrefsManager.initializeInstance(this);
+        if(!SharedPrefsManager.getIsUserAnonymous()){
             mLoginButton.setVisibility(View.GONE);
         }
     }

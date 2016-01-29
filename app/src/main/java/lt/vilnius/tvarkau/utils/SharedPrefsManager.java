@@ -2,7 +2,7 @@ package lt.vilnius.tvarkau.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -17,57 +17,53 @@ import lt.vilnius.tvarkau.entity.Profile;
 public class SharedPrefsManager {
     private static final String PREFS_NAME = "TVARKAU-VILNIU_PREFS";
 
-    private static final String PREF_ISANONYMOUS = "isUserAnonymous";
-    private static final Boolean DEFAULT_PREF_ISANONYMOUS = true;
 
     private static final String PREF_USER_PROFILE = "UserProfile";
-    private static final String PREF_DEFAULT_USER_PROFILE = "[]";
 
-    private static SharedPrefsManager mSingleton = new SharedPrefsManager();
-    private static Context mContext;
+    private static SharedPrefsManager mSingleton;
+    private static SharedPreferences mSharedPrefences;
 
 
-    public static SharedPrefsManager instance(Context context) {
-        mContext = context;
+    private SharedPrefsManager(Context context) {
+        mSharedPrefences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static void initializeInstance(Context context) {
+        if (mSingleton == null) {
+            mSingleton = new SharedPrefsManager(context);
+        }
+    }
+
+    public static SharedPrefsManager getInstance() {
+        if (mSingleton == null) {
+            throw new IllegalStateException(SharedPrefsManager.class.getSimpleName() +
+                    " is not initialized, call initializeInstance method first.");
+        }
         return mSingleton;
     }
 
-    public static SharedPrefsManager instance() {
-        return mSingleton;
+
+    public static Boolean getIsUserAnonymous() {
+        return null == mSharedPrefences.getString(PREF_USER_PROFILE, null);
     }
 
-    private static void init(Context context) {
-        mContext = context;
-    }
-
-    public SharedPreferences getPrefs() {
-        return mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-    }
-
-    public Boolean getIsUserAnonymous() {
-        return getPrefs().getBoolean(PREF_ISANONYMOUS, DEFAULT_PREF_ISANONYMOUS);
-    }
-
-    public void setUserAnonymous(boolean isAnonymous) {
-        SharedPreferences.Editor edit = getPrefs().edit();
-        edit.putBoolean(PREF_ISANONYMOUS, isAnonymous);
+    public static void saveUserDetails(Profile profile) {
+        SharedPreferences.Editor edit = mSharedPrefences.edit();
+        String json = profile.createJsonData();
+        edit.putString(PREF_USER_PROFILE, json);
         edit.apply();
     }
 
-    public void saveUserDetails(Profile profile) {
-        SharedPreferences.Editor edit = getPrefs().edit();
-        String json = profile.createJsonData(profile);
-        edit.putString(PREF_USER_PROFILE, json);
-        edit.commit();
-    }
-
-
-    public Profile getUserProfile() {
+    @Nullable
+    public static Profile getUserProfile() {
         try {
             Gson gson = new Gson();
-            String json = getPrefs().getString(PREF_USER_PROFILE, PREF_DEFAULT_USER_PROFILE);
-            Log.d("SharedPrefsManager", json.toString());
-            return gson.fromJson(json, Profile.class);
+            String json = mSharedPrefences.getString(PREF_USER_PROFILE, null);
+            if (json != null) {
+                return gson.fromJson(json, Profile.class);
+            } else {
+                return new Profile();
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             return null;

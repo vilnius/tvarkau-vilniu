@@ -12,7 +12,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.GoogleSignInHelper;
-import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
 /*
@@ -21,7 +20,7 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
     he will be transferred to MainActivity
 
  */
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements GoogleSignInHelper.GooglePlusSignInInterface {
 
 
     private GoogleSignInHelper googleSignInHelper;
@@ -29,13 +28,12 @@ public class SignInActivity extends AppCompatActivity {
     @OnClick(R.id.login_tv_sign_in)
     public void handleGoogleSignIn(View view) {
         Toast.makeText(this, "Handling login with google", Toast.LENGTH_SHORT).show();
-        googleSignInHelper.authenticateUser();
+        googleSignInHelper.signIn();
     }
 
     @OnClick(R.id.login_tv_annon_enter)
     public void handleAnonymousUser(View view) {
         Toast.makeText(this, "Handling login anonymously", Toast.LENGTH_SHORT).show();
-        SharedPrefsManager.instance(this).setUserAnonymous(true);
         startActivity(new Intent(this, MainActivity.class));
     }
 
@@ -48,6 +46,19 @@ public class SignInActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         googleSignInHelper = new GoogleSignInHelper(this);
+        googleSignInHelper.setSignInInterface(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleSignInHelper.Connect();
+    }
+
+    @Override
+    protected void onStop() {
+        googleSignInHelper.Disconnect();
+        super.onStop();
     }
 
     //Result requested from GoogleSignInHelper class.
@@ -63,4 +74,8 @@ public class SignInActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void startGoogleActivityForResult() {
+        startActivityForResult(googleSignInHelper.getSignInIntent(), GoogleSignInHelper.RC_SIGN_IN);
+    }
 }

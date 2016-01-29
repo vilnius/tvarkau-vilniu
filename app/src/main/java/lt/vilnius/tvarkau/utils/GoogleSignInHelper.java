@@ -1,7 +1,7 @@
 package lt.vilnius.tvarkau.utils;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -19,14 +19,22 @@ public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedLis
     public static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient googleApiClient;
+    private Context context;
 
-    private FragmentActivity activity;
+    // Parent activity has to call startActivityForResult() method to launch connection intent by itself.
+    public interface GooglePlusSignInInterface {
+        void startGoogleActivityForResult();
+    }
+
+    GooglePlusSignInInterface signInInterface;
+
+    public void setSignInInterface(GooglePlusSignInInterface signInInterface) {
+        this.signInInterface = signInInterface;
+    }
 
 
-    public GoogleSignInHelper(FragmentActivity activity) {
-        this.activity = activity;
-
-        //make sure that application will try to login.
+    public GoogleSignInHelper(Context context) {
+        this.context = context;
 
         //Configure google sign in to request user email. Is ID and photo is included in Default Sign In.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -34,34 +42,42 @@ public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedLis
                 .build();
 
         //Build googleApiClient with access to Sign In API and options specified in gso.
-        //Is passing activity is really healthy???
-        googleApiClient = new GoogleApiClient.Builder(activity).enableAutoManage(activity, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        googleApiClient = new GoogleApiClient.Builder(context).addOnConnectionFailedListener(this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+
     }
 
-    public void authenticateUser() {
-        signIn();
-    }
 
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        activity.startActivityForResult(signInIntent, RC_SIGN_IN);
+    public void signIn() {
+        signInInterface.startGoogleActivityForResult();
     }
 
 
     public void saveUserDetailsInPrefs(GoogleSignInResult result) {
         if (result.isSuccess()) {
-            SharedPrefsManager.instance(activity).setUserAnonymous(false);
-            SharedPrefsManager.instance(activity).saveUserDetails(new Profile(result.getSignInAccount()));
-            Intent intent = new Intent(activity, MainActivity.class);
+            SharedPrefsManager.initializeInstance(context.getApplicationContext());
+            SharedPrefsManager.saveUserDetails(new Profile(result.getSignInAccount()));
+            Intent intent = new Intent(context, MainActivity.class);
             //Clearing backstack after login. User does not need to go back to SignInActivity.
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            activity.startActivity(intent);
+            context.startActivity(intent);
         }
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(activity, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    public void Connect() {
+        googleApiClient.connect();
+    }
+
+    public void Disconnect() {
+        googleApiClient.disconnect();
+    }
+
+    public Intent getSignInIntent() {
+        return Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
     }
 
 

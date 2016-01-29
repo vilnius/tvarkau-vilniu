@@ -16,9 +16,7 @@ import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
 
-/**
- * Created by Karolis Vycius on 2016-01-21.
- */
+
 public class MyProfileFragment extends Fragment {
 
     public static MyProfileFragment getInstance() {
@@ -53,17 +51,13 @@ public class MyProfileFragment extends Fragment {
         setUpUserProfile();
     }
 
-    private void setUpUserProfile(){
+    private void setUpUserProfile() {
         Profile profile;
 
-        if(getActivity()!=null){
-            profile = Profile.returnProfile(getActivity());
-
-            mProfileName.setText(profile.getName());
-            mProfileEmail.setText(profile.getEmail());
-            Picasso.with(getActivity()).load(profile.getPictureUrl()).into(mProfilePicture);
-
-        }
+        profile = Profile.returnProfile(getActivity());
+        mProfileName.setText(profile.getName());
+        mProfileEmail.setText(profile.getEmail());
+        Picasso.with(getActivity()).load(profile.getPictureUrl()).into(mProfilePicture);
 
 
     }

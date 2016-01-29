@@ -8,9 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
-/**
- * Created by vn on 16.1.21.
- */
+
 public class Profile {
 
     @SerializedName("Profile_Name")
@@ -66,22 +64,18 @@ public class Profile {
     }
 
     public static Profile returnProfile(Context con) {
-        return SharedPrefsManager.instance(con).getUserProfile();
+        SharedPrefsManager.initializeInstance(con.getApplicationContext());
+        return SharedPrefsManager.getUserProfile();
     }
 
-    public String createJsonData(Profile profile) {
+    public String createJsonData() {
         Gson gson = new Gson();
-        return gson.toJson(profile);
+        return gson.toJson(this);
     }
 
     @Override
     public String toString() {
-        return "Profile{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", mobilePhone='" + mobilePhone + '\'' +
-                ", pictureUrl='" + pictureUrl + '\'' +
-                '}';
+        return createJsonData();
     }
 
 
