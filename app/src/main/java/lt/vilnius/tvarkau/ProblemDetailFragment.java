@@ -7,11 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.factory.DummyProblems;
+import lt.vilnius.tvarkau.network.APIClient;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A fragment representing a single Problem detail screen.
@@ -19,7 +22,7 @@ import lt.vilnius.tvarkau.factory.DummyProblems;
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */
-public class ProblemDetailFragment extends Fragment {
+public class ProblemDetailFragment extends Fragment implements Callback<Problem> {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -30,6 +33,8 @@ public class ProblemDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
     private Problem mItem;
+
+    APIClient apiClient = APIClient.getInstance();
 
 
     @Bind(R.id.problem_title)
@@ -60,12 +65,9 @@ public class ProblemDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
 
-            int problemIndex = getArguments().getInt(ARG_ITEM_ID);
+            int issueId = getArguments().getInt(ARG_ITEM_ID);
 
-            mItem = DummyProblems.getProblems().get(problemIndex);
-
-            mProblemTitle.setText(mItem.getTitle());
-            mProblemDesc.setText(mItem.getDescription());
+            apiClient.getIssue(issueId).enqueue(this);
         }
     }
 
@@ -77,5 +79,17 @@ public class ProblemDetailFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         return rootView;
+    }
+
+    @Override
+    public void onResponse(Response<Problem> response) {
+        Problem problem = response.body();
+
+        mProblemDesc.setText(problem.getDescription());
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        Toast.makeText(getActivity(), "Can't load issue: " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }
