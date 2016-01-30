@@ -10,11 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.network.DaggerAPIComponent;
+import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,7 +28,9 @@ import retrofit2.Response;
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */
-
+@AutoComponent(modules = APIModule.class)
+@AutoInjector
+@Singleton
 public class ProblemDetailFragment extends Fragment implements Callback<Problem> {
 
     /**
@@ -61,7 +66,7 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        DaggerProblemDetailFragmentComponent.create().inject(this);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
@@ -70,7 +75,6 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
 
             int issueId = getArguments().getInt(ARG_ITEM_ID);
 
-            DaggerAPIComponent.create().inject(this);
 
             issueService.getIssue(issueId).enqueue(this);
         }

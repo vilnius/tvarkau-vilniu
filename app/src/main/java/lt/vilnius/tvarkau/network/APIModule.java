@@ -1,8 +1,6 @@
 package lt.vilnius.tvarkau.network;
 
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import lt.vilnius.tvarkau.network.service.IssueService;
