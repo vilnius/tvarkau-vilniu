@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau;
+package lt.vilnius.tvarkau.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +16,9 @@ import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lt.vilnius.tvarkau.ProblemDetailActivity;
+import lt.vilnius.tvarkau.ProblemsListActivity;
+import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
