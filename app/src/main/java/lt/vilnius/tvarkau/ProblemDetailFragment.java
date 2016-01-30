@@ -39,11 +39,6 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private Problem mItem;
-
     @Inject
     IssueService issueService;
 

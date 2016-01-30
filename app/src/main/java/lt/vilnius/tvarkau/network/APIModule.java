@@ -1,6 +1,8 @@
 package lt.vilnius.tvarkau.network;
 
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import lt.vilnius.tvarkau.network.service.IssueService;
@@ -20,6 +22,7 @@ public class APIModule {
     public static final String API_BASE_URL = "http://private-1dd02-tvarkauvilniu.apiary-mock.com/";
 
     @Provides
+    @Singleton
     public OkHttpClient provideOkHttpClient() {
         return new OkHttpClient.Builder()
                 .authenticator(new TokenAuthenticator())
@@ -28,6 +31,7 @@ public class APIModule {
     }
 
     @Provides
+    @Singleton
     public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -37,16 +41,19 @@ public class APIModule {
     }
 
     @Provides
+    @Singleton
     public UserService provideUserService(Retrofit retrofit) {
         return retrofit.create(UserService.class);
     }
 
     @Provides
+    @Singleton
     public IssueService provideIssueService(Retrofit retrofit) {
         return retrofit.create(IssueService.class);
     }
 
     @Provides
+    @Singleton
     public MediaService provideMediaService(Retrofit retrofit) {
         return retrofit.create(MediaService.class);
     }
