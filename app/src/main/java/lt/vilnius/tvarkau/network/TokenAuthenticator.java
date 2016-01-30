@@ -24,12 +24,13 @@ public class TokenAuthenticator implements Authenticator {
             return null;
         }
 
-        Token newAccessToken = APIClient.getInstance().getToken().execute().body();
+        Token newAccessToken = new Token();
+//        Token newAccessToken = APIModule.getInstance().getToken().execute().body();
 
         Authentication.setToken(newAccessToken);
 
         return response.request().newBuilder()
-                .header(APIClient.X_AUTH, newAccessToken.getToken())
+                .header(APIModule.X_AUTH, newAccessToken.getToken())
                 .build();
     }
 

@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.network.APIClient;
+import lt.vilnius.tvarkau.network.DaggerAPIComponent;
+import lt.vilnius.tvarkau.network.service.IssueService;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -22,7 +25,9 @@ import retrofit2.Response;
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */
+
 public class ProblemDetailFragment extends Fragment implements Callback<Problem> {
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -34,8 +39,8 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
      */
     private Problem mItem;
 
-    APIClient apiClient = APIClient.getInstance();
-
+    @Inject
+    IssueService issueService;
 
     @Bind(R.id.problem_title)
     TextView mProblemTitle;
@@ -53,12 +58,10 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
         return problemDetailFragment;
     }
 
-    public ProblemDetailFragment() {
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
@@ -67,7 +70,9 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
 
             int issueId = getArguments().getInt(ARG_ITEM_ID);
 
-            apiClient.getIssue(issueId).enqueue(this);
+            DaggerAPIComponent.create().inject(this);
+
+            issueService.getIssue(issueId).enqueue(this);
         }
     }
 

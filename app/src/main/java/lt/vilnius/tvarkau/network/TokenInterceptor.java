@@ -23,7 +23,7 @@ public class TokenInterceptor implements Interceptor {
         Token token = Authentication.getToken();
 
         if (token != null)
-            builder.header(APIClient.X_AUTH, token.getToken());
+            builder.header(APIModule.X_AUTH, token.getToken());
 
         request = builder.build();
 
