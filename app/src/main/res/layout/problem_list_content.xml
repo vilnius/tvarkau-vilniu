@@ -1,107 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/problem_list_content"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-    >
-
-<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/problem_list_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingBottom="12dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="8dp"
-        android:paddingTop="8dp">
-
-        <TextView
-            android:id="@+id/problem_list_content_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="Gatvių priežiūra ir tvarkymas"
-            android:textColor="#DE000000"
-            android:textSize="18sp"
-            tools:text="title"
-            />
-
-        <TextView
-            android:id="@+id/problem_list_content_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
-            android:maxLines="2"
-            android:paddingTop="2dp"
-            android:singleLine="false"
-            android:text="Klinikų g. jau du mėnesai nenaudojama pilnai įrengta automobilių paarkavimo Klinikų g. jau du mėnesai nenaudojama pilnai įrengta automobilių paarkavimo "
-            android:textColor="#8A000000"
-            android:textSize="16sp"
-            tools:text="Description"
-            />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="8dp"
             android:paddingTop="8dp">
 
             <TextView
-                android:id="@+id/problem_list_content_status"
-                android:layout_width="wrap_content"
+                android:id="@+id/problem_list_content_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/label_report_status_1"
-                android:fontFamily="sans-serif-regular"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="2dp"
-                android:text="Vykdoma"
-                android:textAllCaps="true"
-                android:textColor="#FFF"
-                android:textSize="10sp"
-                android:layout_marginBottom="2dp"
-                tools:text="In progress"
-                />
+                android:fontFamily="sans-serif-medium"
+                android:text="Gatvių priežiūra ir tvarkymas"
+                android:textColor="#DE000000"
+                android:textSize="18sp"
+                tools:text="title" />
 
             <TextView
-                android:id="@+id/problem_list_content_time"
-                android:layout_width="wrap_content"
+                android:id="@+id/problem_list_content_description"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-light"
-                android:paddingLeft="16dp"
-                android:text="prieš 15 min"
+                android:maxLines="2"
+                android:paddingTop="2dp"
+                android:singleLine="false"
+                android:text="Klinikų g. jau du mėnesai nenaudojama pilnai įrengta automobilių paarkavimo Klinikų g. jau du mėnesai nenaudojama pilnai įrengta automobilių paarkavimo "
                 android:textColor="#8A000000"
-                android:textSize="14sp"
-                tools:text="just now"
-                />
+                android:textSize="16sp"
+                tools:text="Description" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:id="@+id/problem_list_content_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:background="@drawable/label_report_status_1"
+                    android:fontFamily="sans-serif-regular"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
+                    android:text="Vykdoma"
+                    android:textColor="#FFF"
+                    android:textSize="10sp"
+                    android:textAllCaps="true"
+                    tools:text="In progress" />
+
+                <TextView
+                    android:id="@+id/problem_list_content_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingLeft="16dp"
+                    android:text="prieš 15 min"
+                    android:textColor="#8A000000"
+                    android:textSize="14sp"
+                    tools:text="just now" />
+
+            </LinearLayout>
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/problem_list_content_thumb"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#f0f0f0"
+            android:scaleType="center"
+            android:src="@drawable/ic_placeholder_list_of_reports" />
+
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/problem_list_content_thumb"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:scaleType="center"
-        android:background="#f0f0f0"
-        android:src="@drawable/ic_placeholder_list_of_reports"
-        />
-
-</LinearLayout>
-
-<View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="#e4e4e4"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e4e4e4" />
 
 </LinearLayout>
 
