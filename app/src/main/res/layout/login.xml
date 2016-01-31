@@ -15,11 +15,15 @@
         android:paddingBottom="112dp"
         />
 
+
+
+
     <TextView
+        android:id="@+id/login_tv_sign_in"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_login"
-        android:text="Sign in with Google"
+        android:text="@string/login_sign_in"
         android:textColor="#fff"
         android:textSize="18sp"
         android:gravity="center"
@@ -33,10 +37,11 @@
         />
 
     <TextView
+        android:id="@+id/login_tv_annon_enter"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_login_guest"
-        android:text="enter anonymously"
+        android:text="@string/login_enter_anon"
         android:textColor="#DE0f76bb"
         android:textSize="18sp"
         android:gravity="center"

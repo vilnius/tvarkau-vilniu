@@ -154,6 +154,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/home_btn_sign_in"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
