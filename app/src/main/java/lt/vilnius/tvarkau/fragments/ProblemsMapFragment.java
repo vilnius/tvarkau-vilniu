@@ -35,8 +35,8 @@ public class ProblemsMapFragment extends SupportMapFragment implements OnMapRead
 
     protected GoogleMap googleMap;
 
-    protected static BitmapDescriptor inProgressMarker;
-    protected static BitmapDescriptor doneMarker;
+    protected BitmapDescriptor inProgressMarker;
+    protected BitmapDescriptor doneMarker;
 
     protected HashMap<String, Problem> problemHashMap = new HashMap<>();
 
@@ -49,7 +49,6 @@ public class ProblemsMapFragment extends SupportMapFragment implements OnMapRead
         super.onActivityCreated(savedInstanceState);
 
         setMarkerResources();
-
 
         getMapAsync(this);
     }

@@ -46,7 +46,6 @@ public class ProblemsListAdapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Problem item = mValues.get(position);
 
-
         holder.item = item;
         holder.titleView.setText(item.title);
         holder.descriptionView.setText(item.description);
@@ -65,22 +64,10 @@ public class ProblemsListAdapter
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO for time being add support for two pane later
-//                if (context.mTwoPane) {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putInt(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
-//                    ProblemDetailFragment fragment = new ProblemDetailFragment();
-//                    fragment.setArguments(arguments);
-//                    context.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.problem_detail_container, fragment)
-//                            .commit();
-//                } else {
-                android.content.Context context = v.getContext();
-                Intent intent = new Intent(context, ProblemDetailActivity.class);
-                intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
+                Context context = v.getContext();
+                Intent intent = ProblemDetailActivity.getStartActivityIntent(context, holder.item.id);
 
                 context.startActivity(intent);
-//                }
             }
         });
     }
