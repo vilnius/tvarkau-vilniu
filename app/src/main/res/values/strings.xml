@@ -49,6 +49,10 @@
         <item>Dviračių takų problemos</item>
     </string-array>
 
+    <string-array name="problems_list_tab_titles">
+        <item>Visos</item>
+        <item>Mano</item>
+    </string-array>
 
     <string-array name="report_privacy_mode">
         <item>Pranešti anonimiškai</item>
