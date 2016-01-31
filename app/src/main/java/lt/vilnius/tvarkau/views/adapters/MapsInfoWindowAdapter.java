@@ -27,21 +27,21 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     protected View view;
     protected Context context;
 
-    @Bind(R.id.problem_list_content_title)
+    @Bind(R.id.problem_map_info_window_content_title)
     protected TextView titleView;
-    @Bind(R.id.problem_list_content_description)
+    @Bind(R.id.problem_map_info_window_content_description)
     protected TextView descriptionView;
-    @Bind(R.id.problem_list_content_status)
+    @Bind(R.id.problem_map_info_window_content_status)
     protected TextView statusView;
-    @Bind(R.id.problem_list_content_time)
+    @Bind(R.id.problem_map_info_window_content_time)
     protected TextView timeView;
-    @Bind(R.id.problem_list_content_thumb)
+    @Bind(R.id.problem_map_info_window_content_thumb)
     protected ImageView thumbView;
 
     public MapsInfoWindowAdapter(Activity activity, HashMap<String, Problem> problemHashMap) {
         this.problemHashMap = problemHashMap;
         context = activity;
-        view = activity.getLayoutInflater().inflate(R.layout.problem_list_content, null);
+        view = activity.getLayoutInflater().inflate(R.layout.problem_map_info_window, null);
 
         ButterKnife.bind(this, view);
     }
