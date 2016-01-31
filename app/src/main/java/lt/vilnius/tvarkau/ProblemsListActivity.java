@@ -26,7 +26,8 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ProblemsListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class ProblemsListActivity extends AppCompatActivity
+        implements SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -79,6 +80,8 @@ public class ProblemsListActivity extends AppCompatActivity implements SearchVie
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setOnQueryTextListener(this);
+
+        menu.findItem(R.id.action_map).setOnMenuItemClickListener(this);
         return true;
     }
 
@@ -99,4 +102,13 @@ public class ProblemsListActivity extends AppCompatActivity implements SearchVie
         return false;
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                startActivity(new Intent(this, ProblemsMapActivity.class));
+                return true;
+        }
+        return false;
+    }
 }

@@ -3,8 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
         android:title="@string/problem_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_map"
+        android:icon="@drawable/ic_mapview_appbar"
+        android:title="@string/problem_search"
+        app:showAsAction="always" />
 </menu>

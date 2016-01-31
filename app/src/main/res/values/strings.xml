@@ -17,6 +17,7 @@
 
     <string name="problem_search">Problemos paieška</string>
     <string name="progress_dialog_loading">Kraunama</string>
+    <string name="problem_map">Problemų žemėlapis</string>
 
     <string name="profile_hint_email">El.paštas</string>
     <string name="profile_hint_name">Vardas</string>
