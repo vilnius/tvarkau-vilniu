@@ -7,7 +7,10 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -44,13 +47,20 @@ public class ProblemsListAdapter
         Problem item = mValues.get(position);
 
 
-
         holder.item = item;
         holder.titleView.setText(item.title);
         holder.descriptionView.setText(item.description);
         holder.statusView.setText(item.statusDescription);
         holder.statusView.setBackgroundColor(context.getResources().getColor(item.getColor()));
         holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.updatedAt.getTime()));
+
+        String thumbUrl = item.getThumbUrl();
+
+        if (thumbUrl == null) {
+            holder.thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
+        } else {
+            Picasso.with(context).load(thumbUrl).into(holder.thumbView);
+        }
 
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,11 +75,11 @@ public class ProblemsListAdapter
 //                            .replace(R.id.problem_detail_container, fragment)
 //                            .commit();
 //                } else {
-                    android.content.Context context = v.getContext();
-                    Intent intent = new Intent(context, ProblemDetailActivity.class);
-                    intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
+                android.content.Context context = v.getContext();
+                Intent intent = new Intent(context, ProblemDetailActivity.class);
+                intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
 
-                    context.startActivity(intent);
+                context.startActivity(intent);
 //                }
             }
         });
@@ -91,6 +101,8 @@ public class ProblemsListAdapter
         public TextView statusView;
         @Bind(R.id.problem_list_content_time)
         public TextView timeView;
+        @Bind(R.id.problem_list_content_thumb)
+        protected ImageView thumbView;
 
         public Problem item;
 
