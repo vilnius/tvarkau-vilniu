@@ -58,7 +58,7 @@ public class ProblemsMapFragment extends SupportMapFragment
     }
 
     private void setMarkerResources() {
-        inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_red);
+        inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_blue);
         doneMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_green);
     }
 
