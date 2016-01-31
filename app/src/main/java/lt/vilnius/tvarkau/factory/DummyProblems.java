@@ -39,6 +39,9 @@ public class DummyProblems {
             }
             problem.updatedAt = new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5));
 
+            problem.lat = 54.5 + 0.4 * Math.random();
+            problem.lng = 25.1 + 0.4 * Math.random();
+
             problems.add(problem);
         }
 
