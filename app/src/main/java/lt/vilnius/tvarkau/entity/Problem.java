@@ -22,6 +22,8 @@ public class Problem {
     public int id;
     public String title;
     public String description;
+
+    public String address;
     @StatusCode
     public int statusCode;
     public String statusDescription;
@@ -42,6 +44,9 @@ public class Problem {
         }
     }
 
+    public String getAddress() {
+        return address;
+    }
 
     public String getStatusDescription() {
         return statusDescription;

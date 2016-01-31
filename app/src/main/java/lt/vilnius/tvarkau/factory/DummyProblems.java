@@ -21,6 +21,11 @@ public class DummyProblems {
             null
     };
 
+    protected static final String[] adresses = {
+            "J.Jasinskio g. 5",
+            "Konstitucijos pr. 3"
+    };
+
     public static List<Problem> getProblems() {
         if (problems == null) problems = createProblems();
         return problems;
@@ -28,6 +33,8 @@ public class DummyProblems {
 
     public static List<Problem> createProblems() {
         ArrayList<Problem> problems = new ArrayList<>();
+
+        Random random = new Random();
 
         for (int i = 0; i < COUNT; i++) {
             Problem problem = new Problem();
@@ -48,7 +55,8 @@ public class DummyProblems {
             problem.lat = 54.5 + 0.4 * Math.random();
             problem.lng = 25.1 + 0.4 * Math.random();
 
-            problem.thumbUrl = thumbsUrls[new Random().nextInt(thumbsUrls.length)];
+            problem.thumbUrl = thumbsUrls[random.nextInt(thumbsUrls.length)];
+            problem.address = adresses[random.nextInt(adresses.length)];
 
             problems.add(problem);
         }

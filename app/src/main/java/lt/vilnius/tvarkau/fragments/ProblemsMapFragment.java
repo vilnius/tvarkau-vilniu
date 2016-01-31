@@ -28,7 +28,11 @@ import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
 /**
  * Created by Karolis Vycius on 2016-01-13.
  */
-public class ProblemsMapFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class ProblemsMapFragment extends SupportMapFragment
+        implements OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnInfoWindowCloseListener,
+        GoogleMap.OnMarkerClickListener {
 
     protected static final LatLng VILNIUS_LAT_LNG = new LatLng(54.687157, 25.279652);
     protected static final int GPS_PERMISSION_REQUEST_CODE = 11;
@@ -72,6 +76,8 @@ public class ProblemsMapFragment extends SupportMapFragment implements OnMapRead
     public void onMapReady(GoogleMap map) {
         googleMap = map;
         map.setOnInfoWindowClickListener(this);
+        map.setOnInfoWindowCloseListener(this);
+        map.setOnMarkerClickListener(this);
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f));
 
@@ -125,10 +131,25 @@ public class ProblemsMapFragment extends SupportMapFragment implements OnMapRead
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        int problemId = problemHashMap.get(marker.getTitle()).getId();
+        int problemId = getProblemByMarker(marker).getId();
 
         Intent intent = ProblemDetailActivity.getStartActivityIntent(getActivity(), problemId);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onInfoWindowClose(Marker marker) {
+        getActivity().setTitle(R.string.title_problems_map);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        getActivity().setTitle(getProblemByMarker(marker).getAddress());
+        return false;
+    }
+
+    public Problem getProblemByMarker(Marker marker) {
+        return problemHashMap.get(marker.getTitle());
     }
 }
