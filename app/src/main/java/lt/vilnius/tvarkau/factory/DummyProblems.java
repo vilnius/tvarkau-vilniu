@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau.factory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import lt.vilnius.tvarkau.entity.Problem;
@@ -14,6 +15,11 @@ import lt.vilnius.tvarkau.entity.Problem;
 public class DummyProblems {
     public static final int COUNT = 100;
     private static List<Problem> problems;
+    protected static final String[] thumbsUrls = {
+            "http://cssslider.com/sliders/demo-26/data1/images/summerfield336672_1280.jpg",
+            "http://drop.ndtv.com/albums/AUTO/mercedesbenzcla/3-main_640x480.jpg",
+            null
+    };
 
     public static List<Problem> getProblems() {
         if (problems == null) problems = createProblems();
@@ -41,6 +47,8 @@ public class DummyProblems {
 
             problem.lat = 54.5 + 0.4 * Math.random();
             problem.lng = 25.1 + 0.4 * Math.random();
+
+            problem.thumbUrl = thumbsUrls[new Random().nextInt(thumbsUrls.length)];
 
             problems.add(problem);
         }
