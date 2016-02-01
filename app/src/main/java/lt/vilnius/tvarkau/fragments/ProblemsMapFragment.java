@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +42,7 @@ public class ProblemsMapFragment extends SupportMapFragment
 
     protected BitmapDescriptor inProgressMarker;
     protected BitmapDescriptor doneMarker;
+    protected BitmapDescriptor selectedMarker;
 
     protected HashMap<String, Problem> problemHashMap = new HashMap<>();
 
@@ -60,6 +62,7 @@ public class ProblemsMapFragment extends SupportMapFragment
     private void setMarkerResources() {
         inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_blue);
         doneMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_green);
+        selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_red);
     }
 
     protected void requestGPSPermission() {
@@ -95,25 +98,17 @@ public class ProblemsMapFragment extends SupportMapFragment
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(problem.getLatLng());
             markerOptions.title(problemStringId);
+            markerOptions.icon(getMarkerIcon(problem));
 
-            switch (problem.getStatusCode()) {
-                case Problem.STATUS_IN_PROGRESS:
-                    markerOptions.icon(inProgressMarker);
-                    break;
-                case Problem.STATUS_DONE:
-                    markerOptions.icon(doneMarker);
-                    break;
-            }
 
             map.addMarker(markerOptions);
         }
 
         map.setInfoWindowAdapter(new MapsInfoWindowAdapter(getActivity(), problemHashMap));
-
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == GPS_PERMISSION_REQUEST_CODE) {
             if (permissions.length >= 1 &&
                     permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
@@ -122,10 +117,19 @@ public class ProblemsMapFragment extends SupportMapFragment
                 try {
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                } catch (SecurityException securityException) {
+                } catch (SecurityException ignored) {
 
                 }
             }
+        }
+    }
+
+    public BitmapDescriptor getMarkerIcon(Problem problem) {
+        switch (problem.getStatusCode()) {
+            case Problem.STATUS_DONE:
+                return doneMarker;
+            default:
+                return inProgressMarker;
         }
     }
 
@@ -140,12 +144,17 @@ public class ProblemsMapFragment extends SupportMapFragment
 
     @Override
     public void onInfoWindowClose(Marker marker) {
+        Problem problem = getProblemByMarker(marker);
+
         getActivity().setTitle(R.string.title_problems_map);
+        marker.setIcon(getMarkerIcon(problem));
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
+        marker.setIcon(selectedMarker);
+
         return false;
     }
 
