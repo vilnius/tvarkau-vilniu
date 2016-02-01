@@ -1,11 +1,8 @@
 package lt.vilnius.tvarkau.fragments;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +23,8 @@ import lt.vilnius.tvarkau.factory.DummyProblems;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 /**
  * Created by Karolis Vycius on 2016-01-13.
  */
@@ -37,6 +36,7 @@ public class ProblemsMapFragment extends SupportMapFragment
 
     protected static final LatLng VILNIUS_LAT_LNG = new LatLng(54.687157, 25.279652);
     protected static final int GPS_PERMISSION_REQUEST_CODE = 11;
+    protected static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
     protected GoogleMap googleMap;
 
@@ -66,12 +66,10 @@ public class ProblemsMapFragment extends SupportMapFragment
     }
 
     protected void requestGPSPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (PermissionUtils.isAllPermissionsGranted(getActivity(), MAP_PERMISSIONS)) {
             googleMap.setMyLocationEnabled(true);
         } else {
-            PermissionUtils.verifyAndRequestPermissions(getActivity(), GPS_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION);
+            requestPermissions(MAP_PERMISSIONS, GPS_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -110,16 +108,8 @@ public class ProblemsMapFragment extends SupportMapFragment
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == GPS_PERMISSION_REQUEST_CODE) {
-            if (permissions.length >= 1 &&
-                    permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Try/catch is used only to suppress permission grant error. It's impossible scenario.
-                try {
-                    googleMap.setMyLocationEnabled(true);
-                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                } catch (SecurityException ignored) {
-
-                }
+            if (PermissionUtils.isAllPermissionsGranted(getActivity(), MAP_PERMISSIONS)) {
+                googleMap.setMyLocationEnabled(true);
             }
         }
     }

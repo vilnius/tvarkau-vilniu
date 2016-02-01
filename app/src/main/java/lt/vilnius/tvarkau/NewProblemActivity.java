@@ -1,15 +1,14 @@
 package lt.vilnius.tvarkau;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,10 +27,15 @@ import icepick.State;
 import lt.vilnius.tvarkau.utils.FileUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class NewProblemActivity extends BaseActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
+    private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
     @Bind(R.id.add_problem_photo_frame)
     FrameLayout mPhotoFrame;
@@ -109,11 +113,10 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.add_problem_take_photo)
     public void onTakePhotoClicked() {
-        if (PermissionUtils.verifyAndRequestPermissions(this, PERMISSION_REQUEST_CODE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
             takePhoto();
+        } else {
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -121,8 +124,7 @@ public class NewProblemActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
                     takePhoto();
                 } else {
                     Toast.makeText(this, "Need camera and storage permissions to take photos.",
