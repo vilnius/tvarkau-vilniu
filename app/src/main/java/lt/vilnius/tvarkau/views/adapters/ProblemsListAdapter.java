@@ -14,7 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
-import lt.vilnius.tvarkau.ProblemDetailFragment;
+import lt.vilnius.tvarkau.fragments.ProblemDetailFragment;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 

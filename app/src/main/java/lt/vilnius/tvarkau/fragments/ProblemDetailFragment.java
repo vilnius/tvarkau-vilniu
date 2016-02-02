@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau;
+package lt.vilnius.tvarkau.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,11 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lt.vilnius.tvarkau.ProblemDetailActivity;
+import lt.vilnius.tvarkau.ProblemsListActivity;
+import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.factory.DummyProblems;
+import lt.vilnius.tvarkau.network.APIModule;
+import lt.vilnius.tvarkau.network.service.IssueService;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A fragment representing a single Problem detail screen.
@@ -19,18 +31,19 @@ import lt.vilnius.tvarkau.factory.DummyProblems;
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */
-public class ProblemDetailFragment extends Fragment {
+@AutoComponent(modules = APIModule.class)
+@AutoInjector
+@Singleton
+public class ProblemDetailFragment extends Fragment implements Callback<Problem> {
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private Problem mItem;
-
+    @Inject
+    IssueService issueService;
 
     @Bind(R.id.problem_title)
     TextView mProblemTitle;
@@ -48,24 +61,20 @@ public class ProblemDetailFragment extends Fragment {
         return problemDetailFragment;
     }
 
-    public ProblemDetailFragment() {
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        DaggerProblemDetailFragmentComponent.create().inject(this);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
 
-            int problemIndex = getArguments().getInt(ARG_ITEM_ID);
+            int issueId = getArguments().getInt(ARG_ITEM_ID);
 
-            mItem = DummyProblems.getProblems().get(problemIndex);
 
-            mProblemTitle.setText(mItem.getTitle());
-            mProblemDesc.setText(mItem.getDescription());
+            issueService.getIssue(issueId).enqueue(this);
         }
     }
 
@@ -77,5 +86,17 @@ public class ProblemDetailFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         return rootView;
+    }
+
+    @Override
+    public void onResponse(Response<Problem> response) {
+        Problem problem = response.body();
+
+        mProblemDesc.setText(problem.getDescription());
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        Toast.makeText(getActivity(), "Can't load issue: " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

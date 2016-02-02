@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import lt.vilnius.tvarkau.fragments.ProblemDetailFragment;
+
 /**
  * An activity representing a single Problem detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,

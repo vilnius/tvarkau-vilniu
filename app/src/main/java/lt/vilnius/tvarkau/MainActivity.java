@@ -6,9 +6,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import butterknife.Bind;
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
+import lt.vilnius.tvarkau.network.service.IssueService;
 
 
 /**
@@ -24,6 +27,9 @@ public class MainActivity extends BaseActivity {
     TextView mLoginButton;
 
     SharedPrefsManager prefsManager;
+    @Inject
+    IssueService issueService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
