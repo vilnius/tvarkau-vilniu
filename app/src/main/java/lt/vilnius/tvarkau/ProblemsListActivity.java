@@ -2,7 +2,9 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +16,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
+import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
 
 /**
  * An activity representing a list of Problems. This activity
@@ -24,10 +26,17 @@ import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ProblemsListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class ProblemsListActivity extends AppCompatActivity
+        implements SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.problems_list_tab_layout)
+    TabLayout tabLayout;
+
+    @Bind(R.id.problems_list_view_pager)
+    ViewPager viewPager;
 
     SearchView searchView;
 
@@ -40,9 +49,14 @@ public class ProblemsListActivity extends AppCompatActivity implements SearchVie
 
         setSupportActionBar(toolbar);
 
-        setProblemListFragment();
+        setTabs();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void setTabs() {
+        viewPager.setAdapter(new ProblemsListViewPagerAdapter(this, getSupportFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
     }
 
 
@@ -66,13 +80,9 @@ public class ProblemsListActivity extends AppCompatActivity implements SearchVie
 
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setOnQueryTextListener(this);
-        return true;
-    }
 
-    protected void setProblemListFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.problems_list_frame, ProblemsListFragment.getInstance())
-                .commit();
+        menu.findItem(R.id.action_map).setOnMenuItemClickListener(this);
+        return true;
     }
 
     @OnClick(R.id.fab)
@@ -89,6 +99,16 @@ public class ProblemsListActivity extends AppCompatActivity implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                startActivity(new Intent(this, ProblemsMapActivity.class));
+                return true;
+        }
         return false;
     }
 }
