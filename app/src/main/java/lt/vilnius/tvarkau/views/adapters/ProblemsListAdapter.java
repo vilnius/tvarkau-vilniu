@@ -7,7 +7,10 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -43,8 +46,6 @@ public class ProblemsListAdapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Problem item = mValues.get(position);
 
-
-
         holder.item = item;
         holder.titleView.setText(item.title);
         holder.descriptionView.setText(item.description);
@@ -52,25 +53,21 @@ public class ProblemsListAdapter
         holder.statusView.setBackgroundColor(context.getResources().getColor(item.getColor()));
         holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.updatedAt.getTime()));
 
+        String thumbUrl = item.getThumbUrl();
+
+        if (thumbUrl == null) {
+            holder.thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
+        } else {
+            Picasso.with(context).load(thumbUrl).into(holder.thumbView);
+        }
+
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO for time being add support for two pane later
-//                if (context.mTwoPane) {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putInt(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
-//                    ProblemDetailFragment fragment = new ProblemDetailFragment();
-//                    fragment.setArguments(arguments);
-//                    context.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.problem_detail_container, fragment)
-//                            .commit();
-//                } else {
-                    android.content.Context context = v.getContext();
-                    Intent intent = new Intent(context, ProblemDetailActivity.class);
-                    intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, holder.item.id);
+                Context context = v.getContext();
+                Intent intent = ProblemDetailActivity.getStartActivityIntent(context, holder.item.id);
 
-                    context.startActivity(intent);
-//                }
+                context.startActivity(intent);
             }
         });
     }
@@ -91,6 +88,8 @@ public class ProblemsListAdapter
         public TextView statusView;
         @Bind(R.id.problem_list_content_time)
         public TextView timeView;
+        @Bind(R.id.problem_list_content_thumb)
+        protected ImageView thumbView;
 
         public Problem item;
 

@@ -2,6 +2,10 @@ package lt.vilnius.tvarkau.entity;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 
@@ -18,9 +22,16 @@ public class Problem {
     public int id;
     public String title;
     public String description;
-    @StatusCode public int statusCode;
+
+    public String address;
+    @StatusCode
+    public int statusCode;
     public String statusDescription;
     public Date updatedAt;
+
+    public double lat, lng;
+
+    public String thumbUrl;
 
     @ColorRes
     public int getColor() {
@@ -33,6 +44,23 @@ public class Problem {
         }
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getStatusDescription() {
+        return statusDescription;
+    }
+
+    @Nullable
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -43,6 +71,14 @@ public class Problem {
 
     public int getId() {
         return id;
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(lat, lng);
+    }
+
+    public String getRelativeUpdatedAt() {
+        return DateUtils.getRelativeTimeSpanString(updatedAt.getTime()).toString();
     }
 
     @IntDef({STATUS_IN_PROGRESS, STATUS_DONE})

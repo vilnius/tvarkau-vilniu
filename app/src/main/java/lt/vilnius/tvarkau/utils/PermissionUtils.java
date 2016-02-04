@@ -1,36 +1,25 @@
 package lt.vilnius.tvarkau.utils;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-
-import java.util.ArrayList;
+import android.util.Log;
 
 /**
  * Created by Karolis Vycius on 2016-01-14.
  */
 public class PermissionUtils {
 
-    public static boolean verifyAndRequestPermissions(Activity activity, int requestCode,
-                                                      String... permissions) {
-        ArrayList<String> missingPermissions = new ArrayList<>();
-
+    public static boolean isAllPermissionsGranted(@NonNull Activity activity,
+                                                  @NonNull String[] permissions) {
         for (String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(activity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                missingPermissions.add(permission);
+            if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+                Log.d("PermissionUtils", permission + " is not granted.");
+                return false;
             }
         }
 
-        if (missingPermissions.isEmpty())
-            return true;
-        else {
-            String[] missingPermissionsArr = missingPermissions.toArray(new String[missingPermissions.size()]);
-
-            ActivityCompat.requestPermissions(activity, missingPermissionsArr, requestCode);
-        }
-
-        return false;
+        return true;
     }
 }

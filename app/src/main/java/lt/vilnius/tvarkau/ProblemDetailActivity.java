@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -17,6 +18,13 @@ import lt.vilnius.tvarkau.fragments.ProblemDetailFragment;
  * in a {@link ProblemsListActivity}.
  */
 public class ProblemDetailActivity extends AppCompatActivity {
+
+    public static Intent getStartActivityIntent(Context context, int problemId) {
+        Intent intent = new Intent(context, ProblemDetailActivity.class);
+        intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, problemId);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
