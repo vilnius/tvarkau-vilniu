@@ -9,14 +9,14 @@ import butterknife.OnClick;
 
 
 /**
- * An activity representing a home screen
+ * An activity representing a main activity home screen
  */
 public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.main_activity);
 
         ButterKnife.bind(this);
     }
@@ -56,6 +56,5 @@ public class MainActivity extends BaseActivity {
     protected void onAboutClicked() {
         Toast.makeText(this, "This should be implemented", Toast.LENGTH_SHORT).show();
     }
-
 
 }
