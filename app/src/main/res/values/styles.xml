@@ -18,4 +18,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="HomeScreenButtonStyle" parent="AppTheme">
+        <item name="android:typeface">sans</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:textColor">@color/home_button_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

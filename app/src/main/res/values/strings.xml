@@ -29,6 +29,13 @@
     <string name="login_enter_anon">Anonimiškas prisijungimas</string>
     <string name="sign_in_failed">Nepavyko prisijungti naudojant Google. Patikrinkite interneto ryšį, arba prisijunkite anonimiškai.</string>
 
+    <string name="home_report_a_problem">Naujas pranešimas</string>
+    <string name="home_list_of_reports">Problemų sąrašas</string>
+    <string name="home_my_problems">Mano pranešimai</string>
+    <string name="home_map_of_problems">Žemėlapis</string>
+    <string name="home_my_profile">Mano profilis</string>
+    <string name="home_about">Apie</string>
+
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>
         <item>Energetika ir inžineriniai tinklai</item>
