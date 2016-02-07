@@ -27,68 +27,76 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.GridLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/content_background"
-        android:scrollbars="vertical"
-        app:columnCount="2"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:useDefaultMargins="true">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/home_report_problem"
-            style="@style/HomeScreenButtonStyle"
-            android:layout_width="0dp"
+        <android.support.v7.widget.GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home_new_report"
-            android:text="@string/home_report_a_problem"
-            app:layout_columnWeight="1" />
+            android:background="@color/content_background"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="16dp"
+            app:columnCount="2"
+            app:useDefaultMargins="true">
 
-        <TextView
-            android:id="@+id/home_my_problems"
-            style="@style/HomeScreenButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home_my_problems"
-            android:text="@string/home_my_problems"
-            app:layout_columnWeight="1" />
+            <TextView
+                android:id="@+id/home_report_problem"
+                style="@style/HomeScreenButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/home_new_report"
+                android:text="@string/home_report_a_problem"
+                app:layout_columnWeight="1" />
 
-        <TextView
-            android:id="@+id/home_list_of_problems"
-            style="@style/HomeScreenButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home_list_of_problems"
-            android:text="@string/home_list_of_reports"
-            app:layout_columnWeight="1" />
+            <TextView
+                android:id="@+id/home_my_problems"
+                style="@style/HomeScreenButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/home_my_problems"
+                android:text="@string/home_my_problems"
+                app:layout_columnWeight="1" />
 
-        <TextView
-            android:id="@+id/home_map_of_problems"
-            style="@style/HomeScreenButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home_map_of_problems"
-            android:text="@string/home_map_of_problems"
-            app:layout_columnWeight="1" />
+            <TextView
+                android:id="@+id/home_list_of_problems"
+                style="@style/HomeScreenButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/home_list_of_problems"
+                android:text="@string/home_list_of_reports"
+                app:layout_columnWeight="1" />
 
-        <TextView
-            android:id="@+id/home_my_profile"
-            style="@style/HomeScreenButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home_my_profile"
-            android:text="@string/home_my_profile"
-            app:layout_columnWeight="1" />
+            <TextView
+                android:id="@+id/home_map_of_problems"
+                style="@style/HomeScreenButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/home_map_of_problems"
+                android:text="@string/home_map_of_problems"
+                app:layout_columnWeight="1" />
 
-        <TextView
-            android:id="@+id/home_about"
-            style="@style/HomeScreenButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home_about"
-            android:text="@string/home_about"
-            app:layout_columnWeight="1" />
+            <TextView
+                android:id="@+id/home_my_profile"
+                style="@style/HomeScreenButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/home_my_profile"
+                android:text="@string/home_my_profile"
+                app:layout_columnWeight="1" />
 
-    </android.support.v7.widget.GridLayout>
+            <TextView
+                android:id="@+id/home_about"
+                style="@style/HomeScreenButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/home_about"
+                android:text="@string/home_about"
+                app:layout_columnWeight="1" />
+
+        </android.support.v7.widget.GridLayout>
+    </ScrollView>
+
 </android.support.design.widget.CoordinatorLayout>
