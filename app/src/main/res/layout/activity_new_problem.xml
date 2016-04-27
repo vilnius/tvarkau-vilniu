@@ -107,7 +107,11 @@
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="24dp"
                     android:background="@null"
+                    android:id="@+id/add_problem_location"
                     android:hint="Vieta"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:textColor="#000"
                     android:textColorHint="#959292"
                     android:textSize="18sp" />

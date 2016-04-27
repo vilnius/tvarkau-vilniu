@@ -9,13 +9,22 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +44,7 @@ public class NewProblemActivity extends BaseActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
+    public static final int PLACE_PICKER_REQUEST = 11;
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
     @Bind(R.id.add_problem_photo_frame)
@@ -43,8 +53,17 @@ public class NewProblemActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
+    @Bind(R.id.add_problem_location)
+    EditText mAddProblemLocation;
+
     @State
     File lastPhotoFile;
+
+    @State
+    LatLng locationCords;
+
+    @State
+    String locationName;
 
 
     @Override
@@ -56,8 +75,6 @@ public class NewProblemActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
     }
 
 
@@ -111,7 +128,7 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.add_problem_take_photo)
+        @OnClick(R.id.add_problem_take_photo)
     public void onTakePhotoClicked() {
         if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
             takePhoto();
@@ -119,6 +136,7 @@ public class NewProblemActivity extends BaseActivity {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -138,19 +156,40 @@ public class NewProblemActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap bp = BitmapFactory.decodeFile(lastPhotoFile.getPath());
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_IMAGE_CAPTURE:
+                    Bitmap bp = BitmapFactory.decodeFile(lastPhotoFile.getPath());
 
-            LayoutInflater inflater = (LayoutInflater)
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView imageView = (ImageView) inflater.inflate(R.layout.new_problem_photo, null);
+                    LayoutInflater inflater = (LayoutInflater)
+                            getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    ImageView imageView = (ImageView) inflater.inflate(R.layout.new_problem_photo, null);
 
-            imageView.setImageBitmap(bp);
+                    imageView.setImageBitmap(bp);
 
-            mPhotoFrame.removeAllViewsInLayout();
-            mPhotoFrame.addView(imageView);
+                    mPhotoFrame.removeAllViewsInLayout();
+                    mPhotoFrame.addView(imageView);
+                    break;
+                case PLACE_PICKER_REQUEST:
+                    Place place = PlacePicker.getPlace(this, data);
+                    mAddProblemLocation.setText(place.getName());
+                    locationCords = place.getLatLng();
+                    break;
+            }
         }
     }
 
+    @OnClick(R.id.add_problem_location)
+    public void onProblemLocationClicked(View view) {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            Intent intent = builder.build(this);
+            Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
 
+            ActivityCompat.startActivityForResult(this, intent, PLACE_PICKER_REQUEST, bundle);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Check Google Play Services!", Toast.LENGTH_LONG).show();
+        }
+    }
 }
