@@ -3,11 +3,14 @@ package lt.vilnius.tvarkau.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.viewpagerindicator.CirclePageIndicator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,6 +25,7 @@ import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
+import lt.vilnius.tvarkau.views.adapters.CustomPagerAdapter;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -34,6 +38,7 @@ import retrofit2.Response;
 @AutoComponent(modules = APIModule.class)
 @AutoInjector
 @Singleton
+// TODO: implement swipeable photos gallery
 public class ProblemDetailFragment extends Fragment implements Callback<Problem> {
 
     /**
@@ -49,6 +54,10 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     TextView mProblemTitle;
     @Bind(R.id.problem_description)
     TextView mProblemDesc;
+    @Bind(R.id.images_view_pager)
+    ViewPager mImagesViewPager;
+    @Bind(R.id.images_view_pager_indicator)
+    CirclePageIndicator mImagesViewPagerIndicator;
 
     public static ProblemDetailFragment getInstance(int problemId) {
         ProblemDetailFragment problemDetailFragment = new ProblemDetailFragment();
@@ -84,6 +93,14 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
         View rootView = inflater.inflate(R.layout.problem_detail, container, false);
 
         ButterKnife.bind(this, rootView);
+
+        int[] mImagesIds = {
+                R.drawable.report1,
+                R.drawable.report1,
+                R.drawable.report1
+        };
+        mImagesViewPager.setAdapter(new CustomPagerAdapter(getContext(), mImagesIds));
+        mImagesViewPagerIndicator.setViewPager(mImagesViewPager);
 
         return rootView;
     }
