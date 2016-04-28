@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#fff"
@@ -13,12 +14,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <ImageView
+            <android.support.v4.view.ViewPager
+                android:id="@+id/problem_images_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/report1" />
+                android:layout_height="240dp" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -26,39 +25,15 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/gradient_photo_report_details" />
 
-            <LinearLayout
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/problem_images_view_pager_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="11dp">
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/photo_counter_circle_full" />
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/photo_counter_circle_empty" />
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/photo_counter_circle_empty" />
-
-            </LinearLayout>
+                android:layout_marginBottom="11dp"
+                app:radius="5dp" />
 
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
