@@ -10,3 +10,6 @@ jdk: oraclejdk7
 
 script:
   - ./gradlew --stacktrace clean build
+
+env:
+- GRADLE_OPTS="-Xmx1024m -XX:MaxPermSize=1024m"
