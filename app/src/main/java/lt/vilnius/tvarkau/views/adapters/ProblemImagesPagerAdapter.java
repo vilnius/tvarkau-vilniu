@@ -26,7 +26,7 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return mResources.length;
+        return (mResources.length > 0) ? mResources.length : 1;
     }
 
     @Override
@@ -38,12 +38,18 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        // TODO: consider recycling views
-        View itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
+        View itemView;
 
-        ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
+        if (mResources.length > 0) {
+            // TODO: consider recycling views
+            itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
 
-        loadImage(mResources[position], container.getContext(), problemImageView);
+            ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
+
+            loadImage(mResources[position], container.getContext(), problemImageView);
+        } else {
+            itemView = mLayoutInflater.inflate(R.layout.no_image, container, false);
+        }
 
         container.addView(itemView);
 
