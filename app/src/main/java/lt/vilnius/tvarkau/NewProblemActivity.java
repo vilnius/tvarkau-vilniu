@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,12 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -49,12 +52,18 @@ public class NewProblemActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.add_problem_location)
+    @Bind(R.id.report_problem_location)
     EditText mAddProblemLocation;
     @Bind(R.id.problem_images_view_pager)
     ViewPager mProblemImagesViewPager;
     @Bind(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator mProblemImagesViewPagerIndicator;
+    @Bind(R.id.report_problem_type)
+    Spinner mReportProblemType;
+    @Bind(R.id.report_problem_privacy_mode)
+    Spinner mReportProblemPrivacyMode;
+    @Bind(R.id.report_problem_description)
+    EditText mReportProblemDescription;
 
     @State
     File lastPhotoFile;
@@ -62,7 +71,6 @@ public class NewProblemActivity extends BaseActivity {
     LatLng locationCords;
     @State
     ArrayList<Uri> problemImagesURIs = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +86,6 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void initProblemImagesPager() {
-        // TODO: change to real images
-        Integer[] imagesIds = {
-        };
-
-        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(this, imagesIds) {
-            @Override
-            public void loadImage(Integer imageId, Context context, ImageView imageView) {
-                Picasso.with(context).load(imageId).into(imageView);
-            }
-        });
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
@@ -111,7 +109,6 @@ public class NewProblemActivity extends BaseActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.new_problem_toolbar_menu, menu);
 
-
         return true;
     }
 
@@ -125,7 +122,7 @@ public class NewProblemActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 
-    @OnClick(R.id.add_problem_take_photo)
+    @OnClick(R.id.report_problem_take_photo)
     public void onTakePhotoClicked() {
         if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
             takePhoto();
@@ -148,6 +145,31 @@ public class NewProblemActivity extends BaseActivity {
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private boolean isEditedByUser() {
+        return mReportProblemDescription.getText().length() > 0 ||
+                mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
+                mReportProblemType.getSelectedItemPosition() > 0 ||
+                locationCords != null || problemImagesURIs.size() > 0;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isEditedByUser()) {
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.discardChanges))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            NewProblemActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null).show();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -179,7 +201,8 @@ public class NewProblemActivity extends BaseActivity {
             }
         });
     }
-    @OnClick(R.id.add_problem_location)
+
+    @OnClick(R.id.report_problem_location)
     public void onProblemLocationClicked(View view) {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
