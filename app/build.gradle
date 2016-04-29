@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "lt.vilnius.tvarkau"
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -40,6 +40,8 @@ android {
 
 repositories {
     maven { url "https://clojars.org/repo/" }
+    maven { url "https://repo.commonsware.com.s3.amazonaws.com" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -66,5 +68,6 @@ dependencies {
     apt 'com.github.lukaspili.autodagger2:autodagger2-compiler:1.1'
     compile 'com.github.lukaspili.autodagger2:autodagger2:1.1'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
+    compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
 }
 

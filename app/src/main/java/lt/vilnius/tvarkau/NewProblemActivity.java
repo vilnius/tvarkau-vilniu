@@ -2,21 +2,17 @@ package lt.vilnius.tvarkau;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -25,16 +21,19 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.gun0912.tedpicker.ImagePickerActivity;
+import com.squareup.picasso.Picasso;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import icepick.State;
-import lt.vilnius.tvarkau.utils.FileUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
+import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -47,23 +46,22 @@ public class NewProblemActivity extends BaseActivity {
     public static final int PLACE_PICKER_REQUEST = 11;
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
-    @Bind(R.id.add_problem_photo_frame)
-    FrameLayout mPhotoFrame;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-
     @Bind(R.id.add_problem_location)
     EditText mAddProblemLocation;
+    @Bind(R.id.problem_images_view_pager)
+    ViewPager mProblemImagesViewPager;
+    @Bind(R.id.problem_images_view_pager_indicator)
+    CirclePageIndicator mProblemImagesViewPagerIndicator;
 
     @State
     File lastPhotoFile;
-
     @State
     LatLng locationCords;
-
     @State
-    String locationName;
+    ArrayList<Uri> problemImagesURIs = new ArrayList<>();
 
 
     @Override
@@ -75,8 +73,23 @@ public class NewProblemActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initProblemImagesPager();
     }
 
+    private void initProblemImagesPager() {
+        // TODO: change to real images
+        Integer[] imagesIds = {
+        };
+
+        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(this, imagesIds) {
+            @Override
+            public void loadImage(Integer imageId, Context context, ImageView imageView) {
+                Picasso.with(context).load(imageId).into(imageView);
+            }
+        });
+        mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -108,27 +121,11 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     public void takePhoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = FileUtils.createTempImageFile();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                lastPhotoFile = photoFile;
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
+        Intent intent = new Intent(this, ImagePickerActivity.class);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 
-        @OnClick(R.id.add_problem_take_photo)
+    @OnClick(R.id.add_problem_take_photo)
     public void onTakePhotoClicked() {
         if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
             takePhoto();
@@ -159,16 +156,10 @@ public class NewProblemActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bitmap bp = BitmapFactory.decodeFile(lastPhotoFile.getPath());
+                    problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
 
-                    LayoutInflater inflater = (LayoutInflater)
-                            getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    ImageView imageView = (ImageView) inflater.inflate(R.layout.new_problem_photo, null);
-
-                    imageView.setImageBitmap(bp);
-
-                    mPhotoFrame.removeAllViewsInLayout();
-                    mPhotoFrame.addView(imageView);
+                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
+                    setPhotos(problemImagesURIsArr);
                     break;
                 case PLACE_PICKER_REQUEST:
                     Place place = PlacePicker.getPlace(this, data);
@@ -179,6 +170,15 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
+
+    private void setPhotos(Uri[] photoUris) {
+        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
+            @Override
+            public void loadImage(Uri imageURI, Context context, ImageView imageView) {
+                Picasso.with(context).load(new File(imageURI.getPath())).into(imageView);
+            }
+        });
+    }
     @OnClick(R.id.add_problem_location)
     public void onProblemLocationClicked(View view) {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();

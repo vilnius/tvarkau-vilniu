@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,9 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import javax.inject.Inject;
@@ -100,13 +103,19 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
 
     private void initProblemImagesPager() {
         // TODO: change to real images
-        int[] imagesIds = {
+        Integer[] imagesIds = {
                 R.drawable.report1,
-                R.drawable.report1,
-                R.drawable.report1
+                R.drawable.report2,
+                R.drawable.report3,
+                R.drawable.report4
         };
 
-        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(getContext(), imagesIds));
+        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(getContext(), imagesIds) {
+            @Override
+            public void loadImage(Integer imageId, Context context, ImageView imageView) {
+                Picasso.with(context).load(imageId).into(imageView);
+            }
+        });
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
