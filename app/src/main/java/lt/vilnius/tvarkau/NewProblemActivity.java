@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
@@ -64,13 +65,16 @@ public class NewProblemActivity extends BaseActivity {
     Spinner mReportProblemPrivacyMode;
     @Bind(R.id.report_problem_description)
     EditText mReportProblemDescription;
+    @Bind(R.id.report_problem_take_photo)
+    FloatingActionButton mReportProblemTakePhoto;
 
     @State
     File lastPhotoFile;
     @State
     LatLng locationCords;
     @State
-    ArrayList<Uri> problemImagesURIs = new ArrayList<>();
+    ArrayList<Uri> problemImagesURIs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +90,14 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void initProblemImagesPager() {
-        mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
+            mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Void>(this, new Void[0]) {
+
+                @Override
+                public void loadImage(Void resource, Context context, ImageView imageView) {
+
+                }
+            });
+            mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
     @Override
@@ -119,7 +130,11 @@ public class NewProblemActivity extends BaseActivity {
 
     public void takePhoto() {
         Intent intent = new Intent(this, ImagePickerActivity.class);
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+
+        Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(mReportProblemTakePhoto, 0, 0,
+                mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
+
+        ActivityCompat.startActivityForResult(this, intent, REQUEST_IMAGE_CAPTURE, bundle);
     }
 
     @OnClick(R.id.report_problem_take_photo)
@@ -152,7 +167,7 @@ public class NewProblemActivity extends BaseActivity {
         return mReportProblemDescription.getText().length() > 0 ||
                 mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
                 mReportProblemType.getSelectedItemPosition() > 0 ||
-                locationCords != null || problemImagesURIs.size() > 0;
+                locationCords != null || problemImagesURIs != null;
     }
 
     @Override
