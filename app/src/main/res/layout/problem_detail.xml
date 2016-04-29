@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/problem_photo_gallery" />
+        <include layout="@layout/problem_photo_gallery"
+            android:elevation="3dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
