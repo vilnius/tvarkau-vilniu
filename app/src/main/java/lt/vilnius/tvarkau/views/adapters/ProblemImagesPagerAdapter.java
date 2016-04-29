@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
+import com.squareup.picasso.Picasso;
 
 import lt.vilnius.tvarkau.R;
 
@@ -39,7 +40,7 @@ public class ProblemImagesPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
 
         ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
-        problemImageView.setImageResource(mResources[position]);
+        Picasso.with(container.getContext()).load(mResources[position]).into(problemImageView);
 
         container.addView(itemView);
 
@@ -48,6 +49,6 @@ public class ProblemImagesPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout) object);
+        container.removeView((View) object);
     }
 }

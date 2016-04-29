@@ -100,13 +100,13 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
 
     private void initProblemImagesPager() {
         // TODO: change to real images
-        int[] mImagesIds = {
+        int[] imagesIds = {
                 R.drawable.report1,
                 R.drawable.report1,
                 R.drawable.report1
         };
 
-        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(getContext(), mImagesIds));
+        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(getContext(), imagesIds));
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 

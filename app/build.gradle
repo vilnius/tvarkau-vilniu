@@ -64,6 +64,6 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     apt 'com.github.lukaspili.autodagger2:autodagger2-compiler:1.1'
     compile 'com.github.lukaspili.autodagger2:autodagger2:1.1'
-    compile 'com.viewpagerindicator:library:2.4.1'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
 }
 
