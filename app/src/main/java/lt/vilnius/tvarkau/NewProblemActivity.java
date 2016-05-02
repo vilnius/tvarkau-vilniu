@@ -90,14 +90,9 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void initProblemImagesPager() {
-            mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Void>(this, new Void[0]) {
-
-                @Override
-                public void loadImage(Void resource, Context context, ImageView imageView) {
-
-                }
-            });
-            mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
+        mProblemImagesViewPager.setAdapter(ProblemImagesPagerAdapter.empty(this));
+        mProblemImagesViewPager.setOffscreenPageLimit(3);
+        mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
     @Override

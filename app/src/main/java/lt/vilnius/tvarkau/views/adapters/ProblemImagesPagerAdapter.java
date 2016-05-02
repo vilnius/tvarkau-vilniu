@@ -18,6 +18,16 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
     private LayoutInflater mLayoutInflater;
     private T[] mResources;
 
+    public static ProblemImagesPagerAdapter<Void> empty(Context context) {
+        return new ProblemImagesPagerAdapter<Void>(context, new Void[0]) {
+
+            @Override
+            public void loadImage(Void resource, Context context, ImageView imageView) {
+
+            }
+        };
+    }
+
     public ProblemImagesPagerAdapter(Context context, T[] images) {
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mResources = images;

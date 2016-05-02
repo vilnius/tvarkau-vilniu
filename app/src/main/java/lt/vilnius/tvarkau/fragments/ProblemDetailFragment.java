@@ -116,6 +116,7 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
                 Glide.with(context).load(imageId).centerCrop().into(imageView);
             }
         });
+        mProblemImagesViewPager.setOffscreenPageLimit(3);
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
