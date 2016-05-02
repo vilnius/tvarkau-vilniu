@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.gun0912.tedpicker.ImagePickerActivity;
-import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.File;
@@ -212,7 +212,7 @@ public class NewProblemActivity extends BaseActivity {
         mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
             @Override
             public void loadImage(Uri imageURI, Context context, ImageView imageView) {
-                Picasso.with(context).load(new File(imageURI.getPath())).into(imageView);
+                Glide.with(context).load(new File(imageURI.getPath())).centerCrop().into(imageView);
             }
         });
     }

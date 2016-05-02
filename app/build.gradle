@@ -53,7 +53,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.android.support:gridlayout-v7:23.3.0'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'frankiesardo:icepick:3.1.0'
@@ -69,5 +69,6 @@ dependencies {
     compile 'com.github.lukaspili.autodagger2:autodagger2:1.1'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
     compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
+
 }
 

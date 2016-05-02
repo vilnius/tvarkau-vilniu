@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import javax.inject.Inject;
@@ -113,7 +113,7 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
         mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(getContext(), imagesIds) {
             @Override
             public void loadImage(Integer imageId, Context context, ImageView imageView) {
-                Picasso.with(context).load(imageId).into(imageView);
+                Glide.with(context).load(imageId).centerCrop().into(imageView);
             }
         });
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
