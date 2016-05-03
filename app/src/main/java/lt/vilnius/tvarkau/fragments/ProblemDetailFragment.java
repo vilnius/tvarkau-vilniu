@@ -3,11 +3,14 @@ package lt.vilnius.tvarkau.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.viewpagerindicator.CirclePageIndicator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,6 +25,7 @@ import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
+import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -49,6 +53,10 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     TextView mProblemTitle;
     @Bind(R.id.problem_description)
     TextView mProblemDesc;
+    @Bind(R.id.problem_images_view_pager)
+    ViewPager mProblemImagesViewPager;
+    @Bind(R.id.problem_images_view_pager_indicator)
+    CirclePageIndicator mProblemImagesViewPagerIndicator;
 
     public static ProblemDetailFragment getInstance(int problemId) {
         ProblemDetailFragment problemDetailFragment = new ProblemDetailFragment();
@@ -85,7 +93,21 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
 
         ButterKnife.bind(this, rootView);
 
+        initProblemImagesPager();
+
         return rootView;
+    }
+
+    private void initProblemImagesPager() {
+        // TODO: change to real images
+        int[] imagesIds = {
+                R.drawable.report1,
+                R.drawable.report1,
+                R.drawable.report1
+        };
+
+        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(getContext(), imagesIds));
+        mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
     @Override
