@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -67,7 +67,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         if (thumbUrl == null) {
             thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
         } else {
-            Picasso.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
+            Glide.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         }
 
         return view;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -57,7 +57,7 @@ public class MyProfileFragment extends Fragment {
         profile = Profile.returnProfile(getActivity());
         mProfileName.setText(profile.getName());
         mProfileEmail.setText(profile.getEmail());
-        Picasso.with(getActivity()).load(profile.getPictureUrl()).into(mProfilePicture);
+        Glide.with(getActivity()).load(profile.getPictureUrl()).into(mProfilePicture);
 
 
     }
