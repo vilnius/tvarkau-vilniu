@@ -1,156 +1,145 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:background="#fff"
-    android:orientation="vertical"
-    android:theme="@style/AppTheme">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <include layout="@layout/app_bar" />
 
-
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/app_bar" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <FrameLayout
-                android:id="@+id/add_problem_photo_frame"
-                android:layout_width="match_parent"
-                android:layout_height="205dp">
-
-                <include layout="@layout/no_image" />
-
-            </FrameLayout>
-
-            <ImageView
-                android:id="@+id/add_problem_take_photo"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="177dp"
-                android:background="@drawable/btn_add_photo_new_problem"
-                android:scaleType="center"
-                android:src="@drawable/ic_photo_camera_white" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="24dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="16dp"
-            android:paddingTop="28dp">
+            android:orientation="vertical">
+
+            <include android:id="@+id/photo_gallery_layout"
+                layout="@layout/problem_photo_gallery" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingBottom="24dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="16dp"
+                android:paddingTop="28dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_type" />
-
-                <Spinner
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="24dp"
-                    android:entries="@array/problem_types"
-                    android:prompt="@string/choose_problem_type" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_person" />
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal">
 
-                <Spinner
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_type" />
+
+                    <Spinner
+                        android:id="@+id/report_problem_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:entries="@array/problem_types"
+                        android:prompt="@string/choose_problem_type" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="24dp"
-                    android:entries="@array/report_privacy_mode" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_add_problem" />
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal">
 
-                <EditText
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_person" />
+
+                    <Spinner
+                        android:id="@+id/report_problem_privacy_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:entries="@array/report_privacy_mode" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="24dp"
-                    android:background="@null"
-                    android:hint="Vieta"
-                    android:textColor="#000"
-                    android:textColorHint="#959292"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:hint="Location"
-                    android:src="@drawable/ic_description" />
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal">
 
-                <EditText
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_location_add_problem" />
+
+                    <EditText
+                        android:id="@+id/report_problem_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="24dp"
+                        android:background="@null"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="Vieta"
+                        android:textColor="#000"
+                        android:textColorHint="#959292"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="24dp"
-                    android:background="@null"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="sans-serif-light"
-                    android:hint="Aprašymas"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:maxLength="140"
-                    android:textSize="18sp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Location"
+                        android:src="@drawable/ic_description" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:gravity="right"
-                android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/report_problem_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:background="@null"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="Aprašymas"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="140"
+                        android:textSize="18sp"
+                        android:singleLine="false"
+                        android:overScrollMode="always"
+                        android:scrollbarStyle="insideInset"
+                        android:minLines="1"
+                        android:gravity="top|start" />
 
-
-
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/report_problem_take_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_photo_camera_white"
+        app:layout_anchor="@id/photo_gallery_layout"
+        app:layout_anchorGravity="bottom|right|end" />
+
+</android.support.design.widget.CoordinatorLayout>

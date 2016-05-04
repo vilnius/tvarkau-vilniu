@@ -35,6 +35,7 @@
     <string name="home_map_of_problems">Žemėlapis</string>
     <string name="home_my_profile">Mano profilis</string>
     <string name="home_about">Apie</string>
+    <string name="discardChanges">Discard your changes</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>

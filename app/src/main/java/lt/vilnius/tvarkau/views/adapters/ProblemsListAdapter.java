@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
-import lt.vilnius.tvarkau.fragments.ProblemDetailFragment;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 
@@ -58,7 +58,7 @@ public class ProblemsListAdapter
         if (thumbUrl == null) {
             holder.thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
         } else {
-            Picasso.with(context).load(thumbUrl).into(holder.thumbView);
+            Glide.with(context).load(thumbUrl).into(holder.thumbView);
         }
 
         holder.content.setOnClickListener(new View.OnClickListener() {
