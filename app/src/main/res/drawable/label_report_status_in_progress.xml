@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="#39b54a"></solid>
-    <corners android:radius="3dp"/>
+    <solid android:color="@color/problem_status_in_progress" />
+    <corners android:radius="@dimen/problem_status_label_radius" />
 </shape>
-

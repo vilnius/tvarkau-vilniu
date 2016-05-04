@@ -49,8 +49,7 @@ public class ProblemsListAdapter
         holder.item = item;
         holder.titleView.setText(item.title);
         holder.descriptionView.setText(item.description);
-        holder.statusView.setText(item.statusDescription);
-        holder.statusView.setBackgroundColor(context.getResources().getColor(item.getColor()));
+        item.applyReportStatusLabel(holder.statusView);
         holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.updatedAt.getTime()));
 
         String thumbUrl = item.getThumbUrl();

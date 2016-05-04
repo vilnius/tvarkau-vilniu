@@ -50,19 +50,10 @@
 
                 <TextView
                     android:id="@+id/problem_list_content_status"
+                    style="@style/ReportStatusLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:background="@drawable/label_report_status_1"
-                    android:fontFamily="sans-serif-regular"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="2dp"
-                    android:textColor="#FFF"
-                    android:textSize="10sp"
-                    android:textAllCaps="true"
-                    tools:text="In progress" />
+                    android:layout_marginBottom="2dp" />
 
                 <TextView
                     android:id="@+id/problem_list_content_time"

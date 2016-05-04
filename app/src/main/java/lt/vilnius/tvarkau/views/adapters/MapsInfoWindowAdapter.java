@@ -2,7 +2,6 @@ package lt.vilnius.tvarkau.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,9 +57,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         titleView.setText(problem.getTitle());
         descriptionView.setText(problem.getDescription());
         timeView.setText(problem.getRelativeUpdatedAt());
-
-        statusView.setBackgroundColor(ContextCompat.getColor(context, problem.getColor()));
-        statusView.setText(problem.getStatusDescription());
+        problem.applyReportStatusLabel(statusView);
 
         String thumbUrl = problem.getThumbUrl();
 

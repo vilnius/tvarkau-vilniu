@@ -45,10 +45,8 @@ public class DummyProblems {
 
             if (Math.random() < 0.5) {
                 problem.statusCode = Problem.STATUS_IN_PROGRESS;
-                problem.statusDescription = "Vykdoma";
             } else {
                 problem.statusCode = Problem.STATUS_DONE;
-                problem.statusDescription = "Atlikta";
             }
             problem.updatedAt = new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5));
 
