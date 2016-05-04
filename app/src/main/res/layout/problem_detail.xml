@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/problem_photo_gallery"
+        <include
+            layout="@layout/problem_photo_gallery"
             android:elevation="3dp" />
 
         <RelativeLayout
@@ -33,20 +34,11 @@
 
             <TextView
                 android:id="@+id/status"
+                style="@style/ReportStatusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/label_report_status_2"
-                android:fontFamily="sans-serif-regular"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="2dp"
-                android:text="Atlikta"
-                android:textAllCaps="true"
-                android:textColor="#FFF"
-                android:textSize="10sp" />
+                android:layout_marginTop="7dp" />
 
         </RelativeLayout>
 

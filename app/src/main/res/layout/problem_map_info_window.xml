@@ -45,19 +45,10 @@
 
             <TextView
                 android:id="@+id/problem_map_info_window_content_status"
+                style="@style/ReportStatusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/label_report_status_1"
-                android:fontFamily="sans-serif-regular"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="2dp"
-                android:textAllCaps="true"
-                android:textColor="#FFF"
-                android:textSize="10sp"
-                tools:text="In progress" />
+                android:layout_marginBottom="2dp" />
 
             <TextView
                 android:id="@+id/problem_map_info_window_content_time"

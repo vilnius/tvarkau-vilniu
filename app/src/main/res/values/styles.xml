@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -27,6 +27,20 @@
         <item name="android:drawablePadding">8dp</item>
         <item name="android:textColor">@color/home_button_text_color</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+
+    <style name="ReportStatusLabel">
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-regular</item>
+        <item name="android:textColor">@color/problem_status_text_color</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:background">@drawable/label_report_status_in_progress</item>
+        <item name="android:text">@string/report_status_in_progress</item>
     </style>
 
 </resources>

@@ -1,9 +1,10 @@
 package lt.vilnius.tvarkau.entity;
 
-import android.support.annotation.ColorRes;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.format.DateUtils;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -26,30 +27,27 @@ public class Problem {
     public String address;
     @StatusCode
     public int statusCode;
-    public String statusDescription;
     public Date updatedAt;
 
     public double lat, lng;
 
     public String thumbUrl;
 
-    @ColorRes
-    public int getColor() {
+    public void applyReportStatusLabel(@NonNull TextView reportLabelTextView) {
         switch (statusCode) {
             case STATUS_IN_PROGRESS:
-                return R.color.problem_status_in_progress;
+                reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_in_progress);
+                reportLabelTextView.setText(R.string.report_status_in_progress);
+                break;
             case STATUS_DONE:
             default:
-                return R.color.problem_status_in_done;
+                reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_done);
+                reportLabelTextView.setText(R.string.report_status_done);
         }
     }
 
     public String getAddress() {
         return address;
-    }
-
-    public String getStatusDescription() {
-        return statusDescription;
     }
 
     @Nullable
