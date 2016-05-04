@@ -54,6 +54,7 @@
                 android:src="@drawable/ic_location_problem" />
 
             <TextView
+                android:id="@+id/problem_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
