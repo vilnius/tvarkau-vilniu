@@ -3,15 +3,12 @@ package lt.vilnius.tvarkau;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,7 +24,7 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
  * item details side-by-side using two vertical panes.
  */
 public class ProblemsListActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
+        implements MenuItem.OnMenuItemClickListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -38,7 +35,8 @@ public class ProblemsListActivity extends AppCompatActivity
     @Bind(R.id.problems_list_view_pager)
     ViewPager viewPager;
 
-    SearchView searchView;
+
+//    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +76,8 @@ public class ProblemsListActivity extends AppCompatActivity
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
 
-        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        searchView.setOnQueryTextListener(this);
+//        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+//        searchView.setOnQueryTextListener(this);
 
         menu.findItem(R.id.action_map).setOnMenuItemClickListener(this);
         return true;
@@ -91,16 +89,16 @@ public class ProblemsListActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, "Searched for: " + query, Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        Toast.makeText(this, "Searched for: " + query, Toast.LENGTH_SHORT).show();
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        return false;
+//    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
