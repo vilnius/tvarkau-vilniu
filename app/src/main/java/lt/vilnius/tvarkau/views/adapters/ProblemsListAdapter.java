@@ -57,6 +57,7 @@ public class ProblemsListAdapter
         if (thumbUrl == null) {
             holder.thumbView.setVisibility(View.GONE);
         } else {
+            holder.thumbView.setVisibility(View.VISIBLE);
             Glide.with(context).load(thumbUrl).into(holder.thumbView);
         }
 

@@ -3,6 +3,8 @@ package lt.vilnius.tvarkau;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -83,9 +85,13 @@ public class ProblemsListActivity extends AppCompatActivity
         return true;
     }
 
-    @OnClick(R.id.fab)
+    @OnClick(R.id.fab_report_problem)
     public void onNewProblemClicked(View view) {
-        startActivityForResult(new Intent(this, NewProblemActivity.class), 0);
+        Intent intent = new Intent(this, NewProblemActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
+                view.getWidth(), view.getHeight()).toBundle();
+
+        ActivityCompat.startActivity(this, intent, bundle);
     }
 
 
@@ -104,6 +110,7 @@ public class ProblemsListActivity extends AppCompatActivity
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_map:
+
                 startActivity(new Intent(this, ProblemsMapActivity.class));
                 return true;
         }
