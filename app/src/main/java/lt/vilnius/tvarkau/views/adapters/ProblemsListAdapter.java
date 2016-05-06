@@ -55,7 +55,7 @@ public class ProblemsListAdapter
         String thumbUrl = item.getThumbUrl();
 
         if (thumbUrl == null) {
-            holder.thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
+            holder.thumbView.setVisibility(View.GONE);
         } else {
             Glide.with(context).load(thumbUrl).into(holder.thumbView);
         }
