@@ -51,6 +51,8 @@
                 <TextView
                     android:id="@+id/problem_list_content_status"
                     style="@style/ReportStatusLabel"
+                    android:gravity="center"
+                    android:minEms="6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp" />
