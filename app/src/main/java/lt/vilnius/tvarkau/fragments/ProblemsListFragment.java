@@ -39,7 +39,7 @@ public class ProblemsListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        recyclerView.setAdapter(new ProblemsListAdapter(getContext(), DummyProblems.getProblems()));
+        recyclerView.setAdapter(new ProblemsListAdapter(getActivity(), DummyProblems.getProblems()));
 
     }
 }
