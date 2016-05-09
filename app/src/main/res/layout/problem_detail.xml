@@ -9,56 +9,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/report1" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/gradient_photo_report_details" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="11dp">
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/photo_counter_circle_full" />
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/photo_counter_circle_empty" />
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/photo_counter_circle_empty" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
+        <include layout="@layout/problem_photo_gallery"
+            android:elevation="3dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -98,7 +50,6 @@
 
         </RelativeLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -111,6 +62,7 @@
                 android:src="@drawable/ic_location_problem" />
 
             <TextView
+                android:id="@+id/problem_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"

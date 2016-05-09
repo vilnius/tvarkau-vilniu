@@ -9,6 +9,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.GlobalConsts;
 
 
 /**
@@ -39,6 +40,13 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    protected void startNewActivity(Class<?> cls, Bundle data) {
+        Intent intent = new Intent(this, cls);
+        intent.putExtras(data);
+
+        startActivity(intent);
+    }
+
     @OnClick(R.id.home_report_problem)
     protected void onNewIssueClicked() {
         startNewActivity(NewProblemActivity.class);
@@ -56,7 +64,9 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_map_of_problems)
     protected void onProblemsMapClicked() {
-        startNewActivity(ProblemsMapActivity.class);
+        Bundle data = new Bundle();
+        data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT);
+        startNewActivity(ProblemsMapActivity.class, data);
     }
 
     @OnClick(R.id.home_my_profile)
