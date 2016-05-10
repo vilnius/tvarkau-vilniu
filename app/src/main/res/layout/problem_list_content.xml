@@ -51,6 +51,8 @@
                 <TextView
                     android:id="@+id/problem_list_content_status"
                     style="@style/ReportStatusLabel"
+                    android:gravity="center"
+                    android:minEms="6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp" />
@@ -62,7 +64,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingLeft="16dp"
                     android:textColor="#8A000000"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     tools:text="just now" />
 
             </LinearLayout>

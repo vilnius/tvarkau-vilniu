@@ -1,7 +1,14 @@
 package lt.vilnius.tvarkau.views.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -27,11 +34,11 @@ import lt.vilnius.tvarkau.entity.Problem;
 public class ProblemsListAdapter
         extends RecyclerView.Adapter<ProblemsListAdapter.ViewHolder> {
 
-    private Context context;
+    private Activity activity;
     private final List<Problem> mValues;
 
-    public ProblemsListAdapter(Context context, List<Problem> items) {
-        this.context = context;
+    public ProblemsListAdapter(Activity activity, List<Problem> items) {
+        this.activity = activity;
         mValues = items;
     }
 
@@ -55,18 +62,38 @@ public class ProblemsListAdapter
         String thumbUrl = item.getThumbUrl();
 
         if (thumbUrl == null) {
-            holder.thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
+            holder.thumbView.setVisibility(View.GONE);
         } else {
-            Glide.with(context).load(thumbUrl).into(holder.thumbView);
+            holder.thumbView.setVisibility(View.VISIBLE);
+            Glide.with(activity).load(thumbUrl).into(holder.thumbView);
         }
 
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = ProblemDetailActivity.getStartActivityIntent(context, holder.item.id);
+            public void onClick(View view) {
+                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, holder.item.id);
+                Drawable drawable = holder.thumbView.getDrawable();
 
-                context.startActivity(intent);
+                Bundle bundle;
+                if(holder.thumbView.getVisibility() == View.VISIBLE) {
+                    Bitmap bitmap;
+
+                    if (drawable instanceof BitmapDrawable) {
+                        bitmap = ((BitmapDrawable) drawable).getBitmap();
+                    } else {
+                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                        Canvas canvas = new Canvas(bitmap);
+                        drawable.draw(canvas);
+                    }
+
+                    bundle = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(holder.thumbView, bitmap, 0, 0).toBundle();
+                } else {
+                    bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
+                            view.getWidth(), view.getHeight()).toBundle();
+                }
+
+
+                ActivityCompat.startActivity(activity, intent, bundle);
             }
         });
     }
