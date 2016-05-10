@@ -1,8 +1,10 @@
 package lt.vilnius.tvarkau.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -22,12 +24,16 @@ import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.ProblemsListActivity;
+import lt.vilnius.tvarkau.ProblemsMapActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
+import lt.vilnius.tvarkau.utils.GlobalConsts;
+import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -130,5 +136,17 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     @Override
     public void onFailure(Throwable t) {
         Toast.makeText(getActivity(), "Can't load issue: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.problem_address)
+    public void onProblemAddressClick() {
+        Intent intent = new Intent(getActivity(), ProblemsMapActivity.class);
+
+        Bundle data = new Bundle();
+        data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT);
+
+        intent.putExtras(data);
+
+        startActivity(intent);
     }
 }
