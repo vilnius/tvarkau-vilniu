@@ -15,6 +15,7 @@ import android.view.View;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
 
 /**
@@ -110,8 +111,11 @@ public class ProblemsListActivity extends AppCompatActivity
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_map:
+                Intent intent = new Intent(this, ProblemsMapActivity.class);
 
-                startActivity(new Intent(this, ProblemsMapActivity.class));
+                intent.putExtra(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT);
+                startActivity(intent);
+
                 return true;
         }
         return false;
