@@ -129,6 +129,10 @@ public class NewProblemActivity extends BaseActivity {
         Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(mReportProblemTakePhoto, 0, 0,
                 mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
 
+        if (problemImagesURIs != null) {
+            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, problemImagesURIs);
+        }
+
         ActivityCompat.startActivityForResult(this, intent, REQUEST_IMAGE_CAPTURE, bundle);
     }
 
