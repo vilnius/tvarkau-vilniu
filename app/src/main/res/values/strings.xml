@@ -38,6 +38,8 @@
     <string name="report_status_in_progress">Vykdoma</string>
     <string name="report_status_done">Atlikta</string>
 
+    <string name="choose_photos_title">Pasirinkite nuotraukas</string>
+
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>
         <item>Energetika ir inžineriniai tinklai</item>
