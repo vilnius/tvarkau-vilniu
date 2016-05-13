@@ -26,6 +26,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -124,10 +125,19 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     public void takePhoto() {
+        Config config = new Config();
+        config.setToolbarTitleRes(R.string.choose_photos_title);
+
+        ImagePickerActivity.setConfig(config);
+
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
         Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(mReportProblemTakePhoto, 0, 0,
                 mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
+
+        if (problemImagesURIs != null) {
+            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, problemImagesURIs);
+        }
 
         ActivityCompat.startActivityForResult(this, intent, REQUEST_IMAGE_CAPTURE, bundle);
     }
