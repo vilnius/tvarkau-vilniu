@@ -81,9 +81,11 @@ public class ProblemsListActivity extends AppCompatActivity
     }
 
     public void setTabs() {
-        viewPager.setAdapter(new ProblemsListViewPagerAdapter(this, getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(initialPosition);
+        if(viewPager.getAdapter() == null) {
+            viewPager.setAdapter(new ProblemsListViewPagerAdapter(this, getSupportFragmentManager()));
+            tabLayout.setupWithViewPager(viewPager);
+            viewPager.setCurrentItem(initialPosition);
+        }
     }
 
 
