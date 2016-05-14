@@ -19,7 +19,7 @@
 
     <string name="profile_hint_email">El.paštas</string>
     <string name="profile_hint_name">Vardas</string>
-    <string name="profile_telephone">Telefonas</string>
+    <string name="profile_hint_telephone">Telefonas</string>
     <string name="message_notsigned">Norint pasiekti profilio informacija prašome prisijungti</string>
     <string name="title_notsigned">Vartotojas neprisijungęs</string>
     <string name="problem_send">Pranešti apie problemą</string>

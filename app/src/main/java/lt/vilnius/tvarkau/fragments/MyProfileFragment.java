@@ -7,14 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
-import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
 public class MyProfileFragment extends Fragment {
@@ -23,17 +20,17 @@ public class MyProfileFragment extends Fragment {
         return new MyProfileFragment();
     }
 
+    private SharedPrefsManager prefsManager;
+
     @Bind(R.id.profile_name)
     EditText mProfileName;
 
-    @Bind(R.id.profile_email)
-    EditText mProfileEmail;
+//    @Bind(R.id.profile_email)
+//    EditText mProfileEmail;
+//
+//    @Bind(R.id.profile_telephone)
+//    EditText mProfileTelephone;
 
-    @Bind(R.id.profile_telephone)
-    EditText mProfileTelephone;
-
-    @Bind(R.id.profile_picture)
-    ImageView mProfilePicture;
 
     @Nullable
     @Override
@@ -48,17 +45,20 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        prefsManager = SharedPrefsManager.getInstance(getContext());
+
         setUpUserProfile();
     }
 
     private void setUpUserProfile() {
-        Profile profile;
 
-        profile = Profile.returnProfile(getActivity());
-        mProfileName.setText(profile.getName());
-        mProfileEmail.setText(profile.getEmail());
-        Glide.with(getActivity()).load(profile.getPictureUrl()).into(mProfilePicture);
-
-
+        if(!prefsManager.getIsUserAnonymous()) {
+//            Profile profile;
+//
+//            profile = Profile.returnProfile(getContext());
+//            mProfileName.setText(profile.getName());
+//            mProfileEmail.setText(profile.getEmail());
+        }
     }
 }
