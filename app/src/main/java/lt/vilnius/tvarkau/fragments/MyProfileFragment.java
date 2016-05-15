@@ -130,9 +130,8 @@ public class MyProfileFragment extends Fragment {
 
     private void setUpUserProfile() {
         if (!prefsManager.isUserAnonymous()) {
-            Profile profile;
+            Profile profile = Profile.returnProfile(getContext());
 
-            profile = Profile.returnProfile(getContext());
             mProfileName.setText(profile.getName());
             mProfileEmail.setText(profile.getEmail());
             mProfileTelephone.setText(profile.getMobilePhone());
