@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/profile_submit"
-        android:icon="@drawable/ic_send"
+        android:icon="@drawable/ic_check"
         android:title="@string/profile_submit"
         app:showAsAction="always" />
 </menu>
