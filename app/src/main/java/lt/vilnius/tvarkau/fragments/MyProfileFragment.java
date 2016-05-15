@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +19,14 @@ import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 import static android.app.Activity.RESULT_OK;
+import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
 
@@ -85,12 +88,16 @@ public class MyProfileFragment extends Fragment {
                 getActivity().onBackPressed();
                 return true;
             case R.id.profile_submit:
-                if (verifyAllFields()) {
-                    saveUserProfile();
-                }
+                verifyAndSaveProfile();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void verifyAndSaveProfile() {
+        if (verifyAllFields()) {
+            saveUserProfile();
         }
     }
 
@@ -150,6 +157,17 @@ public class MyProfileFragment extends Fragment {
         } else {
             mProfileEmail.setError(null);
         }
+    }
+
+    @OnEditorAction(R.id.profile_telephone)
+    public boolean onTelephoneEditorAction(int actionId, KeyEvent event) {
+        if (actionId == IME_ACTION_DONE) {
+            verifyAndSaveProfile();
+
+            return true;
+        }
+
+        return false;
     }
 
     public void verifyProfileTelephone() {
