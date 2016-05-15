@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/profile_submit"
+        android:icon="@drawable/ic_send"
+        android:title="@string/profile_submit"
+        app:showAsAction="always" />
+</menu>

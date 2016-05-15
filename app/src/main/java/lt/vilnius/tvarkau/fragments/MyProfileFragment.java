@@ -3,12 +3,16 @@ package lt.vilnius.tvarkau.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.PhoneNumberUtils;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Patterns;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.regex.Pattern;
 
@@ -19,8 +23,8 @@ import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
+import static android.app.Activity.RESULT_OK;
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
-import static butterknife.OnTextChanged.Callback.BEFORE_TEXT_CHANGED;
 
 
 public class MyProfileFragment extends Fragment {
@@ -52,12 +56,64 @@ public class MyProfileFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+        prefsManager = SharedPrefsManager.getInstance(getContext());
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        prefsManager = SharedPrefsManager.getInstance(getContext());
-
         setUpUserProfile();
+        mProfileTelephone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.my_profile_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.profile_submit:
+                if (verifyAllFields()) {
+                    saveUserProfile();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void saveUserProfile() {
+        String name = mProfileName.getText().toString();
+        String email = mProfileEmail.getText().toString();
+        String phone = mProfileTelephone.getText().toString();
+
+        Profile profile = new Profile(name, email, phone);
+
+        prefsManager.saveUserDetails(profile);
+
+        getActivity().setResult(RESULT_OK);
+
+        Toast.makeText(getContext(), "User profile saved. " +
+                "Implement sending logic.", Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean verifyAllFields() {
+        verifyProfileName();
+        verifyProfileEmail();
+        verifyProfileTelephone();
+
+        return mProfileName.getError() == null &&
+                mProfileEmail.getError() == null &&
+                mProfileTelephone.getError() == null;
     }
 
     private void setUpUserProfile() {
@@ -93,7 +149,6 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
-    @OnTextChanged(value = R.id.profile_telephone, callback = AFTER_TEXT_CHANGED)
     public void verifyProfileTelephone() {
         Pattern pattern = Patterns.PHONE;
 
@@ -106,12 +161,4 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
-    @OnTextChanged(value = R.id.profile_telephone, callback = BEFORE_TEXT_CHANGED)
-    public void formatTelephoneNumber() {
-        //noinspection deprecation
-        String formattedPhone = PhoneNumberUtils.formatNumber(mProfileTelephone.getText().toString());
-
-        if(!formattedPhone.equals(mProfileTelephone.getText().toString()))
-            mProfileTelephone.setText(formattedPhone);
-    }
 }

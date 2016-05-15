@@ -31,6 +31,12 @@ public class Profile {
 
     }
 
+    public Profile(String name, String email, String mobilePhone) {
+        this.name = name;
+        this.email = email;
+        this.mobilePhone = mobilePhone;
+    }
+
     public String getName() {
         return name;
     }

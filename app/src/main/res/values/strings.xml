@@ -43,6 +43,7 @@
     <string name="error_empty_field">Tuščias laukelis</string>
     <string name="error_email_incorrect">Blogas el. pašto adresas</string>
     <string name="error_phone_number_incorrect">Blogas telefono numeris</string>
+    <string name="profile_submit">Išsaugoti</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>
