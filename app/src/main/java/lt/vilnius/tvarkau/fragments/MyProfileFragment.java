@@ -81,6 +81,9 @@ public class MyProfileFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
             case R.id.profile_submit:
                 if (verifyAllFields()) {
                     saveUserProfile();
@@ -159,6 +162,30 @@ public class MyProfileFragment extends Fragment {
         } else {
             mProfileTelephone.setError(null);
         }
+    }
+
+    public boolean isEditedByUser() {
+        if (mProfileName == null || mProfileEmail == null || mProfileTelephone == null) {
+            return true;
+        }
+
+        String name = mProfileName.getText().toString();
+        String email = mProfileEmail.getText().toString();
+        String telephone = mProfileTelephone.getText().toString();
+
+        if (name.length() == 0 && email.length() == 0 && telephone.length() == 0) {
+            return true;
+        }
+
+        if (!prefsManager.getIsUserAnonymous()) {
+            Profile oldProfile = prefsManager.getUserProfile();
+
+            Profile newProfile = new Profile(name, email, telephone);
+
+            return newProfile.equals(oldProfile);
+        }
+
+        return false;
     }
 
 }

@@ -179,15 +179,15 @@ public class NewProblemActivity extends BaseActivity {
     public void onBackPressed() {
         if (isEditedByUser()) {
             new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.discardChanges))
+                    .setMessage(getString(R.string.discard_changes_title))
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.discard_changes_positive, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
                             NewProblemActivity.super.onBackPressed();
                         }
                     })
-                    .setNegativeButton(android.R.string.no, null).show();
+                    .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();
         }

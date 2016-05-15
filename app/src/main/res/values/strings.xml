@@ -33,7 +33,9 @@
     <string name="home_map_of_problems">Žemėlapis</string>
     <string name="home_my_profile">Mano profilis</string>
     <string name="home_about">Apie</string>
-    <string name="discardChanges">Discard your changes</string>
+    <string name="discard_changes_title">Discard your changes</string>
+    <string name="discard_changes_positive">Discard</string>
+    <string name="discard_changes_negative">No</string>
 
     <string name="report_status_in_progress">Vykdoma</string>
     <string name="report_status_done">Atlikta</string>
