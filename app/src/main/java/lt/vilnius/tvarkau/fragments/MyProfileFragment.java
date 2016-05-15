@@ -48,6 +48,8 @@ public class MyProfileFragment extends Fragment {
     EditText mProfileTelephone;
 
 
+    public MyProfileFragment() {}
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -127,7 +129,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void setUpUserProfile() {
-        if (!prefsManager.getIsUserAnonymous()) {
+        if (!prefsManager.isUserAnonymous()) {
             Profile profile;
 
             profile = Profile.returnProfile(getContext());
@@ -195,7 +197,7 @@ public class MyProfileFragment extends Fragment {
             return true;
         }
 
-        if (!prefsManager.getIsUserAnonymous()) {
+        if (!prefsManager.isUserAnonymous()) {
             Profile oldProfile = prefsManager.getUserProfile();
 
             Profile newProfile = new Profile(name, email, telephone);
