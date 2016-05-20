@@ -11,6 +11,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 
+import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
+import static lt.vilnius.tvarkau.ProblemsListActivity.ALL_PROBLEMS;
+
 
 /**
  * An activity representing a main activity home screen
@@ -54,12 +57,16 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_list_of_problems)
     protected void onProblemsListClicked() {
-        startNewActivity(ProblemsListActivity.class);
+        Intent intent = ProblemsListActivity.getStartActivityIntent(this, ALL_PROBLEMS);
+
+        startActivity(intent);
     }
 
     @OnClick(R.id.home_my_problems)
     protected void onMyProblemsClicked() {
-        Toast.makeText(this, "This should be properly implemented", Toast.LENGTH_SHORT).show();
+        Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
+
+        startActivity(intent);
     }
 
     @OnClick(R.id.home_map_of_problems)

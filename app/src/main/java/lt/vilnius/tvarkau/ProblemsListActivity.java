@@ -1,7 +1,9 @@
 package lt.vilnius.tvarkau;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,6 +17,7 @@ import android.view.View;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
 
 /**
@@ -28,6 +31,15 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
 public class ProblemsListActivity extends AppCompatActivity
         implements MenuItem.OnMenuItemClickListener {
 
+    public static final int ALL_PROBLEMS = 0;
+    public static final int MY_PROBLEMS = 1;
+
+    @IntDef({ALL_PROBLEMS, MY_PROBLEMS})
+    public @interface ProblemsTabsInitialPosition {
+    }
+
+    protected static final String EXTRA_INITIAL_POSITION = "list.initial_position";
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
@@ -37,8 +49,18 @@ public class ProblemsListActivity extends AppCompatActivity
     @Bind(R.id.problems_list_view_pager)
     ViewPager viewPager;
 
+    private int initialPosition;
+
 
 //    SearchView searchView;
+
+    public static Intent getStartActivityIntent(Context context, @ProblemsTabsInitialPosition int initialPosition) {
+        Intent intent = new Intent(context, ProblemsListActivity.class);
+
+        intent.putExtra(EXTRA_INITIAL_POSITION, initialPosition);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +71,21 @@ public class ProblemsListActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+        if(getIntent().getExtras() != null) {
+            initialPosition = getIntent().getExtras().getInt(EXTRA_INITIAL_POSITION, ALL_PROBLEMS);
+        }
+
         setTabs();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void setTabs() {
-        viewPager.setAdapter(new ProblemsListViewPagerAdapter(this, getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
+        if(viewPager.getAdapter() == null) {
+            viewPager.setAdapter(new ProblemsListViewPagerAdapter(this, getSupportFragmentManager()));
+            tabLayout.setupWithViewPager(viewPager);
+            viewPager.setCurrentItem(initialPosition);
+        }
     }
 
 
@@ -110,8 +139,11 @@ public class ProblemsListActivity extends AppCompatActivity
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_map:
+                Intent intent = new Intent(this, ProblemsMapActivity.class);
 
-                startActivity(new Intent(this, ProblemsMapActivity.class));
+                intent.putExtra(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT);
+                startActivity(intent);
+
                 return true;
         }
         return false;
