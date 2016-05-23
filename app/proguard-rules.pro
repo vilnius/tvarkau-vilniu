@@ -34,3 +34,5 @@
 -keepclasseswithmembernames class * {
     @icepick.* <fields>;
 }
+
+-dontwarn java.lang.invoke.*
