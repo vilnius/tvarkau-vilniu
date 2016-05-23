@@ -9,6 +9,8 @@ public class Authentication {
 
     protected static Token token;
 
+    private Authentication() {}
+
     public static Token getToken() {
         return token;
     }

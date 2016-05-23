@@ -20,18 +20,18 @@ public class Problem {
     public static final int STATUS_IN_PROGRESS = 0;
     public static final int STATUS_DONE = 1;
 
-    public int id;
-    public String title;
-    public String description;
+    private int id;
+    private String title;
+    private String description;
 
-    public String address;
+    private String address;
     @StatusCode
-    public int statusCode;
-    public Date updatedAt;
+    private int statusCode;
+    private Date updatedAt;
 
-    public double lat, lng;
+    private double lat, lng;
 
-    public String thumbUrl;
+    private String thumbUrl;
 
     public void applyReportStatusLabel(@NonNull TextView reportLabelTextView) {
         switch (statusCode) {
@@ -73,6 +73,46 @@ public class Problem {
 
     public LatLng getLatLng() {
         return new LatLng(lat, lng);
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
     public String getRelativeUpdatedAt() {

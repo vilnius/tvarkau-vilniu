@@ -49,10 +49,10 @@ public class ProblemsListAdapter
         Problem item = mValues.get(position);
 
         holder.item = item;
-        holder.titleView.setText(item.title);
-        holder.descriptionView.setText(item.description);
+        holder.titleView.setText(item.getTitle());
+        holder.descriptionView.setText(item.getDescription());
         item.applyReportStatusLabel(holder.statusView);
-        holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.updatedAt.getTime()));
+        holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.getUpdatedAt().getTime()));
 
         String thumbUrl = item.getThumbUrl();
 
@@ -66,7 +66,7 @@ public class ProblemsListAdapter
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, holder.item.id);
+                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, holder.item.getId());
 
                 Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
                             view.getWidth(), view.getHeight()).toBundle();

@@ -19,11 +19,11 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter;
  */
 public class ProblemsListFragment extends Fragment {
 
+    @Bind(R.id.problem_list) RecyclerView recyclerView;
+
     public static ProblemsListFragment getInstance() {
         return new ProblemsListFragment();
     }
-
-    @Bind(R.id.problem_list) RecyclerView recyclerView;
 
 
     @Nullable
