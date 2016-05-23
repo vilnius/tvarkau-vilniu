@@ -103,10 +103,8 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == GPS_PERMISSION_REQUEST_CODE) {
-            if (PermissionUtils.isAllPermissionsGranted(getActivity(), MAP_PERMISSIONS)) {
-                googleMap.setMyLocationEnabled(true);
-            }
+        if (requestCode == GPS_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(getActivity(), MAP_PERMISSIONS)) {
+            googleMap.setMyLocationEnabled(true);
         }
     }
 

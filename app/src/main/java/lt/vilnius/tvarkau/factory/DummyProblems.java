@@ -26,6 +26,8 @@ public class DummyProblems {
             "Konstitucijos pr. 3"
     };
 
+    private DummyProblems() {}
+
     public static List<Problem> getProblems() {
         if (problems == null) problems = createProblems();
         return problems;
@@ -39,22 +41,22 @@ public class DummyProblems {
         for (int i = 0; i < COUNT; i++) {
             Problem problem = new Problem();
 
-            problem.id = i;
-            problem.title = "Gatvių priežiūra ir tvarkymas";
-            problem.description = "Klinikų g. jau du mėnesiai nenaudojama pilnai pilnai įrengta automobilių parkavimo....";
+            problem.setId(i);
+            problem.setTitle("Gatvių priežiūra ir tvarkymas");
+            problem.setDescription("Klinikų g. jau du mėnesiai nenaudojama pilnai pilnai įrengta automobilių parkavimo....");
 
             if (Math.random() < 0.5) {
-                problem.statusCode = Problem.STATUS_IN_PROGRESS;
+                problem.setStatusCode(Problem.STATUS_IN_PROGRESS);
             } else {
-                problem.statusCode = Problem.STATUS_DONE;
+                problem.setStatusCode(Problem.STATUS_DONE);
             }
-            problem.updatedAt = new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5));
+            problem.setUpdatedAt(new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5L)));
 
-            problem.lat = 54.5 + 0.4 * Math.random();
-            problem.lng = 25.1 + 0.4 * Math.random();
+            problem.setLat(54.5 + 0.4 * Math.random());
+            problem.setLng(25.1 + 0.4 * Math.random());
 
-            problem.thumbUrl = thumbsUrls[random.nextInt(thumbsUrls.length)];
-            problem.address = adresses[random.nextInt(adresses.length)];
+            problem.setThumbUrl(thumbsUrls[random.nextInt(thumbsUrls.length)]);
+            problem.setAddress(adresses[random.nextInt(adresses.length)]);
 
             problems.add(problem);
         }

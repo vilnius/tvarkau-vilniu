@@ -25,7 +25,7 @@ import okhttp3.Route;
 @Singleton
 public class TokenAuthenticator implements Authenticator {
 
-    protected static final int maxRetries = 3;
+    protected static final int MAX_RETRIES = 3;
 
     @Inject
     Lazy<UserService> userService;
@@ -33,7 +33,7 @@ public class TokenAuthenticator implements Authenticator {
     @Override
     public Request authenticate(Route route, Response response) throws IOException {
         // Give up after unsuccessful retries
-        if (responseCount(response) >= maxRetries) {
+        if (responseCount(response) >= MAX_RETRIES) {
             return null;
         }
 

@@ -11,6 +11,8 @@ import android.util.Log;
  */
 public class PermissionUtils {
 
+    private PermissionUtils() {}
+
     public static boolean isAllPermissionsGranted(@NonNull Activity activity,
                                                   @NonNull String[] permissions) {
         for (String permission : permissions) {

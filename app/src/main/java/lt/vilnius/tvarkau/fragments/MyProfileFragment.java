@@ -32,10 +32,6 @@ import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
 public class MyProfileFragment extends Fragment {
 
-    public static MyProfileFragment getInstance() {
-        return new MyProfileFragment();
-    }
-
     private SharedPrefsManager prefsManager;
 
     @Bind(R.id.profile_name)
@@ -49,6 +45,10 @@ public class MyProfileFragment extends Fragment {
 
 
     public MyProfileFragment() {}
+
+    public static MyProfileFragment getInstance() {
+        return new MyProfileFragment();
+    }
 
     @Nullable
     @Override
