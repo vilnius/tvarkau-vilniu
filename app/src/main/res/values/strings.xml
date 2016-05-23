@@ -19,7 +19,7 @@
 
     <string name="profile_hint_email">El.paštas</string>
     <string name="profile_hint_name">Vardas</string>
-    <string name="profile_telephone">Telefonas</string>
+    <string name="profile_hint_telephone">Telefonas</string>
     <string name="message_notsigned">Norint pasiekti profilio informacija prašome prisijungti</string>
     <string name="title_notsigned">Vartotojas neprisijungęs</string>
     <string name="problem_send">Pranešti apie problemą</string>
@@ -33,12 +33,19 @@
     <string name="home_map_of_problems">Žemėlapis</string>
     <string name="home_my_profile">Mano profilis</string>
     <string name="home_about">Apie</string>
-    <string name="discardChanges">Discard your changes</string>
+    <string name="discard_changes_title">Discard your changes</string>
+    <string name="discard_changes_positive">Discard</string>
+    <string name="discard_changes_negative">No</string>
 
     <string name="report_status_in_progress">Vykdoma</string>
     <string name="report_status_done">Atlikta</string>
 
     <string name="choose_photos_title">Pasirinkite nuotraukas</string>
+
+    <string name="error_empty_field">Tuščias laukelis</string>
+    <string name="error_email_incorrect">Blogas el. pašto adresas</string>
+    <string name="error_phone_number_incorrect">Blogas telefono numeris</string>
+    <string name="profile_submit">Išsaugoti</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>

@@ -1,37 +1,44 @@
 package lt.vilnius.tvarkau;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v7.app.AlertDialog;
 
 import lt.vilnius.tvarkau.fragments.MyProfileFragment;
-import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
-/**
- * An activity representing a single Problem detail screen. This
- * activity is only used narrow width devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link ProblemsListActivity}.
- */
 public class MyProfileActivity extends BaseActivity {
-    SharedPrefsManager prefsManager;
+
+    private MyProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.profile_activity);
-        prefsManager = SharedPrefsManager.getInstance(this);
-        if (prefsManager.getIsUserAnonymous()) {
-            Toast.makeText(this, "anonymous profile not developed", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, MainActivity.class));
-        } else {
+
+        if (savedInstanceState == null) {
+            profileFragment = MyProfileFragment.getInstance();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.profile_frame, MyProfileFragment.getInstance())
+                    .replace(R.id.profile_frame, profileFragment)
                     .commit();
         }
-
     }
 
+    @Override
+    public void onBackPressed() {
+        if (profileFragment != null && !profileFragment.isEditedByUser()) {
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.discard_changes_title))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(R.string.discard_changes_positive, new DialogInterface.OnClickListener() {
 
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            MyProfileActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton(R.string.discard_changes_negative, null).show();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

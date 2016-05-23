@@ -31,6 +31,12 @@ public class Profile {
 
     }
 
+    public Profile(String name, String email, String mobilePhone) {
+        this.name = name;
+        this.email = email;
+        this.mobilePhone = mobilePhone;
+    }
+
     public String getName() {
         return name;
     }
@@ -43,24 +49,8 @@ public class Profile {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getMobilePhone() {
         return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
     }
 
     public static Profile returnProfile(Context con) {
@@ -77,5 +67,16 @@ public class Profile {
         return createJsonData();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Profile) {
+            Profile profile = (Profile) o;
 
+            return name.equals(profile.getName()) &&
+                    email.equals(profile.getEmail()) &&
+                    mobilePhone.equals(profile.getMobilePhone());
+        }
+
+        return false;
+    }
 }

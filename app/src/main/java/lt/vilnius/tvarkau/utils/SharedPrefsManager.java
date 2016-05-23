@@ -40,7 +40,7 @@ public class SharedPrefsManager {
     }
 
 
-    public Boolean getIsUserAnonymous() {
+    public Boolean isUserAnonymous() {
         return null == mSharedPrefences.getString(PREF_USER_PROFILE, null);
     }
 
