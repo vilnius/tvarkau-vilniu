@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
@@ -34,7 +36,6 @@ public class MyProfileFragment extends Fragment {
 
     @Bind(R.id.profile_telephone)
     EditText mProfileTelephone;
-
 
     public MyProfileFragment() {
     }
@@ -103,6 +104,8 @@ public class MyProfileFragment extends Fragment {
 
         Toast.makeText(getContext(), "User profile saved. " +
                 "Implement sending logic.", Toast.LENGTH_SHORT).show();
+
+        getActivity().finish();
     }
 
     private void setUpUserProfile() {
@@ -124,10 +127,6 @@ public class MyProfileFragment extends Fragment {
         String email = mProfileEmail.getText().toString();
         String telephone = mProfileTelephone.getText().toString();
 
-        if (name.length() == 0 && email.length() == 0 && telephone.length() == 0) {
-            return true;
-        }
-
         if (!prefsManager.isUserAnonymous()) {
             Profile oldProfile = prefsManager.getUserProfile();
 
@@ -139,4 +138,17 @@ public class MyProfileFragment extends Fragment {
         return false;
     }
 
+    public void fillFields(GoogleSignInAccount account) {
+        Profile profile = new Profile(account);
+
+        mProfileName.setText(profile.getName());
+        mProfileEmail.setText(profile.getEmail());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ButterKnife.unbind(this);
+    }
 }
