@@ -58,10 +58,12 @@
                     style="@style/NewProblemIcon"
                     android:src="@drawable/ic_type" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/report_problem_type"
                     style="@style/NewProblemField"
-                    android:hint="@string/hint_problem_type" />
+                    android:entries="@array/problem_types"
+                    android:prompt="@string/hint_problem_type"
+                    android:spinnerMode="dialog" />
 
                 <ImageView
                     style="@style/NewProblemIcon"
@@ -69,7 +71,7 @@
 
                 <Spinner
                     android:id="@+id/report_problem_privacy_mode"
-                    style="@style/NewProblemSpinner"
+                    style="@style/NewProblemField"
                     android:entries="@array/report_privacy_mode" />
             </GridLayout>
         </LinearLayout>

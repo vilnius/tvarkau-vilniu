@@ -66,7 +66,7 @@ public class NewProblemActivity extends BaseActivity {
     @Bind(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator mProblemImagesViewPagerIndicator;
     @Bind(R.id.report_problem_type)
-    EditText mReportProblemType;
+    Spinner mReportProblemType;
     @Bind(R.id.report_problem_privacy_mode)
     Spinner mReportProblemPrivacyMode;
     @Bind(R.id.report_problem_description)
@@ -178,7 +178,7 @@ public class NewProblemActivity extends BaseActivity {
     private boolean isEditedByUser() {
         return mReportProblemDescription.getText().length() > 0 ||
                 mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-                mReportProblemType.getText().length() > 0 ||
+                mReportProblemType.getSelectedItemPosition() > 0 ||
                 locationCords != null || problemImagesURIs != null;
     }
 
@@ -250,7 +250,6 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnItemSelected(R.id.report_problem_privacy_mode)
     public void onPrivacyModeSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(NewProblemActivity.this, "onPrivacyModeSelected " + position, Toast.LENGTH_SHORT).show();
         switch (position) {
             case 0:
                 profile = null;
