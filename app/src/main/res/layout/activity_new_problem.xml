@@ -15,121 +15,67 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include android:id="@+id/photo_gallery_layout"
+            <include
+                android:id="@+id/photo_gallery_layout"
                 layout="@layout/problem_photo_gallery" />
 
-            <LinearLayout
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="24dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="16dp"
-                android:paddingTop="28dp">
+                android:layout_margin="28dp"
+                android:alignmentMode="alignBounds"
+                android:columnCount="2"
+                android:columnOrderPreserved="true"
+                android:useDefaultMargins="true">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
+                <ImageView
+                    style="@style/NewProblemIcon"
+                    android:src="@drawable/ic_location_add_problem" />
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_type" />
+                <EditText
+                    android:id="@+id/report_problem_location"
+                    style="@style/NewProblemField"
+                    android:cursorVisible="false"
+                    android:ellipsize="end"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/hint_location" />
 
-                    <Spinner
-                        android:id="@+id/report_problem_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="24dp"
-                        android:entries="@array/problem_types"
-                        android:prompt="@string/choose_problem_type" />
+                <ImageView
+                    style="@style/NewProblemIcon"
+                    android:src="@drawable/ic_description" />
 
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/report_problem_description"
+                    style="@style/NewProblemField"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/hint_description"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="140"
+                    android:minLines="1"
+                    android:scrollbarStyle="insideInset"
+                    android:singleLine="false" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
+                <ImageView
+                    style="@style/NewProblemIcon"
+                    android:src="@drawable/ic_type" />
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_person" />
+                <Spinner
+                    android:id="@+id/report_problem_type"
+                    style="@style/NewProblemField"
+                    android:entries="@array/problem_types"
+                    android:prompt="@string/choose_problem_type" />
 
-                    <Spinner
-                        android:id="@+id/report_problem_privacy_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="24dp"
-                        android:entries="@array/report_privacy_mode" />
+                <ImageView
+                    style="@style/NewProblemIcon"
+                    android:src="@drawable/ic_person" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_location_add_problem" />
-
-                    <EditText
-                        android:id="@+id/report_problem_location"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:layout_marginLeft="24dp"
-                        android:background="@null"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:hint="Vieta"
-                        android:textColor="#000"
-                        android:textColorHint="#959292"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="wrap_content"
-                        android:hint="Location"
-                        android:src="@drawable/ic_description" />
-
-                    <EditText
-                        android:id="@+id/report_problem_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="24dp"
-                        android:background="@null"
-                        android:focusableInTouchMode="true"
-                        android:fontFamily="sans-serif-light"
-                        android:hint="Aprašymas"
-                        android:inputType="textCapSentences|textMultiLine"
-                        android:maxLength="140"
-                        android:textSize="18sp"
-                        android:singleLine="false"
-                        android:overScrollMode="always"
-                        android:scrollbarStyle="insideInset"
-                        android:minLines="1"
-                        android:gravity="top|start" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+                <Spinner
+                    android:id="@+id/report_problem_privacy_mode"
+                    style="@style/NewProblemField"
+                    android:entries="@array/report_privacy_mode" />
+            </GridLayout>
         </LinearLayout>
+
 
     </android.support.v4.widget.NestedScrollView>
 

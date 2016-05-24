@@ -50,5 +50,19 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="NewProblemIcon">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="NewProblemField">
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-light</item>
+    </style>
+
 
 </resources>
