@@ -10,7 +10,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 
 
 public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedListener {
@@ -90,13 +89,7 @@ public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedLis
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
             // single sign-on will occur in this branch.
 
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-
-                    checkSignInResult(googleSignInResult);
-                }
-            });
+            opr.setResultCallback(this::checkSignInResult);
         }
     }
 
