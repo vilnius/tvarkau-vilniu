@@ -48,6 +48,7 @@
     <string name="profile_submit">Išsaugoti</string>
     <string name="hint_location">Vieta</string>
     <string name="hint_description">Aprašymas</string>
+    <string name="no_photo">Nėra nuotraukos</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>

@@ -14,10 +14,12 @@
     <color name="home_about_background">#9b8579</color>
     <color name="home_button_text_color">#DE000000</color>
 
-
     <color name="problem_status_text_color">#fff</color>
     <color name="problem_status_in_progress">#0f76bb</color>
     <color name="problem_status_done">#39b54a</color>
 
-    <color name="new_problem_photo_background">#e7e7e7</color>
+    <color name="photo_background">#e7e7e7</color>
+
+    <color name="no_photo_text_color">#a9a9a9</color>
+
 </resources>
