@@ -26,6 +26,7 @@
                 android:alignmentMode="alignBounds"
                 android:columnCount="2"
                 android:columnOrderPreserved="true"
+                android:focusableInTouchMode="true"
                 android:useDefaultMargins="true">
 
                 <ImageView
@@ -47,23 +48,20 @@
                 <EditText
                     android:id="@+id/report_problem_description"
                     style="@style/NewProblemField"
-                    android:focusableInTouchMode="true"
                     android:hint="@string/hint_description"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLength="140"
                     android:minLines="1"
-                    android:scrollbarStyle="insideInset"
-                    android:singleLine="false" />
+                    android:scrollbarStyle="insideInset" />
 
                 <ImageView
                     style="@style/NewProblemIcon"
                     android:src="@drawable/ic_type" />
 
-                <Spinner
+                <EditText
                     android:id="@+id/report_problem_type"
                     style="@style/NewProblemField"
-                    android:entries="@array/problem_types"
-                    android:prompt="@string/choose_problem_type" />
+                    android:hint="@string/hint_problem_type" />
 
                 <ImageView
                     style="@style/NewProblemIcon"
@@ -71,7 +69,7 @@
 
                 <Spinner
                     android:id="@+id/report_problem_privacy_mode"
-                    style="@style/NewProblemField"
+                    style="@style/NewProblemSpinner"
                     android:entries="@array/report_privacy_mode" />
             </GridLayout>
         </LinearLayout>

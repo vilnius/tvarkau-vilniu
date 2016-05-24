@@ -49,6 +49,7 @@
     <string name="hint_location">Vieta</string>
     <string name="hint_description">Aprašymas</string>
     <string name="no_photo">Nėra nuotraukos</string>
+    <string name="hint_problem_type">Tipas</string>
 
     <string-array name="problem_types">
         <item>Eismo organizavimas</item>
