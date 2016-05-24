@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.util.Patterns;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,19 +13,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.regex.Pattern;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnEditorAction;
-import butterknife.OnTextChanged;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 import static android.app.Activity.RESULT_OK;
-import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
-import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
 
 public class MyProfileFragment extends Fragment {
@@ -44,7 +36,8 @@ public class MyProfileFragment extends Fragment {
     EditText mProfileTelephone;
 
 
-    public MyProfileFragment() {}
+    public MyProfileFragment() {
+    }
 
     public static MyProfileFragment getInstance() {
         return new MyProfileFragment();
@@ -90,16 +83,10 @@ public class MyProfileFragment extends Fragment {
                 getActivity().onBackPressed();
                 return true;
             case R.id.profile_submit:
-                verifyAndSaveProfile();
+                saveUserProfile();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void verifyAndSaveProfile() {
-        if (verifyAllFields()) {
-            saveUserProfile();
         }
     }
 
@@ -118,16 +105,6 @@ public class MyProfileFragment extends Fragment {
                 "Implement sending logic.", Toast.LENGTH_SHORT).show();
     }
 
-    public boolean verifyAllFields() {
-        verifyProfileName();
-        verifyProfileEmail();
-        verifyProfileTelephone();
-
-        return mProfileName.getError() == null &&
-                mProfileEmail.getError() == null &&
-                mProfileTelephone.getError() == null;
-    }
-
     private void setUpUserProfile() {
         if (!prefsManager.isUserAnonymous()) {
             Profile profile = Profile.returnProfile(getContext());
@@ -135,51 +112,6 @@ public class MyProfileFragment extends Fragment {
             mProfileName.setText(profile.getName());
             mProfileEmail.setText(profile.getEmail());
             mProfileTelephone.setText(profile.getMobilePhone());
-        }
-    }
-
-    @OnTextChanged(value = R.id.profile_name, callback = AFTER_TEXT_CHANGED)
-    public void verifyProfileName() {
-        if (mProfileName.getText().length() == 0) {
-            mProfileName.setError(getString(R.string.error_empty_field));
-        } else {
-            mProfileName.setError(null);
-        }
-    }
-
-    @OnTextChanged(value = R.id.profile_email, callback = AFTER_TEXT_CHANGED)
-    public void verifyProfileEmail() {
-        Pattern pattern = Patterns.EMAIL_ADDRESS;
-
-        if (mProfileEmail.getText().length() == 0) {
-            mProfileEmail.setError(getString(R.string.error_empty_field));
-        } else if (!pattern.matcher(mProfileEmail.getText().toString()).matches()) {
-            mProfileEmail.setError(getString(R.string.error_email_incorrect));
-        } else {
-            mProfileEmail.setError(null);
-        }
-    }
-
-    @OnEditorAction(R.id.profile_telephone)
-    public boolean onTelephoneEditorAction(int actionId, KeyEvent event) {
-        if (actionId == IME_ACTION_DONE) {
-            verifyAndSaveProfile();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public void verifyProfileTelephone() {
-        Pattern pattern = Patterns.PHONE;
-
-        if (mProfileTelephone.getText().length() == 0) {
-            mProfileTelephone.setError(getString(R.string.error_empty_field));
-        } else if (!pattern.matcher(mProfileTelephone.getText().toString()).matches()) {
-            mProfileTelephone.setError(getString(R.string.error_phone_number_incorrect));
-        } else {
-            mProfileTelephone.setError(null);
         }
     }
 
