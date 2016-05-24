@@ -6,7 +6,7 @@ android:
    - build-tools-23.0.3
    - extra
 
-jdk: oraclejdk7
+jdk: oraclejdk8
 
 script:
   - ./gradlew --stacktrace clean build
