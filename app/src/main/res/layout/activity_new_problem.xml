@@ -49,10 +49,7 @@
                     android:id="@+id/report_problem_description"
                     style="@style/NewProblemField"
                     android:hint="@string/hint_description"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:maxLength="140"
-                    android:minLines="1"
-                    android:scrollbarStyle="insideInset" />
+                    android:inputType="textCapSentences|textMultiLine" />
 
                 <ImageView
                     style="@style/NewProblemIcon"
