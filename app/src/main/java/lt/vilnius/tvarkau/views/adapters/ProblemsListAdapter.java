@@ -48,7 +48,7 @@ public class ProblemsListAdapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Problem item = mValues.get(position);
 
-        holder.item = item;
+        holder.setItem(item);
         holder.titleView.setText(item.getTitle());
         holder.descriptionView.setText(item.getDescription());
         item.applyReportStatusLabel(holder.statusView);
@@ -66,7 +66,7 @@ public class ProblemsListAdapter
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, holder.item.getId());
+                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, holder.getItem().getId());
 
                 Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
                             view.getWidth(), view.getHeight()).toBundle();
@@ -95,11 +95,19 @@ public class ProblemsListAdapter
         @Bind(R.id.problem_list_content_thumb)
         protected ImageView thumbView;
 
-        public Problem item;
+        private Problem item;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        public Problem getItem() {
+            return item;
+        }
+
+        public void setItem(Problem item) {
+            this.item = item;
         }
 
         @Override

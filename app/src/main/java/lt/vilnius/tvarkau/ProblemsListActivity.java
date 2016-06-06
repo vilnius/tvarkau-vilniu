@@ -51,9 +51,6 @@ public class ProblemsListActivity extends AppCompatActivity
 
     private int initialPosition;
 
-
-//    SearchView searchView;
-
     public static Intent getStartActivityIntent(Context context, @ProblemsTabsInitialPosition int initialPosition) {
         Intent intent = new Intent(context, ProblemsListActivity.class);
 
@@ -106,10 +103,6 @@ public class ProblemsListActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
-
-//        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-//        searchView.setOnQueryTextListener(this);
-
         menu.findItem(R.id.action_map).setOnMenuItemClickListener(this);
         return true;
     }
@@ -122,18 +115,6 @@ public class ProblemsListActivity extends AppCompatActivity
 
         ActivityCompat.startActivity(this, intent, bundle);
     }
-
-
-//    @Override
-//    public boolean onQueryTextSubmit(String query) {
-//        Toast.makeText(this, "Searched for: " + query, Toast.LENGTH_SHORT).show();
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onQueryTextChange(String newText) {
-//        return false;
-//    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
