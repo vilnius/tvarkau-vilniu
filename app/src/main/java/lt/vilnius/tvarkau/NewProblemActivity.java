@@ -39,12 +39,14 @@ import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import icepick.State;
 import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
 public class NewProblemActivity extends BaseActivity {
 
@@ -53,6 +55,8 @@ public class NewProblemActivity extends BaseActivity {
 
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PROFILE = 12;
+    public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
+
 
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
@@ -66,7 +70,7 @@ public class NewProblemActivity extends BaseActivity {
     @Bind(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator mProblemImagesViewPagerIndicator;
     @Bind(R.id.report_problem_type)
-    Spinner mReportProblemType;
+    EditText mReportProblemType;
     @Bind(R.id.report_problem_privacy_mode)
     Spinner mReportProblemPrivacyMode;
     @Bind(R.id.report_problem_description)
@@ -82,6 +86,8 @@ public class NewProblemActivity extends BaseActivity {
     ArrayList<Uri> problemImagesURIs;
     @State
     Profile profile;
+    @State
+    ReportType reportType;
 
 
     @Override
@@ -158,6 +164,13 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.report_problem_type)
+    public void onChooseProblemTypeClicked() {
+        Intent intent = new Intent(this, ChooseReportTypeActivity.class);
+
+        startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -178,8 +191,7 @@ public class NewProblemActivity extends BaseActivity {
     private boolean isEditedByUser() {
         return mReportProblemDescription.getText().length() > 0 ||
                 mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-                mReportProblemType.getSelectedItemPosition() > 0 ||
-                locationCords != null || problemImagesURIs != null;
+                reportType != null || locationCords != null || problemImagesURIs != null;
     }
 
     @Override
@@ -214,9 +226,15 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_PROFILE:
                     profile = Profile.returnProfile(this);
                     break;
+                case REQUEST_CHOOSE_REPORT_TYPE:
+                    if (data.hasExtra(EXTRA_REPORT_TYPE)) {
+                        reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
+                        mReportProblemType.setText(reportType.getName());
+                    }
+                    break;
             }
         } else {
-            switch(requestCode) {
+            switch (requestCode) {
                 case REQUEST_PROFILE:
                     mReportProblemPrivacyMode.setSelection(0);
                     break;
@@ -257,7 +275,7 @@ public class NewProblemActivity extends BaseActivity {
             case 1:
                 profile = Profile.returnProfile(this);
 
-                if(profile == null) {
+                if (profile == null) {
                     Intent intent = new Intent(this, MyProfileActivity.class);
                     startActivityForResult(intent, REQUEST_PROFILE);
                 }

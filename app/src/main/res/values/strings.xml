@@ -6,6 +6,7 @@
     <string name="title_problems_map">Problemų žemėlapis</string>
     <string name="title_my_profile">Mano profilis</string>
     <string name="title_new_problem">Naujas pranešimas</string>
+    <string name="title_choose_problem_type">Pranešimo tipas</string>
 
 
     <string name="choose_problem_type">Tipas</string>
@@ -52,6 +53,9 @@
     <string name="hint_problem_type">Tipas</string>
 
     <string-array name="problem_types">
+        <item>Aplinkos tvarkymas</item>
+        <item>Beglobių gyvūnų gaudymas</item>
+        <item>Dviračių takų problemos</item>
         <item>Eismo organizavimas</item>
         <item>Energetika ir inžineriniai tinklai</item>
         <item>Gatvių apšvietimas</item>
@@ -61,15 +65,12 @@
         <item>Kapinių priežiūra</item>
         <item>Komunalinių atliekų tvarkymas</item>
         <item>Pastatų administravimas</item>
+        <item>Statinių priežiūra</item>
         <item>Tiltų, viadukų, tunelių ir estakadų priežiūra</item>
+        <item>Transporto priemonių stovėjimo tvarkos pažeidimai</item>
         <item>Triukšmo prevencijos viešosiose vietose taisyklių pažeidimas</item>
         <item>Tvarkymo ir švaros taisyklių pažeidimas</item>
         <item>Viešasis transportas</item>
-        <item>Aplinkos tvarkymas</item>
-        <item>Transporto priemonių stovėjimo tvarkos pažeidimai</item>
-        <item>Statinių priežiūra</item>
-        <item>Beglobių gyvūnų gaudymas</item>
-        <item>Dviračių takų problemos</item>
     </string-array>
 
     <string-array name="problems_list_tab_titles">

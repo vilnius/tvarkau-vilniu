@@ -55,12 +55,13 @@
                     style="@style/NewProblemIcon"
                     android:src="@drawable/ic_type" />
 
-                <Spinner
+                <EditText
                     android:id="@+id/report_problem_type"
                     style="@style/NewProblemField"
-                    android:entries="@array/problem_types"
-                    android:prompt="@string/hint_problem_type"
-                    android:spinnerMode="dialog" />
+                    android:cursorVisible="false"
+                    android:ellipsize="end"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/hint_problem_type" />
 
                 <ImageView
                     style="@style/NewProblemIcon"
