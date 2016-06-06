@@ -99,6 +99,7 @@ public class NewProblemActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         initProblemImagesPager();
     }
@@ -281,5 +282,12 @@ public class NewProblemActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+
+        return false;
     }
 }
