@@ -8,4 +8,6 @@ public class GlobalConsts {
     public final static String TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT = "multipleProblemsMapFragment";
 
     public final static String KEY_MAP_FRAGMENT= "keyMapFragment";
+
+    private GlobalConsts() {}
 }
