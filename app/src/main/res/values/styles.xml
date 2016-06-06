@@ -58,6 +58,8 @@
     </style>
 
     <style name="NewProblemField">
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_gravity">center_vertical</item>

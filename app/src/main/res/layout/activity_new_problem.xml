@@ -68,8 +68,9 @@
                     android:src="@drawable/ic_person" />
 
                 <Spinner
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/report_problem_privacy_mode"
-                    style="@style/NewProblemField"
                     android:entries="@array/report_privacy_mode" />
             </GridLayout>
         </LinearLayout>

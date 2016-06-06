@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -102,6 +103,14 @@ public class NewProblemActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         initProblemImagesPager();
+        initPrivacyModeSpinner();
+    }
+
+    private void initPrivacyModeSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.report_privacy_mode, R.layout.item_report_type_spinner);
+        adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
+        mReportProblemPrivacyMode.setAdapter(adapter);
     }
 
     private void initProblemImagesPager() {
