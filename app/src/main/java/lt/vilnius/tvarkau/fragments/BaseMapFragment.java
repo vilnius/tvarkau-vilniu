@@ -109,11 +109,10 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     public BitmapDescriptor getMarkerIcon(Problem problem) {
-        switch (problem.getStatusCode()) {
-            case Problem.STATUS_DONE:
-                return doneMarker;
-            default:
-                return inProgressMarker;
+        if (problem.getStatusCode() == Problem.STATUS_DONE) {
+            return doneMarker;
+        } else {
+            return inProgressMarker;
         }
     }
 

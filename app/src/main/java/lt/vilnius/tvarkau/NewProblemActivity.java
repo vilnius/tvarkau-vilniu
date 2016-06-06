@@ -154,17 +154,14 @@ public class NewProblemActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
-                    takePhoto();
-                } else {
-                    Toast.makeText(this, "Need camera and storage permissions to take photos.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
+                takePhoto();
+            } else {
+                Toast.makeText(this, "Need camera and storage permissions to take photos.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -196,18 +193,15 @@ public class NewProblemActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_IMAGE_CAPTURE:
-                    problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
 
-                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
-                    setPhotos(problemImagesURIsArr);
-                    break;
-                case PLACE_PICKER_REQUEST:
-                    Place place = PlacePicker.getPlace(this, data);
-                    mAddProblemLocation.setText(place.getName());
-                    locationCords = place.getLatLng();
-                    break;
+                Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
+                setPhotos(problemImagesURIsArr);
+            } else if (resultCode == PLACE_PICKER_REQUEST) {
+                Place place = PlacePicker.getPlace(this, data);
+                mAddProblemLocation.setText(place.getName());
+                locationCords = place.getLatLng();
             }
         }
     }
