@@ -24,11 +24,10 @@ public class ProblemsListViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         // TODO change to real fragments
-        switch (position) {
-            case 0:
-                return ProblemsListFragment.getInstance();
-            default:
-                return ProblemsListFragment.getInstance();
+        if (position == 0) {
+            return ProblemsListFragment.getInstance();
+        } else {
+            return ProblemsListFragment.getInstance();
         }
     }
 

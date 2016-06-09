@@ -91,13 +91,11 @@ public class ProblemsListActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -137,14 +135,13 @@ public class ProblemsListActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_map:
-                Intent intent = new Intent(this, ProblemsMapActivity.class);
+        if (item.getItemId() == R.id.action_map) {
+            Intent intent = new Intent(this, ProblemsMapActivity.class);
 
-                intent.putExtra(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT);
-                startActivity(intent);
+            intent.putExtra(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT);
+            startActivity(intent);
 
-                return true;
+            return true;
         }
         return false;
     }
