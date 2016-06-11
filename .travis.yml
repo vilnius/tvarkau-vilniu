@@ -15,7 +15,8 @@ script:
   - ./gradlew -s -PdisablePreDex clean build
 
 env:
-  - GRADLE_OPTS="-Xmx1024m -XX:MaxPermSize=1024m"
+  global:
+    - GRADLE_OPTS="-Xmx4g"
 
 cache:
   directories:
