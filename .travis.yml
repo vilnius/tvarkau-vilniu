@@ -1,5 +1,9 @@
 language: android
 
+sudo: false
+
+jdk: oraclejdk8
+
 android:
   components:
     - android-23
@@ -7,10 +11,16 @@ android:
     - build-tools-23.0.3
     - extra
 
-jdk: oraclejdk8
-
 script:
   - ./gradlew -s -PdisablePreDex clean build
 
 env:
   - GRADLE_OPTS="-Xmx1024m -XX:MaxPermSize=1024m"
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/2.13
+    - $HOME/.gradle/caches/jars-1
+    - $HOME/.gradle/daemon
+    - $HOME/.gradle/native
+    - $HOME/.gradle/wrapper
