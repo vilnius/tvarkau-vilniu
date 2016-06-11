@@ -1,6 +1,8 @@
 package lt.vilnius.tvarkau.entity;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
@@ -9,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
-public class Profile {
+public class Profile implements Parcelable {
 
     @SerializedName("Profile_Name")
     private String name;
@@ -79,4 +81,36 @@ public class Profile {
 
         return false;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.email);
+        dest.writeString(this.mobilePhone);
+        dest.writeString(this.pictureUrl);
+    }
+
+    protected Profile(Parcel in) {
+        this.name = in.readString();
+        this.email = in.readString();
+        this.mobilePhone = in.readString();
+        this.pictureUrl = in.readString();
+    }
+
+    public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {
+        @Override
+        public Profile createFromParcel(Parcel source) {
+            return new Profile(source);
+        }
+
+        @Override
+        public Profile[] newArray(int size) {
+            return new Profile[size];
+        }
+    };
 }

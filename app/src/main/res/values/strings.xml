@@ -5,7 +5,8 @@
     <string name="title_problem_detail">Problemos informacija</string>
     <string name="title_problems_map">Problemų žemėlapis</string>
     <string name="title_my_profile">Mano profilis</string>
-    <string name="title_new_problem">Nauja problema</string>
+    <string name="title_new_problem">Naujas pranešimas</string>
+    <string name="title_choose_problem_type">Pranešimo tipas</string>
 
 
     <string name="choose_problem_type">Tipas</string>
@@ -33,9 +34,9 @@
     <string name="home_map_of_problems">Žemėlapis</string>
     <string name="home_my_profile">Mano profilis</string>
     <string name="home_about">Apie</string>
-    <string name="discard_changes_title">Discard your changes</string>
-    <string name="discard_changes_positive">Discard</string>
-    <string name="discard_changes_negative">No</string>
+    <string name="discard_changes_title">Sunaikinti jūsų pakeitmus?</string>
+    <string name="discard_changes_positive">Sunaikinti</string>
+    <string name="discard_changes_negative">Toliau redaguoti</string>
 
     <string name="report_status_in_progress">Vykdoma</string>
     <string name="report_status_done">Atlikta</string>
@@ -46,8 +47,15 @@
     <string name="error_email_incorrect">Blogas el. pašto adresas</string>
     <string name="error_phone_number_incorrect">Blogas telefono numeris</string>
     <string name="profile_submit">Išsaugoti</string>
+    <string name="hint_location">Vieta</string>
+    <string name="hint_description">Aprašymas</string>
+    <string name="no_photo">Nėra nuotraukos</string>
+    <string name="hint_problem_type">Tipas</string>
 
     <string-array name="problem_types">
+        <item>Aplinkos tvarkymas</item>
+        <item>Beglobių gyvūnų gaudymas</item>
+        <item>Dviračių takų problemos</item>
         <item>Eismo organizavimas</item>
         <item>Energetika ir inžineriniai tinklai</item>
         <item>Gatvių apšvietimas</item>
@@ -57,15 +65,12 @@
         <item>Kapinių priežiūra</item>
         <item>Komunalinių atliekų tvarkymas</item>
         <item>Pastatų administravimas</item>
+        <item>Statinių priežiūra</item>
         <item>Tiltų, viadukų, tunelių ir estakadų priežiūra</item>
+        <item>Transporto priemonių stovėjimo tvarkos pažeidimai</item>
         <item>Triukšmo prevencijos viešosiose vietose taisyklių pažeidimas</item>
         <item>Tvarkymo ir švaros taisyklių pažeidimas</item>
         <item>Viešasis transportas</item>
-        <item>Aplinkos tvarkymas</item>
-        <item>Transporto priemonių stovėjimo tvarkos pažeidimai</item>
-        <item>Statinių priežiūra</item>
-        <item>Beglobių gyvūnų gaudymas</item>
-        <item>Dviračių takų problemos</item>
     </string-array>
 
     <string-array name="problems_list_tab_titles">

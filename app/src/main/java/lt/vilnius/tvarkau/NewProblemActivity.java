@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -36,19 +37,28 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import icepick.State;
+import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
 public class NewProblemActivity extends BaseActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
-    public static final int PLACE_PICKER_REQUEST = 11;
+
+    public static final int REQUEST_PLACE_PICKER = 11;
+    public static final int REQUEST_PROFILE = 12;
+    public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
+
+
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
 
@@ -61,7 +71,7 @@ public class NewProblemActivity extends BaseActivity {
     @Bind(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator mProblemImagesViewPagerIndicator;
     @Bind(R.id.report_problem_type)
-    Spinner mReportProblemType;
+    EditText mReportProblemType;
     @Bind(R.id.report_problem_privacy_mode)
     Spinner mReportProblemPrivacyMode;
     @Bind(R.id.report_problem_description)
@@ -75,6 +85,10 @@ public class NewProblemActivity extends BaseActivity {
     LatLng locationCords;
     @State
     ArrayList<Uri> problemImagesURIs;
+    @State
+    Profile profile;
+    @State
+    ReportType reportType;
 
 
     @Override
@@ -86,8 +100,17 @@ public class NewProblemActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         initProblemImagesPager();
+        initPrivacyModeSpinner();
+    }
+
+    private void initPrivacyModeSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.report_privacy_mode, R.layout.item_report_type_spinner);
+        adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
+        mReportProblemPrivacyMode.setAdapter(adapter);
     }
 
     private void initProblemImagesPager() {
@@ -151,6 +174,13 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.report_problem_type)
+    public void onChooseProblemTypeClicked() {
+        Intent intent = new Intent(this, ChooseReportTypeActivity.class);
+
+        startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -171,8 +201,7 @@ public class NewProblemActivity extends BaseActivity {
     private boolean isEditedByUser() {
         return mReportProblemDescription.getText().length() > 0 ||
                 mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-                mReportProblemType.getSelectedItemPosition() > 0 ||
-                locationCords != null || problemImagesURIs != null;
+                reportType != null || locationCords != null || problemImagesURIs != null;
     }
 
     @Override
@@ -181,12 +210,8 @@ public class NewProblemActivity extends BaseActivity {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.discard_changes_title))
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.discard_changes_positive, new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            NewProblemActivity.super.onBackPressed();
-                        }
-                    })
+                    .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
+                            NewProblemActivity.super.onBackPressed())
                     .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();
@@ -203,10 +228,25 @@ public class NewProblemActivity extends BaseActivity {
                     Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
                     setPhotos(problemImagesURIsArr);
                     break;
-                case PLACE_PICKER_REQUEST:
+                case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
                     mAddProblemLocation.setText(place.getName());
                     locationCords = place.getLatLng();
+                    break;
+                case REQUEST_PROFILE:
+                    profile = Profile.returnProfile(this);
+                    break;
+                case REQUEST_CHOOSE_REPORT_TYPE:
+                    if (data.hasExtra(EXTRA_REPORT_TYPE)) {
+                        reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
+                        mReportProblemType.setText(reportType.getName());
+                    }
+                    break;
+            }
+        } else {
+            switch (requestCode) {
+                case REQUEST_PROFILE:
+                    mReportProblemPrivacyMode.setSelection(0);
                     break;
             }
         }
@@ -229,10 +269,34 @@ public class NewProblemActivity extends BaseActivity {
             Intent intent = builder.build(this);
             Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
 
-            ActivityCompat.startActivityForResult(this, intent, PLACE_PICKER_REQUEST, bundle);
+            ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
             Toast.makeText(this, "Check Google Play Services!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @OnItemSelected(R.id.report_problem_privacy_mode)
+    public void onPrivacyModeSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                profile = null;
+                break;
+            case 1:
+                profile = Profile.returnProfile(this);
+
+                if (profile == null) {
+                    Intent intent = new Intent(this, MyProfileActivity.class);
+                    startActivityForResult(intent, REQUEST_PROFILE);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+
+        return false;
     }
 }
