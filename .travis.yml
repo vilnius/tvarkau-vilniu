@@ -12,7 +12,7 @@ android:
     - extra
 
 script:
-  - ./gradlew -s -PdisablePreDex clean build
+  - ./gradlew -s -PdisablePreDex clean assembleDebug
 
 env:
   global:
