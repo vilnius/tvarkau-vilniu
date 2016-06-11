@@ -1,15 +1,16 @@
 language: android
+
 android:
-   components:
-   - android-23
-   - tools
-   - build-tools-23.0.3
-   - extra
+  components:
+    - android-23
+    - tools
+    - build-tools-23.0.3
+    - extra
 
 jdk: oraclejdk8
 
 script:
-  - ./gradlew --stacktrace clean build
+  - ./gradlew -s -PdisablePreDex clean build
 
 env:
-- GRADLE_OPTS="-Xmx1024m -XX:MaxPermSize=1024m"
+  - GRADLE_OPTS="-Xmx1024m -XX:MaxPermSize=1024m"
