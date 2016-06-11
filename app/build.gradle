@@ -57,33 +57,61 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+ext {
+    junitVersion = '4.12'
+    supportLibraryVersion = '23.4.0'
+    playServicesVersion = '9.0.2'
+    butterKnifeVersion = '7.0.1'
+    glideVersion = '3.7.0'
+    icepickVersion = '3.1.0'
+    retrofitVersion = '2.0.0-beta3'
+    gsonVersion = '2.5'
+    daggerVersion = '2.0.2'
+    autoDaggerVersion = '1.1'
+    javaxAnnotationVersion = '1.0'
+    viewPagerIndicatorVersion = '2.4.1.1@aar'
+    tedPickerVersion = 'v1.0.10'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:gridlayout-v7:23.4.0'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
-    compile 'com.google.android.gms:play-services-location:9.0.2'
-    compile 'com.google.firebase:firebase-core:9.0.2'
-    compile 'com.google.firebase:firebase-crash:9.0.2'
-    compile 'frankiesardo:icepick:3.1.0'
-    provided 'frankiesardo:icepick-processor:3.1.0'
-    compile 'com.google.android.gms:play-services-auth:9.0.2'
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
-    compile 'com.google.dagger:dagger:2.0.2'
-    provided 'javax.annotation:jsr250-api:1.0'
-    apt 'com.github.lukaspili.autodagger2:autodagger2-compiler:1.1'
-    compile 'com.github.lukaspili.autodagger2:autodagger2:1.1'
-    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
-    compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
+
+    testCompile "junit:junit:$junitVersion"
+
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
+
+    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.firebase:firebase-core:$playServicesVersion"
+    compile "com.google.firebase:firebase-crash:$playServicesVersion"
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+
+    compile "frankiesardo:icepick:$icepickVersion"
+    provided "frankiesardo:icepick-processor:$icepickVersion"
+
+    compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
+    compile "com.google.code.gson:gson:$gsonVersion"
+
+    compile "com.google.dagger:dagger:$daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    apt "com.github.lukaspili.autodagger2:autodagger2-compiler:$autoDaggerVersion"
+    compile "com.github.lukaspili.autodagger2:autodagger2:$autoDaggerVersion"
+
+    provided "javax.annotation:jsr250-api:$javaxAnnotationVersion"
+
+    compile "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
+
+    compile "com.github.ParkSangGwon:TedPicker:$tedPickerVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
