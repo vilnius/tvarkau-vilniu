@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
@@ -82,17 +82,17 @@ public class ProblemsListAdapter
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.problem_list_content)
+        @BindView(R.id.problem_list_content)
         public View content;
-        @Bind(R.id.problem_list_content_title)
+        @BindView(R.id.problem_list_content_title)
         public TextView titleView;
-        @Bind(R.id.problem_list_content_description)
+        @BindView(R.id.problem_list_content_description)
         public TextView descriptionView;
-        @Bind(R.id.problem_list_content_status)
+        @BindView(R.id.problem_list_content_status)
         public TextView statusView;
-        @Bind(R.id.problem_list_content_time)
+        @BindView(R.id.problem_list_content_time)
         public TextView timeView;
-        @Bind(R.id.problem_list_content_thumb)
+        @BindView(R.id.problem_list_content_thumb)
         protected ImageView thumbView;
 
         public Problem item;

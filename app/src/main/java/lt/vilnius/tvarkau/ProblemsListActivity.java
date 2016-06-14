@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
@@ -40,13 +40,13 @@ public class ProblemsListActivity extends AppCompatActivity
 
     protected static final String EXTRA_INITIAL_POSITION = "list.initial_position";
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.problems_list_tab_layout)
+    @BindView(R.id.problems_list_tab_layout)
     TabLayout tabLayout;
 
-    @Bind(R.id.problems_list_view_pager)
+    @BindView(R.id.problems_list_view_pager)
     ViewPager viewPager;
 
     private int initialPosition;

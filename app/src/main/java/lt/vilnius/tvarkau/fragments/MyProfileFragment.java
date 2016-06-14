@@ -15,8 +15,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
@@ -28,14 +29,16 @@ public class MyProfileFragment extends Fragment {
 
     private SharedPrefsManager prefsManager;
 
-    @Bind(R.id.profile_name)
+    @BindView(R.id.profile_name)
     EditText mProfileName;
 
-    @Bind(R.id.profile_email)
+    @BindView(R.id.profile_email)
     EditText mProfileEmail;
 
-    @Bind(R.id.profile_telephone)
+    @BindView(R.id.profile_telephone)
     EditText mProfileTelephone;
+
+    private Unbinder unbinder;
 
     public MyProfileFragment() {
     }
@@ -49,7 +52,7 @@ public class MyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.my_profile, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }
@@ -149,6 +152,6 @@ public class MyProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 }

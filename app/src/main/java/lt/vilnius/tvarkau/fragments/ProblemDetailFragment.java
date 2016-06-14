@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import javax.inject.Singleton;
 
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
@@ -33,8 +32,8 @@ import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
-import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -58,13 +57,13 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     @Inject
     IssueService issueService;
 
-    @Bind(R.id.problem_title)
+    @BindView(R.id.problem_title)
     TextView mProblemTitle;
-    @Bind(R.id.problem_description)
+    @BindView(R.id.problem_description)
     TextView mProblemDesc;
-    @Bind(R.id.problem_images_view_pager)
+    @BindView(R.id.problem_images_view_pager)
     ViewPager mProblemImagesViewPager;
-    @Bind(R.id.problem_images_view_pager_indicator)
+    @BindView(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator mProblemImagesViewPagerIndicator;
 
     public static ProblemDetailFragment getInstance(int problemId) {
@@ -126,18 +125,6 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
     }
 
-    @Override
-    public void onResponse(Response<Problem> response) {
-        Problem problem = response.body();
-
-        mProblemDesc.setText(problem.getDescription());
-    }
-
-    @Override
-    public void onFailure(Throwable t) {
-        Toast.makeText(getActivity(), "Can't load issue: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
     @OnClick(R.id.problem_address)
     public void onProblemAddressClick() {
         Intent intent = new Intent(getActivity(), ProblemsMapActivity.class);
@@ -148,5 +135,17 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
         intent.putExtras(data);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onResponse(Call<Problem> call, Response<Problem> response) {
+        Problem problem = response.body();
+
+        mProblemDesc.setText(problem.getDescription());
+    }
+
+    @Override
+    public void onFailure(Call<Problem> call, Throwable t) {
+        Toast.makeText(getActivity(), "Can't load issue: " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

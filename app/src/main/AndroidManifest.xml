@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="lt.vilnius.tvarkau">
+          package="lt.vilnius.tvarkau">
 
-    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera"/>
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+        android:required="false"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDdwFCwNh1c5bTI_sreT4BKI3oXpEjwQSM" />
+            android:value="AIzaSyDdwFCwNh1c5bTI_sreT4BKI3oXpEjwQSM"/>
 
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <!--
              This strangely named alias is here for backwards compatibility.
@@ -37,9 +36,9 @@
             android:label="@string/app_name"
             android:targetActivity=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
 
@@ -51,8 +50,9 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"/>
         </activity>
+        
         <activity
             android:name=".SignInActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -61,8 +61,9 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProblemsListActivity" />
+                android:value=".ProblemsListActivity"/>
         </activity>
+
         <activity
             android:name=".ProblemDetailActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -71,8 +72,9 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProblemsListActivity" />
+                android:value=".ProblemsListActivity"/>
         </activity>
+
         <activity
             android:name=".ProblemsMapActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -82,8 +84,9 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"/>
         </activity>
+
         <activity
             android:name=".NewProblemActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -93,8 +96,9 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"/>
         </activity>
+
         <activity
             android:name=".MyProfileActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -104,15 +108,12 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"/>
         </activity>
+
         <activity
             android:name="com.gun0912.tedpicker.ImagePickerActivity"
-            android:screenOrientation="portrait" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="33cce6891f8d5ae5c92235382a89bc0e9d7ca255" />
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ChooseReportTypeActivity"
@@ -123,7 +124,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".NewProblemActivity" />
+                android:value=".NewProblemActivity"/>
         </activity>
     </application>
 

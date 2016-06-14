@@ -34,7 +34,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.io.File;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
@@ -62,21 +62,21 @@ public class NewProblemActivity extends BaseActivity {
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.report_problem_location)
+    @BindView(R.id.report_problem_location)
     EditText mAddProblemLocation;
-    @Bind(R.id.problem_images_view_pager)
+    @BindView(R.id.problem_images_view_pager)
     ViewPager mProblemImagesViewPager;
-    @Bind(R.id.problem_images_view_pager_indicator)
+    @BindView(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator mProblemImagesViewPagerIndicator;
-    @Bind(R.id.report_problem_type)
+    @BindView(R.id.report_problem_type)
     EditText mReportProblemType;
-    @Bind(R.id.report_problem_privacy_mode)
+    @BindView(R.id.report_problem_privacy_mode)
     Spinner mReportProblemPrivacyMode;
-    @Bind(R.id.report_problem_description)
+    @BindView(R.id.report_problem_description)
     EditText mReportProblemDescription;
-    @Bind(R.id.report_problem_take_photo)
+    @BindView(R.id.report_problem_take_photo)
     FloatingActionButton mReportProblemTakePhoto;
 
     @State
