@@ -5,6 +5,7 @@ buildscript {
 
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
     }
 }
 
@@ -14,6 +15,7 @@ plugins {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileSdkVersion 23
@@ -113,6 +115,20 @@ dependencies {
     compile "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
 
     compile "com.github.ParkSangGwon:TedPicker:$tedPickerVersion"
+}
+
+// https://github.com/ben-manes/gradle-versions-plugin
+dependencyUpdates.resolutionStrategy = {
+    componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+            }
+            if (rejected) {
+                selection.reject('Release candidate')
+            }
+        }
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
