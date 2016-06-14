@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.factory.DummyProblems;
@@ -19,7 +19,7 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter;
  */
 public class ProblemsListFragment extends Fragment {
 
-    @Bind(R.id.problem_list) RecyclerView recyclerView;
+    @BindView(R.id.problem_list) RecyclerView recyclerView;
 
     public static ProblemsListFragment getInstance() {
         return new ProblemsListFragment();

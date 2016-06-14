@@ -6,13 +6,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 
-import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
 import static lt.vilnius.tvarkau.ProblemsListActivity.ALL_PROBLEMS;
+import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
 
 
 /**
@@ -20,7 +20,7 @@ import static lt.vilnius.tvarkau.ProblemsListActivity.ALL_PROBLEMS;
  */
 public class MainActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Override

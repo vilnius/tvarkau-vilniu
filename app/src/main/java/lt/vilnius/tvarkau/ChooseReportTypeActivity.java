@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter;
@@ -19,7 +19,7 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
 
     public static final String EXTRA_REPORT_TYPE = "ChooseReportTypeActivity.reportType";
 
-    @Bind(R.id.report_types_recycler_view)
+    @BindView(R.id.report_types_recycler_view)
     RecyclerView reportTypesRecyclerView;
 
     ReportTypesListAdapter reportTypesListAdapter;

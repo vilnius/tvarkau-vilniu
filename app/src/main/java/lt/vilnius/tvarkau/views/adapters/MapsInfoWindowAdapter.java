@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
@@ -26,15 +26,15 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     protected View view;
     protected Context context;
 
-    @Bind(R.id.problem_map_info_window_content_title)
+    @BindView(R.id.problem_map_info_window_content_title)
     protected TextView titleView;
-    @Bind(R.id.problem_map_info_window_content_description)
+    @BindView(R.id.problem_map_info_window_content_description)
     protected TextView descriptionView;
-    @Bind(R.id.problem_map_info_window_content_status)
+    @BindView(R.id.problem_map_info_window_content_status)
     protected TextView statusView;
-    @Bind(R.id.problem_map_info_window_content_time)
+    @BindView(R.id.problem_map_info_window_content_time)
     protected TextView timeView;
-    @Bind(R.id.problem_map_info_window_content_thumb)
+    @BindView(R.id.problem_map_info_window_content_thumb)
     protected ImageView thumbView;
 
     public MapsInfoWindowAdapter(Activity activity, HashMap<String, Problem> problemHashMap) {

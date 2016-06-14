@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.ReportType;
@@ -56,7 +56,7 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
 
         public ReportType item;
 
-        @Bind(R.id.item_report_type_name)
+        @BindView(R.id.item_report_type_name)
         public TextView reportTypeName;
 
         public ViewHolder(View view) {

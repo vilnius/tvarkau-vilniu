@@ -10,7 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.fragments.MyProfileFragment;
@@ -26,7 +26,7 @@ public class MyProfileActivity extends BaseActivity implements GooglePlusSignInI
     private MyProfileFragment profileFragment;
     private GoogleSignInHelper googleSignInHelper;
 
-    @Bind(R.id.google_sign_in_button)
+    @BindView(R.id.google_sign_in_button)
     SignInButton signInButton;
 
 
