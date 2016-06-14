@@ -9,8 +9,8 @@ import lt.vilnius.tvarkau.network.service.IssueService;
 import lt.vilnius.tvarkau.network.service.MediaService;
 import lt.vilnius.tvarkau.network.service.UserService;
 import okhttp3.OkHttpClient;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Karolis Vycius on 2016-01-21.
