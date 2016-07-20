@@ -2,6 +2,8 @@ package lt.vilnius.tvarkau;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,8 +34,10 @@ import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +46,7 @@ import butterknife.OnItemSelected;
 import icepick.State;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
+import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 
@@ -52,11 +57,11 @@ import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
 public class NewProblemActivity extends BaseActivity {
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE   = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
 
-    public static final int REQUEST_PLACE_PICKER = 11;
-    public static final int REQUEST_PROFILE = 12;
+    public static final int REQUEST_PLACE_PICKER       = 11;
+    public static final int REQUEST_PROFILE            = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
 
@@ -64,32 +69,32 @@ public class NewProblemActivity extends BaseActivity {
 
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar              mToolbar;
     @BindView(R.id.report_problem_location)
-    EditText mAddProblemLocation;
+    EditText             mAddProblemLocation;
     @BindView(R.id.problem_images_view_pager)
-    ViewPager mProblemImagesViewPager;
+    ViewPager            mProblemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
-    CirclePageIndicator mProblemImagesViewPagerIndicator;
+    CirclePageIndicator  mProblemImagesViewPagerIndicator;
     @BindView(R.id.report_problem_type)
-    EditText mReportProblemType;
+    EditText             mReportProblemType;
     @BindView(R.id.report_problem_privacy_mode)
-    Spinner mReportProblemPrivacyMode;
+    Spinner              mReportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
-    EditText mReportProblemDescription;
+    EditText             mReportProblemDescription;
     @BindView(R.id.report_problem_take_photo)
     FloatingActionButton mReportProblemTakePhoto;
 
     @State
-    File lastPhotoFile;
+    File           lastPhotoFile;
     @State
-    LatLng locationCords;
+    LatLng         locationCords;
     @State
     ArrayList<Uri> problemImagesURIs;
     @State
-    Profile profile;
+    Profile        profile;
     @State
-    ReportType reportType;
+    ReportType     reportType;
 
 
     @Override
@@ -231,15 +236,24 @@ public class NewProblemActivity extends BaseActivity {
                     break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
-                    CharSequence address = place.getAddress();
-                    String matchVilnius = "Vilnius";
-                    Boolean isVilnius = Arrays.asList(address.toString().split(" ")).contains(matchVilnius);
-                    if (isVilnius){
-                        mAddProblemLocation.setText(place.getName());
-                        locationCords = place.getLatLng();
+                    LatLng latLng = place.getLatLng();
+
+                    Geocoder geocoder = new Geocoder(getApplication(), Locale.getDefault());
+
+                    List<Address> addresses = null;
+                    try {
+                        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                    if (addresses != null) {
+                        String city = addresses.get(0).getLocality();
+                        if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
+                            mAddProblemLocation.setText(place.getName());
+                            locationCords = latLng;
+                        } else {
+                            Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                        }
                     }
                     break;
                 case REQUEST_PROFILE:

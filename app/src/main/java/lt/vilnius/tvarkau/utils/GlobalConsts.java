@@ -9,5 +9,7 @@ public class GlobalConsts {
 
     public final static String KEY_MAP_FRAGMENT= "keyMapFragment";
 
+    public final static String CITY_VILNIUS = "Vilnius";
+
     private GlobalConsts() {}
 }
