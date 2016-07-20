@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,10 +13,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.factory.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
 
 /**
@@ -99,7 +103,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
     public boolean onMarkerClick(Marker marker) {
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
         marker.setIcon(selectedMarker);
-
+        EventBus.getDefault().post(new MapInfoWindowShownEvent(marker));
         return false;
     }
 
