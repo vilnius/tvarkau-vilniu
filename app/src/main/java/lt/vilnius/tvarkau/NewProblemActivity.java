@@ -57,11 +57,11 @@ import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
 public class NewProblemActivity extends BaseActivity {
 
-    private static final int REQUEST_IMAGE_CAPTURE   = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
 
-    public static final int REQUEST_PLACE_PICKER       = 11;
-    public static final int REQUEST_PROFILE            = 12;
+    public static final int REQUEST_PLACE_PICKER = 11;
+    public static final int REQUEST_PROFILE = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
 
@@ -69,32 +69,32 @@ public class NewProblemActivity extends BaseActivity {
 
 
     @BindView(R.id.toolbar)
-    Toolbar              mToolbar;
+    Toolbar mToolbar;
     @BindView(R.id.report_problem_location)
-    EditText             mAddProblemLocation;
+    EditText mAddProblemLocation;
     @BindView(R.id.problem_images_view_pager)
-    ViewPager            mProblemImagesViewPager;
+    ViewPager mProblemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
-    CirclePageIndicator  mProblemImagesViewPagerIndicator;
+    CirclePageIndicator mProblemImagesViewPagerIndicator;
     @BindView(R.id.report_problem_type)
-    EditText             mReportProblemType;
+    EditText mReportProblemType;
     @BindView(R.id.report_problem_privacy_mode)
-    Spinner              mReportProblemPrivacyMode;
+    Spinner mReportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
-    EditText             mReportProblemDescription;
+    EditText mReportProblemDescription;
     @BindView(R.id.report_problem_take_photo)
     FloatingActionButton mReportProblemTakePhoto;
 
     @State
-    File           lastPhotoFile;
+    File lastPhotoFile;
     @State
-    LatLng         locationCords;
+    LatLng locationCords;
     @State
     ArrayList<Uri> problemImagesURIs;
     @State
-    Profile        profile;
+    Profile profile;
     @State
-    ReportType     reportType;
+    ReportType reportType;
 
 
     @Override
