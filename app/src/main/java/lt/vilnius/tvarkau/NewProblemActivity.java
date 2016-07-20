@@ -33,6 +33,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -230,8 +231,16 @@ public class NewProblemActivity extends BaseActivity {
                     break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
-                    mAddProblemLocation.setText(place.getName());
-                    locationCords = place.getLatLng();
+                    CharSequence address = place.getAddress();
+                    String matchVilnius = "Vilnius";
+                    Boolean isVilnius = Arrays.asList(address.toString().split(" ")).contains(matchVilnius);
+                    if (isVilnius){
+                        mAddProblemLocation.setText(place.getName());
+                        locationCords = place.getLatLng();
+                    }
+                    else {
+                        Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case REQUEST_PROFILE:
                     profile = Profile.returnProfile(this);
