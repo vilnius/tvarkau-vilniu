@@ -73,6 +73,7 @@ ext {
     javaxAnnotationVersion = '1.0'
     viewPagerIndicatorVersion = '2.4.1.1@aar'
     tedPickerVersion = 'v1.0.10'
+    eventBusVersion = '3.0.0'
 }
 
 dependencies {
@@ -117,6 +118,8 @@ dependencies {
     compile "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
 
     compile "com.github.ParkSangGwon:TedPicker:$tedPickerVersion"
+
+    compile "org.greenrobot:eventbus:$eventBusVersion"
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
