@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="24dp"
             >
 
             <TextView
@@ -26,14 +26,16 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="@string/about_text_top"
+                android:textColor="@color/black_87"
                 />
 
             <TextView
                 android:id="@+id/about_text_below"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="24dp"
+                android:paddingBottom="32dp"
                 android:text="@string/about_text_below"
+                android:textColor="@color/black_87"
                 >
 
             </TextView>
@@ -51,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="16dp"
                     android:src="@drawable/ic_logo_about"
                     />
 
@@ -70,6 +72,7 @@
                         android:paddingBottom="8dp"
                         android:paddingRight="8dp"
                         android:text="@string/version"
+                        android:textColor="@color/black_87"
                         />
 
                     <TextView
@@ -77,6 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
+                        android:textColor="@color/black_87"
                         />
 
                 </LinearLayout>
@@ -88,13 +92,14 @@
                     android:paddingBottom="8dp"
                     android:gravity="center_horizontal"
                     android:text="@string/built_by"
+                    android:textColor="@color/black_87"
                     />
 
                 <ImageView
                     android:id="@+id/code_for_vilnius_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
+                    android:paddingBottom="32dp"
                     android:src="@drawable/ic_c4v"
                     />
 
@@ -105,6 +110,7 @@
                     android:paddingBottom="16dp"
                     android:text="@string/support_us"
                     android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/black_87"
                     />
 
                 <TextView
@@ -148,7 +154,7 @@
                     android:id="@+id/meetup_page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="24dp"
+                    android:paddingBottom="32dp"
                     android:text="@string/meetup_page"
                     android:textColor="@color/colorPrimary"
                     />
@@ -161,6 +167,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/municipality_contacts"
                     android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/black_87"
                     />
 
                 <LinearLayout
