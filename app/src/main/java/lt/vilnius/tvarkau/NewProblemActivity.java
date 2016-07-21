@@ -29,6 +29,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.crash.FirebaseCrash;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -37,7 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -238,22 +238,26 @@ public class NewProblemActivity extends BaseActivity {
                     Place place = PlacePicker.getPlace(this, data);
                     LatLng latLng = place.getLatLng();
 
-                    Geocoder geocoder = new Geocoder(getApplication(), Locale.getDefault());
+                    Geocoder geocoder = new Geocoder(this);
 
                     List<Address> addresses = null;
                     try {
                         addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        FirebaseCrash.report(e);
                     }
-                    if (addresses != null) {
-                        String city = addresses.get(0).getLocality();
-                        if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                            mAddProblemLocation.setText(place.getName());
-                            locationCords = latLng;
-                        } else {
-                            Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                    if (addresses != null && addresses.get(0).getLocality() != null) {
+                            String city = addresses.get(0).getLocality();
+                            if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
+                                mAddProblemLocation.setText(place.getName());
+                                locationCords = latLng;
+                            } else {
+                                Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                            }
                         }
+                    else {
+                        Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case REQUEST_PROFILE:
