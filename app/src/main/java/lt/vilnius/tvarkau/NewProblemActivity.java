@@ -96,6 +96,7 @@ public class NewProblemActivity extends BaseActivity {
     @State
     ReportType reportType;
 
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +253,9 @@ public class NewProblemActivity extends BaseActivity {
                             if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
                                 mAddProblemLocation.setText(place.getName());
                                 locationCords = latLng;
+                                if (snackbar != null && snackbar.isShown()) {
+                                    snackbar.dismiss();
+                                }
                             } else {
                                 showIncorrectPlaceSnackbar();
                             }
@@ -281,9 +285,9 @@ public class NewProblemActivity extends BaseActivity {
 
     private void showIncorrectPlaceSnackbar(){
         View view = this.getCurrentFocus();
-        Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_LONG)
-            .setAction(R.string.choose_again, v -> showPlacePicker(view))
-            .show();
+        snackbar = Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view));
+        snackbar.show();
     }
 
     private void setPhotos(Uri[] photoUris) {
