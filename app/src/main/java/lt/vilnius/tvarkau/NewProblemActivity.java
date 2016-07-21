@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
@@ -63,7 +64,6 @@ public class NewProblemActivity extends BaseActivity {
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PROFILE = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
-
 
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
@@ -253,11 +253,11 @@ public class NewProblemActivity extends BaseActivity {
                                 mAddProblemLocation.setText(place.getName());
                                 locationCords = latLng;
                             } else {
-                                Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                                showIncorrectPlaceSnackbar();
                             }
                         }
                     else {
-                        Toast.makeText(this, R.string.error_location_incorrect, Toast.LENGTH_SHORT).show();
+                        showIncorrectPlaceSnackbar();
                     }
                     break;
                 case REQUEST_PROFILE:
@@ -279,6 +279,12 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
+    private void showIncorrectPlaceSnackbar(){
+        View view = this.getCurrentFocus();
+        Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_LONG)
+            .setAction(R.string.choose_again, v -> showPlacePicker(view))
+            .show();
+    }
 
     private void setPhotos(Uri[] photoUris) {
         mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
@@ -291,16 +297,7 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_location)
     public void onProblemLocationClicked(View view) {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        try {
-            Intent intent = builder.build(this);
-            Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
-
-            ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
-        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Check Google Play Services!", Toast.LENGTH_LONG).show();
-        }
+        showPlacePicker(view);
     }
 
     @OnItemSelected(R.id.report_problem_privacy_mode)
@@ -325,5 +322,18 @@ public class NewProblemActivity extends BaseActivity {
         onBackPressed();
 
         return false;
+    }
+
+    private void showPlacePicker(View view){
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            Intent intent = builder.build(this);
+            Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
+
+            ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Check Google Play Services!", Toast.LENGTH_LONG).show();
+        }
     }
 }
