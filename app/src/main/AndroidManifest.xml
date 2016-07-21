@@ -126,6 +126,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".NewProblemActivity"/>
         </activity>
+
+        <activity
+            android:name=".AboutActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_about"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
     </application>
 
 </manifest>
