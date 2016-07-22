@@ -21,12 +21,6 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.version_code)
     TextView versionCode;
 
-    @BindView(R.id.municipality_phone)
-    TextView municipalityPhone;
-
-    @BindView(R.id.municipality_email)
-    TextView municipalityEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,23 +34,21 @@ public class AboutActivity extends BaseActivity {
         }
 
         versionCode.setText(BuildConfig.VERSION_NAME);
-        municipalityPhone.setText(GlobalConsts.VILNIUS_MUNICIPALITY_PHONE);
-        municipalityEmail.setText(GlobalConsts.VILNIUS_MUNICIPALITY_EMAIL);
     }
 
     @OnClick(R.id.rate_app)
     protected void onRateAppClick() {
-        // TODO testPackage is kept for testing; afterwards change testPackage to this.getPackageName();
-        String testPackageName = "uk.co.es4b.tvarkau_vilniu";
+        // For testing we can use previous app's package name
+        // String testPackageName = "uk.co.es4b.tvarkau_vilniu";
 
-        Uri uri = Uri.parse("market://details?id=" + testPackageName);
+        Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
             startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://play.google.com/store/apps/details?id=" + testPackageName)));
+                Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
         }
     }
 
