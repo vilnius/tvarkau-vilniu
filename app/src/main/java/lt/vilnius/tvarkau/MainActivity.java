@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,8 +81,5 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick(R.id.home_about)
-    protected void onAboutClicked() {
-        Toast.makeText(this, "This should be implemented", Toast.LENGTH_SHORT).show();
-    }
-
+    protected void onAboutClicked() { startNewActivity(AboutActivity.class); }
 }
