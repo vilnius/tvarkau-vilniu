@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.MainActivity;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.ProblemsListActivity;
 import lt.vilnius.tvarkau.ProblemsMapActivity;
@@ -32,6 +34,7 @@ import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.network.APIModule;
 import lt.vilnius.tvarkau.network.service.IssueService;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
+import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -127,6 +130,23 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
 
     @OnClick(R.id.problem_address)
     public void onProblemAddressClick() {
+
+        if ((PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS))) {
+            startProblemActivity();
+        } else {
+            requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.GPS_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MainActivity.GPS_PERMISSION_REQUEST_CODE
+            && PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS)) {
+            startProblemActivity();
+        }
+    }
+
+    private void startProblemActivity() {
         Intent intent = new Intent(getActivity(), ProblemsMapActivity.class);
 
         Bundle data = new Bundle();

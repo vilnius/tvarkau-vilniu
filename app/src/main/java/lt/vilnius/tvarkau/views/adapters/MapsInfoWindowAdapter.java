@@ -47,11 +47,6 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
-        return null;
-    }
-
-    @Override
-    public View getInfoContents(Marker marker) {
         Problem problem = problemHashMap.get(marker.getTitle());
 
         titleView.setText(problem.getTitle());
@@ -66,7 +61,11 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         } else {
             Glide.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         }
-
         return view;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
     }
 }

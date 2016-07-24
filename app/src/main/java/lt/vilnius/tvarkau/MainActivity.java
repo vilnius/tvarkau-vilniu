@@ -2,15 +2,17 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
+import lt.vilnius.tvarkau.utils.PermissionUtils;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static lt.vilnius.tvarkau.ProblemsListActivity.ALL_PROBLEMS;
 import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
 
@@ -19,6 +21,9 @@ import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
  * An activity representing a main activity home screen
  */
 public class MainActivity extends BaseActivity {
+
+    public static final int      GPS_PERMISSION_REQUEST_CODE = 11;
+    public static final String[] MAP_PERMISSIONS             = new String[]{ACCESS_FINE_LOCATION};
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -71,9 +76,25 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_map_of_problems)
     protected void onProblemsMapClicked() {
+
+        if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
+            startProblemActivity();
+        } else {
+            requestPermissions(MAP_PERMISSIONS, GPS_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void startProblemActivity() {
         Bundle data = new Bundle();
         data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_MULTIPLE_PROBLEMS_MAP_FRAGMENT);
         startNewActivity(ProblemsMapActivity.class, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == GPS_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
+            startProblemActivity();
+        }
     }
 
     @OnClick(R.id.home_my_profile)
@@ -82,8 +103,5 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick(R.id.home_about)
-    protected void onAboutClicked() {
-        Toast.makeText(this, "This should be implemented", Toast.LENGTH_SHORT).show();
-    }
-
+    protected void onAboutClicked() { startNewActivity(AboutActivity.class); }
 }
