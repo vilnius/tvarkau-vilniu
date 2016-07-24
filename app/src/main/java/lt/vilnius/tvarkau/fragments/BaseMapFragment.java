@@ -2,7 +2,7 @@ package lt.vilnius.tvarkau.fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,14 +13,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.utils.PermissionUtils;
+import lt.vilnius.tvarkau.factory.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
  * Created by Karolis Vycius on 2016-01-13.
@@ -29,8 +29,6 @@ public abstract class BaseMapFragment extends SupportMapFragment
         implements GoogleMap.OnMarkerClickListener {
 
     protected static final LatLng VILNIUS_LAT_LNG = new LatLng(54.687157, 25.279652);
-    protected static final int GPS_PERMISSION_REQUEST_CODE = 11;
-    protected static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
     protected GoogleMap googleMap;
 
@@ -53,22 +51,13 @@ public abstract class BaseMapFragment extends SupportMapFragment
         selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_red);
     }
 
-    protected void requestGPSPermission() {
-        if (PermissionUtils.isAllPermissionsGranted(getActivity(), MAP_PERMISSIONS)) {
-            googleMap.setMyLocationEnabled(true);
-        } else {
-            requestPermissions(MAP_PERMISSIONS, GPS_PERMISSION_REQUEST_CODE);
-        }
-    }
-
     protected void onMapReady(GoogleMap map) {
         googleMap = map;
         googleMap.setOnMarkerClickListener(this);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f));
 
-        requestGPSPermission();
-
+        googleMap.setMyLocationEnabled(true);
         initMapData();
     }
 
@@ -101,13 +90,6 @@ public abstract class BaseMapFragment extends SupportMapFragment
             googleMap.addMarker(markerOptions);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == GPS_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(getActivity(), MAP_PERMISSIONS)) {
-            googleMap.setMyLocationEnabled(true);
-        }
-    }
-
     public BitmapDescriptor getMarkerIcon(Problem problem) {
         switch (problem.getStatusCode()) {
             case Problem.STATUS_DONE:
@@ -121,7 +103,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
     public boolean onMarkerClick(Marker marker) {
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
         marker.setIcon(selectedMarker);
-
+        EventBus.getDefault().post(new MapInfoWindowShownEvent(marker));
         return false;
     }
 
