@@ -51,6 +51,8 @@
     <string name="hint_description">Aprašymas</string>
     <string name="no_photo">Nėra nuotraukos</string>
     <string name="hint_problem_type">Tipas</string>
+    <string name="error_location_incorrect">Pasirinkote vietą ne Vilniaus mieste.</string>
+    <string name="choose_again">Perrinkti</string>
     <string name="title_about">Apie</string>
     <string name="support_us">Norite mus paremti?</string>
     <string name="rate_app">Įvertinkite programėlę</string>
