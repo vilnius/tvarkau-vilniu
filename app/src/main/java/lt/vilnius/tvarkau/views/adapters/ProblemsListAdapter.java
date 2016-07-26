@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,13 +48,17 @@ public class ProblemsListAdapter
         Problem item = mValues.get(position);
 
         holder.item = item;
-        holder.titleView.setText(item.getTitle());
+
         holder.descriptionView.setText(item.getDescription());
-        item.applyReportStatusLabel(holder.statusView);
-        holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.getUpdatedAt().getTime()));
+        item.applyReportStatusLabel(item.getStatus(), holder.statusView);
+
+        holder.titleView.setText(item.getTypeName());
+
+        // TODO update to 10 min ago format if possible
+        // holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.getUpdatedAt().getTime()));
+        holder.timeView.setText(item.getReportDate());
 
         String thumbUrl = item.getThumbUrl();
-
         if (thumbUrl == null) {
             holder.thumbView.setVisibility(View.GONE);
         } else {

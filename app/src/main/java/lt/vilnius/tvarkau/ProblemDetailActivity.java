@@ -18,7 +18,7 @@ import lt.vilnius.tvarkau.fragments.ProblemDetailFragment;
  */
 public class ProblemDetailActivity extends AppCompatActivity {
 
-    public static Intent getStartActivityIntent(Context context, int problemId) {
+    public static Intent getStartActivityIntent(Context context, String problemId) {
         Intent intent = new Intent(context, ProblemDetailActivity.class);
         intent.putExtra(ProblemDetailFragment.ARG_ITEM_ID, problemId);
 
@@ -51,7 +51,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            int problemId = getIntent().getIntExtra(ProblemDetailFragment.ARG_ITEM_ID, 0);
+            String problemId = getIntent().getStringExtra(ProblemDetailFragment.ARG_ITEM_ID);
             ProblemDetailFragment fragment = ProblemDetailFragment.getInstance(problemId);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.problem_detail_container, fragment)

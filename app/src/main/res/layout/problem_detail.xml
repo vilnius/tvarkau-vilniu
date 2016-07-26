@@ -25,15 +25,14 @@
                 android:id="@+id/problem_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/status"
+                android:layout_toLeftOf="@+id/problem_status"
                 android:fontFamily="sans-serif-regular"
                 android:paddingRight="16dp"
-                android:text="Tiltų, viadukų, tunelių ir estakadų priežiūra"
                 android:textColor="#DE000000"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/status"
+                android:id="@+id/problem_status"
                 style="@style/ReportStatusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,7 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
-                android:text="Švitrigailos g. 11B"
                 android:textColor="#27aae1"
                 android:textSize="14sp" />
 
@@ -75,16 +73,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:text="Pranešimas"
+                android:text="@string/issue"
                 android:textColor="#DE000000"
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/problem_entry_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="2015-10-07, 17:45"
                 android:textColor="#6d6d6d"
                 android:textSize="14sp" />
 
@@ -98,11 +96,11 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:paddingTop="8dp"
-            android:text="Laisves pr. sankryza priko metu uzkemsama ir tampa neimanoma isvaziuoti is akstes ir isukti is Virsuliskiu g. Pries kiek laiko siuliai nubrezti geltona tinkla, taip ispejant vairuotojus. adeta apsvarstyti pasiulyma. Dabar prisegu nuotraukas su realia situacija, kurioje matosi problema. Ir cia, tik 17 valandos situacija, kai piko valandos dar tik prasideda."
             android:textColor="#DE000000"
             android:textSize="14sp" />
 
         <RelativeLayout
+            android:id="@+id/problem_answer_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -110,30 +108,30 @@
             android:padding="24dp">
 
             <TextView
-                android:id="@+id/answer_label"
+                android:id="@+id/problem_answer_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:text="Atsakymas"
+                android:text="@string/answer"
                 android:textColor="#DE000000"
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/problem_answer_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="šiandien, 9:20"
                 android:textColor="#6d6d6d"
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/problem_answer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/answer_label"
+                android:layout_below="@id/problem_answer_label"
                 android:lineSpacingExtra="4sp"
                 android:paddingTop="8dp"
-                android:text="Laisves pr. sankryza priko metu uzkemsama ir tampa neimanoma isvaziuoti is akstes ir isukti is Virsuliskiu g. Pries kiek laiko siuliai nubrezti geltona tinkla, taip ispejant vairuotojus. adeta apsvarstyti pasiulyma. Dabar prisegu nuotraukas su realia situacija, kurioje matosi problema. Ir cia, tik 17 valandos situacija, kai piko valandos dar tik prasideda."
                 android:textColor="#DE000000"
                 android:textSize="14sp" />
 

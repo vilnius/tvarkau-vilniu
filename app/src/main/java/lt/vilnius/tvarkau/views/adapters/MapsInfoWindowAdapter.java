@@ -49,11 +49,29 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(Marker marker) {
         Problem problem = problemHashMap.get(marker.getTitle());
 
-        titleView.setText(problem.getTitle());
         descriptionView.setText(problem.getDescription());
-        timeView.setText(problem.getRelativeUpdatedAt());
-        problem.applyReportStatusLabel(statusView);
 
+        // LegacyApi have two different methods for single problem item
+        // and for multiple items and they bring back same result. These
+        // checks below takes the available data. Would appreciate if
+        // you have any ideas for nicer solution.
+        if (problem.getType() != null) {
+            titleView.setText(problem.getType());
+        } else {
+            titleView.setText(problem.getTypeName());
+        }
+
+        if (problem.getEntryDate() != null) {
+            timeView.setText(problem.getEntryDate());
+        } else {
+            timeView.setText(problem.getReportDate());
+        }
+
+        problem.applyReportStatusLabel(problem.getStatus(), statusView);
+
+        // timeView.setText(problem.getRelativeUpdatedAt());
+
+        // TODO thumbnail photo only works for MultipleProblemMap, need to update to SingleProblemMap as well
         String thumbUrl = problem.getThumbUrl();
 
         if (thumbUrl == null) {

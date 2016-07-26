@@ -1,10 +1,8 @@
 package lt.vilnius.tvarkau.factory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import lt.vilnius.tvarkau.entity.Problem;
 
@@ -41,16 +39,16 @@ public class DummyProblems {
         for (int i = 0; i < COUNT; i++) {
             Problem problem = new Problem();
 
-            problem.setId(i);
-            problem.setTitle("Gatvių priežiūra ir tvarkymas");
+            //problem.setId(i);
+            //problem.setTitle("Gatvių priežiūra ir tvarkymas");
             problem.setDescription("Klinikų g. jau du mėnesiai nenaudojama pilnai pilnai įrengta automobilių parkavimo....");
 
-            if (Math.random() < 0.5) {
-                problem.setStatusCode(Problem.STATUS_IN_PROGRESS);
-            } else {
-                problem.setStatusCode(Problem.STATUS_DONE);
-            }
-            problem.setUpdatedAt(new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5L)));
+//            if (Math.random() < 0.5) {
+//                problem.setStatusCode(Problem.STATUS_IN_PROGRESS);
+//            } else {
+//                problem.setStatusCode(Problem.STATUS_DONE);
+//            }
+//            problem.setUpdatedAt(new Date(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis((int) (Math.random() * 20) + 5L)));
 
             problem.setLat(54.5 + 0.4 * Math.random());
             problem.setLng(25.1 + 0.4 * Math.random());

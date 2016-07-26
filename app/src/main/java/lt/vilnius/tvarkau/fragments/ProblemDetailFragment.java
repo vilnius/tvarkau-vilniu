@@ -17,6 +17,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import org.parceler.Parcels;
+
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,20 +29,24 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.API.ApiMethod;
+import lt.vilnius.tvarkau.API.ApiRequest;
+import lt.vilnius.tvarkau.API.ApiResponse;
+import lt.vilnius.tvarkau.API.GetProblemParams;
+import lt.vilnius.tvarkau.API.LegacyApiModule;
+import lt.vilnius.tvarkau.API.LegacyApiService;
 import lt.vilnius.tvarkau.MainActivity;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.ProblemsListActivity;
 import lt.vilnius.tvarkau.ProblemsMapActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.network.APIModule;
-import lt.vilnius.tvarkau.network.service.IssueService;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a single Problem detail screen.
@@ -46,34 +54,49 @@ import retrofit2.Response;
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */
-@AutoComponent(modules = APIModule.class)
+@AutoComponent(modules = LegacyApiModule.class)
 @AutoInjector
 @Singleton
-public class ProblemDetailFragment extends Fragment implements Callback<Problem> {
+public class ProblemDetailFragment extends Fragment {
 
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String KEY_PROBLEM = "problem";
 
-    @Inject
-    IssueService issueService;
+    @Inject LegacyApiService legacyApiService;
 
     @BindView(R.id.problem_title)
-    TextView mProblemTitle;
+    TextView problemTitle;
     @BindView(R.id.problem_description)
-    TextView mProblemDesc;
+    TextView problemDescription;
+    @BindView(R.id.problem_entry_date)
+    TextView problemEntryDate;
+    @BindView(R.id.problem_status)
+    TextView problemStatus;
+    @BindView(R.id.problem_address)
+    TextView problemAddress;
+    @BindView(R.id.problem_answer_block)
+    View problemAnswerBlock;
+    @BindView(R.id.problem_answer)
+    TextView problemAnswer;
+    @BindView(R.id.problem_answer_date)
+    TextView problemAnswerDate;
     @BindView(R.id.problem_images_view_pager)
-    ViewPager mProblemImagesViewPager;
+    ViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
-    CirclePageIndicator mProblemImagesViewPagerIndicator;
+    CirclePageIndicator problemImagesViewPagerIndicator;
 
-    public static ProblemDetailFragment getInstance(int problemId) {
+    String issueId;
+    Problem problem;
+
+    public static ProblemDetailFragment getInstance(String problemId) {
         ProblemDetailFragment problemDetailFragment = new ProblemDetailFragment();
 
         Bundle arguments = new Bundle();
-        arguments.putInt(ProblemDetailFragment.ARG_ITEM_ID, problemId);
+        arguments.putString(ProblemDetailFragment.ARG_ITEM_ID, problemId);
 
         problemDetailFragment.setArguments(arguments);
 
@@ -83,49 +106,92 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        DaggerProblemDetailFragmentComponent.create().inject(this);
+
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-
-            int issueId = getArguments().getInt(ARG_ITEM_ID);
-
-
-            issueService.getIssue(issueId).enqueue(this);
+            issueId = getArguments().getString(ARG_ITEM_ID);
+            getData();
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+        LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState
+    ) {
         View rootView = inflater.inflate(R.layout.problem_detail, container, false);
 
-        ButterKnife.bind(this, rootView);
+        DaggerProblemDetailFragmentComponent.create().inject(this);
 
-        initProblemImagesPager();
+        ButterKnife.bind(this, rootView);
 
         return rootView;
     }
 
-    private void initProblemImagesPager() {
-        // TODO: change to real images
-        Integer[] imagesIds = {
-                R.drawable.report1,
-                R.drawable.report2,
-                R.drawable.report3,
-                R.drawable.report4
+
+    private void getData() {
+        GetProblemParams params = new GetProblemParams(issueId);
+        ApiRequest<GetProblemParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEM, params);
+
+        Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
+            if (apiResponse.getResult().size() > 0) {
+                problem = apiResponse.getResult().get(0);
+                if (problem.getType() != null) {
+                    problemTitle.setText(problem.getType());
+                }
+                if (problem.getDescription() != null) {
+                    problemDescription.setText(problem.getDescription());
+                }
+                if (problem.getAddress() != null) {
+                    problemAddress.setText(problem.getAddress());
+                }
+                if (problem.getEntryDate() != null) {
+                    problemEntryDate.setText(problem.getEntryDate());
+                }
+                if (problem.getStatus() != null) {
+                    problem.applyReportStatusLabel(problem.getStatus(), problemStatus);
+                }
+                if (problem.getAnswer() != null) {
+                    problemAnswerBlock.setVisibility(View.VISIBLE);
+                    problemAnswer.setText(problem.getAnswer());
+                    // TODO set problemDate if API return this option
+                } else {
+                    problemAnswerBlock.setVisibility(View.GONE);
+                }
+                initProblemImagesPager(problem);
+            } else {
+                Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
+            }
         };
 
-        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(getContext(), imagesIds) {
+        Action1<Throwable> onError = Throwable::printStackTrace;
+
+        legacyApiService.getProblem(request)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                onSuccess,
+                onError
+            );
+    }
+
+    private void initProblemImagesPager(Problem problem) {
+        // TODO: change to real images of given problem
+        Integer[] imagesIds = {
+            R.drawable.report1,
+            R.drawable.report2,
+            R.drawable.report3,
+            R.drawable.report4
+        };
+
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(getContext(), imagesIds) {
             @Override
             public void loadImage(Integer imageId, Context context, ImageView imageView) {
                 Glide.with(context).load(imageId).centerCrop().into(imageView);
             }
         });
-        mProblemImagesViewPager.setOffscreenPageLimit(3);
-        mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
+        problemImagesViewPager.setOffscreenPageLimit(3);
+        problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
     }
 
     @OnClick(R.id.problem_address)
@@ -147,25 +213,15 @@ public class ProblemDetailFragment extends Fragment implements Callback<Problem>
     }
 
     private void startProblemActivity() {
+        // TODO investigate photo sizes when app crashes for TransactionTooLargeException: data parcel size
         Intent intent = new Intent(getActivity(), ProblemsMapActivity.class);
 
         Bundle data = new Bundle();
         data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT);
+        data.putParcelable(KEY_PROBLEM, Parcels.wrap(problem));
 
         intent.putExtras(data);
 
         startActivity(intent);
-    }
-
-    @Override
-    public void onResponse(Call<Problem> call, Response<Problem> response) {
-        Problem problem = response.body();
-
-        mProblemDesc.setText(problem.getDescription());
-    }
-
-    @Override
-    public void onFailure(Call<Problem> call, Throwable t) {
-        Toast.makeText(getActivity(), "Can't load issue: " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

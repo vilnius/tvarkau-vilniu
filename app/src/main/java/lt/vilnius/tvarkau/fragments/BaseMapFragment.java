@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,7 +91,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     public BitmapDescriptor getMarkerIcon(Problem problem) {
-        switch (problem.getStatusCode()) {
+        switch (problem.getStatus()) {
             case Problem.STATUS_DONE:
                 return doneMarker;
             default:

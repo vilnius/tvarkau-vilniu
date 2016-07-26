@@ -64,8 +64,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingLeft="16dp"
                     android:textColor="#8A000000"
-                    android:textSize="13sp"
-                    tools:text="just now" />
+                    android:textSize="13sp" />
 
             </LinearLayout>
         </LinearLayout>
