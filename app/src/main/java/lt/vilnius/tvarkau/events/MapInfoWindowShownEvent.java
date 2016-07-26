@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.factory;
+package lt.vilnius.tvarkau.events;
 
 import com.google.android.gms.maps.model.Marker;
 

@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.Marker;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import lt.vilnius.tvarkau.factory.MapInfoWindowShownEvent;
+import lt.vilnius.tvarkau.events.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.fragments.BaseMapFragment;
 import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment;
 import lt.vilnius.tvarkau.fragments.SingleProblemMapFragment;
