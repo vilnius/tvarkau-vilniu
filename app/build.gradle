@@ -74,6 +74,8 @@ ext {
     viewPagerIndicatorVersion = '2.4.1.1@aar'
     tedPickerVersion = 'v1.0.10'
     eventBusVersion = '3.0.0'
+    stethoVersion = '1.3.1'
+    okhttp3LoggingInterceptorVersion = '3.2.0'
 }
 
 dependencies {
@@ -120,6 +122,11 @@ dependencies {
     compile "com.github.ParkSangGwon:TedPicker:$tedPickerVersion"
 
     compile "org.greenrobot:eventbus:$eventBusVersion"
+
+    compile "com.facebook.stetho:stetho:$stethoVersion"
+    compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3LoggingInterceptorVersion"
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
