@@ -8,7 +8,7 @@ public enum ApiMethod {
     GET_PROBLEM_TYPES(4),
     NEW_PROBLEM(5),
     GET_PROBLEMS(6),
-    GET_PROBLEM(7);
+    GET_REPORT(7);
 
     private final int id;
 

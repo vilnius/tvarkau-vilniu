@@ -128,14 +128,13 @@ public class ProblemDetailFragment extends Fragment {
         return rootView;
     }
 
-
     private void getData() {
         GetProblemParams params = new GetProblemParams(issueId);
-        ApiRequest<GetProblemParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEM, params);
+        ApiRequest<GetProblemParams> request = new ApiRequest<>(ApiMethod.GET_REPORT, params);
 
-        Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult().size() > 0) {
-                problem = apiResponse.getResult().get(0);
+        Action1<ApiResponse<Problem>> onSuccess = apiResponse -> {
+            if (apiResponse.getResult() != null) {
+                problem = apiResponse.getResult();
                 if (problem.getType() != null) {
                     problemTitle.setText(problem.getType());
                 }

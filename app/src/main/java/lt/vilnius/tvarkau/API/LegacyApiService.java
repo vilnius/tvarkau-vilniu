@@ -10,7 +10,7 @@ import rx.Observable;
 public interface LegacyApiService {
 
     @POST("server.php")
-    Observable<ApiResponse<List<Problem>>> getProblem(@Body ApiRequest<GetProblemParams> getProblemsRequest);
+    Observable<ApiResponse<Problem>> getProblem(@Body ApiRequest<GetProblemParams> getProblemRequest);
 
     @POST("server.php")
     Observable<ApiResponse<List<Problem>>> getProblems(@Body ApiRequest<GetProblemsParams> getProblemsRequest);
