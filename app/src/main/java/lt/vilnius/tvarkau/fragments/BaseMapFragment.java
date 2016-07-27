@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.fragments;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -86,6 +87,10 @@ public abstract class BaseMapFragment extends SupportMapFragment
             Marker marker = googleMap.addMarker(markerOptions);
             marker.setIcon(selectedMarker);
             marker.showInfoWindow();
+            //  There is a known issue where in InfoWindow the image
+            // doesn't load properly the first time. Need to reload  each time
+            final Handler handler = new Handler();
+            handler.postDelayed(marker::showInfoWindow, 200);
         } else
             googleMap.addMarker(markerOptions);
     }
@@ -104,6 +109,11 @@ public abstract class BaseMapFragment extends SupportMapFragment
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
         marker.setIcon(selectedMarker);
         EventBus.getDefault().post(new MapInfoWindowShownEvent(marker));
+        marker.showInfoWindow();
+        //  There is a known issue where in InfoWindow the image
+        // doesn't load properly the first time. Need to reload  each time
+        final Handler handler = new Handler();
+        handler.postDelayed(marker::showInfoWindow, 200);
         return false;
     }
 

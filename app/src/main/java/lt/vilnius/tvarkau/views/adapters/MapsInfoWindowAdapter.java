@@ -71,13 +71,17 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         // timeView.setText(problem.getRelativeUpdatedAt());
 
-        // TODO thumbnail photo only works for MultipleProblemMap, need to update to SingleProblemMap as well
+        // ThumbUrl will set up thumbnail photo in MultipleProblemMap view
         String thumbUrl = problem.getThumbUrl();
+        // Photos will set up thumbnail photo in SingleProblemMap view
+        String[] photos = problem.getPhotos();
 
-        if (thumbUrl == null) {
-            thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
-        } else {
+        if (thumbUrl != null) {
             Glide.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
+        } else if (photos != null) {
+            Glide.with(context).load(photos[0]).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
+        } else {
+            thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
         }
         return view;
     }

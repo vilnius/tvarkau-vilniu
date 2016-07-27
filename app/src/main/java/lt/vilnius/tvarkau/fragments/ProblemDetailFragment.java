@@ -175,20 +175,15 @@ public class ProblemDetailFragment extends Fragment {
     }
 
     private void initProblemImagesPager(Problem problem) {
-        // TODO: change to real images of given problem
-        Integer[] imagesIds = {
-            R.drawable.report1,
-            R.drawable.report2,
-            R.drawable.report3,
-            R.drawable.report4
-        };
+        String [] photos = problem.getPhotos();
 
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Integer>(getContext(), imagesIds) {
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<String>(getContext(), photos) {
             @Override
-            public void loadImage(Integer imageId, Context context, ImageView imageView) {
+            public void loadImage(String imageId, Context context, ImageView imageView) {
                 Glide.with(context).load(imageId).centerCrop().into(imageView);
             }
         });
+
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
     }

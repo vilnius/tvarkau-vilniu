@@ -9,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 
 import lt.vilnius.tvarkau.R;
 
@@ -59,7 +58,7 @@ public class Problem {
     public double lat;
 
     @SerializedName("photo")
-    public ArrayList<String> photos;
+    public String[] photos;
 
     //  private Date updatedAt;
 
@@ -117,8 +116,9 @@ public class Problem {
         return new LatLng(lat, lng);
     }
 
-    public ArrayList<String> getPhotos() { return photos; }
     public String getAnswerDate() { return answerDate; }
+
+    public String[] getPhotos() { return photos; }
 
     //    public Date getUpdatedAt() {
     //        return updatedAt;

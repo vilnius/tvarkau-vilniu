@@ -35,7 +35,7 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return (mResources.length > 0) ? mResources.length : 1;
+        return (mResources != null && mResources.length > 0) ? mResources.length : 1;
     }
 
     @Override
@@ -49,7 +49,7 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView;
 
-        if (mResources.length > 0) {
+        if (mResources != null && mResources.length > 0) {
             // TODO: consider recycling views
             itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
 
