@@ -20,6 +20,11 @@ import lt.vilnius.tvarkau.R;
 @Parcel
 public class Problem {
     public static final String STATUS_DONE = "Atlikta";
+    public static final String STATUS_RESOLVED = "Išnagrinėta";
+    public static final String STATUS_TRANSFERRED = "Perduota";
+    public static final String STATUS_REGISTERED = "Registruota";
+    public static final String STATUS_POSTPONED = "Atidėta";
+    public static final String STATUS_IN_PROGRESS = "Vykdoma";
 
     @SerializedName("docNo")
     public String id;
@@ -63,10 +68,16 @@ public class Problem {
 
     public void applyReportStatusLabel(String status, @NonNull TextView reportLabelTextView) {
         reportLabelTextView.setText(status);
-        if (status.equalsIgnoreCase(STATUS_DONE)) {
+        if (status.equalsIgnoreCase(STATUS_DONE) || (status.equalsIgnoreCase(STATUS_RESOLVED))) {
             reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_done);
-        } else {
+        } else if (status.equalsIgnoreCase(STATUS_IN_PROGRESS)) {
             reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_in_progress);
+        } else if (status.equalsIgnoreCase(STATUS_POSTPONED)) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_postponed);
+        } else if (status.equalsIgnoreCase(STATUS_REGISTERED)) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_registered);
+        } else if (status.equalsIgnoreCase(STATUS_TRANSFERRED)) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_transferred);
         }
     }
 
