@@ -66,6 +66,9 @@ public class Problem {
     @SerializedName("thumbnail")
     public String thumbUrl;
 
+    @SerializedName("complete_date")
+    public String answerDate;
+
     public void applyReportStatusLabel(String status, @NonNull TextView reportLabelTextView) {
         reportLabelTextView.setText(status);
         if (status.equalsIgnoreCase(STATUS_DONE) || (status.equalsIgnoreCase(STATUS_RESOLVED))) {
@@ -115,6 +118,7 @@ public class Problem {
     }
 
     public ArrayList<String> getPhotos() { return photos; }
+    public String getAnswerDate() { return answerDate; }
 
     //    public Date getUpdatedAt() {
     //        return updatedAt;

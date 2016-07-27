@@ -153,7 +153,7 @@ public class ProblemDetailFragment extends Fragment {
                 if (problem.getAnswer() != null) {
                     problemAnswerBlock.setVisibility(View.VISIBLE);
                     problemAnswer.setText(problem.getAnswer());
-                    // TODO set problemDate if API return this option
+                    problemAnswerDate.setText(problem.getAnswerDate());
                 } else {
                     problemAnswerBlock.setVisibility(View.GONE);
                 }
