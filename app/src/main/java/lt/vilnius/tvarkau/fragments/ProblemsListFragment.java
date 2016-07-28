@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class ProblemsListFragment extends Fragment {
 
     @Inject LegacyApiService legacyApiService;
 
+    @BindView(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.problem_list) RecyclerView recyclerView;
 
     public static final int PROBLEM_COUNT_LIMIT = 100;
@@ -60,13 +62,15 @@ public class ProblemsListFragment extends Fragment {
 
         DaggerProblemsListFragmentComponent.create().inject(this);
 
+        swipeContainer.setOnRefreshListener(() -> getData());
+        swipeContainer.setColorSchemeResources(R.color.colorAccent);
+
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         getData();
     }
 
@@ -77,6 +81,7 @@ public class ProblemsListFragment extends Fragment {
         Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
             if (apiResponse.getResult().size() > 0) {
                 recyclerView.setAdapter(new ProblemsListAdapter(getActivity(), apiResponse.getResult()));
+                swipeContainer.setRefreshing(false);
             }
             else {
                 Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
