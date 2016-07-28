@@ -49,17 +49,10 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView;
 
-        if (mResources != null && mResources.length > 0) {
-            // TODO: consider recycling views
-            itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
-
-            ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
-
-            loadImage(mResources[position], container.getContext(), problemImageView);
-        } else {
-            itemView = mLayoutInflater.inflate(R.layout.no_image, container, false);
-        }
-
+        // TODO: consider recycling views
+        itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
+        ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
+        loadImage(mResources[position], container.getContext(), problemImageView);
         container.addView(itemView);
 
         return itemView;

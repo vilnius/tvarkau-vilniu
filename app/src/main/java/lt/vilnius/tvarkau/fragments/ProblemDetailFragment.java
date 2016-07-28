@@ -88,6 +88,8 @@ public class ProblemDetailFragment extends Fragment {
     ViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator problemImagesViewPagerIndicator;
+    @BindView(R.id.problem_image_pager_layout)
+    View problemImagePagerLayout;
 
     String issueId;
     Problem problem;
@@ -157,7 +159,12 @@ public class ProblemDetailFragment extends Fragment {
                 } else {
                     problemAnswerBlock.setVisibility(View.GONE);
                 }
-                initProblemImagesPager(problem);
+                if (problem.getPhotos() != null) {
+                    initProblemImagesPager(problem);
+                } else {
+                    problemImagePagerLayout.setVisibility(View.GONE);
+                }
+
             } else {
                 Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
             }

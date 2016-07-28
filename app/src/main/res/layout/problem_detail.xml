@@ -10,6 +10,7 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/problem_image_pager_layout"
             layout="@layout/problem_photo_gallery"
             android:elevation="3dp" />
 
