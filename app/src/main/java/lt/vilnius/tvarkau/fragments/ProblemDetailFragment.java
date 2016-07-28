@@ -160,6 +160,9 @@ public class ProblemDetailFragment extends Fragment {
                     problemAnswerBlock.setVisibility(View.GONE);
                 }
                 if (problem.getPhotos() != null) {
+                    if (problem.getPhotos().length == 1) {
+                        problemImagesViewPagerIndicator.setVisibility(View.GONE);
+                    }
                     initProblemImagesPager(problem);
                 } else {
                     problemImagePagerLayout.setVisibility(View.GONE);
