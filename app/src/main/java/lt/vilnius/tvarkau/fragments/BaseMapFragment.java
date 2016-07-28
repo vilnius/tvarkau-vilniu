@@ -35,6 +35,9 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     protected BitmapDescriptor inProgressMarker;
     protected BitmapDescriptor doneMarker;
+    protected BitmapDescriptor postponedMarker;
+    protected BitmapDescriptor registeredMarker;
+    protected BitmapDescriptor transferredMarker;
     protected BitmapDescriptor selectedMarker;
 
     protected HashMap<String, Problem> problemHashMap = new HashMap<>();
@@ -47,9 +50,13 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     private void setMarkerResources() {
-        inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_blue);
-        doneMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_green);
-        selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_red);
+        doneMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_done);
+        postponedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_postponed);
+        transferredMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_transferred);
+        registeredMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_registered);
+        // In progress can be inactive
+        inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_in_progress);
+        selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_selected);
     }
 
     protected void onMapReady(GoogleMap map) {
@@ -99,6 +106,16 @@ public abstract class BaseMapFragment extends SupportMapFragment
         switch (problem.getStatus()) {
             case Problem.STATUS_DONE:
                 return doneMarker;
+            case Problem.STATUS_RESOLVED:
+                return doneMarker;
+            case Problem.STATUS_IN_PROGRESS:
+                return inProgressMarker;
+            case Problem.STATUS_POSTPONED:
+                return postponedMarker;
+            case Problem.STATUS_TRANSFERRED:
+                return transferredMarker;
+            case Problem.STATUS_REGISTERED:
+                return registeredMarker;
             default:
                 return inProgressMarker;
         }
