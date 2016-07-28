@@ -77,8 +77,10 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         String[] photos = problem.getPhotos();
 
         if (thumbUrl != null) {
+            thumbView.setVisibility(View.VISIBLE);
             Glide.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         } else if (photos != null) {
+            thumbView.setVisibility(View.VISIBLE);
             Glide.with(context).load(photos[0]).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         } else {
             thumbView.setVisibility(View.GONE);

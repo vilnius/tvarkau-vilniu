@@ -63,7 +63,7 @@ public class ProblemsListAdapter
             holder.thumbView.setVisibility(View.GONE);
         } else {
             holder.thumbView.setVisibility(View.VISIBLE);
-            Glide.with(activity).load(thumbUrl).centerCrop().into(holder.thumbView);
+            Glide.with(activity).load(thumbUrl).into(holder.thumbView);
         }
 
         holder.content.setOnClickListener(new View.OnClickListener() {

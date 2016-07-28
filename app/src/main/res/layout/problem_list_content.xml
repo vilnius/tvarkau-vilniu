@@ -74,8 +74,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:background="#f0f0f0"
-            android:scaleType="center"
-            android:src="@drawable/ic_placeholder_list_of_reports" />
+            android:scaleType="center" />
 
     </LinearLayout>
 
