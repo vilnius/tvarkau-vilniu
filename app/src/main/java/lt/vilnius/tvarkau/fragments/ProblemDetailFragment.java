@@ -19,8 +19,6 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -126,6 +124,7 @@ public class ProblemDetailFragment extends Fragment {
         DaggerProblemDetailFragmentComponent.create().inject(this);
 
         ButterKnife.bind(this, rootView);
+        problemAnswerBlock.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -156,8 +155,6 @@ public class ProblemDetailFragment extends Fragment {
                     problemAnswerBlock.setVisibility(View.VISIBLE);
                     problemAnswer.setText(problem.getAnswer());
                     problemAnswerDate.setText(problem.getAnswerDate());
-                } else {
-                    problemAnswerBlock.setVisibility(View.GONE);
                 }
                 if (problem.getPhotos() != null) {
                     if (problem.getPhotos().length == 1) {
