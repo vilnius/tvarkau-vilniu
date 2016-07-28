@@ -50,12 +50,15 @@ public abstract class ProblemImagesPagerAdapter<T> extends PagerAdapter {
         View itemView;
 
         // TODO: consider recycling views
-        itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
-        ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
-        loadImage(mResources[position], container.getContext(), problemImageView);
-        container.addView(itemView);
-
-        return itemView;
+        if (mResources.length > 0) {
+            itemView = mLayoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false);
+            ImageView problemImageView = (ImageView) itemView.findViewById(R.id.problem_image_view);
+            loadImage(mResources[position], container.getContext(), problemImageView);
+            container.addView(itemView);
+            return itemView;
+        } else {
+            return null;
+        }
     }
 
     @Override
