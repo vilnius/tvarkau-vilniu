@@ -33,7 +33,6 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     protected GoogleMap googleMap;
 
-    protected BitmapDescriptor inProgressMarker;
     protected BitmapDescriptor doneMarker;
     protected BitmapDescriptor postponedMarker;
     protected BitmapDescriptor registeredMarker;
@@ -54,8 +53,6 @@ public abstract class BaseMapFragment extends SupportMapFragment
         postponedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_postponed);
         transferredMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_transferred);
         registeredMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_registered);
-        // In progress can be inactive
-        inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_in_progress);
         selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_selected);
     }
 
@@ -65,6 +62,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f));
 
+        // TODO add additional permission check because sometime app crashes
         googleMap.setMyLocationEnabled(true);
         initMapData();
     }
@@ -108,8 +106,6 @@ public abstract class BaseMapFragment extends SupportMapFragment
                 return doneMarker;
             case Problem.STATUS_RESOLVED:
                 return doneMarker;
-            case Problem.STATUS_IN_PROGRESS:
-                return inProgressMarker;
             case Problem.STATUS_POSTPONED:
                 return postponedMarker;
             case Problem.STATUS_TRANSFERRED:
@@ -117,7 +113,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
             case Problem.STATUS_REGISTERED:
                 return registeredMarker;
             default:
-                return inProgressMarker;
+                return registeredMarker;
         }
     }
 

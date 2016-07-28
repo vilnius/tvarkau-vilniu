@@ -23,7 +23,6 @@ public class Problem {
     public static final String STATUS_TRANSFERRED = "Perduota";
     public static final String STATUS_REGISTERED = "Registruota";
     public static final String STATUS_POSTPONED = "Atidėta";
-    public static final String STATUS_IN_PROGRESS = "Vykdoma";
 
     @SerializedName("docNo")
     public String id;
@@ -72,8 +71,6 @@ public class Problem {
         reportLabelTextView.setText(status);
         if (status.equalsIgnoreCase(STATUS_DONE) || (status.equalsIgnoreCase(STATUS_RESOLVED))) {
             reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_done);
-        } else if (status.equalsIgnoreCase(STATUS_IN_PROGRESS)) {
-            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_in_progress);
         } else if (status.equalsIgnoreCase(STATUS_POSTPONED)) {
             reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_postponed);
         } else if (status.equalsIgnoreCase(STATUS_REGISTERED)) {
