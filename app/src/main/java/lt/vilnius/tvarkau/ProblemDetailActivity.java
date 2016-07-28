@@ -52,6 +52,9 @@ public class ProblemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             String problemId = getIntent().getStringExtra(ProblemDetailFragment.ARG_ITEM_ID);
+            if (actionBar != null) {
+                actionBar.setTitle(problemId);
+            }
             ProblemDetailFragment fragment = ProblemDetailFragment.getInstance(problemId);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.problem_detail_container, fragment)
