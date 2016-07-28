@@ -81,7 +81,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         } else if (photos != null) {
             Glide.with(context).load(photos[0]).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         } else {
-            thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
+            thumbView.setVisibility(View.GONE);
         }
         return view;
     }
