@@ -284,7 +284,7 @@ public class NewProblemActivity extends BaseActivity {
                     if (addresses != null && addresses.get(0).getLocality() != null) {
                         String city = addresses.get(0).getLocality();
                         if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                            address = place.getName().toString();
+                            address = addresses.get(0).getAddressLine(0);
                             reportProblemLocationWrapper.setError(null);
                             mAddProblemLocation.setText(address);
                             locationCords = latLng;
