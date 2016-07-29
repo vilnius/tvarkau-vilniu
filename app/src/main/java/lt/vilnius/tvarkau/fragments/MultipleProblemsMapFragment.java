@@ -63,7 +63,7 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
 
     private void addMultipleProblemsMarkers() {
 
-        GetProblemsParams params = new GetProblemsParams(PROBLEM_COUNT_LIMIT_IN_MAP, null, null, null, null, null, null, null);
+        GetProblemsParams params = new GetProblemsParams(0, PROBLEM_COUNT_LIMIT_IN_MAP, null, null, null, null, null, null);
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
         Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {

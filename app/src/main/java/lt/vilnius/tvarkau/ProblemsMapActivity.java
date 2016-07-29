@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.parceler.Parcels;
 
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.events.MapInfoWindowShownEvent;
+import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.fragments.BaseMapFragment;
 import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment;
 import lt.vilnius.tvarkau.fragments.ProblemDetailFragment;
