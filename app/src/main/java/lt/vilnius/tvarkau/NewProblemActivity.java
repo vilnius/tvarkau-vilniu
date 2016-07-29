@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
@@ -84,6 +85,12 @@ public class NewProblemActivity extends BaseActivity {
     EditText mReportProblemDescription;
     @BindView(R.id.report_problem_take_photo)
     FloatingActionButton mReportProblemTakePhoto;
+    @BindView(R.id.report_problem_location_wrapper)
+    TextInputLayout reportProblemLocationWrapper;
+    @BindView(R.id.report_problem_description_wrapper)
+    TextInputLayout reportProblemDescriptionWrapper;
+    @BindView(R.id.report_problem_type_wrapper)
+    TextInputLayout reportProblemTypeWrapper;
 
     @State
     File lastPhotoFile;
@@ -95,6 +102,7 @@ public class NewProblemActivity extends BaseActivity {
     Profile profile;
     @State
     ReportType reportType;
+    String address;
 
     private Snackbar snackbar;
 
@@ -152,6 +160,32 @@ public class NewProblemActivity extends BaseActivity {
 
     public void sendProblem() {
         Toast.makeText(this, "Should implement send behaviour", Toast.LENGTH_SHORT).show();
+
+    private Boolean validateProblemInputs() {
+        Boolean addressIsValid = false;
+        Boolean descriptionIsValid = false;
+        Boolean problemTypeIsValid = false;
+
+        if (address != null) {
+            addressIsValid = true;
+            reportProblemDescriptionWrapper.setError(null);
+        } else {
+            reportProblemLocationWrapper.setError(getText(R.string.error_problem_location_is_empty));
+        }
+
+        if (mReportProblemDescription.getText() != null && mReportProblemDescription.getText().length() > 0) {
+            descriptionIsValid = true;
+        } else {
+            reportProblemDescriptionWrapper.setError(getText(R.string.error_problem_description_is_empty));
+        }
+
+        if (reportType != null) {
+            problemTypeIsValid = true;
+        } else {
+            reportProblemTypeWrapper.setError(getText(R.string.error_problem_type_is_empty));
+        }
+
+        return addressIsValid && descriptionIsValid && problemTypeIsValid;
     }
 
     public void takePhoto() {
@@ -196,8 +230,7 @@ public class NewProblemActivity extends BaseActivity {
                 if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
                     takePhoto();
                 } else {
-                    Toast.makeText(this, "Need camera and storage permissions to take photos.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -249,18 +282,19 @@ public class NewProblemActivity extends BaseActivity {
                         FirebaseCrash.report(e);
                     }
                     if (addresses != null && addresses.get(0).getLocality() != null) {
-                            String city = addresses.get(0).getLocality();
-                            if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                                mAddProblemLocation.setText(place.getName());
-                                locationCords = latLng;
-                                if (snackbar != null && snackbar.isShown()) {
-                                    snackbar.dismiss();
-                                }
-                            } else {
-                                showIncorrectPlaceSnackbar();
+                        String city = addresses.get(0).getLocality();
+                        if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
+                            address = place.getName().toString();
+                            reportProblemLocationWrapper.setError(null);
+                            mAddProblemLocation.setText(address);
+                            locationCords = latLng;
+                            if (snackbar != null && snackbar.isShown()) {
+                                snackbar.dismiss();
                             }
+                        } else {
+                            showIncorrectPlaceSnackbar();
                         }
-                    else {
+                    } else {
                         showIncorrectPlaceSnackbar();
                     }
                     break;
@@ -270,6 +304,7 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_CHOOSE_REPORT_TYPE:
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
                         reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
+                        reportProblemTypeWrapper.setError(null);
                         mReportProblemType.setText(reportType.getName());
                     }
                     break;
