@@ -159,7 +159,10 @@ public class NewProblemActivity extends BaseActivity {
 
 
     public void sendProblem() {
-        Toast.makeText(this, "Should implement send behaviour", Toast.LENGTH_SHORT).show();
+        if (validateProblemInputs()) {
+            Toast.makeText(this, "All inputs are ok; API integration in process", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private Boolean validateProblemInputs() {
         Boolean addressIsValid = false;
