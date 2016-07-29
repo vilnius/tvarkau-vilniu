@@ -21,6 +21,7 @@ import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import lt.vilnius.tvarkau.API.ApiMethod;
 import lt.vilnius.tvarkau.API.ApiRequest;
 import lt.vilnius.tvarkau.API.ApiResponse;
@@ -34,6 +35,7 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Karolis Vycius on 2016-01-13.
@@ -52,6 +54,8 @@ public class ProblemsListFragment extends Fragment {
     public static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 100;
     public List<Problem> problemList;
     public ProblemsListAdapter adapter;
+    private Unbinder unbinder;
+    private CompositeSubscription subscriptions;
 
     public static ProblemsListFragment getInstance() {
         return new ProblemsListFragment();
@@ -62,13 +66,15 @@ public class ProblemsListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         problemList = new ArrayList<>();
+        subscriptions = new CompositeSubscription();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.problem_list, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         DaggerProblemsListFragmentComponent.create().inject(this);
 
@@ -122,5 +128,20 @@ public class ProblemsListFragment extends Fragment {
                 onSuccess,
                 onError
             );
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (subscriptions != null) {
+            subscriptions.unsubscribe();
+            subscriptions = new CompositeSubscription();
+        }
     }
 }
