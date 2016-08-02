@@ -52,18 +52,33 @@ public class ProblemsListAdapter
         holder.descriptionView.setText(item.getDescription());
         item.applyReportStatusLabel(item.getStatus(), holder.statusView);
 
-        holder.titleView.setText(item.getTypeName());
+        // Check problem type in both APIs as same data is called differently
+        if (item.getTypeName() != null) {
+            holder.titleView.setText(item.getTypeName());
+        } else {
+            holder.titleView.setText(item.getType());
+        }
 
         // TODO update to 10 min ago format if possible
         // holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.getUpdatedAt().getTime()));
-        holder.timeView.setText(item.getReportDate());
 
-        String thumbUrl = item.getThumbUrl();
-        if (thumbUrl == null) {
-            holder.thumbView.setVisibility(View.GONE);
+        // Check date in both APIs as same data is called differently
+        if (item.getReportDate() != null) {
+            holder.timeView.setText(item.getReportDate());
         } else {
+            holder.timeView.setText(item.getEntryDate());
+        }
+
+        // Check photo thumbnail in both APIs as same data is called differently
+        if (item.getThumbUrl() != null) {
             holder.thumbView.setVisibility(View.VISIBLE);
-            Glide.with(activity).load(thumbUrl).into(holder.thumbView);
+            Glide.with(activity).load(item.getThumbUrl()).into(holder.thumbView);
+        } else if (item.getPhotos() != null) {
+            String[] photos = item.getPhotos();
+            holder.thumbView.setVisibility(View.VISIBLE);
+            Glide.with(activity).load(photos[0]).into(holder.thumbView);
+        } else {
+            holder.thumbView.setVisibility(View.GONE);
         }
 
         holder.content.setOnClickListener(new View.OnClickListener() {

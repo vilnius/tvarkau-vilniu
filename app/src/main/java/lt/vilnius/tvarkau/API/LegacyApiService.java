@@ -15,7 +15,9 @@ public interface LegacyApiService {
     @POST("server.php")
     Observable<ApiResponse<List<Problem>>> getProblems(@Body ApiRequest<GetProblemsParams> getProblemsRequest);
 
-    // postNewProblem
+    @POST("server.php")
+    Observable<ApiResponse<Integer>> postNewProblem(@Body ApiRequest<GetNewProblemParams> getNewProblemRequest);
+
     // getProblemTypes
 
     // loginUser

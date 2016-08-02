@@ -1,15 +1,20 @@
 package lt.vilnius.tvarkau.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +30,19 @@ import butterknife.Unbinder;
 import lt.vilnius.tvarkau.API.ApiMethod;
 import lt.vilnius.tvarkau.API.ApiRequest;
 import lt.vilnius.tvarkau.API.ApiResponse;
+import lt.vilnius.tvarkau.API.GetProblemParams;
 import lt.vilnius.tvarkau.API.GetProblemsParams;
 import lt.vilnius.tvarkau.API.LegacyApiModule;
 import lt.vilnius.tvarkau.API.LegacyApiService;
-import lt.vilnius.tvarkau.events_listeners.EndlessRecyclerViewScrollListener;
+import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.R;
+import lt.vilnius.tvarkau.SharedPreferencesModule;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.events_listeners.EndlessRecyclerViewScrollListener;
+import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -41,29 +51,57 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Karolis Vycius on 2016-01-13.
  */
 
-@AutoComponent(modules = LegacyApiModule.class)
+@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
 @AutoInjector
 @Singleton
 public class ProblemsListFragment extends Fragment {
 
     @Inject LegacyApiService legacyApiService;
+    @Inject SharedPreferences myProblemsPreferences;
 
     @BindView(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.problem_list) RecyclerView recyclerView;
 
-    public static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 100;
-    public List<Problem> problemList;
-    public ProblemsListAdapter adapter;
+    private static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 100;
+    private static final String ALL_PROBLEM_LIST = "all_problem_list";
+    private List<Problem> problemList;
+    private ProblemsListAdapter adapter;
     private Unbinder unbinder;
     private CompositeSubscription subscriptions;
+    private Boolean isAllProblemList;
+    private int myProblemsCount;
 
-    public static ProblemsListFragment getInstance() {
-        return new ProblemsListFragment();
+    public static ProblemsListFragment getAllProblemList() {
+        ProblemsListFragment problemsListFragment = new ProblemsListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(ALL_PROBLEM_LIST, true);
+        problemsListFragment.setArguments(arguments);
+        return problemsListFragment;
+    }
+
+    public static ProblemsListFragment getMyProblemList() {
+        ProblemsListFragment problemsListFragment = new ProblemsListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(ALL_PROBLEM_LIST, false);
+        problemsListFragment.setArguments(arguments);
+        return problemsListFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DaggerProblemsListFragmentComponent
+            .builder()
+            .appModule(new AppModule(this.getActivity().getApplication()))
+            .sharedPreferencesModule(new SharedPreferencesModule())
+            .legacyApiModule(new LegacyApiModule())
+            .build()
+            .inject(this);
+
+        if (getArguments() != null) {
+            isAllProblemList = getArguments().getBoolean(ALL_PROBLEM_LIST);
+        }
 
         problemList = new ArrayList<>();
         subscriptions = new CompositeSubscription();
@@ -75,8 +113,6 @@ public class ProblemsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.problem_list, container, false);
 
         unbinder = ButterKnife.bind(this, view);
-
-        DaggerProblemsListFragmentComponent.create().inject(this);
 
         swipeContainer.setOnRefreshListener(() -> getData(0));
         swipeContainer.setColorSchemeResources(R.color.colorAccent);
@@ -103,31 +139,79 @@ public class ProblemsListFragment extends Fragment {
 
     private void getData(int page) {
 
-        int startLoadingFromPage = page * PROBLEM_COUNT_LIMIT_PER_PAGE;
+        if (isAllProblemList) {
 
-        GetProblemsParams params = new GetProblemsParams(startLoadingFromPage, PROBLEM_COUNT_LIMIT_PER_PAGE,
-            null, null, null, null, null, null);
-        ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
+            int startLoadingFromPage = page * PROBLEM_COUNT_LIMIT_PER_PAGE;
 
-        Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult().size() > 0) {
-                problemList.addAll(apiResponse.getResult());
-                setupView();
-                swipeContainer.setRefreshing(false);
-            } else {
-                Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+            GetProblemsParams params = new GetProblemsParams(startLoadingFromPage, PROBLEM_COUNT_LIMIT_PER_PAGE,
+                null, null, null, null, null, null);
+            ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
+
+            Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
+                if (apiResponse.getResult().size() > 0) {
+                    problemList.addAll(apiResponse.getResult());
+                    setupView();
+                    swipeContainer.setRefreshing(false);
+                } else {
+                    Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            Action1<Throwable> onError = Throwable::printStackTrace;
+
+            legacyApiService.getProblems(request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    onSuccess,
+                    onError
+                );
+        } else {
+            problemList.clear();
+            myProblemsCount = 0;
+
+            Action0 onSuccess = () -> {
+                if (problemList.size() == myProblemsCount) {
+                    setupView();
+                    swipeContainer.setRefreshing(false);
+                }
+            };
+
+            Action1<Throwable> onError = Throwable::printStackTrace;
+
+            for (String key : myProblemsPreferences.getAll().keySet()) {
+                myProblemsCount++;
+                String issueId = myProblemsPreferences.getString(key, "");
+                GetProblemParams params = new GetProblemParams(issueId);
+                ApiRequest<GetProblemParams> request = new ApiRequest<>(ApiMethod.GET_REPORT, params);
+
+                legacyApiService.getProblem(request)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        apiResponse -> problemList.add(apiResponse.getResult()),
+                        onError,
+                        onSuccess
+                    );
             }
-        };
+        }
+    }
 
-        Action1<Throwable> onError = Throwable::printStackTrace;
+    @Subscribe
+    public void onNewProblemAddedEvent(NewProblemAddedEvent event) {
+        getData(0);
+    }
 
-        legacyApiService.getProblems(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                onSuccess,
-                onError
-            );
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override

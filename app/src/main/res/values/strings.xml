@@ -78,6 +78,7 @@
     <string name="error_problem_description_is_empty">Prašome įvesti problemos aprašymą</string>
     <string name="error_problem_location_is_empty">Prašome pasirinkti problemos vietą</string>
     <string name="error_problem_type_is_empty">Prašome pasirinkti problemos tipą</string>
+    <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

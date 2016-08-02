@@ -2,10 +2,13 @@ package lt.vilnius.tvarkau;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +18,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,28 +40,52 @@ import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import icepick.State;
+import lt.vilnius.tvarkau.API.ApiMethod;
+import lt.vilnius.tvarkau.API.ApiRequest;
+import lt.vilnius.tvarkau.API.ApiResponse;
+import lt.vilnius.tvarkau.API.GetNewProblemParams;
+import lt.vilnius.tvarkau.API.LegacyApiModule;
+import lt.vilnius.tvarkau.API.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
+import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
+@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
+@AutoInjector
+@Singleton
 public class NewProblemActivity extends BaseActivity {
+
+    @Inject LegacyApiService legacyApiService;
+    @Inject SharedPreferences myProblemsPreferences;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
@@ -67,6 +95,9 @@ public class NewProblemActivity extends BaseActivity {
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
+
+    private static final String ANONYMOUS_USER_SESSION_IS = "null";
+    private static final String PROBLEM_PREFERENCE_KEY = "problem";
 
 
     @BindView(R.id.toolbar)
@@ -103,6 +134,7 @@ public class NewProblemActivity extends BaseActivity {
     @State
     ReportType reportType;
     String address;
+    String[] photos;
 
     private Snackbar snackbar;
 
@@ -112,6 +144,14 @@ public class NewProblemActivity extends BaseActivity {
         setContentView(R.layout.activity_new_problem);
 
         ButterKnife.bind(this);
+
+        DaggerNewProblemActivityComponent
+            .builder()
+            .appModule(new AppModule(this.getApplication()))
+            .sharedPreferencesModule(new SharedPreferencesModule())
+            .legacyApiModule(new LegacyApiModule())
+            .build()
+            .inject(this);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -157,10 +197,37 @@ public class NewProblemActivity extends BaseActivity {
         return true;
     }
 
-
     public void sendProblem() {
         if (validateProblemInputs()) {
-            Toast.makeText(this, "All inputs are ok; API integration in process", Toast.LENGTH_SHORT).show();
+
+            String description = mReportProblemDescription.getText().toString();
+            GetNewProblemParams params = new GetNewProblemParams(ANONYMOUS_USER_SESSION_IS, description,
+                reportType.getName(), address, locationCords.latitude, locationCords.longitude, photos,
+                null, null, null);
+            ApiRequest<GetNewProblemParams> request = new ApiRequest<>(ApiMethod.NEW_PROBLEM, params);
+
+            Action1<ApiResponse<Integer>> onSuccess = apiResponse -> {
+                if (apiResponse.getResult() != null) {
+                    String newProblemId = apiResponse.getResult().toString();
+                    myProblemsPreferences
+                        .edit()
+                        .putString(PROBLEM_PREFERENCE_KEY + newProblemId, newProblemId)
+                        .apply();
+                    Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(new NewProblemAddedEvent());
+                    finish();
+                }
+            };
+
+            Action1<Throwable> onError = Throwable::printStackTrace;
+
+            legacyApiService.postNewProblem(request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    onSuccess,
+                    onError
+                );
         }
     }
 
@@ -267,8 +334,22 @@ public class NewProblemActivity extends BaseActivity {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-
-                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
+                    int photoCount = problemImagesURIs.size();
+                    photos = new String[photoCount];
+                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[photoCount]);
+                    for (int i = 0; i < photoCount; i++) {
+                        Uri uriPath = Uri.fromFile(new File(problemImagesURIsArr[i].toString()));
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriPath);
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                            byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
+                            String encodedImage = Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
+                            photos[i] = encodedImage;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     setPhotos(problemImagesURIsArr);
                     break;
                 case REQUEST_PLACE_PICKER:
