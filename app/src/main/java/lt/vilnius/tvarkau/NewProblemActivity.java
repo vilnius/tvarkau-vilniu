@@ -172,6 +172,7 @@ public class NewProblemActivity extends BaseActivity {
         mProblemImagesViewPager.setAdapter(ProblemImagesPagerAdapter.empty(this));
         mProblemImagesViewPager.setOffscreenPageLimit(3);
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
+        mProblemImagesViewPagerIndicator.setVisibility(View.GONE);
     }
 
     @Override
@@ -411,6 +412,9 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void setPhotos(Uri[] photoUris) {
+        if (photos.length > 1) {
+            mProblemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
+        }
         mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
             @Override
             public void loadImage(Uri imageURI, Context context, ImageView imageView) {
