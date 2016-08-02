@@ -261,6 +261,7 @@ public class NewProblemActivity extends BaseActivity {
     public void takePhoto() {
         Config config = new Config();
         config.setToolbarTitleRes(R.string.choose_photos_title);
+        config.setCameraBtnImage(R.drawable.ic_photo_camera_white);
 
         ImagePickerActivity.setConfig(config);
 
