@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 
 /**
  * Created by Karolis Vycius on 2016-01-13.
@@ -59,14 +60,11 @@ public class ProblemsListAdapter
             holder.titleView.setText(item.getType());
         }
 
-        // TODO update to 10 min ago format if possible
-        // holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.getUpdatedAt().getTime()));
-
         // Check date in both APIs as same data is called differently
         if (item.getReportDate() != null) {
-            holder.timeView.setText(item.getReportDate());
+            holder.timeView.setText(FormatUtils.formatLocalDateTime(item.getReportDate()));
         } else {
-            holder.timeView.setText(item.getEntryDate());
+            holder.timeView.setText(FormatUtils.formatLocalDateTime(item.getEntryDate()));
         }
 
         // Check photo thumbnail in both APIs as same data is called differently

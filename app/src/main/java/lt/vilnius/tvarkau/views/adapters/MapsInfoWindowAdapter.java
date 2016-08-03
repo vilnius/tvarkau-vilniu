@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 
 /**
  * Created by Karolis Vycius on 2016-01-30.
@@ -62,18 +63,16 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         }
 
         if (problem.getEntryDate() != null) {
-            timeView.setText(problem.getEntryDate());
+            timeView.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
         } else {
-            timeView.setText(problem.getReportDate());
+            timeView.setText(FormatUtils.formatLocalDateTime(problem.getReportDate()));
         }
 
         problem.applyReportStatusLabel(problem.getStatus(), statusView);
 
-        // timeView.setText(problem.getRelativeUpdatedAt());
-
-        // ThumbUrl will set up thumbnail photo in MultipleProblemMap view
+        // ThumbUrl will set up thumbnail photo in MultipleProblemMap view 
         String thumbUrl = problem.getThumbUrl();
-        // Photos will set up thumbnail photo in SingleProblemMap view
+        // Photos will set up thumbnail photo in SingleProblemMap view 
         String[] photos = problem.getPhotos();
 
         if (thumbUrl != null) {

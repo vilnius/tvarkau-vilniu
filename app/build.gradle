@@ -79,6 +79,7 @@ ext {
     rxAndroidVersion = '1.2.0'
     rxJavaVersion = '1.1.6'
     parcelerVersion = '1.1.2'
+    threeTenVersion ='1.0.3'
 }
 
 dependencies {
@@ -136,6 +137,8 @@ dependencies {
 
     compile "org.parceler:parceler-api:$parcelerVersion"
     apt "org.parceler:parceler:$parcelerVersion"
+
+    compile "com.jakewharton.threetenabp:threetenabp:$threeTenVersion"
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin

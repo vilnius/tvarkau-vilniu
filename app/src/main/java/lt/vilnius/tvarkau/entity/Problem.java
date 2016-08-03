@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
-
+import org.threeten.bp.LocalDateTime;
 
 import lt.vilnius.tvarkau.R;
 
@@ -30,13 +30,10 @@ public class Problem {
     // entry_date and report_date brings back the
     // same result just from different API methods
     @SerializedName("entry_date")
-    public String entryDate;
+    public LocalDateTime entryDate;
 
     @SerializedName("report_date")
-    public String reportDate;
-
-    @SerializedName("time_ago")
-    public String timeAgo;
+    public LocalDateTime reportDate;
 
     // type_name and type brings back the
     // same result just from different API methods
@@ -58,8 +55,6 @@ public class Problem {
 
     @SerializedName("photo")
     public String[] photos;
-
-    //  private Date updatedAt;
 
     @SerializedName("thumbnail")
     public String thumbUrl;
@@ -92,14 +87,14 @@ public class Problem {
     }
 
     public String getType() { return type; }
+
     public String getTypeName() { return typeName; }
 
     public String getAnswer() { return answer; }
 
-    public String getEntryDate() { return entryDate; }
-    public String getReportDate() { return reportDate; }
+    public LocalDateTime getEntryDate() { return entryDate; }
 
-    public String getTimeAgo() { return timeAgo; }
+    public LocalDateTime getReportDate() { return reportDate; }
 
     public String getDescription() {
         return description;
@@ -117,10 +112,6 @@ public class Problem {
 
     public String[] getPhotos() { return photos; }
 
-    //    public Date getUpdatedAt() {
-    //        return updatedAt;
-    //    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -133,10 +124,6 @@ public class Problem {
         this.address = address;
     }
 
-    //    public void setUpdatedAt(Date updatedAt) {
-    //        this.updatedAt = updatedAt;
-    //    }
-
     public void setLat(double lat) {
         this.lat = lat;
     }
@@ -146,8 +133,4 @@ public class Problem {
     }
 
     public void setThumbUrl(String thumbUrl) {this.thumbUrl = thumbUrl; }
-
-    //    public String getRelativeUpdatedAt() {
-    //        return DateUtils.getRelativeTimeSpanString(updatedAt.getTime()).toString();
-    //    }
 }

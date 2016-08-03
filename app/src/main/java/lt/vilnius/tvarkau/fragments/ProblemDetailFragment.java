@@ -39,6 +39,7 @@ import lt.vilnius.tvarkau.ProblemsListActivity;
 import lt.vilnius.tvarkau.ProblemsMapActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
@@ -145,8 +146,9 @@ public class ProblemDetailFragment extends Fragment {
                 if (problem.getAddress() != null) {
                     problemAddress.setText(problem.getAddress());
                 }
+
                 if (problem.getEntryDate() != null) {
-                    problemEntryDate.setText(problem.getEntryDate());
+                    problemEntryDate.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
                 }
                 if (problem.getStatus() != null) {
                     problem.applyReportStatusLabel(problem.getStatus(), problemStatus);
@@ -214,7 +216,6 @@ public class ProblemDetailFragment extends Fragment {
     }
 
     private void startProblemActivity() {
-        // TODO investigate photo sizes when app crashes for TransactionTooLargeException: data parcel size
         Intent intent = new Intent(getActivity(), ProblemsMapActivity.class);
 
         Bundle data = new Bundle();

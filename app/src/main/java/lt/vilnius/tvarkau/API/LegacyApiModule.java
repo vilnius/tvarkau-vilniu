@@ -3,8 +3,19 @@ package lt.vilnius.tvarkau.API;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import javax.inject.Singleton;
 
@@ -50,7 +61,7 @@ public class LegacyApiModule {
     public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
 
         Gson gson = new GsonBuilder()
-            .setLenient()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
             .create();
 
         return new Retrofit.Builder()
@@ -65,5 +76,21 @@ public class LegacyApiModule {
     @Singleton
     public LegacyApiService provideProblemService(Retrofit retrofit) {
         return retrofit.create(LegacyApiService.class);
+    }
+
+    public static class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+
+        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        @Override
+        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+            return LocalDateTime.parse(json.getAsString(), formatter);
+        }
+
+        @Override
+        public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.format(formatter));
+        }
     }
 }
