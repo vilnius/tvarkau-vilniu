@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -189,7 +190,6 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -200,6 +200,9 @@ public class NewProblemActivity extends BaseActivity {
 
     public void sendProblem() {
         if (validateProblemInputs()) {
+
+            ProgressDialog progressDialog = createProgressDialog();
+            progressDialog.show();
 
             String description = mReportProblemDescription.getText().toString();
             GetNewProblemParams params = new GetNewProblemParams(ANONYMOUS_USER_SESSION_IS, description,
@@ -214,13 +217,18 @@ public class NewProblemActivity extends BaseActivity {
                         .edit()
                         .putString(PROBLEM_PREFERENCE_KEY + newProblemId, newProblemId)
                         .apply();
-                    Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
                     EventBus.getDefault().post(new NewProblemAddedEvent());
+                    progressDialog.dismiss();
+                    Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
                     finish();
                 }
             };
 
-            Action1<Throwable> onError = Throwable::printStackTrace;
+            Action1<Throwable> onError = throwable -> {
+                throwable.printStackTrace();
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
+            };
 
             legacyApiService.postNewProblem(request)
                 .subscribeOn(Schedulers.io())
@@ -230,6 +238,13 @@ public class NewProblemActivity extends BaseActivity {
                     onError
                 );
         }
+    }
+
+    private ProgressDialog createProgressDialog() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.sending_problem));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        return progressDialog;
     }
 
     private Boolean validateProblemInputs() {
@@ -293,8 +308,7 @@ public class NewProblemActivity extends BaseActivity {
 
         startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
     }
-
-
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -404,7 +418,7 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
-    private void showIncorrectPlaceSnackbar(){
+    private void showIncorrectPlaceSnackbar() {
         View view = this.getCurrentFocus();
         snackbar = Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view));
@@ -452,7 +466,7 @@ public class NewProblemActivity extends BaseActivity {
         return false;
     }
 
-    private void showPlacePicker(View view){
+    private void showPlacePicker(View view) {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
             Intent intent = builder.build(this);
@@ -461,7 +475,7 @@ public class NewProblemActivity extends BaseActivity {
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Check Google Play Services!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.check_google_play_services, Toast.LENGTH_LONG).show();
         }
     }
 }
