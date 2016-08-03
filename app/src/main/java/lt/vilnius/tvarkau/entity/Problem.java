@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau.entity;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -27,20 +26,19 @@ public class Problem {
     @SerializedName("docNo")
     public String id;
 
-    // entry_date and report_date brings back the
+    // entry_date and report_date bring back the
     // same result just from different API methods
     @SerializedName("entry_date")
-    public LocalDateTime entryDate;
-
+    public LocalDateTime entryDateInGetProblemsAPI;
     @SerializedName("report_date")
-    public LocalDateTime reportDate;
+    public LocalDateTime entryDateInGetReportAPI;
 
-    // type_name and type brings back the
+    // type_name and type bring back the
     // same result just from different API methods
     @SerializedName("type_name")
-    public String typeName;
-
-    public String type;
+    public String typeInGetProblemsAPI;
+    @SerializedName("type")
+    public String typeInGetReportAPI;
 
     public String description;
     public String address;
@@ -54,10 +52,10 @@ public class Problem {
     public double lat;
 
     @SerializedName("photo")
-    public String[] photos;
+    public String[] photosInGetReportAPI;
 
     @SerializedName("thumbnail")
-    public String thumbUrl;
+    public String photosInGetProblemsAPI;
 
     @SerializedName("complete_date")
     public String answerDate;
@@ -79,22 +77,27 @@ public class Problem {
         return address;
     }
 
-    @Nullable
-    public String getThumbUrl() { return thumbUrl; }
-
     public String getStatus() {
         return status;
     }
 
-    public String getType() { return type; }
-
-    public String getTypeName() { return typeName; }
+    public String getType() {
+        if (typeInGetProblemsAPI != null) {
+            return typeInGetProblemsAPI;
+        } else {
+            return typeInGetReportAPI;
+        }
+    }
 
     public String getAnswer() { return answer; }
 
-    public LocalDateTime getEntryDate() { return entryDate; }
-
-    public LocalDateTime getReportDate() { return reportDate; }
+    public LocalDateTime getEntryDate() {
+        if (entryDateInGetProblemsAPI != null) {
+            return entryDateInGetProblemsAPI;
+        } else {
+            return entryDateInGetReportAPI;
+        }
+    }
 
     public String getDescription() {
         return description;
@@ -110,27 +113,19 @@ public class Problem {
 
     public String getAnswerDate() { return answerDate; }
 
-    public String[] getPhotos() { return photos; }
+    public String[] getPhotos() {
+        if (photosInGetReportAPI != null) {
+            return photosInGetReportAPI;
+        } else if (photosInGetProblemsAPI != null) {
+            String[] photosArray = new String[1];
+            photosArray[0] = photosInGetProblemsAPI;
+            return photosArray;
+        } else {
+            return null;
+        }
+    }
 
     public void setId(String id) {
         this.id = id;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
-
-    public void setThumbUrl(String thumbUrl) {this.thumbUrl = thumbUrl; }
 }

@@ -90,8 +90,8 @@ public class ProblemDetailFragment extends Fragment {
     @BindView(R.id.problem_image_pager_layout)
     View problemImagePagerLayout;
 
-    String issueId;
-    Problem problem;
+    private String issueId;
+    private Problem problem;
 
     public static ProblemDetailFragment getInstance(String problemId) {
         ProblemDetailFragment problemDetailFragment = new ProblemDetailFragment();
@@ -108,7 +108,6 @@ public class ProblemDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             issueId = getArguments().getString(ARG_ITEM_ID);
             getData();
@@ -118,8 +117,7 @@ public class ProblemDetailFragment extends Fragment {
     @Override
     public View onCreateView(
         LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState
-    ) {
+        Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.problem_detail, container, false);
 
         DaggerProblemDetailFragmentComponent.create().inject(this);
@@ -172,7 +170,10 @@ public class ProblemDetailFragment extends Fragment {
             }
         };
 
-        Action1<Throwable> onError = Throwable::printStackTrace;
+        Action1<Throwable> onError = throwable -> {
+            throwable.printStackTrace();
+            Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
+        };
 
         legacyApiService.getProblem(request)
             .subscribeOn(Schedulers.io())
@@ -184,7 +185,7 @@ public class ProblemDetailFragment extends Fragment {
     }
 
     private void initProblemImagesPager(Problem problem) {
-        String [] photos = problem.getPhotos();
+        String[] photos = problem.getPhotos();
 
         problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<String>(getContext(), photos) {
             @Override

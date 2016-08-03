@@ -157,7 +157,11 @@ public class ProblemsListFragment extends Fragment {
                 }
             };
 
-            Action1<Throwable> onError = Throwable::printStackTrace;
+            Action1<Throwable> onError = throwable -> {
+                throwable.printStackTrace();
+                Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+                swipeContainer.setRefreshing(false);
+            };
 
             legacyApiService.getProblems(request)
                 .subscribeOn(Schedulers.io())
@@ -178,7 +182,11 @@ public class ProblemsListFragment extends Fragment {
                 }
             };
 
-            Action1<Throwable> onError = Throwable::printStackTrace;
+            Action1<Throwable> onError = throwable -> {
+                throwable.printStackTrace();
+                Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+                swipeContainer.setRefreshing(false);
+            };
 
             for (String key : myProblemsPreferences.getAll().keySet()) {
                 myProblemsCount++;
@@ -194,6 +202,10 @@ public class ProblemsListFragment extends Fragment {
                         onError,
                         onSuccess
                     );
+            }
+
+            if (myProblemsCount == 0) {
+                swipeContainer.setRefreshing(false);
             }
         }
     }

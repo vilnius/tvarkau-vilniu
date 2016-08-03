@@ -52,35 +52,15 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         descriptionView.setText(problem.getDescription());
 
-        // LegacyApi have two different methods for single problem item
-        // and for multiple items and they bring back same result. These
-        // checks below takes the available data. Would appreciate if
-        // you have any ideas for nicer solution.
-        if (problem.getType() != null) {
-            titleView.setText(problem.getType());
-        } else {
-            titleView.setText(problem.getTypeName());
-        }
+        titleView.setText(problem.getType());
 
-        if (problem.getEntryDate() != null) {
-            timeView.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
-        } else {
-            timeView.setText(FormatUtils.formatLocalDateTime(problem.getReportDate()));
-        }
+        timeView.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
 
         problem.applyReportStatusLabel(problem.getStatus(), statusView);
 
-        // ThumbUrl will set up thumbnail photo in MultipleProblemMap view 
-        String thumbUrl = problem.getThumbUrl();
-        // Photos will set up thumbnail photo in SingleProblemMap view 
-        String[] photos = problem.getPhotos();
-
-        if (thumbUrl != null) {
+        if (problem.getPhotos() != null) {
             thumbView.setVisibility(View.VISIBLE);
-            Glide.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
-        } else if (photos != null) {
-            thumbView.setVisibility(View.VISIBLE);
-            Glide.with(context).load(photos[0]).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
+            Glide.with(context).load(problem.getPhotos()[0]).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         } else {
             thumbView.setVisibility(View.GONE);
         }
