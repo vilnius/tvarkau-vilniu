@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -171,6 +172,7 @@ public class ProblemsListFragment extends Fragment {
 
             Action0 onSuccess = () -> {
                 if (problemList.size() == myProblemsCount) {
+                    Collections.sort(problemList, (lhs, rhs) -> lhs.getEntryDate().isAfter(rhs.getEntryDate()) ? -1 : 1);
                     setupView();
                     swipeContainer.setRefreshing(false);
                 }
