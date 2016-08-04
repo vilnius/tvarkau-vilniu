@@ -246,6 +246,7 @@ public class ProblemsListFragment extends Fragment {
 
     @Override
     public void onResume() {
+        problemList.clear();
         getData(0);
         super.onResume();
     }
