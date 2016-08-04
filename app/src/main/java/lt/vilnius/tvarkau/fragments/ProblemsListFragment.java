@@ -118,7 +118,10 @@ public class ProblemsListFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
-        swipeContainer.setOnRefreshListener(() -> getData(0));
+        swipeContainer.setOnRefreshListener(() -> {
+            problemList.clear();
+            getData(0);
+        });
         swipeContainer.setColorSchemeResources(R.color.colorAccent);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
