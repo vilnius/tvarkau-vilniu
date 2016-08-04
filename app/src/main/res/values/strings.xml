@@ -84,6 +84,8 @@
     <string name="check_google_play_services">Patikrinkite Google Play paslaugas!</string>
     <string name="my_problems_empty">Mano pranešimai tušti</string>
     <string name="my_problems_will_appear_here">Jūsų sukurti pranešimai atsiras čia</string>
+    <string name="thanks_to">Ypatingai dėkojame</string>
+    <string name="comma">,</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

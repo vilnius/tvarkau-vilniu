@@ -104,4 +104,34 @@ public class AboutActivity extends BaseActivity {
                 .show();
         }
     }
+
+    @OnClick(R.id.ineta)
+    protected void onClickIneta() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.INETA_LINKEDIN));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.karolis)
+    protected void onClickKarolis() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.KAROLIS_LINKEDIN));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.vilius)
+    protected void onCliclVilius() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.VILIUS_LINKEDIN));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.povilas)
+    protected void onClickPovilas() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.POVILAS_LINKEDIN));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.renat)
+    protected void onClickRenat() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.RENAT_LINKEDIN));
+        startActivity(intent);
+    }
 }
