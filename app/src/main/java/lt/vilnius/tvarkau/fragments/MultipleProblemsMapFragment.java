@@ -15,12 +15,12 @@ import javax.inject.Singleton;
 
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
-import lt.vilnius.tvarkau.API.ApiMethod;
-import lt.vilnius.tvarkau.API.ApiRequest;
-import lt.vilnius.tvarkau.API.ApiResponse;
-import lt.vilnius.tvarkau.API.GetProblemsParams;
-import lt.vilnius.tvarkau.API.LegacyApiModule;
-import lt.vilnius.tvarkau.API.LegacyApiService;
+import lt.vilnius.tvarkau.api.ApiMethod;
+import lt.vilnius.tvarkau.api.ApiRequest;
+import lt.vilnius.tvarkau.api.ApiResponse;
+import lt.vilnius.tvarkau.api.GetProblemsParams;
+import lt.vilnius.tvarkau.api.LegacyApiModule;
+import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
@@ -63,7 +63,16 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
 
     private void addMultipleProblemsMarkers() {
 
-        GetProblemsParams params = new GetProblemsParams(0, PROBLEM_COUNT_LIMIT_IN_MAP, null, null, null, null, null, null);
+        GetProblemsParams params = new GetProblemsParams.Builder()
+            .setStart(0)
+            .setLimit(PROBLEM_COUNT_LIMIT_IN_MAP)
+            .setDescriptionFilter(null)
+            .setTypeFilter(null)
+            .setAddressFilter(null)
+            .setReporterFilter(null)
+            .setDateFilter(null)
+            .setStatusFilter(null)
+            .create();
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
         Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {

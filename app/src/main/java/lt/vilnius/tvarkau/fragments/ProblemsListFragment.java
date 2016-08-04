@@ -27,16 +27,16 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import lt.vilnius.tvarkau.API.ApiMethod;
-import lt.vilnius.tvarkau.API.ApiRequest;
-import lt.vilnius.tvarkau.API.ApiResponse;
-import lt.vilnius.tvarkau.API.GetProblemParams;
-import lt.vilnius.tvarkau.API.GetProblemsParams;
-import lt.vilnius.tvarkau.API.LegacyApiModule;
-import lt.vilnius.tvarkau.API.LegacyApiService;
 import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.SharedPreferencesModule;
+import lt.vilnius.tvarkau.api.ApiMethod;
+import lt.vilnius.tvarkau.api.ApiRequest;
+import lt.vilnius.tvarkau.api.ApiResponse;
+import lt.vilnius.tvarkau.api.GetProblemParams;
+import lt.vilnius.tvarkau.api.GetProblemsParams;
+import lt.vilnius.tvarkau.api.LegacyApiModule;
+import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.EndlessRecyclerViewScrollListener;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
@@ -143,8 +143,16 @@ public class ProblemsListFragment extends Fragment {
 
             int startLoadingFromPage = page * PROBLEM_COUNT_LIMIT_PER_PAGE;
 
-            GetProblemsParams params = new GetProblemsParams(startLoadingFromPage, PROBLEM_COUNT_LIMIT_PER_PAGE,
-                null, null, null, null, null, null);
+            GetProblemsParams params = new GetProblemsParams.Builder()
+                .setStart(startLoadingFromPage)
+                .setLimit(PROBLEM_COUNT_LIMIT_PER_PAGE)
+                .setDescriptionFilter(null)
+                .setTypeFilter(null)
+                .setAddressFilter(null)
+                .setReporterFilter(null)
+                .setDateFilter(null)
+                .setStatusFilter(null)
+                .create();
             ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
             Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {

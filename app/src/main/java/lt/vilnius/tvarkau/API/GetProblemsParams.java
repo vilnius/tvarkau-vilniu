@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.API;
+package lt.vilnius.tvarkau.api;
 
 import android.support.annotation.Nullable;
 
@@ -6,24 +6,80 @@ public class GetProblemsParams {
 
     private int start;
     private int limit;
-    private String description_filter;
-    private String type_filter;
-    private String address_filter;
-    private String reporter_filter;
-    private String date_filter;
-    private String status_filter;
+    private String descriptionFilter;
+    private String typeFilter;
+    private String addressFilter;
+    private String reporterFilter;
+    private String dateFilter;
+    private String statusFilter;
 
     public GetProblemsParams(int start, int limit, @Nullable String descriptionFilter, @Nullable String typeFilter,
         @Nullable String addressFilter, @Nullable String reporterFilter, @Nullable String dateFilter,
         @Nullable String statusFilter) {
         this.start = start;
         this.limit = limit;
-        this.description_filter = descriptionFilter;
-        this.type_filter = typeFilter;
-        this.address_filter = addressFilter;
-        this.reporter_filter = reporterFilter;
-        this.date_filter = dateFilter;
-        this.status_filter = statusFilter;
+        this.descriptionFilter = descriptionFilter;
+        this.typeFilter = typeFilter;
+        this.addressFilter = addressFilter;
+        this.reporterFilter = reporterFilter;
+        this.dateFilter = dateFilter;
+        this.statusFilter = statusFilter;
+    }
+
+    public static class Builder {
+        private int start;
+        private int limit;
+        private String descriptionFilter;
+        private String typeFilter;
+        private String addressFilter;
+        private String reporterFilter;
+        private String dateFilter;
+        private String statusFilter;
+
+        public Builder setStart(int start) {
+            this.start = start;
+            return this;
+        }
+
+        public Builder setLimit(int limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public Builder setDescriptionFilter(String descriptionFilter) {
+            this.descriptionFilter = descriptionFilter;
+            return this;
+        }
+
+        public Builder setTypeFilter(String typeFilter) {
+            this.typeFilter = typeFilter;
+            return this;
+        }
+
+        public Builder setAddressFilter(String addressFilter) {
+            this.addressFilter = addressFilter;
+            return this;
+        }
+
+        public Builder setReporterFilter(String reporterFilter) {
+            this.reporterFilter = reporterFilter;
+            return this;
+        }
+
+        public Builder setDateFilter(String dateFilter) {
+            this.dateFilter = dateFilter;
+            return this;
+        }
+
+        public Builder setStatusFilter(String statusFilter) {
+            this.statusFilter = statusFilter;
+            return this;
+        }
+
+        public GetProblemsParams create() {
+            return new GetProblemsParams(start, limit, descriptionFilter, typeFilter, addressFilter,
+                reporterFilter, dateFilter, statusFilter);
+        }
     }
 }
 
