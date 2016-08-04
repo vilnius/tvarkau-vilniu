@@ -82,6 +82,13 @@
     <string name="error_submitting_problem">Įvyko klaida, bandykite dar sykį</string>
     <string name="sending_problem">Siunčiama</string>
     <string name="check_google_play_services">Patikrinkite Google Play paslaugas!</string>
+    <string name="thanks_to">Ypatingai dėkojame</string>
+    <string name="comma">,</string>
+    <string name="ineta">Ineta Platonaitė</string>
+    <string name="karolis">Karolis Vyčius</string>
+    <string name="vilius">Vilius Kraujutis</string>
+    <string name="povilas">Povilas Poderskis</string>
+    <string name="renat">Renat Buga</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

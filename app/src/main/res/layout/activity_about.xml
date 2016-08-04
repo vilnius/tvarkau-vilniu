@@ -34,7 +34,7 @@
                 android:textColor="@color/black_87" />
 
             <LinearLayout
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
@@ -86,8 +86,96 @@
                     android:id="@+id/code_for_vilnius_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="32dp"
+                    android:paddingBottom="8dp"
                     android:src="@drawable/ic_c4v" />
+
+                <TextView
+                    android:id="@+id/thanks_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:text="@string/thanks_to"
+                    android:textColor="@color/black_87" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/ineta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ineta"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comma"
+                        android:textColor="@color/black_87"
+                        android:layout_marginRight="2dp"/>
+
+                    <TextView
+                        android:id="@+id/karolis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/karolis"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comma"
+                        android:textColor="@color/black_87"
+                        android:layout_marginRight="2dp"/>
+
+                    <TextView
+                        android:id="@+id/vilius"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vilius"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comma"
+                        android:textColor="@color/black_87" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="32dp"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/povilas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/povilas"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comma"
+                        android:textColor="@color/black_87"
+                        android:layout_marginRight="2dp"/>
+
+                    <TextView
+                        android:id="@+id/renat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/renat"
+                        android:textColor="@color/colorPrimary"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/support_us"

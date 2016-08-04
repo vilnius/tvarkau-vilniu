@@ -18,6 +18,11 @@ public class GlobalConsts {
     public final static String CODE_FOR_VILNIUS_EMAIL = "info@codeforvilnius.lt";
     public final static String VILNIUS_MUNICIPALITY_EMAIL = "e.vicemeras@vilnius.lt";
     public final static String VILNIUS_MUNICIPALITY_PHONE = "1664";
+    public final static String INETA_LINKEDIN = "https://lt.linkedin.com/in/platonaite";
+    public final static String KAROLIS_LINKEDIN = "https://lt.linkedin.com/in/vycius";
+    public final static String VILIUS_LINKEDIN = "https://lt.linkedin.com/in/viliusk";
+    public final static String POVILAS_LINKEDIN = "https://lt.linkedin.com/in/povilaspoderskis";
+    public final static String RENAT_LINKEDIN = "https://lt.linkedin.com/in/renatbuga";
 
     private GlobalConsts() {}
 }
