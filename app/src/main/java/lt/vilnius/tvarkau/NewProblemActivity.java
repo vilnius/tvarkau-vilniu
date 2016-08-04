@@ -71,6 +71,7 @@ import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -204,11 +205,29 @@ public class NewProblemActivity extends BaseActivity {
             ProgressDialog progressDialog = createProgressDialog();
             progressDialog.show();
 
-            String description = mReportProblemDescription.getText().toString();
-            GetNewProblemParams params = new GetNewProblemParams(ANONYMOUS_USER_SESSION_IS, description,
-                reportType.getName(), address, locationCords.latitude, locationCords.longitude, photos,
-                null, null, null);
-            ApiRequest<GetNewProblemParams> request = new ApiRequest<>(ApiMethod.NEW_PROBLEM, params);
+            photos = new String[problemImagesURIs.size()];
+
+            Observable<String[]> photoObservable = Observable.from(problemImagesURIs)
+                .map(uri -> Uri.fromFile(new File(uri.toString())))
+                .map(uri -> {
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                        byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
+                        return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .toList()
+                .map(photos -> {
+                    String[] photoArray = new String[photos.size()];
+                    photos.toArray(photoArray);
+                    return photoArray;
+                });
 
             Action1<ApiResponse<Integer>> onSuccess = apiResponse -> {
                 if (apiResponse.getResult() != null) {
@@ -230,13 +249,27 @@ public class NewProblemActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
 
-            legacyApiService.postNewProblem(request)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    onSuccess,
-                    onError
-                );
+            photoObservable.flatMap(photos -> Observable.just(
+                new GetNewProblemParams.Builder()
+                    .setSessionId(ANONYMOUS_USER_SESSION_IS)
+                    .setDescription(mReportProblemDescription.getText().toString())
+                    .setType(reportType.getName())
+                    .setAddress(address)
+                    .setLatitude(locationCords.latitude)
+                    .setLongitude(locationCords.longitude)
+                    .setPhoto(photos)
+                    .setEmail(null)
+                    .setPhone(null)
+                    .setMessageDescription(null)
+                    .create())
+            ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
+            .flatMap(request -> legacyApiService.postNewProblem(request))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                onSuccess,
+                onError
+            );
         }
     }
 
@@ -350,22 +383,7 @@ public class NewProblemActivity extends BaseActivity {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-                    int photoCount = problemImagesURIs.size();
-                    photos = new String[photoCount];
-                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[photoCount]);
-                    for (int i = 0; i < photoCount; i++) {
-                        Uri uriPath = Uri.fromFile(new File(problemImagesURIsArr[i].toString()));
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriPath);
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
-                            byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
-                            String encodedImage = Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
-                            photos[i] = encodedImage;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
                     setPhotos(problemImagesURIsArr);
                     break;
                 case REQUEST_PLACE_PICKER:
@@ -426,7 +444,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void setPhotos(Uri[] photoUris) {
-        if (photos.length > 1) {
+        if (photoUris.length > 1) {
             mProblemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
         mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
