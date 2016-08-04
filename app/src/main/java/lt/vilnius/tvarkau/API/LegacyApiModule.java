@@ -41,18 +41,25 @@ public class LegacyApiModule {
     @Singleton
     public OkHttpClient provideOkHttpClient() {
 
-        return new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            builder
+                .addNetworkInterceptor(interceptor)
+                .addNetworkInterceptor(new StethoInterceptor());
+        }
+
+        return builder
             .authenticator(new TokenAuthenticator())
-            .addNetworkInterceptor(new Interceptor() {
-                @Override public Response intercept(Chain chain) throws IOException {
-                    Request.Builder requestBuilder = chain.request().newBuilder();
-                    requestBuilder.header("Content-Type", "application/json");
-                    return chain.proceed(requestBuilder.build());
-                }
-            })
-            .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(new TokenInterceptor())
-            .addNetworkInterceptor(new StethoInterceptor())
+            .addNetworkInterceptor(chain -> {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+                requestBuilder.header("Content-Type", "application/json");
+                return chain.proceed(requestBuilder.build());
+            })
             .build();
     }
 
