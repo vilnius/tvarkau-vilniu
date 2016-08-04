@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.API;
+package lt.vilnius.tvarkau.api;
 
 import android.support.annotation.Nullable;
 

@@ -1,6 +1,7 @@
-package lt.vilnius.tvarkau.API;
+package lt.vilnius.tvarkau.api;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -14,19 +15,17 @@ import com.google.gson.JsonSerializer;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import lt.vilnius.tvarkau.BuildConfig;
 import lt.vilnius.tvarkau.network.TokenAuthenticator;
 import lt.vilnius.tvarkau.network.TokenInterceptor;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -69,6 +68,7 @@ public class LegacyApiModule {
 
         Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
 
         return new Retrofit.Builder()

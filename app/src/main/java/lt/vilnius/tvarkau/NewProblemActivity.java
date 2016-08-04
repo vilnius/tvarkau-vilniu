@@ -59,12 +59,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import icepick.State;
-import lt.vilnius.tvarkau.API.ApiMethod;
-import lt.vilnius.tvarkau.API.ApiRequest;
-import lt.vilnius.tvarkau.API.ApiResponse;
-import lt.vilnius.tvarkau.API.GetNewProblemParams;
-import lt.vilnius.tvarkau.API.LegacyApiModule;
-import lt.vilnius.tvarkau.API.LegacyApiService;
+import lt.vilnius.tvarkau.api.ApiMethod;
+import lt.vilnius.tvarkau.api.ApiRequest;
+import lt.vilnius.tvarkau.api.ApiResponse;
+import lt.vilnius.tvarkau.api.GetNewProblemParams;
+import lt.vilnius.tvarkau.api.LegacyApiModule;
+import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
@@ -165,7 +165,7 @@ public class NewProblemActivity extends BaseActivity {
 
     private void initPrivacyModeSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.report_privacy_mode, R.layout.item_report_type_spinner);
+            R.array.report_privacy_mode, R.layout.item_report_type_spinner);
         adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
         mReportProblemPrivacyMode.setAdapter(adapter);
     }
@@ -280,10 +280,10 @@ public class NewProblemActivity extends BaseActivity {
         return progressDialog;
     }
 
-    private Boolean validateProblemInputs() {
-        Boolean addressIsValid = false;
-        Boolean descriptionIsValid = false;
-        Boolean problemTypeIsValid = false;
+    private boolean validateProblemInputs() {
+        boolean addressIsValid = false;
+        boolean descriptionIsValid = false;
+        boolean problemTypeIsValid = false;
 
         if (address != null) {
             addressIsValid = true;
@@ -317,7 +317,7 @@ public class NewProblemActivity extends BaseActivity {
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
         Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(mReportProblemTakePhoto, 0, 0,
-                mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
+            mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
 
         if (problemImagesURIs != null) {
             intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, problemImagesURIs);
@@ -341,7 +341,7 @@ public class NewProblemActivity extends BaseActivity {
 
         startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
     }
-    
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -359,19 +359,19 @@ public class NewProblemActivity extends BaseActivity {
 
     private boolean isEditedByUser() {
         return mReportProblemDescription.getText().length() > 0 ||
-                mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-                reportType != null || locationCords != null || problemImagesURIs != null;
+            mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
+            reportType != null || locationCords != null || problemImagesURIs != null;
     }
 
     @Override
     public void onBackPressed() {
         if (isEditedByUser()) {
             new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.discard_changes_title))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
-                            NewProblemActivity.super.onBackPressed())
-                    .setNegativeButton(R.string.discard_changes_negative, null).show();
+                .setMessage(getString(R.string.discard_changes_title))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
+                    NewProblemActivity.super.onBackPressed())
+                .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();
         }

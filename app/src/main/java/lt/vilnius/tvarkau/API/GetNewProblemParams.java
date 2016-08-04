@@ -1,10 +1,10 @@
-package lt.vilnius.tvarkau.API;
+package lt.vilnius.tvarkau.api;
 
 import android.support.annotation.Nullable;
 
 public class GetNewProblemParams {
 
-    private String session_id;
+    private String sessionId;
     private String description;
     private String type;
     private String address;
@@ -13,12 +13,12 @@ public class GetNewProblemParams {
     private String[] photo;
     private String email;
     private String phone;
-    private String message_description;
+    private String messageDescription;
 
-    public GetNewProblemParams(String session_id, String description, String type, String address, double latitude,
+    public GetNewProblemParams(String sessionId, String description, String type, String address, double latitude,
         double longitude, @Nullable String[] photo, @Nullable String email, @Nullable String phone,
         @Nullable String messageDescription) {
-        this.session_id = session_id;
+        this.sessionId = sessionId;
         this.description = description;
         this.type = type;
         this.address = address;
@@ -27,7 +27,8 @@ public class GetNewProblemParams {
         this.photo = photo;
         this.email = email;
         this.phone = phone;
-        this.message_description = messageDescription;
+        this.messageDescription = messageDescription;
+    }
 
     public static class Builder {
         private String sessionId;
