@@ -82,6 +82,8 @@
     <string name="error_submitting_problem">Įvyko klaida, bandykite dar sykį</string>
     <string name="sending_problem">Siunčiama</string>
     <string name="check_google_play_services">Patikrinkite Google Play paslaugas!</string>
+    <string name="my_problems_empty">Mano pranešimai tušti</string>
+    <string name="my_problems_will_appear_here">Jūsų sukurti pranešimai atsiras čia</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

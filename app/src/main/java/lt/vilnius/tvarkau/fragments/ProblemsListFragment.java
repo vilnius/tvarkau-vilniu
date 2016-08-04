@@ -62,6 +62,7 @@ public class ProblemsListFragment extends Fragment {
 
     @BindView(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.problem_list) RecyclerView recyclerView;
+    @BindView(R.id.my_problems_empty_view) View myProblemEmptyView;
 
     private static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 20;
     private static final String ALL_PROBLEM_LIST = "all_problem_list";
@@ -144,6 +145,12 @@ public class ProblemsListFragment extends Fragment {
 
     private void setupView() {
         adapter.notifyDataSetChanged();
+        if (!isAllProblemList && problemList.size() == 0) {
+            myProblemEmptyView.setVisibility(View.VISIBLE);
+            swipeContainer.setRefreshing(false);
+        } else {
+            myProblemEmptyView.setVisibility(View.GONE);
+        }
     }
 
     private void getData(int page) {
@@ -202,7 +209,10 @@ public class ProblemsListFragment extends Fragment {
 
     private void loadMyProblems() {
 
-        if (!shouldLoadMoreProblems) { return; }
+        if (!shouldLoadMoreProblems) {
+            swipeContainer.setRefreshing(false);
+            return;
+        }
 
         Action0 onSuccess = () -> {
             Collections.sort(problemList, (lhs, rhs) -> lhs.getEntryDate().isAfter(rhs.getEntryDate()) ? -1 : 1);
@@ -241,6 +251,7 @@ public class ProblemsListFragment extends Fragment {
 
     @Subscribe
     public void onNewProblemAddedEvent(NewProblemAddedEvent event) {
+        problemList.clear();
         getData(0);
     }
 
