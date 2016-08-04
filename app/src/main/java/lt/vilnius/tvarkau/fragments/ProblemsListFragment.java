@@ -62,7 +62,7 @@ public class ProblemsListFragment extends Fragment {
 
     @BindView(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.problem_list) RecyclerView recyclerView;
-    @BindView(R.id.my_problems_empty_view) View myProblemEmptyView;
+    @BindView(R.id.my_problems_empty_view) View myProblemsEmptyView;
 
     private static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 100;
     private static final String ALL_PROBLEM_LIST = "all_problem_list";
@@ -146,10 +146,10 @@ public class ProblemsListFragment extends Fragment {
     private void setupView() {
         adapter.notifyDataSetChanged();
         if (!isAllProblemList && problemList.size() == 0) {
-            myProblemEmptyView.setVisibility(View.VISIBLE);
+            myProblemsEmptyView.setVisibility(View.VISIBLE);
             swipeContainer.setRefreshing(false);
         } else {
-            myProblemEmptyView.setVisibility(View.GONE);
+            myProblemsEmptyView.setVisibility(View.GONE);
         }
     }
 
