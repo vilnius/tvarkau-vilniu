@@ -89,6 +89,7 @@
     <string name="vilius">Vilius Kraujutis</string>
     <string name="povilas">Povilas Poderskis</string>
     <string name="renat">Renat Buga</string>
+    <string name="contribute_with_code">Prisidėkite savo kodu</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

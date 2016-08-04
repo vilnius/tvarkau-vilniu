@@ -52,6 +52,12 @@ public class AboutActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.contribute_with_code)
+    protected void onClickContributeWithCode() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.CODE_FOR_VILNIUS_TRELLO));
+        startActivity(intent);
+    }
+
     @OnClick(R.id.contact_us)
     protected void onContactUsClick() {
         openEmail(GlobalConsts.CODE_FOR_VILNIUS_EMAIL);
