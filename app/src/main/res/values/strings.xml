@@ -86,6 +86,7 @@
     <string name="my_problems_will_appear_here">Jūsų sukurti pranešimai atsiras čia</string>
     <string name="thanks_to">Ypatingai dėkojame</string>
     <string name="comma">,</string>
+    <string name="contribute_with_code">Prisidėkite savo kodu</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>
