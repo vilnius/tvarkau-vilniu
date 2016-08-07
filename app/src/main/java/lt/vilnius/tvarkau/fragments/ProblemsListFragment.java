@@ -119,10 +119,7 @@ public class ProblemsListFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
-        swipeContainer.setOnRefreshListener(() -> {
-            problemList.clear();
-            getData(0);
-        });
+        swipeContainer.setOnRefreshListener(this::reloadData);
         swipeContainer.setColorSchemeResources(R.color.colorAccent);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -141,6 +138,11 @@ public class ProblemsListFragment extends Fragment {
         getData(0);
 
         return view;
+    }
+
+    private void reloadData() {
+        problemList.clear();
+        getData(0);
     }
 
     private void setupView() {
@@ -251,14 +253,12 @@ public class ProblemsListFragment extends Fragment {
 
     @Subscribe
     public void onNewProblemAddedEvent(NewProblemAddedEvent event) {
-        problemList.clear();
-        getData(0);
+        reloadData();
     }
 
     @Override
     public void onResume() {
-        problemList.clear();
-        getData(0);
+        reloadData();
         super.onResume();
     }
 
