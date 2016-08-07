@@ -8,7 +8,6 @@
     <string name="title_new_problem">Naujas pranešimas</string>
     <string name="title_choose_problem_type">Pranešimo tipas</string>
 
-
     <string name="choose_problem_type">Tipas</string>
 
     <string name="open">Atidaryti</string>
@@ -90,6 +89,11 @@
     <string name="povilas">Povilas Poderskis</string>
     <string name="renat">Renat Buga</string>
     <string name="contribute_with_code">Prisidėkite savo kodu</string>
+    <string name="thanks_to_contributors"><a href="https://lt.linkedin.com/in/platonaite">Ineta Platonaitė</a>,
+        <a href="https://lt.linkedin.com/in/vycius">Karolis Vyčius</a>,
+        <a href="https://lt.linkedin.com/in/viliusk">Vilius Kraujutis</a>,
+        <a href="https://lt.linkedin.com/in/povilaspoderskis">Povilas Poderskis</a>,
+        <a href="https://lt.linkedin.com/in/renatbuga">Renat Buga</a></string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

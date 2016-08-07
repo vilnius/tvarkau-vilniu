@@ -6,11 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 
 public class AboutActivity extends BaseActivity {
@@ -20,6 +23,9 @@ public class AboutActivity extends BaseActivity {
 
     @BindView(R.id.version_code)
     TextView versionCode;
+
+    @BindView(R.id.thanks_to_contributors)
+    TextView thanksToContributors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,10 @@ public class AboutActivity extends BaseActivity {
         }
 
         versionCode.setText(BuildConfig.VERSION_NAME);
+
+        Linkify.addLinks(thanksToContributors, Linkify.WEB_URLS);
+        FormatUtils.removeUnderlines(thanksToContributors);
+        thanksToContributors.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @OnClick(R.id.rate_app)
@@ -109,35 +119,5 @@ public class AboutActivity extends BaseActivity {
                 .create()
                 .show();
         }
-    }
-
-    @OnClick(R.id.ineta)
-    protected void onClickIneta() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.INETA_LINKEDIN));
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.karolis)
-    protected void onClickKarolis() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.KAROLIS_LINKEDIN));
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.vilius)
-    protected void onCliclVilius() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.VILIUS_LINKEDIN));
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.povilas)
-    protected void onClickPovilas() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.POVILAS_LINKEDIN));
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.renat)
-    protected void onClickRenat() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.RENAT_LINKEDIN));
-        startActivity(intent);
     }
 }
