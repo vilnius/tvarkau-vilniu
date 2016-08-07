@@ -384,7 +384,11 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_IMAGE_CAPTURE:
                     problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
                     Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
-                    setPhotos(problemImagesURIsArr);
+                    String[] photoArray = new String[problemImagesURIsArr.length];
+                    for (int i = 0; i < problemImagesURIsArr.length; i++) {
+                        photoArray[i] = new File(problemImagesURIsArr[i].getPath()).toString();
+                    }
+                    setPhotos(photoArray);
                     break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
@@ -443,16 +447,12 @@ public class NewProblemActivity extends BaseActivity {
         snackbar.show();
     }
 
-    private void setPhotos(Uri[] photoUris) {
-        if (photoUris.length > 1) {
-            mProblemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
+    private void setPhotos(String[] photoArrays) {
+        if (photoArrays.length > 1) {
+            problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
-        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
-            @Override
-            public void loadImage(Uri imageURI, Context context, ImageView imageView) {
-                Glide.with(context).load(new File(imageURI.getPath())).centerCrop().into(imageView);
-            }
-        });
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photoArrays,
+            R.layout.problem_images_view_pager_item));
     }
 
     @OnClick(R.id.report_problem_location)
