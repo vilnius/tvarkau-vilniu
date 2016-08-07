@@ -135,6 +135,8 @@ public class ProblemsListFragment extends Fragment {
         adapter = new ProblemsListAdapter(getActivity(), problemList);
         recyclerView.setAdapter(adapter);
 
+        myProblemsEmptyView.setVisibility(View.GONE);
+
         getData(0);
 
         return view;
@@ -147,11 +149,10 @@ public class ProblemsListFragment extends Fragment {
 
     private void setupView() {
         adapter.notifyDataSetChanged();
+
         if (!isAllProblemList && problemList.size() == 0) {
             myProblemsEmptyView.setVisibility(View.VISIBLE);
             swipeContainer.setRefreshing(false);
-        } else {
-            myProblemsEmptyView.setVisibility(View.GONE);
         }
     }
 
