@@ -110,6 +110,8 @@ public class ProblemsListFragment extends Fragment {
         subscriptions = new CompositeSubscription();
         shouldLoadMoreProblems = true;
         isLoading = false;
+
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -162,7 +164,6 @@ public class ProblemsListFragment extends Fragment {
             return;
         }
 
-        isLoading = true;
         if (isAllProblemList) {
             loadAllProblems(page);
         } else {
@@ -209,6 +210,7 @@ public class ProblemsListFragment extends Fragment {
             };
 
             legacyApiService.getProblems(request)
+                .doOnSubscribe(() -> isLoading = true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -246,6 +248,7 @@ public class ProblemsListFragment extends Fragment {
         }
 
         Observable.from(myProblemIds)
+            .doOnSubscribe(() -> isLoading = true)
             .map(id -> new GetProblemParams(id))
             .map(params -> new ApiRequest<>(ApiMethod.GET_REPORT, params))
             .flatMap(request -> legacyApiService.getProblem(request))
@@ -262,25 +265,20 @@ public class ProblemsListFragment extends Fragment {
 
     @Subscribe
     public void onNewProblemAddedEvent(NewProblemAddedEvent event) {
+        shouldLoadMoreProblems = true;
+        isLoading = false;
         reloadData();
     }
-
+    
     @Override
     public void onResume() {
         reloadData();
         super.onResume();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
+    @Override public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
-        super.onStop();
     }
 
     @Override
