@@ -137,7 +137,9 @@ public class ProblemsListFragment extends Fragment {
 
         myProblemsEmptyView.setVisibility(View.GONE);
 
-        getData(0);
+        if (problemList.size() == 0 && shouldLoadMoreProblems) {
+            getData(0);
+        }
 
         return view;
     }
@@ -263,12 +265,6 @@ public class ProblemsListFragment extends Fragment {
     @Subscribe
     public void onNewProblemAddedEvent(NewProblemAddedEvent event) {
         reloadData();
-    }
-
-    @Override
-    public void onResume() {
-        reloadData();
-        super.onResume();
     }
 
     @Override
