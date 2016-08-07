@@ -27,63 +27,86 @@ import lt.vilnius.tvarkau.utils.FormatUtils;
  * Created by Karolis Vycius on 2016-01-13.
  */
 public class ProblemsListAdapter
-        extends RecyclerView.Adapter<ProblemsListAdapter.ViewHolder> {
+    extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROGRESS = 0;
 
     private Activity activity;
     private final List<Problem> values;
+    private boolean showLoader;
 
     public ProblemsListAdapter(Activity activity, List<Problem> items) {
         this.activity = activity;
         values = items;
+        showLoader = true;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder = null;
+        if (viewType == VIEW_ITEM) {
+            View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.problem_list_content, parent, false);
-        return new ViewHolder(view);
+            viewHolder = new DataViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_indicator, parent, false);
+            viewHolder = new ProgressViewHolder(view);
+        }
+        return viewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        Problem item = values.get(position);
+    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        holder.item = item;
+        if (holder instanceof DataViewHolder) {
+            Problem item = values.get(position);
 
-        holder.descriptionView.setText(item.getDescription());
+            DataViewHolder dataViewHolder = (DataViewHolder) holder;
+            dataViewHolder.item = item;
 
-        item.applyReportStatusLabel(item.getStatus(), holder.statusView);
+            dataViewHolder.descriptionView.setText(item.getDescription());
 
-        holder.titleView.setText(item.getType());
+            item.applyReportStatusLabel(item.getStatus(), dataViewHolder.statusView);
 
-        holder.timeView.setText(FormatUtils.formatLocalDateTime(item.getEntryDate()));
+            dataViewHolder.titleView.setText(item.getType());
 
-        if (item.getPhotos() != null) {
-            holder.thumbView.setVisibility(View.VISIBLE);
-            Glide.with(activity).load(item.getPhotos()[0]).into(holder.thumbView);
-        } else {
-            holder.thumbView.setVisibility(View.GONE);
-        }
+            dataViewHolder.timeView.setText(FormatUtils.formatLocalDateTime(item.getEntryDate()));
 
-        holder.content.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, holder.item.getId());
+            if (item.getPhotos() != null) {
+                dataViewHolder.thumbView.setVisibility(View.VISIBLE);
+                Glide.with(activity)
+                    .load(item.getPhotos()[0])
+                    .into(dataViewHolder.thumbView);
+            } else {
+                dataViewHolder.thumbView.setVisibility(View.GONE);
+            }
+
+            dataViewHolder.content.setOnClickListener(view -> {
+                Intent intent = ProblemDetailActivity.getStartActivityIntent(activity, dataViewHolder.item.getId());
 
                 Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
                             view.getWidth(), view.getHeight()).toBundle();
 
                 ActivityCompat.startActivity(activity, intent, bundle);
-            }
-        });
+            });
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position < values.size()
+            ? VIEW_ITEM
+            : VIEW_PROGRESS;
     }
 
     @Override
     public int getItemCount() {
-        return values.size();
+        return showLoader
+            ? values.size() + 1
+            : values.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class DataViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.problem_list_content)
         public View content;
         @BindView(R.id.problem_list_content_title)
@@ -99,7 +122,7 @@ public class ProblemsListAdapter
 
         public Problem item;
 
-        public ViewHolder(View view) {
+        public DataViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
@@ -108,5 +131,15 @@ public class ProblemsListAdapter
         public String toString() {
             return super.toString() + " '" + descriptionView.getText() + "'";
         }
+    }
+
+    public class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressViewHolder(View view) {
+            super(view);
+        }
+    }
+
+    public void hideLoader() {
+        showLoader = false;
     }
 }
