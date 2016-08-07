@@ -6,10 +6,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.List;
+import org.parceler.Parcels;
 
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.factory.DummyProblems;
 
 /**
  * Created by Gediminas Zukas on 04/05/16.
@@ -18,6 +17,8 @@ public class SingleProblemMapFragment extends BaseMapFragment implements OnMapRe
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {
 
+    Problem problem;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -25,8 +26,20 @@ public class SingleProblemMapFragment extends BaseMapFragment implements OnMapRe
         getMapAsync(this);
     }
 
-    public static SingleProblemMapFragment getInstance() {
-        return new SingleProblemMapFragment();
+    public static SingleProblemMapFragment getInstance(Problem problem) {
+        SingleProblemMapFragment singleProblemMapFragment = new SingleProblemMapFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(null, Parcels.wrap(problem));
+        singleProblemMapFragment.setArguments(arguments);
+        return singleProblemMapFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            problem = Parcels.unwrap(getArguments().getParcelable(null));
+        }
     }
 
     @Override
@@ -35,11 +48,7 @@ public class SingleProblemMapFragment extends BaseMapFragment implements OnMapRe
     }
 
     private void addSingleProblemMarker() {
-        Problem problem;
-        List<Problem> problems = DummyProblems.getProblems();
-
-        if (problems != null && !problems.isEmpty()) {
-            problem = problems.get(0);
+        if (problem != null) {
             placeMarkerOnTheMap(problem, true);
             setMapTitle(problem.getAddress());
         }

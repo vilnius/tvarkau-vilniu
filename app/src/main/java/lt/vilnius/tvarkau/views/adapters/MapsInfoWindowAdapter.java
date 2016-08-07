@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 
 /**
  * Created by Karolis Vycius on 2016-01-30.
@@ -49,17 +50,19 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(Marker marker) {
         Problem problem = problemHashMap.get(marker.getTitle());
 
-        titleView.setText(problem.getTitle());
         descriptionView.setText(problem.getDescription());
-        timeView.setText(problem.getRelativeUpdatedAt());
-        problem.applyReportStatusLabel(statusView);
 
-        String thumbUrl = problem.getThumbUrl();
+        titleView.setText(problem.getType());
 
-        if (thumbUrl == null) {
-            thumbView.setImageResource(R.drawable.ic_placeholder_list_of_reports);
+        timeView.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
+
+        problem.applyReportStatusLabel(problem.getStatus(), statusView);
+
+        if (problem.getPhotos() != null) {
+            thumbView.setVisibility(View.VISIBLE);
+            Glide.with(context).load(problem.getPhotos()[0]).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
         } else {
-            Glide.with(context).load(thumbUrl).placeholder(R.drawable.ic_placeholder_list_of_reports).into(thumbView);
+            thumbView.setVisibility(View.GONE);
         }
         return view;
     }

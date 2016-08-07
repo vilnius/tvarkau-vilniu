@@ -64,8 +64,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingLeft="16dp"
                     android:textColor="#8A000000"
-                    android:textSize="13sp"
-                    tools:text="just now" />
+                    android:textSize="13sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -75,8 +74,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:background="#f0f0f0"
-            android:scaleType="center"
-            android:src="@drawable/ic_placeholder_list_of_reports" />
+            android:scaleType="centerCrop"/>
 
     </LinearLayout>
 

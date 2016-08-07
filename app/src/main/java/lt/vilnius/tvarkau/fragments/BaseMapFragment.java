@@ -1,8 +1,11 @@
 package lt.vilnius.tvarkau.fragments;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,7 +22,7 @@ import java.util.HashMap;
 
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.factory.MapInfoWindowShownEvent;
+import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
 
 /**
@@ -32,8 +35,10 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     protected GoogleMap googleMap;
 
-    protected BitmapDescriptor inProgressMarker;
     protected BitmapDescriptor doneMarker;
+    protected BitmapDescriptor postponedMarker;
+    protected BitmapDescriptor registeredMarker;
+    protected BitmapDescriptor transferredMarker;
     protected BitmapDescriptor selectedMarker;
 
     protected HashMap<String, Problem> problemHashMap = new HashMap<>();
@@ -46,9 +51,11 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     private void setMarkerResources() {
-        inProgressMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_blue);
-        doneMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_green);
-        selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_red);
+        doneMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_done);
+        postponedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_postponed);
+        transferredMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_transferred);
+        registeredMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_registered);
+        selectedMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_selected);
     }
 
     protected void onMapReady(GoogleMap map) {
@@ -57,7 +64,12 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f));
 
-        googleMap.setMyLocationEnabled(true);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
+            .PERMISSION_GRANTED && ActivityCompat
+            .checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        }
+
         initMapData();
     }
 
@@ -86,16 +98,28 @@ public abstract class BaseMapFragment extends SupportMapFragment
             Marker marker = googleMap.addMarker(markerOptions);
             marker.setIcon(selectedMarker);
             marker.showInfoWindow();
+            //  There is a known issue where in InfoWindow the image
+            // doesn't load properly the first time. Need to reload  each time
+            final Handler handler = new Handler();
+            handler.postDelayed(marker::showInfoWindow, 200);
         } else
             googleMap.addMarker(markerOptions);
     }
 
     public BitmapDescriptor getMarkerIcon(Problem problem) {
-        switch (problem.getStatusCode()) {
+        switch (problem.getStatus()) {
             case Problem.STATUS_DONE:
                 return doneMarker;
+            case Problem.STATUS_RESOLVED:
+                return doneMarker;
+            case Problem.STATUS_POSTPONED:
+                return postponedMarker;
+            case Problem.STATUS_TRANSFERRED:
+                return transferredMarker;
+            case Problem.STATUS_REGISTERED:
+                return registeredMarker;
             default:
-                return inProgressMarker;
+                return registeredMarker;
         }
     }
 
@@ -104,6 +128,11 @@ public abstract class BaseMapFragment extends SupportMapFragment
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
         marker.setIcon(selectedMarker);
         EventBus.getDefault().post(new MapInfoWindowShownEvent(marker));
+        marker.showInfoWindow();
+        //  There is a known issue where in InfoWindow the image
+        // doesn't load properly the first time. Need to reload  each time
+        final Handler handler = new Handler();
+        handler.postDelayed(marker::showInfoWindow, 200);
         return false;
     }
 

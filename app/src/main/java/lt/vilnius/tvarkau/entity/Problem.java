@@ -1,14 +1,13 @@
 package lt.vilnius.tvarkau.entity;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.format.DateUtils;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
+import org.parceler.Parcel;
+import org.threeten.bp.LocalDateTime;
 
 import lt.vilnius.tvarkau.R;
 
@@ -16,33 +15,61 @@ import lt.vilnius.tvarkau.R;
  * @author Vilius Kraujutis
  * @since 2015-11-17 03:23.
  */
+@Parcel
 public class Problem {
-    public static final int STATUS_IN_PROGRESS = 0;
-    public static final int STATUS_DONE = 1;
+    public static final String STATUS_DONE = "Atlikta";
+    public static final String STATUS_RESOLVED = "Išnagrinėta";
+    public static final String STATUS_TRANSFERRED = "Perduota";
+    public static final String STATUS_REGISTERED = "Registruota";
+    public static final String STATUS_POSTPONED = "Atidėta";
 
-    private int id;
-    private String title;
-    private String description;
+    @SerializedName("docNo")
+    public String id;
 
-    private String address;
-    @StatusCode
-    private int statusCode;
-    private Date updatedAt;
+    // entry_date and report_date bring back the
+    // same result just from different API methods
+    @SerializedName("entry_date")
+    public LocalDateTime entryDateInGetProblemsAPI;
+    @SerializedName("report_date")
+    public LocalDateTime entryDateInGetReportAPI;
 
-    private double lat, lng;
+    // type_name and type bring back the
+    // same result just from different API methods
+    @SerializedName("type_name")
+    public String typeInGetProblemsAPI;
+    @SerializedName("type")
+    public String typeInGetReportAPI;
 
-    private String thumbUrl;
+    public String description;
+    public String address;
+    public String status;
+    public String answer;
 
-    public void applyReportStatusLabel(@NonNull TextView reportLabelTextView) {
-        switch (statusCode) {
-            case STATUS_IN_PROGRESS:
-                reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_in_progress);
-                reportLabelTextView.setText(R.string.report_status_in_progress);
-                break;
-            case STATUS_DONE:
-            default:
-                reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_done);
-                reportLabelTextView.setText(R.string.report_status_done);
+    @SerializedName("x")
+    public double lng;
+
+    @SerializedName("y")
+    public double lat;
+
+    @SerializedName("photo")
+    public String[] photosInGetReportAPI;
+
+    @SerializedName("thumbnail")
+    public String photosInGetProblemsAPI;
+
+    @SerializedName("complete_date")
+    public String answerDate;
+
+    public void applyReportStatusLabel(String status, @NonNull TextView reportLabelTextView) {
+        reportLabelTextView.setText(status);
+        if (status.equalsIgnoreCase(STATUS_DONE) || (status.equalsIgnoreCase(STATUS_RESOLVED))) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_done);
+        } else if (status.equalsIgnoreCase(STATUS_POSTPONED)) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_postponed);
+        } else if (status.equalsIgnoreCase(STATUS_REGISTERED)) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_registered);
+        } else if (status.equalsIgnoreCase(STATUS_TRANSFERRED)) {
+            reportLabelTextView.setBackgroundResource(R.drawable.label_report_status_transferred);
         }
     }
 
@@ -50,24 +77,33 @@ public class Problem {
         return address;
     }
 
-    @Nullable
-    public String getThumbUrl() {
-        return thumbUrl;
+    public String getStatus() {
+        return status;
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public String getType() {
+        if (typeInGetProblemsAPI != null) {
+            return typeInGetProblemsAPI;
+        } else {
+            return typeInGetReportAPI;
+        }
     }
 
-    public String getTitle() {
-        return title;
+    public String getAnswer() { return answer; }
+
+    public LocalDateTime getEntryDate() {
+        if (entryDateInGetProblemsAPI != null) {
+            return entryDateInGetProblemsAPI;
+        } else {
+            return entryDateInGetReportAPI;
+        }
     }
 
     public String getDescription() {
         return description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -75,51 +111,21 @@ public class Problem {
         return new LatLng(lat, lng);
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getAnswerDate() { return answerDate; }
+
+    public String[] getPhotos() {
+        if (photosInGetReportAPI != null) {
+            return photosInGetReportAPI;
+        } else if (photosInGetProblemsAPI != null) {
+            String[] photosArray = new String[1];
+            photosArray[0] = photosInGetProblemsAPI;
+            return photosArray;
+        } else {
+            return null;
+        }
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
-
-    public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
-    }
-
-    public String getRelativeUpdatedAt() {
-        return DateUtils.getRelativeTimeSpanString(updatedAt.getTime()).toString();
-    }
-
-    @IntDef({STATUS_IN_PROGRESS, STATUS_DONE})
-    public @interface StatusCode {
     }
 }

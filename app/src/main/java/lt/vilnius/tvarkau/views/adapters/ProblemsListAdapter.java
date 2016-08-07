@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 
 /**
  * Created by Karolis Vycius on 2016-01-13.
@@ -30,11 +30,11 @@ public class ProblemsListAdapter
         extends RecyclerView.Adapter<ProblemsListAdapter.ViewHolder> {
 
     private Activity activity;
-    private final List<Problem> mValues;
+    private final List<Problem> values;
 
     public ProblemsListAdapter(Activity activity, List<Problem> items) {
         this.activity = activity;
-        mValues = items;
+        values = items;
     }
 
     @Override
@@ -46,21 +46,23 @@ public class ProblemsListAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Problem item = mValues.get(position);
+        Problem item = values.get(position);
 
         holder.item = item;
-        holder.titleView.setText(item.getTitle());
+
         holder.descriptionView.setText(item.getDescription());
-        item.applyReportStatusLabel(holder.statusView);
-        holder.timeView.setText(DateUtils.getRelativeTimeSpanString(item.getUpdatedAt().getTime()));
 
-        String thumbUrl = item.getThumbUrl();
+        item.applyReportStatusLabel(item.getStatus(), holder.statusView);
 
-        if (thumbUrl == null) {
-            holder.thumbView.setVisibility(View.GONE);
-        } else {
+        holder.titleView.setText(item.getType());
+
+        holder.timeView.setText(FormatUtils.formatLocalDateTime(item.getEntryDate()));
+
+        if (item.getPhotos() != null) {
             holder.thumbView.setVisibility(View.VISIBLE);
-            Glide.with(activity).load(thumbUrl).into(holder.thumbView);
+            Glide.with(activity).load(item.getPhotos()[0]).into(holder.thumbView);
+        } else {
+            holder.thumbView.setVisibility(View.GONE);
         }
 
         holder.content.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +80,7 @@ public class ProblemsListAdapter
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return values.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

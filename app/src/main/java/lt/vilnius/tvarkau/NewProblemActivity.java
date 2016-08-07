@@ -1,19 +1,25 @@
 package lt.vilnius.tvarkau;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,28 +41,53 @@ import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import icepick.State;
+import lt.vilnius.tvarkau.api.ApiMethod;
+import lt.vilnius.tvarkau.api.ApiRequest;
+import lt.vilnius.tvarkau.api.ApiResponse;
+import lt.vilnius.tvarkau.api.GetNewProblemParams;
+import lt.vilnius.tvarkau.api.LegacyApiModule;
+import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
+import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
+@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
+@AutoInjector
+@Singleton
 public class NewProblemActivity extends BaseActivity {
+
+    @Inject LegacyApiService legacyApiService;
+    @Inject SharedPreferences myProblemsPreferences;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 10;
@@ -66,6 +97,9 @@ public class NewProblemActivity extends BaseActivity {
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
+
+    private static final String ANONYMOUS_USER_SESSION_IS = "null";
+    private static final String PROBLEM_PREFERENCE_KEY = "problem";
 
 
     @BindView(R.id.toolbar)
@@ -84,6 +118,12 @@ public class NewProblemActivity extends BaseActivity {
     EditText mReportProblemDescription;
     @BindView(R.id.report_problem_take_photo)
     FloatingActionButton mReportProblemTakePhoto;
+    @BindView(R.id.report_problem_location_wrapper)
+    TextInputLayout reportProblemLocationWrapper;
+    @BindView(R.id.report_problem_description_wrapper)
+    TextInputLayout reportProblemDescriptionWrapper;
+    @BindView(R.id.report_problem_type_wrapper)
+    TextInputLayout reportProblemTypeWrapper;
 
     @State
     File lastPhotoFile;
@@ -95,6 +135,8 @@ public class NewProblemActivity extends BaseActivity {
     Profile profile;
     @State
     ReportType reportType;
+    String address;
+    String[] photos;
 
     private Snackbar snackbar;
 
@@ -104,6 +146,14 @@ public class NewProblemActivity extends BaseActivity {
         setContentView(R.layout.activity_new_problem);
 
         ButterKnife.bind(this);
+
+        DaggerNewProblemActivityComponent
+            .builder()
+            .appModule(new AppModule(this.getApplication()))
+            .sharedPreferencesModule(new SharedPreferencesModule())
+            .legacyApiModule(new LegacyApiModule())
+            .build()
+            .inject(this);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -115,7 +165,7 @@ public class NewProblemActivity extends BaseActivity {
 
     private void initPrivacyModeSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.report_privacy_mode, R.layout.item_report_type_spinner);
+            R.array.report_privacy_mode, R.layout.item_report_type_spinner);
         adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
         mReportProblemPrivacyMode.setAdapter(adapter);
     }
@@ -124,6 +174,7 @@ public class NewProblemActivity extends BaseActivity {
         mProblemImagesViewPager.setAdapter(ProblemImagesPagerAdapter.empty(this));
         mProblemImagesViewPager.setOffscreenPageLimit(3);
         mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
+        mProblemImagesViewPagerIndicator.setVisibility(View.GONE);
     }
 
     @Override
@@ -140,7 +191,6 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -149,21 +199,125 @@ public class NewProblemActivity extends BaseActivity {
         return true;
     }
 
-
     public void sendProblem() {
-        Toast.makeText(this, "Should implement send behaviour", Toast.LENGTH_SHORT).show();
+        if (validateProblemInputs()) {
+
+            ProgressDialog progressDialog = createProgressDialog();
+            progressDialog.show();
+
+            photos = new String[problemImagesURIs.size()];
+
+            Observable<String[]> photoObservable = Observable.from(problemImagesURIs)
+                .map(uri -> Uri.fromFile(new File(uri.toString())))
+                .map(uri -> {
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                        byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
+                        return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .toList()
+                .map(photos -> {
+                    String[] photoArray = new String[photos.size()];
+                    photos.toArray(photoArray);
+                    return photoArray;
+                });
+
+            Action1<ApiResponse<Integer>> onSuccess = apiResponse -> {
+                if (apiResponse.getResult() != null) {
+                    String newProblemId = apiResponse.getResult().toString();
+                    myProblemsPreferences
+                        .edit()
+                        .putString(PROBLEM_PREFERENCE_KEY + newProblemId, newProblemId)
+                        .apply();
+                    EventBus.getDefault().post(new NewProblemAddedEvent());
+                    progressDialog.dismiss();
+                    Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            };
+
+            Action1<Throwable> onError = throwable -> {
+                throwable.printStackTrace();
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
+            };
+
+            photoObservable.flatMap(photos -> Observable.just(
+                new GetNewProblemParams.Builder()
+                    .setSessionId(ANONYMOUS_USER_SESSION_IS)
+                    .setDescription(mReportProblemDescription.getText().toString())
+                    .setType(reportType.getName())
+                    .setAddress(address)
+                    .setLatitude(locationCords.latitude)
+                    .setLongitude(locationCords.longitude)
+                    .setPhoto(photos)
+                    .setEmail(null)
+                    .setPhone(null)
+                    .setMessageDescription(null)
+                    .create())
+            ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
+            .flatMap(request -> legacyApiService.postNewProblem(request))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                onSuccess,
+                onError
+            );
+        }
+    }
+
+    private ProgressDialog createProgressDialog() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.sending_problem));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        return progressDialog;
+    }
+
+    private boolean validateProblemInputs() {
+        boolean addressIsValid = false;
+        boolean descriptionIsValid = false;
+        boolean problemTypeIsValid = false;
+
+        if (address != null) {
+            addressIsValid = true;
+            reportProblemDescriptionWrapper.setError(null);
+        } else {
+            reportProblemLocationWrapper.setError(getText(R.string.error_problem_location_is_empty));
+        }
+
+        if (mReportProblemDescription.getText() != null && mReportProblemDescription.getText().length() > 0) {
+            descriptionIsValid = true;
+        } else {
+            reportProblemDescriptionWrapper.setError(getText(R.string.error_problem_description_is_empty));
+        }
+
+        if (reportType != null) {
+            problemTypeIsValid = true;
+        } else {
+            reportProblemTypeWrapper.setError(getText(R.string.error_problem_type_is_empty));
+        }
+
+        return addressIsValid && descriptionIsValid && problemTypeIsValid;
     }
 
     public void takePhoto() {
         Config config = new Config();
         config.setToolbarTitleRes(R.string.choose_photos_title);
+        config.setCameraBtnImage(R.drawable.ic_photo_camera_white);
 
         ImagePickerActivity.setConfig(config);
 
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
         Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(mReportProblemTakePhoto, 0, 0,
-                mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
+            mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
 
         if (problemImagesURIs != null) {
             intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, problemImagesURIs);
@@ -188,7 +342,6 @@ public class NewProblemActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -196,8 +349,7 @@ public class NewProblemActivity extends BaseActivity {
                 if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
                     takePhoto();
                 } else {
-                    Toast.makeText(this, "Need camera and storage permissions to take photos.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -207,19 +359,19 @@ public class NewProblemActivity extends BaseActivity {
 
     private boolean isEditedByUser() {
         return mReportProblemDescription.getText().length() > 0 ||
-                mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-                reportType != null || locationCords != null || problemImagesURIs != null;
+            mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
+            reportType != null || locationCords != null || problemImagesURIs != null;
     }
 
     @Override
     public void onBackPressed() {
         if (isEditedByUser()) {
             new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.discard_changes_title))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
-                            NewProblemActivity.super.onBackPressed())
-                    .setNegativeButton(R.string.discard_changes_negative, null).show();
+                .setMessage(getString(R.string.discard_changes_title))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
+                    NewProblemActivity.super.onBackPressed())
+                .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();
         }
@@ -231,7 +383,6 @@ public class NewProblemActivity extends BaseActivity {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-
                     Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
                     setPhotos(problemImagesURIsArr);
                     break;
@@ -249,18 +400,19 @@ public class NewProblemActivity extends BaseActivity {
                         FirebaseCrash.report(e);
                     }
                     if (addresses != null && addresses.get(0).getLocality() != null) {
-                            String city = addresses.get(0).getLocality();
-                            if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                                mAddProblemLocation.setText(place.getName());
-                                locationCords = latLng;
-                                if (snackbar != null && snackbar.isShown()) {
-                                    snackbar.dismiss();
-                                }
-                            } else {
-                                showIncorrectPlaceSnackbar();
+                        String city = addresses.get(0).getLocality();
+                        if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
+                            address = addresses.get(0).getAddressLine(0);
+                            reportProblemLocationWrapper.setError(null);
+                            mAddProblemLocation.setText(address);
+                            locationCords = latLng;
+                            if (snackbar != null && snackbar.isShown()) {
+                                snackbar.dismiss();
                             }
+                        } else {
+                            showIncorrectPlaceSnackbar();
                         }
-                    else {
+                    } else {
                         showIncorrectPlaceSnackbar();
                     }
                     break;
@@ -270,6 +422,7 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_CHOOSE_REPORT_TYPE:
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
                         reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
+                        reportProblemTypeWrapper.setError(null);
                         mReportProblemType.setText(reportType.getName());
                     }
                     break;
@@ -283,7 +436,7 @@ public class NewProblemActivity extends BaseActivity {
         }
     }
 
-    private void showIncorrectPlaceSnackbar(){
+    private void showIncorrectPlaceSnackbar() {
         View view = this.getCurrentFocus();
         snackbar = Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view));
@@ -291,6 +444,9 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void setPhotos(Uri[] photoUris) {
+        if (photoUris.length > 1) {
+            mProblemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
+        }
         mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
             @Override
             public void loadImage(Uri imageURI, Context context, ImageView imageView) {
@@ -328,7 +484,7 @@ public class NewProblemActivity extends BaseActivity {
         return false;
     }
 
-    private void showPlacePicker(View view){
+    private void showPlacePicker(View view) {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
             Intent intent = builder.build(this);
@@ -337,7 +493,7 @@ public class NewProblemActivity extends BaseActivity {
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Check Google Play Services!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.check_google_play_services, Toast.LENGTH_LONG).show();
         }
     }
 }

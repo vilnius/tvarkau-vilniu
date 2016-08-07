@@ -23,12 +23,13 @@ public class ProblemsListViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // TODO change to real fragments
         switch (position) {
             case 0:
-                return ProblemsListFragment.getInstance();
+                return ProblemsListFragment.getAllProblemList();
+            case 1:
+                return ProblemsListFragment.getMyProblemList();
             default:
-                return ProblemsListFragment.getInstance();
+                return ProblemsListFragment.getAllProblemList();
         }
     }
 

@@ -15,8 +15,11 @@
     <color name="home_button_text_color">#DE000000</color>
 
     <color name="problem_status_text_color">#fff</color>
-    <color name="problem_status_in_progress">#0f76bb</color>
+    <color name="problem_status_registered">#0f76bb</color>
     <color name="problem_status_done">#39b54a</color>
+    <color name="problem_status_postponed">#8f8e94</color>
+    <color name="problem_status_transferred">#ff9600</color>
+    <color name="problem_status_selected">#e65100</color>
 
     <color name="photo_background">#e7e7e7</color>
 
