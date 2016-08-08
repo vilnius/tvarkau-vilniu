@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 
 import lt.vilnius.tvarkau.FullscreenImageActivity;
 import lt.vilnius.tvarkau.R;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by Gediminas Zukas on 2016-04-28.
@@ -57,6 +58,11 @@ public class ProblemImagesPagerAdapter<T> extends PagerAdapter {
                 intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position);
                 context.startActivity(intent);
             });
+
+            // Enable image zoom for fullscreen images
+            if (layoutRes == R.layout.problem_fullscreen_image_view_pager_item) {
+                PhotoViewAttacher attacher = new PhotoViewAttacher(problemImageView);
+            }
 
         } else {
             itemView = layoutInflater.inflate(R.layout.no_image, container, false);

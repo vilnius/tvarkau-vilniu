@@ -1,15 +1,17 @@
 package lt.vilnius.tvarkau;
 
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lt.vilnius.tvarkau.views.adapters.HackyViewPager;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 
 public class FullscreenImageActivity extends BaseActivity {
@@ -18,9 +20,11 @@ public class FullscreenImageActivity extends BaseActivity {
     public final static String EXTRA_PHOTOS = "FullscreenImageActivity.photos";
 
     @BindView(R.id.problem_images_view_pager)
-    ViewPager problemImagesViewPager;
+    HackyViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator problemImagesViewPagerIndicator;
+    @BindView(R.id.fullscreen_layout)
+    RelativeLayout fullscreenLayout;
 
     private int initialImagePosition;
     private String[] photos;
@@ -48,7 +52,7 @@ public class FullscreenImageActivity extends BaseActivity {
         initializePager();
     }
 
-    private void initializePager(){
+    private void initializePager() {
         problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photos,
             R.layout.problem_fullscreen_image_view_pager_item));
         problemImagesViewPager.setOffscreenPageLimit(3);
@@ -58,5 +62,13 @@ public class FullscreenImageActivity extends BaseActivity {
         if (photos.length > 1) {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Need to recreate layout after new images
+        // are loaded on app rotation
+        fullscreenLayout.requestLayout();
     }
 }
