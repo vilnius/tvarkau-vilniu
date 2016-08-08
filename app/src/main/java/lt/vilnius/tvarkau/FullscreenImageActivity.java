@@ -31,18 +31,19 @@ public class FullscreenImageActivity extends BaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fullscreen);
-
-        ButterKnife.bind(this);
 
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN|
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
         }
+
+        setContentView(R.layout.activity_fullscreen);
+
+        ButterKnife.bind(this);
 
         if (getIntent().getExtras() != null) {
             initialImagePosition = getIntent().getExtras().getInt(EXTRA_IMAGE_POSITION);
@@ -67,8 +68,8 @@ public class FullscreenImageActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Need to recreate layout after new images
-        // are loaded on app rotation
-        fullscreenLayout.requestLayout();
+        // Need to recreate layout after phone rotation
+        initialImagePosition = problemImagesViewPager.getCurrentItem();
+        initializePager();
     }
 }
