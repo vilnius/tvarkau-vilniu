@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v4.view.ViewPager
+    <lt.vilnius.tvarkau.views.adapters.HackyViewPager
         android:id="@+id/problem_images_view_pager"
         android:layout_width="match_parent"
         android:layout_height="240dp" />

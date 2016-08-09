@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
@@ -27,17 +24,17 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.MainActivity;
+import lt.vilnius.tvarkau.ProblemDetailActivity;
+import lt.vilnius.tvarkau.ProblemsListActivity;
+import lt.vilnius.tvarkau.ProblemsMapActivity;
+import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.api.ApiMethod;
 import lt.vilnius.tvarkau.api.ApiRequest;
 import lt.vilnius.tvarkau.api.ApiResponse;
 import lt.vilnius.tvarkau.api.GetProblemParams;
 import lt.vilnius.tvarkau.api.LegacyApiModule;
 import lt.vilnius.tvarkau.api.LegacyApiService;
-import lt.vilnius.tvarkau.MainActivity;
-import lt.vilnius.tvarkau.ProblemDetailActivity;
-import lt.vilnius.tvarkau.ProblemsListActivity;
-import lt.vilnius.tvarkau.ProblemsMapActivity;
-import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
@@ -187,14 +184,9 @@ public class ProblemDetailFragment extends Fragment {
     private void initProblemImagesPager(Problem problem) {
         String[] photos = problem.getPhotos();
 
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<String>(getContext(), photos) {
-            @Override
-            public void loadImage(String imageId, Context context, ImageView imageView) {
-                Glide.with(context).load(imageId).centerCrop().into(imageView);
-            }
-        });
-
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(getContext(), photos));
         problemImagesViewPager.setOffscreenPageLimit(3);
+
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
     }
 

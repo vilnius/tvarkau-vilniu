@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -26,11 +25,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -103,21 +100,21 @@ public class NewProblemActivity extends BaseActivity {
 
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
     @BindView(R.id.report_problem_location)
-    EditText mAddProblemLocation;
+    EditText addProblemLocation;
     @BindView(R.id.problem_images_view_pager)
-    ViewPager mProblemImagesViewPager;
+    ViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
-    CirclePageIndicator mProblemImagesViewPagerIndicator;
+    CirclePageIndicator problemImagesViewPagerIndicator;
     @BindView(R.id.report_problem_type)
-    EditText mReportProblemType;
+    EditText reportProblemType;
     @BindView(R.id.report_problem_privacy_mode)
-    Spinner mReportProblemPrivacyMode;
+    Spinner reportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
-    EditText mReportProblemDescription;
+    EditText reportProblemDescription;
     @BindView(R.id.report_problem_take_photo)
-    FloatingActionButton mReportProblemTakePhoto;
+    FloatingActionButton reportProblemTakePhoto;
     @BindView(R.id.report_problem_location_wrapper)
     TextInputLayout reportProblemLocationWrapper;
     @BindView(R.id.report_problem_description_wrapper)
@@ -155,7 +152,7 @@ public class NewProblemActivity extends BaseActivity {
             .build()
             .inject(this);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
@@ -167,14 +164,14 @@ public class NewProblemActivity extends BaseActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
             R.array.report_privacy_mode, R.layout.item_report_type_spinner);
         adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
-        mReportProblemPrivacyMode.setAdapter(adapter);
+        reportProblemPrivacyMode.setAdapter(adapter);
     }
 
     private void initProblemImagesPager() {
-        mProblemImagesViewPager.setAdapter(ProblemImagesPagerAdapter.empty(this));
-        mProblemImagesViewPager.setOffscreenPageLimit(3);
-        mProblemImagesViewPagerIndicator.setViewPager(mProblemImagesViewPager);
-        mProblemImagesViewPagerIndicator.setVisibility(View.GONE);
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, null));
+        problemImagesViewPager.setOffscreenPageLimit(3);
+        problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
+        problemImagesViewPagerIndicator.setVisibility(View.GONE);
     }
 
     @Override
@@ -205,29 +202,35 @@ public class NewProblemActivity extends BaseActivity {
             ProgressDialog progressDialog = createProgressDialog();
             progressDialog.show();
 
-            photos = new String[problemImagesURIs.size()];
+            Observable<String[]> photoObservable;
 
-            Observable<String[]> photoObservable = Observable.from(problemImagesURIs)
-                .map(uri -> Uri.fromFile(new File(uri.toString())))
-                .map(uri -> {
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
-                        byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
-                        return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                })
-                .toList()
-                .map(photos -> {
-                    String[] photoArray = new String[photos.size()];
-                    photos.toArray(photoArray);
-                    return photoArray;
-                });
+            if (problemImagesURIs != null) {
+                photos = new String[problemImagesURIs.size()];
+
+                photoObservable = Observable.from(problemImagesURIs)
+                    .map(uri -> Uri.fromFile(new File(uri.toString())))
+                    .map(uri -> {
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                            byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
+                            return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    })
+                    .toList()
+                    .map(photos -> {
+                        String[] photoArray = new String[photos.size()];
+                        photos.toArray(photoArray);
+                        return photoArray;
+                    });
+            } else {
+                photoObservable = Observable.just(null);
+            }
 
             Action1<ApiResponse<Integer>> onSuccess = apiResponse -> {
                 if (apiResponse.getResult() != null) {
@@ -252,7 +255,7 @@ public class NewProblemActivity extends BaseActivity {
             photoObservable.flatMap(photos -> Observable.just(
                 new GetNewProblemParams.Builder()
                     .setSessionId(ANONYMOUS_USER_SESSION_IS)
-                    .setDescription(mReportProblemDescription.getText().toString())
+                    .setDescription(reportProblemDescription.getText().toString())
                     .setType(reportType.getName())
                     .setAddress(address)
                     .setLatitude(locationCords.latitude)
@@ -263,13 +266,13 @@ public class NewProblemActivity extends BaseActivity {
                     .setMessageDescription(null)
                     .create())
             ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
-            .flatMap(request -> legacyApiService.postNewProblem(request))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                onSuccess,
-                onError
-            );
+                .flatMap(request -> legacyApiService.postNewProblem(request))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    onSuccess,
+                    onError
+                );
         }
     }
 
@@ -292,7 +295,7 @@ public class NewProblemActivity extends BaseActivity {
             reportProblemLocationWrapper.setError(getText(R.string.error_problem_location_is_empty));
         }
 
-        if (mReportProblemDescription.getText() != null && mReportProblemDescription.getText().length() > 0) {
+        if (reportProblemDescription.getText() != null && reportProblemDescription.getText().length() > 0) {
             descriptionIsValid = true;
         } else {
             reportProblemDescriptionWrapper.setError(getText(R.string.error_problem_description_is_empty));
@@ -316,8 +319,8 @@ public class NewProblemActivity extends BaseActivity {
 
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
-        Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(mReportProblemTakePhoto, 0, 0,
-            mReportProblemTakePhoto.getWidth(), mReportProblemTakePhoto.getHeight()).toBundle();
+        Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(reportProblemTakePhoto, 0, 0,
+            reportProblemTakePhoto.getWidth(), reportProblemTakePhoto.getHeight()).toBundle();
 
         if (problemImagesURIs != null) {
             intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, problemImagesURIs);
@@ -358,8 +361,8 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private boolean isEditedByUser() {
-        return mReportProblemDescription.getText().length() > 0 ||
-            mReportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
+        return reportProblemDescription.getText().length() > 0 ||
+            reportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
             reportType != null || locationCords != null || problemImagesURIs != null;
     }
 
@@ -384,7 +387,11 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_IMAGE_CAPTURE:
                     problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
                     Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
-                    setPhotos(problemImagesURIsArr);
+                    String[] photoArray = new String[problemImagesURIsArr.length];
+                    for (int i = 0; i < problemImagesURIsArr.length; i++) {
+                        photoArray[i] = new File(problemImagesURIsArr[i].getPath()).toString();
+                    }
+                    setPhotos(photoArray);
                     break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
@@ -404,7 +411,7 @@ public class NewProblemActivity extends BaseActivity {
                         if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
                             address = addresses.get(0).getAddressLine(0);
                             reportProblemLocationWrapper.setError(null);
-                            mAddProblemLocation.setText(address);
+                            addProblemLocation.setText(address);
                             locationCords = latLng;
                             if (snackbar != null && snackbar.isShown()) {
                                 snackbar.dismiss();
@@ -423,14 +430,14 @@ public class NewProblemActivity extends BaseActivity {
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
                         reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
                         reportProblemTypeWrapper.setError(null);
-                        mReportProblemType.setText(reportType.getName());
+                        reportProblemType.setText(reportType.getName());
                     }
                     break;
             }
         } else {
             switch (requestCode) {
                 case REQUEST_PROFILE:
-                    mReportProblemPrivacyMode.setSelection(0);
+                    reportProblemPrivacyMode.setSelection(0);
                     break;
             }
         }
@@ -443,16 +450,11 @@ public class NewProblemActivity extends BaseActivity {
         snackbar.show();
     }
 
-    private void setPhotos(Uri[] photoUris) {
-        if (photoUris.length > 1) {
-            mProblemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
+    private void setPhotos(String[] photoArray) {
+        if (photoArray.length > 1) {
+            problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
-        mProblemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<Uri>(this, photoUris) {
-            @Override
-            public void loadImage(Uri imageURI, Context context, ImageView imageView) {
-                Glide.with(context).load(new File(imageURI.getPath())).centerCrop().into(imageView);
-            }
-        });
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photoArray));
     }
 
     @OnClick(R.id.report_problem_location)
