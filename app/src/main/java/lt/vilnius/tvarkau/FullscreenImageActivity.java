@@ -1,8 +1,10 @@
 package lt.vilnius.tvarkau;
 
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -11,8 +13,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import lt.vilnius.tvarkau.views.adapters.HackyViewPager;
-import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
+import lt.vilnius.tvarkau.views.adapters.FullscreenImagesPagerAdapter;
 
 public class FullscreenImageActivity extends BaseActivity {
 
@@ -20,11 +21,13 @@ public class FullscreenImageActivity extends BaseActivity {
     public final static String EXTRA_PHOTOS = "FullscreenImageActivity.photos";
 
     @BindView(R.id.problem_images_view_pager)
-    HackyViewPager problemImagesViewPager;
+    ViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator problemImagesViewPagerIndicator;
     @BindView(R.id.fullscreen_layout)
     RelativeLayout fullscreenLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private int initialImagePosition;
     private String[] photos;
@@ -37,13 +40,20 @@ public class FullscreenImageActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN|
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
 
         setContentView(R.layout.activity_fullscreen);
 
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().hide();
+        }
 
         if (getIntent().getExtras() != null) {
             initialImagePosition = getIntent().getExtras().getInt(EXTRA_IMAGE_POSITION);
@@ -53,9 +63,27 @@ public class FullscreenImageActivity extends BaseActivity {
         initializePager();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void initializePager() {
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photos,
-            R.layout.problem_fullscreen_image_view_pager_item));
+        problemImagesViewPager.setAdapter(new FullscreenImagesPagerAdapter<>(this, photos, v -> {
+            if (getSupportActionBar() != null) {
+                if (getSupportActionBar().isShowing()) {
+                    getSupportActionBar().hide();
+                } else {
+                    getSupportActionBar().show();
+                }
+            }
+        }));
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPager.setCurrentItem(initialImagePosition);
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
@@ -63,13 +91,5 @@ public class FullscreenImageActivity extends BaseActivity {
         if (photos.length > 1) {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Need to recreate layout after phone rotation
-        initialImagePosition = problemImagesViewPager.getCurrentItem();
-        initializePager();
     }
 }

@@ -19,7 +19,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -169,8 +168,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void initProblemImagesPager() {
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, null,
-            R.layout.problem_images_view_pager_item));
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, null));
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
         problemImagesViewPagerIndicator.setVisibility(View.GONE);
@@ -452,12 +450,11 @@ public class NewProblemActivity extends BaseActivity {
         snackbar.show();
     }
 
-    private void setPhotos(String[] photoArrays) {
-        if (photoArrays.length > 1) {
+    private void setPhotos(String[] photoArray) {
+        if (photoArray.length > 1) {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photoArrays,
-            R.layout.problem_images_view_pager_item));
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photoArray));
     }
 
     @OnClick(R.id.report_problem_location)

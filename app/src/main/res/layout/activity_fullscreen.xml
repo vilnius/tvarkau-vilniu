@@ -4,12 +4,27 @@
     android:id="@+id/fullscreen_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_87">
+    android:background="@android:color/black">
 
-    <lt.vilnius.tvarkau.views.adapters.HackyViewPager
+    <android.support.v4.view.ViewPager
         android:id="@+id/problem_images_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <android.support.design.widget.AppBarLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/FullscreenAppBar"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/problem_images_view_pager_indicator"

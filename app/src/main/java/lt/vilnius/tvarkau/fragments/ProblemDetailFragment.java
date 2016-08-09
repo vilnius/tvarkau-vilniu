@@ -184,8 +184,7 @@ public class ProblemDetailFragment extends Fragment {
     private void initProblemImagesPager(Problem problem) {
         String[] photos = problem.getPhotos();
 
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(getContext(), photos,
-            R.layout.problem_images_view_pager_item));
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(getContext(), photos));
         problemImagesViewPager.setOffscreenPageLimit(3);
 
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
