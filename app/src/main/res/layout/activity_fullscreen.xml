@@ -26,12 +26,4 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.viewpagerindicator.CirclePageIndicator
-        android:id="@+id/problem_images_view_pager_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="10dp"
-        app:radius="5dp" />
-
 </RelativeLayout>

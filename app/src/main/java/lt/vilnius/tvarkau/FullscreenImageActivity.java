@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.views.adapters.FullscreenImagesPagerAdapter;
@@ -22,8 +20,6 @@ public class FullscreenImageActivity extends BaseActivity {
 
     @BindView(R.id.problem_images_view_pager)
     ViewPager problemImagesViewPager;
-    @BindView(R.id.problem_images_view_pager_indicator)
-    CirclePageIndicator problemImagesViewPagerIndicator;
     @BindView(R.id.fullscreen_layout)
     RelativeLayout fullscreenLayout;
     @BindView(R.id.toolbar)
@@ -86,10 +82,5 @@ public class FullscreenImageActivity extends BaseActivity {
         }));
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPager.setCurrentItem(initialImagePosition);
-        problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
-        problemImagesViewPagerIndicator.setVisibility(View.GONE);
-        if (photos.length > 1) {
-            problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
-        }
     }
 }
