@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -446,8 +447,9 @@ public class NewProblemActivity extends BaseActivity {
     private void showIncorrectPlaceSnackbar() {
         View view = this.getCurrentFocus();
         snackbar = Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view));
-        snackbar.show();
+        snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view))
+            .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+            .show();
     }
 
     private void setPhotos(String[] photoArray) {
