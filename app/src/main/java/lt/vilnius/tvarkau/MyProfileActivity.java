@@ -77,7 +77,7 @@ public class MyProfileActivity extends BaseActivity implements GooglePlusSignInI
     @Override
     public void onBackPressed() {
         if (profileFragment != null && !profileFragment.isEditedByUser()) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.MyDialogTheme)
                     .setMessage(getString(R.string.discard_changes_title))
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
