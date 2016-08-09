@@ -1,141 +1,150 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/problem_image_pager_layout"
-            layout="@layout/problem_photo_gallery"
-            android:elevation="3dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="24dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingTop="18dp">
-
-            <TextView
-                android:id="@+id/problem_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/problem_status"
-                android:fontFamily="sans-serif-regular"
-                android:paddingRight="16dp"
-                android:textColor="#DE000000"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/problem_status"
-                style="@style/ReportStatusLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="7dp" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_location_problem" />
-
-            <TextView
-                android:id="@+id/problem_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:textColor="#27aae1"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <RelativeLayout
+            android:id="@+id/problem_detail_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingTop="24dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/issue"
-                android:textColor="#DE000000"
-                android:textSize="14sp" />
+            <include
+                android:id="@+id/problem_image_pager_layout"
+                android:elevation="3dp"
+                layout="@layout/problem_photo_gallery" />
 
-            <TextView
-                android:id="@+id/problem_entry_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:fontFamily="sans-serif-regular"
-                android:textColor="#6d6d6d"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/problem_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="4sp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="24dp"
-            android:textColor="#DE000000"
-            android:textSize="14sp" />
-
-        <RelativeLayout
-            android:id="@+id/problem_answer_block"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#f4f4f4"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/problem_answer_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/answer"
-                android:textColor="#DE000000"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/problem_answer_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:fontFamily="sans-serif-regular"
-                android:textColor="#6d6d6d"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/problem_answer"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/problem_answer_label"
-                android:lineSpacingExtra="4sp"
+                android:paddingBottom="24dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:id="@+id/problem_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/problem_status"
+                    android:paddingRight="16dp"
+                    android:fontFamily="sans-serif-regular"
+                    android:textColor="#DE000000"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/problem_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="7dp"
+                    style="@style/ReportStatusLabel" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location_problem" />
+
+                <TextView
+                    android:id="@+id/problem_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:textColor="#27aae1"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/issue"
+                    android:textColor="#DE000000"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/problem_entry_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:fontFamily="sans-serif-regular"
+                    android:textColor="#6d6d6d"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/problem_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="24dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
                 android:paddingTop="8dp"
+                android:lineSpacingExtra="4sp"
                 android:textColor="#DE000000"
                 android:textSize="14sp" />
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/problem_answer_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp"
+                android:background="#f4f4f4">
 
-    </LinearLayout>
-</ScrollView>
+                <TextView
+                    android:id="@+id/problem_answer_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/answer"
+                    android:textColor="#DE000000"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/problem_answer_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:fontFamily="sans-serif-regular"
+                    android:textColor="#6d6d6d"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/problem_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/problem_answer_label"
+                    android:paddingTop="8dp"
+                    android:lineSpacingExtra="4sp"
+                    android:textColor="#DE000000"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/no_internet" />
+
+    <include layout="@layout/server_not_responding" />
+
+</FrameLayout>

@@ -4,13 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -39,6 +41,7 @@ import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
+import lt.vilnius.tvarkau.utils.NetworkUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -65,6 +68,8 @@ public class ProblemDetailFragment extends Fragment {
 
     @Inject LegacyApiService legacyApiService;
 
+    @BindView(R.id.problem_detail_view)
+    LinearLayout problemDetailView;
     @BindView(R.id.problem_title)
     TextView problemTitle;
     @BindView(R.id.problem_description)
@@ -87,6 +92,10 @@ public class ProblemDetailFragment extends Fragment {
     CirclePageIndicator problemImagesViewPagerIndicator;
     @BindView(R.id.problem_image_pager_layout)
     View problemImagePagerLayout;
+    @BindView(R.id.no_internet_view)
+    View noInternetView;
+    @BindView(R.id.server_not_responding_view)
+    View serverNotRespondingView;
 
     private String issueId;
     private Problem problem;
@@ -121,66 +130,95 @@ public class ProblemDetailFragment extends Fragment {
         DaggerProblemDetailFragmentComponent.create().inject(this);
 
         ButterKnife.bind(this, rootView);
+        problemDetailView.setVisibility(View.VISIBLE);
         problemAnswerBlock.setVisibility(View.GONE);
+        noInternetView.setVisibility(View.GONE);
+        serverNotRespondingView.setVisibility(View.GONE);
 
         return rootView;
     }
 
     private void getData() {
-        GetProblemParams params = new GetProblemParams(issueId);
-        ApiRequest<GetProblemParams> request = new ApiRequest<>(ApiMethod.GET_REPORT, params);
 
-        Action1<ApiResponse<Problem>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult() != null) {
-                problem = apiResponse.getResult();
-                if (problem.getType() != null) {
-                    problemTitle.setText(problem.getType());
+        if (NetworkUtils.isNetworkConnected(getActivity())) {
+
+            GetProblemParams params = new GetProblemParams(issueId);
+            ApiRequest<GetProblemParams> request = new ApiRequest<>(ApiMethod.GET_REPORT, params);
+
+            Action1<ApiResponse<Problem>> onSuccess = apiResponse -> {
+                problemDetailView.setVisibility(View.VISIBLE);
+                if (noInternetView.isShown()) {
+                    noInternetView.setVisibility(View.GONE);
                 }
-                if (problem.getDescription() != null) {
-                    problemDescription.setText(problem.getDescription());
-                }
-                if (problem.getAddress() != null) {
-                    problemAddress.setText(problem.getAddress());
+                if (serverNotRespondingView.isShown()) {
+                    serverNotRespondingView.setVisibility(View.GONE);
                 }
 
-                if (problem.getEntryDate() != null) {
-                    problemEntryDate.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
-                }
-                if (problem.getStatus() != null) {
-                    problem.applyReportStatusLabel(problem.getStatus(), problemStatus);
-                }
-                if (problem.getAnswer() != null) {
-                    problemAnswerBlock.setVisibility(View.VISIBLE);
-                    problemAnswer.setText(problem.getAnswer());
-                    problemAnswerDate.setText(problem.getAnswerDate());
-                }
-                if (problem.getPhotos() != null) {
-                    if (problem.getPhotos().length == 1) {
-                        problemImagesViewPagerIndicator.setVisibility(View.GONE);
+                if (apiResponse.getResult() != null) {
+                    problem = apiResponse.getResult();
+                    if (problem.getType() != null) {
+                        problemTitle.setText(problem.getType());
                     }
-                    initProblemImagesPager(problem);
-                } else {
-                    problemImagePagerLayout.setVisibility(View.GONE);
+                    if (problem.getDescription() != null) {
+                        problemDescription.setText(problem.getDescription());
+                    }
+                    if (problem.getAddress() != null) {
+                        problemAddress.setText(problem.getAddress());
+                    }
+
+                    if (problem.getEntryDate() != null) {
+                        problemEntryDate.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
+                    }
+                    if (problem.getStatus() != null) {
+                        problem.applyReportStatusLabel(problem.getStatus(), problemStatus);
+                    }
+                    if (problem.getAnswer() != null) {
+                        problemAnswerBlock.setVisibility(View.VISIBLE);
+                        problemAnswer.setText(problem.getAnswer());
+                        problemAnswerDate.setText(problem.getAnswerDate());
+                    }
+                    if (problem.getPhotos() != null) {
+                        if (problem.getPhotos().length == 1) {
+                            problemImagesViewPagerIndicator.setVisibility(View.GONE);
+                        }
+                        initProblemImagesPager(problem);
+                    } else {
+                        problemImagePagerLayout.setVisibility(View.GONE);
+                    }
                 }
+            };
 
-            } else {
-                Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
-            }
-        };
+            Action1<Throwable> onError = throwable -> {
+                throwable.printStackTrace();
+                FirebaseCrash.report(throwable);
+                showNoConnectionSnackbar();
+                if (noInternetView.isShown()){
+                    noInternetView.setVisibility(View.GONE);
+                }
+                problemDetailView.setVisibility(View.GONE);
+                serverNotRespondingView.setVisibility(View.VISIBLE);
+            };
 
-        Action1<Throwable> onError = throwable -> {
-            throwable.printStackTrace();
-            FirebaseCrash.report(throwable);
-            Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
-        };
+            legacyApiService.getProblem(request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    onSuccess,
+                    onError
+                );
+        } else {
+            problemDetailView.setVisibility(View.GONE);
+            noInternetView.setVisibility(View.VISIBLE);
+            showNoConnectionSnackbar();
+        }
+    }
 
-        legacyApiService.getProblem(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                onSuccess,
-                onError
-            );
+    private void showNoConnectionSnackbar() {
+        Snackbar.make(getActivity().findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
+            .LENGTH_INDEFINITE)
+            .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
+            .setAction(R.string.try_again, v -> getData())
+            .show();
     }
 
     private void initProblemImagesPager(Problem problem) {

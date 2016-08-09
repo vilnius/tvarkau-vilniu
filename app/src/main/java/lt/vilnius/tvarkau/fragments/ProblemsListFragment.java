@@ -1,8 +1,6 @@
 package lt.vilnius.tvarkau.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -45,6 +43,7 @@ import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.EndlessRecyclerViewScrollListener;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
+import lt.vilnius.tvarkau.utils.NetworkUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -170,7 +169,7 @@ public class ProblemsListFragment extends Fragment {
     }
 
     private void getData(int page) {
-        if (isNetworkConnected()) {
+        if (NetworkUtils.isNetworkConnected(getActivity())) {
             if (isLoading) {
                 swipeContainer.setRefreshing(false);
                 return;
@@ -232,7 +231,7 @@ public class ProblemsListFragment extends Fragment {
 
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
-                if (isNetworkConnected()) {
+                if (NetworkUtils.isNetworkConnected(getActivity())) {
                     FirebaseCrash.report(throwable);
                 }
                 serverNotRespondingView.setVisibility(View.VISIBLE);
@@ -278,7 +277,7 @@ public class ProblemsListFragment extends Fragment {
 
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
-            if (isNetworkConnected()) {
+            if (NetworkUtils.isNetworkConnected(getActivity())) {
                 FirebaseCrash.report(throwable);
             }
             serverNotRespondingView.setVisibility(View.VISIBLE);
@@ -315,11 +314,6 @@ public class ProblemsListFragment extends Fragment {
             .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
             .setAction(R.string.try_again, v -> reloadData())
             .show();
-    }
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
     }
 
     @Subscribe
