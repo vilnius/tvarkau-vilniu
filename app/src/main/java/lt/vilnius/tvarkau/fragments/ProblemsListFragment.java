@@ -1,16 +1,21 @@
 package lt.vilnius.tvarkau.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -63,6 +68,8 @@ public class ProblemsListFragment extends Fragment {
     @BindView(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.problem_list) RecyclerView recyclerView;
     @BindView(R.id.my_problems_empty_view) View myProblemsEmptyView;
+    @BindView(R.id.no_internet_view) View noInternetView;
+    @BindView(R.id.server_not_responding_view) View serverNotRespondingView;
 
     private static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 20;
     private static final String ALL_PROBLEM_LIST = "all_problem_list";
@@ -138,6 +145,8 @@ public class ProblemsListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         myProblemsEmptyView.setVisibility(View.GONE);
+        noInternetView.setVisibility(View.GONE);
+        serverNotRespondingView.setVisibility(View.GONE);
 
         if (problemList.size() == 0 && shouldLoadMoreProblems) {
             getData(0);
@@ -161,15 +170,25 @@ public class ProblemsListFragment extends Fragment {
     }
 
     private void getData(int page) {
-        if (isLoading) {
-            swipeContainer.setRefreshing(false);
-            return;
-        }
+        if (isNetworkConnected()) {
+            if (isLoading) {
+                swipeContainer.setRefreshing(false);
+                return;
+            }
 
-        if (isAllProblemList) {
-            loadAllProblems(page);
+            if (isAllProblemList) {
+                loadAllProblems(page);
+            } else {
+                loadMyProblems();
+            }
         } else {
-            loadMyProblems();
+            swipeContainer.setRefreshing(false);
+            myProblemsEmptyView.setVisibility(View.GONE);
+            noInternetView.setVisibility(View.VISIBLE);
+            problemList.clear();
+            adapter.notifyDataSetChanged();
+            adapter.hideLoader();
+            showNoConnectionSnackbar();
         }
     }
 
@@ -203,12 +222,25 @@ public class ProblemsListFragment extends Fragment {
                     setupView();
                     swipeContainer.setRefreshing(false);
                 }
+                if (serverNotRespondingView.isShown()) {
+                    serverNotRespondingView.setVisibility(View.GONE);
+                }
+                if (noInternetView.isShown()) {
+                    noInternetView.setVisibility(View.GONE);
+                }
             };
 
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
-                Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+                if (isNetworkConnected()) {
+                    FirebaseCrash.report(throwable);
+                }
+                serverNotRespondingView.setVisibility(View.VISIBLE);
+                adapter.hideLoader();
                 swipeContainer.setRefreshing(false);
+                isLoading = false;
+                shouldLoadMoreProblems = true;
+                showNoConnectionSnackbar();
             };
 
             legacyApiService.getProblems(request)
@@ -236,12 +268,24 @@ public class ProblemsListFragment extends Fragment {
             adapter.hideLoader();
             shouldLoadMoreProblems = false;
             isLoading = false;
+            if (serverNotRespondingView.isShown()) {
+                serverNotRespondingView.setVisibility(View.GONE);
+            }
+            if (noInternetView.isShown()) {
+                noInternetView.setVisibility(View.GONE);
+            }
         };
 
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
-            Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+            if (isNetworkConnected()) {
+                FirebaseCrash.report(throwable);
+            }
+            serverNotRespondingView.setVisibility(View.VISIBLE);
+            adapter.hideLoader();
             swipeContainer.setRefreshing(false);
+            isLoading = false;
+            shouldLoadMoreProblems = true;
         };
 
         List<String> myProblemIds = new ArrayList<>();
@@ -263,6 +307,19 @@ public class ProblemsListFragment extends Fragment {
                 onError,
                 onSuccess
             );
+    }
+
+    private void showNoConnectionSnackbar() {
+        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.no_connection, Snackbar
+            .LENGTH_INDEFINITE)
+            .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
+            .setAction(R.string.try_again, v -> reloadData())
+            .show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     @Subscribe
