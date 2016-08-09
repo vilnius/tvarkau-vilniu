@@ -271,9 +271,9 @@ public class ProblemsListFragment extends Fragment {
         isLoading = false;
         reloadData();
     }
-    
+
     @Override
-    @Override public void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
