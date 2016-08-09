@@ -6,11 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 
 public class AboutActivity extends BaseActivity {
@@ -20,6 +23,9 @@ public class AboutActivity extends BaseActivity {
 
     @BindView(R.id.version_code)
     TextView versionCode;
+
+    @BindView(R.id.thanks_to_contributors)
+    TextView thanksToContributors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,10 @@ public class AboutActivity extends BaseActivity {
         }
 
         versionCode.setText(BuildConfig.VERSION_NAME);
+
+        Linkify.addLinks(thanksToContributors, Linkify.WEB_URLS);
+        FormatUtils.removeUnderlines(thanksToContributors);
+        thanksToContributors.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @OnClick(R.id.rate_app)
@@ -50,6 +60,12 @@ public class AboutActivity extends BaseActivity {
             startActivity(new Intent(Intent.ACTION_VIEW,
                 Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
         }
+    }
+
+    @OnClick(R.id.contribute_with_code)
+    protected void onClickContributeWithCode() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.CODE_FOR_VILNIUS_TRELLO));
+        startActivity(intent);
     }
 
     @OnClick(R.id.contact_us)

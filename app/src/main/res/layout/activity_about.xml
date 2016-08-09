@@ -34,7 +34,7 @@
                 android:textColor="@color/black_87" />
 
             <LinearLayout
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
@@ -86,8 +86,26 @@
                     android:id="@+id/code_for_vilnius_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="32dp"
+                    android:paddingBottom="8dp"
                     android:src="@drawable/ic_c4v" />
+
+                <TextView
+                    android:id="@+id/thanks_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:text="@string/thanks_to"
+                    android:textColor="@color/black_87" />
+
+                <TextView
+                    android:id="@+id/thanks_to_contributors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColorLink="@color/colorPrimary"
+                    android:text="@string/thanks_to_contributors"
+                    android:lineSpacingExtra="8dp"
+                    android:paddingBottom="32dp"/>
 
                 <TextView
                     android:id="@+id/support_us"
@@ -104,6 +122,14 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:text="@string/rate_app"
+                    android:textColor="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/contribute_with_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:text="@string/contribute_with_code"
                     android:textColor="@color/colorPrimary" />
 
                 <TextView

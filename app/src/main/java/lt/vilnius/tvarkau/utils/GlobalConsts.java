@@ -12,6 +12,7 @@ public class GlobalConsts {
     public final static String CITY_VILNIUS = "Vilnius";
 
     public final static String CODE_FOR_VILNIUS_WEBSITE = "http://www.codeforvilnius.lt";
+    public final static String CODE_FOR_VILNIUS_TRELLO = "https://trello.com/b/PE4yjVzw/tvarkau-vilniu";
     public final static String CODE_FOR_VILNIUS_FACEBOOK = "https://www.facebook.com/code4vilnius";
     public final static String CODE_FOR_VILNIUS_FACEBOOK_ID = "944807128946722";
     public final static String CODE_FOR_VILNIUS_MEETUP = "http://www.meetup.com/CodeforVilnius/";
