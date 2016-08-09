@@ -112,7 +112,7 @@ public class AboutActivity extends BaseActivity {
         if (intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.MyDialogTheme)
                 .setMessage(this.getResources().getString(R.string.send_email_to) + " " + emailAddress)
                 .setPositiveButton(R.string.ok, (dialog, whichButton) ->
                     AboutActivity.super.onBackPressed())
