@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
@@ -169,6 +170,7 @@ public class ProblemDetailFragment extends Fragment {
 
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
+            FirebaseCrash.report(throwable);
             Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
         };
 
