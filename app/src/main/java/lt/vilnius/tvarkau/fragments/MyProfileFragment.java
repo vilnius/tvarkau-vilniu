@@ -105,8 +105,7 @@ public class MyProfileFragment extends Fragment {
 
         getActivity().setResult(RESULT_OK);
 
-        Toast.makeText(getContext(), "User profile saved. " +
-                "Implement sending logic.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Beta versijoje registracija dar neveikia", Toast.LENGTH_SHORT).show();
 
         getActivity().finish();
     }
