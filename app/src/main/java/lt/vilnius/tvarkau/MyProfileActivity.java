@@ -1,8 +1,11 @@
 package lt.vilnius.tvarkau;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -76,6 +79,11 @@ public class MyProfileActivity extends BaseActivity implements GooglePlusSignInI
 
     @Override
     public void onBackPressed() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         if (profileFragment != null && !profileFragment.isEditedByUser()) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.discard_changes_title))

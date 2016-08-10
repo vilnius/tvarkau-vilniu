@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -369,6 +371,8 @@ public class NewProblemActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(reportProblemDescription.getWindowToken(), 0);
         if (isEditedByUser()) {
             new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.discard_changes_title))
