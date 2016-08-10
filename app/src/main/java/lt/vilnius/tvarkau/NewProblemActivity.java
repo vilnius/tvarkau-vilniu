@@ -374,7 +374,7 @@ public class NewProblemActivity extends BaseActivity {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(reportProblemDescription.getWindowToken(), 0);
         if (isEditedByUser()) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.MyDialogTheme)
                 .setMessage(getString(R.string.discard_changes_title))
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
