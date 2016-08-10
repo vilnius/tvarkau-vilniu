@@ -47,7 +47,7 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
     private void setReportTypesAdapter() {
         List<ReportType> reportTypes = getReportTypes();
 
-        reportTypesListAdapter = new ReportTypesListAdapter(this, reportTypes);
+        reportTypesListAdapter = new ReportTypesListAdapter(this, reportTypes, this);
 
         reportTypesRecyclerView.setAdapter(reportTypesListAdapter);
     }
