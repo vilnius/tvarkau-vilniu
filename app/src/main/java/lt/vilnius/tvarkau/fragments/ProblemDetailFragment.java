@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -185,6 +186,8 @@ public class ProblemDetailFragment extends Fragment {
                     } else {
                         problemImagePagerLayout.setVisibility(View.GONE);
                     }
+                } else {
+                    Toast.makeText(getContext(), R.string.error_no_problem, Toast.LENGTH_SHORT).show();
                 }
             };
 
