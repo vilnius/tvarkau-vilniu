@@ -238,9 +238,13 @@ public class NewProblemActivity extends BaseActivity {
                     })
                     .toList()
                     .map(photos -> {
-                        String[] photoArray = new String[photos.size()];
-                        photos.toArray(photoArray);
-                        return photoArray;
+                        if (photos.size() > 0) {
+                            String[] photoArray = new String[photos.size()];
+                            photos.toArray(photoArray);
+                            return photoArray;
+                        } else {
+                            return null;
+                        }
                     });
             } else {
                 photoObservable = Observable.just(null);
