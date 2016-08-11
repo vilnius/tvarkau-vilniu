@@ -203,6 +203,7 @@ public class NewProblemActivity extends BaseActivity {
         if (validateProblemInputs()) {
 
             ProgressDialog progressDialog = createProgressDialog();
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
             Observable<String[]> photoObservable;
