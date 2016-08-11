@@ -10,6 +10,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -39,7 +41,11 @@ public class AboutActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        versionCode.setText(BuildConfig.VERSION_NAME);
+        String version = String.format(Locale.getDefault(), "%s (%d)",
+            BuildConfig.VERSION_NAME,
+            BuildConfig.VERSION_CODE
+        );
+        versionCode.setText(version);
 
         Linkify.addLinks(thanksToContributors, Linkify.WEB_URLS);
         FormatUtils.removeUnderlines(thanksToContributors);
