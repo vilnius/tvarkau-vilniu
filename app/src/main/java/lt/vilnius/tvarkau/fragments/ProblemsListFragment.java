@@ -231,6 +231,7 @@ public class ProblemsListFragment extends Fragment {
 
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
+                FirebaseCrash.report(throwable);
                 if (NetworkUtils.isNetworkConnected(getActivity())) {
                     FirebaseCrash.report(throwable);
                 }
@@ -277,6 +278,7 @@ public class ProblemsListFragment extends Fragment {
 
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
+            FirebaseCrash.report(throwable);
             if (NetworkUtils.isNetworkConnected(getActivity())) {
                 FirebaseCrash.report(throwable);
             }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -63,6 +64,7 @@ public class SharedPrefsManager {
             }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             return null;
         }
     }

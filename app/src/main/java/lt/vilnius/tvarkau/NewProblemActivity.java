@@ -223,6 +223,7 @@ public class NewProblemActivity extends BaseActivity {
                             return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     })
@@ -252,6 +253,7 @@ public class NewProblemActivity extends BaseActivity {
 
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
+                FirebaseCrash.report(throwable);
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
@@ -502,6 +504,7 @@ public class NewProblemActivity extends BaseActivity {
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             Toast.makeText(this, R.string.check_google_play_services, Toast.LENGTH_LONG).show();
         }
     }
