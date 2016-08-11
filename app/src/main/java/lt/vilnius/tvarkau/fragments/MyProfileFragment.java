@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 import static android.app.Activity.RESULT_OK;
@@ -113,8 +112,7 @@ public class MyProfileFragment extends Fragment {
 
         View view = getActivity().getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            KeyboardUtils.closeSoftKeyboard(getActivity(), view);
         }
     }
 

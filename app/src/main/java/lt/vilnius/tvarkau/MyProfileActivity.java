@@ -1,11 +1,9 @@
 package lt.vilnius.tvarkau;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -19,6 +17,7 @@ import butterknife.OnClick;
 import lt.vilnius.tvarkau.fragments.MyProfileFragment;
 import lt.vilnius.tvarkau.utils.GoogleSignInHelper;
 import lt.vilnius.tvarkau.utils.GoogleSignInHelper.GooglePlusSignInInterface;
+import lt.vilnius.tvarkau.utils.KeyboardUtils;
 
 import static com.google.android.gms.common.SignInButton.COLOR_DARK;
 import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
@@ -81,8 +80,7 @@ public class MyProfileActivity extends BaseActivity implements GooglePlusSignInI
     public void onBackPressed() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            KeyboardUtils.closeSoftKeyboard(this, view);
         }
         if (profileFragment != null && !profileFragment.isEditedByUser()) {
             new AlertDialog.Builder(this, R.style.MyDialogTheme)
