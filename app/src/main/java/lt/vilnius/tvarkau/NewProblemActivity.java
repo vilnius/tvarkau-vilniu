@@ -100,7 +100,7 @@ public class NewProblemActivity extends BaseActivity {
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
     private static final String ANONYMOUS_USER_SESSION_IS = "null";
-    private static final String PROBLEM_PREFERENCE_KEY = "problem";
+    public static final String PROBLEM_PREFERENCE_KEY = "problem";
 
 
     @BindView(R.id.toolbar)

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.AppModule;
+import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.SharedPreferencesModule;
 import lt.vilnius.tvarkau.api.ApiMethod;
@@ -296,14 +298,24 @@ public class ProblemsListFragment extends Fragment {
 
         Observable.from(myProblemIds)
             .doOnSubscribe(() -> isLoading = true)
-            .map(id -> new GetProblemParams(id))
-            .map(params -> new ApiRequest<>(ApiMethod.GET_REPORT, params))
-            .flatMap(request -> legacyApiService.getProblem(request))
+            .flatMap(id -> Observable.zip(
+                Observable.just(id),
+                legacyApiService.getProblem(new ApiRequest<>(ApiMethod.GET_REPORT, new GetProblemParams(id))),
+                Pair::new
+            ))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 apiResponse -> {
-                    problemList.add(apiResponse.getResult());
+                    String id = apiResponse.first;
+                    if (apiResponse.second.getResult() != null) {
+                        problemList.add(apiResponse.second.getResult());
+                    } else {
+                        myProblemsPreferences
+                            .edit()
+                            .remove(NewProblemActivity.PROBLEM_PREFERENCE_KEY+id)
+                            .apply();
+                    }
                 },
                 onError,
                 onSuccess
