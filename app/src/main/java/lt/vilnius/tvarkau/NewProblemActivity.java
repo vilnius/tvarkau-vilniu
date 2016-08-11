@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +67,7 @@ import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
+import lt.vilnius.tvarkau.utils.BitmapUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
@@ -217,7 +219,15 @@ public class NewProblemActivity extends BaseActivity {
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                            Bitmap scaledBitmap;
+                            if (bitmap.getHeight() > bitmap.getWidth()){
+                                scaledBitmap = BitmapUtils.scaleToFitHeight(bitmap, 1000);
+                                bitmap.recycle();
+                            } else {
+                                scaledBitmap = BitmapUtils.scaleToFitWidth(bitmap, 1000);
+                                bitmap.recycle();
+                            }
+                            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
                             byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
                             return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
                         } catch (IOException e) {
