@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="7dp"
+                    android:layout_centerVertical="true"
                     style="@style/ReportStatusLabel" />
 
             </RelativeLayout>
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
-                    android:textColor="#27aae1"
+                    android:textColor="@color/problem_address"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/issue"
-                    android:textColor="#DE000000"
+                    android:textColor="@color/black_87"
                     android:textSize="14sp" />
 
                 <TextView
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:fontFamily="sans-serif-regular"
-                    android:textColor="#6d6d6d"
+                    android:textColor="@color/problem_date"
                     android:textSize="14sp" />
 
             </RelativeLayout>
@@ -101,7 +101,7 @@
                 android:paddingRight="24dp"
                 android:paddingTop="8dp"
                 android:lineSpacingExtra="4sp"
-                android:textColor="#DE000000"
+                android:textColor="@color/black_87"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/answer"
-                    android:textColor="#DE000000"
+                    android:textColor="@color/black_87"
                     android:textSize="14sp" />
 
                 <TextView
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:fontFamily="sans-serif-regular"
-                    android:textColor="#6d6d6d"
+                    android:textColor="@color/problem_date"
                     android:textSize="14sp" />
 
                 <TextView
@@ -136,7 +136,7 @@
                     android:layout_below="@id/problem_answer_label"
                     android:paddingTop="8dp"
                     android:lineSpacingExtra="4sp"
-                    android:textColor="#DE000000"
+                    android:textColor="@color/black_87"
                     android:textSize="14sp" />
 
             </RelativeLayout>
