@@ -41,7 +41,7 @@ public class AboutActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        String version = String.format(Locale.getDefault(), "%s (%d)",
+        String version = String.format(Locale.getDefault(), "%s.%d",
             BuildConfig.VERSION_NAME,
             BuildConfig.VERSION_CODE
         );
