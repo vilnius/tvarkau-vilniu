@@ -167,6 +167,8 @@ public class ProblemsListFragment extends Fragment {
         if (!isAllProblemList && problemList.size() == 0) {
             myProblemsEmptyView.setVisibility(View.VISIBLE);
             swipeContainer.setRefreshing(false);
+        } else {
+            myProblemsEmptyView.setVisibility(View.GONE);
         }
     }
 
