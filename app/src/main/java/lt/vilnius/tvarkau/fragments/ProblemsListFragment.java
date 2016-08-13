@@ -141,6 +141,15 @@ public class ProblemsListFragment extends Fragment {
                 }
             }
         });
+        recyclerView.setOnTouchListener(
+            (v, event) -> {
+                if (isLoading) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        );
 
         adapter = new ProblemsListAdapter(getActivity(), problemList);
         recyclerView.setAdapter(adapter);
