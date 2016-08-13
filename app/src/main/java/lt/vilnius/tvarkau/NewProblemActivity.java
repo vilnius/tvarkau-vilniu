@@ -217,7 +217,7 @@ public class NewProblemActivity extends BaseActivity {
                     .map(uri -> {
                         Bitmap bitmap = BitmapUtils.createBitmap(uri);
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
                         byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
                         return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
                     })
