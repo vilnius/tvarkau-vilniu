@@ -225,12 +225,14 @@ public class ProblemsListFragment extends Fragment {
                 if (apiResponse.getResult().size() > 0) {
                     problemList.addAll(apiResponse.getResult());
                     setupView();
-                    swipeContainer.setRefreshing(false);
+                    if (getView() != null) {
+                        swipeContainer.setRefreshing(false);
+                    }
                 }
-                if (serverNotRespondingView.isShown()) {
+                if (getView() != null && serverNotRespondingView.isShown()) {
                     serverNotRespondingView.setVisibility(View.GONE);
                 }
-                if (noInternetView.isShown()) {
+                if (getView() != null && noInternetView.isShown()) {
                     noInternetView.setVisibility(View.GONE);
                 }
             };
@@ -238,15 +240,14 @@ public class ProblemsListFragment extends Fragment {
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
                 FirebaseCrash.report(throwable);
-                if (NetworkUtils.isNetworkConnected(getActivity())) {
-                    FirebaseCrash.report(throwable);
+                if (getView() != null) {
+                    serverNotRespondingView.setVisibility(View.VISIBLE);
+                    adapter.hideLoader();
+                    swipeContainer.setRefreshing(false);
+                    isLoading = false;
+                    shouldLoadMoreProblems = true;
+                    showNoConnectionSnackbar();
                 }
-                serverNotRespondingView.setVisibility(View.VISIBLE);
-                adapter.hideLoader();
-                swipeContainer.setRefreshing(false);
-                isLoading = false;
-                shouldLoadMoreProblems = true;
-                showNoConnectionSnackbar();
             };
 
             legacyApiService.getProblems(request)
@@ -285,9 +286,6 @@ public class ProblemsListFragment extends Fragment {
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
             FirebaseCrash.report(throwable);
-            if (NetworkUtils.isNetworkConnected(getActivity())) {
-                FirebaseCrash.report(throwable);
-            }
             serverNotRespondingView.setVisibility(View.VISIBLE);
             adapter.hideLoader();
             swipeContainer.setRefreshing(false);
@@ -317,7 +315,7 @@ public class ProblemsListFragment extends Fragment {
                     } else {
                         myProblemsPreferences
                             .edit()
-                            .remove(NewProblemActivity.PROBLEM_PREFERENCE_KEY+id)
+                            .remove(NewProblemActivity.PROBLEM_PREFERENCE_KEY + id)
                             .apply();
                     }
                 },
