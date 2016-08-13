@@ -211,11 +211,13 @@ public class NewProblemActivity extends BaseActivity {
                 photos = new String[problemImagesURIs.size()];
 
                 photoObservable = Observable.from(problemImagesURIs)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .map(uri -> Uri.fromFile(new File(uri.toString())))
                     .map(uri -> {
                         Bitmap bitmap = BitmapUtils.createBitmap(uri);
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
                         byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
                         return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
                     })
@@ -254,22 +256,24 @@ public class NewProblemActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
 
-            photoObservable.flatMap(photos -> Observable.just(
-                new GetNewProblemParams.Builder()
-                    .setSessionId(ANONYMOUS_USER_SESSION_IS)
-                    .setDescription(reportProblemDescription.getText().toString())
-                    .setType(reportType.getName())
-                    .setAddress(address)
-                    .setLatitude(locationCords.latitude)
-                    .setLongitude(locationCords.longitude)
-                    .setPhoto(photos)
-                    .setEmail(null)
-                    .setPhone(null)
-                    .setMessageDescription(null)
-                    .create())
-            ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
-                .flatMap(request -> legacyApiService.postNewProblem(request))
+            photoObservable
                 .subscribeOn(Schedulers.io())
+                .flatMap(photos ->
+                    Observable.just(
+                        new GetNewProblemParams.Builder()
+                            .setSessionId(ANONYMOUS_USER_SESSION_IS)
+                            .setDescription(reportProblemDescription.getText().toString())
+                            .setType(reportType.getName())
+                            .setAddress(address)
+                            .setLatitude(locationCords.latitude)
+                            .setLongitude(locationCords.longitude)
+                            .setPhoto(photos)
+                            .setEmail(null)
+                            .setPhone(null)
+                            .setMessageDescription(null)
+                            .create())
+                ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
+                .flatMap(request -> legacyApiService.postNewProblem(request))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     onSuccess,

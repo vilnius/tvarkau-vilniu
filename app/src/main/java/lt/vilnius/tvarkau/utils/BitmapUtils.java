@@ -3,7 +3,6 @@ package lt.vilnius.tvarkau.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.File;
 
@@ -11,20 +10,22 @@ public class BitmapUtils {
 
     public static Bitmap createBitmap(Uri uri) {
 
+        final int requiredWidth = 1600;
+        final int requiredHeight = 1600;
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-        options.inSampleSize = calculateInSampleSize(options, 1000, 1000);
+        options.inSampleSize = calculateInSampleSize(options, requiredWidth, requiredHeight);
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-        if (bitmap.getHeight() < 1000 || bitmap.getWidth() < 1000) {
-            return bitmap;
+
+        if (bitmap.getHeight() > bitmap.getWidth() && bitmap.getHeight() > requiredHeight) {
+            return scaleToFitHeight(bitmap, requiredHeight);
+        } else if (bitmap.getWidth() > bitmap.getHeight() && bitmap.getWidth() > requiredWidth) {
+            return scaleToFitWidth(bitmap, requiredWidth);
         } else {
-            if (bitmap.getHeight() > bitmap.getWidth()) {
-                return scaleToFitHeight(bitmap, 1000);
-            } else {
-                return scaleToFitWidth(bitmap, 1000);
-            }
+            return bitmap;
         }
     }
 
@@ -32,17 +33,16 @@ public class BitmapUtils {
 
         final int height = options.outHeight;
         final int width = options.outWidth;
-        Log.d("Image initial height", String.format("%d", height));
-        Log.d("Image initial width", String.format("%d", width));
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-
+        if (height > width && height > reqHeight) {
             final int halfHeight = height / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight) {
+                inSampleSize *= 2;
+            }
+        } else if (width > height && width > reqWidth) {
             final int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) >= reqHeight
-                && (halfWidth / inSampleSize) >= reqWidth) {
+            while (halfWidth / inSampleSize >= reqWidth) {
                 inSampleSize *= 2;
             }
         }
