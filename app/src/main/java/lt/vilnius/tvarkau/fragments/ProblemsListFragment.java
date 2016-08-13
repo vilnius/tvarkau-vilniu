@@ -164,11 +164,13 @@ public class ProblemsListFragment extends Fragment {
     private void setupView() {
         adapter.notifyDataSetChanged();
 
-        if (!isAllProblemList && problemList.size() == 0) {
-            myProblemsEmptyView.setVisibility(View.VISIBLE);
-            swipeContainer.setRefreshing(false);
-        } else {
-            myProblemsEmptyView.setVisibility(View.GONE);
+        if (!isAllProblemList) {
+            if (problemList.size() == 0) {
+                myProblemsEmptyView.setVisibility(View.VISIBLE);
+                swipeContainer.setRefreshing(false);
+            } else {
+                myProblemsEmptyView.setVisibility(View.GONE);
+            }
         }
     }
 
