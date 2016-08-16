@@ -117,11 +117,11 @@
                     android:textColor="@color/black_87" />
 
                 <TextView
-                    android:id="@+id/report_a_bug"
+                    android:id="@+id/report_bug"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
-                    android:text="@string/report_a_bug"
+                    android:text="@string/report_bug"
                     android:textColor="@color/colorPrimary" />
 
                 <TextView

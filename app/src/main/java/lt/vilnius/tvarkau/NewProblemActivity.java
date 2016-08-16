@@ -3,7 +3,6 @@ package lt.vilnius.tvarkau;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -18,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +38,6 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -214,13 +211,7 @@ public class NewProblemActivity extends BaseActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .map(uri -> Uri.fromFile(new File(uri.toString())))
-                    .map(uri -> {
-                        Bitmap bitmap = BitmapUtils.createBitmap(uri);
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
-                        byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
-                        return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
-                    })
+                    .map(BitmapUtils::convertToBase64EncodedString)
                     .toList()
                     .map(photos -> {
                         if (photos.size() > 0) {

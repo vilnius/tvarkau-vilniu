@@ -238,11 +238,14 @@ public class ProblemsListFragment extends Fragment {
                         swipeContainer.setRefreshing(false);
                     }
                 }
-                if (getView() != null && serverNotRespondingView.isShown()) {
-                    serverNotRespondingView.setVisibility(View.GONE);
-                }
-                if (getView() != null && noInternetView.isShown()) {
-                    noInternetView.setVisibility(View.GONE);
+
+                if (getView() != null) {
+                    if (serverNotRespondingView.isShown()) {
+                        serverNotRespondingView.setVisibility(View.GONE);
+                    }
+                    if (noInternetView.isShown()) {
+                        noInternetView.setVisibility(View.GONE);
+                    }
                 }
             };
 
@@ -319,8 +322,9 @@ public class ProblemsListFragment extends Fragment {
             .subscribe(
                 apiResponse -> {
                     String id = apiResponse.first;
-                    if (apiResponse.second.getResult() != null) {
-                        problemList.add(apiResponse.second.getResult());
+                    Problem problem = apiResponse.second.getResult();
+                    if (problem != null) {
+                        problemList.add(problem);
                     } else {
                         myProblemsPreferences
                             .edit()

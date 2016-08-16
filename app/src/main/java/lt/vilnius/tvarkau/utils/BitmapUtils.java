@@ -3,10 +3,22 @@ package lt.vilnius.tvarkau.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class BitmapUtils {
+
+
+    public static String convertToBase64EncodedString(Uri uri) {
+
+        Bitmap bitmap = createBitmap(uri);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
+    }
 
     public static Bitmap createBitmap(Uri uri) {
 
@@ -15,14 +27,18 @@ public class BitmapUtils {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+        String bitmapFilePath = new File(uri.getPath()).getAbsolutePath();
+        BitmapFactory.decodeFile(bitmapFilePath, options);
         options.inSampleSize = calculateInSampleSize(options, requiredWidth, requiredHeight);
         options.inJustDecodeBounds = false;
-        Bitmap bitmap = BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+        Bitmap bitmap = BitmapFactory.decodeFile(bitmapFilePath, options);
 
-        if (bitmap.getHeight() > bitmap.getWidth() && bitmap.getHeight() > requiredHeight) {
+        final int bitmapHeight = bitmap.getHeight();
+        final int bitmapWidth = bitmap.getWidth();
+
+        if (bitmapHeight > bitmapWidth && bitmapHeight > requiredHeight) {
             return scaleToFitHeight(bitmap, requiredHeight);
-        } else if (bitmap.getWidth() > bitmap.getHeight() && bitmap.getWidth() > requiredWidth) {
+        } else if (bitmapWidth > bitmapHeight && bitmapWidth > requiredWidth) {
             return scaleToFitWidth(bitmap, requiredWidth);
         } else {
             return bitmap;

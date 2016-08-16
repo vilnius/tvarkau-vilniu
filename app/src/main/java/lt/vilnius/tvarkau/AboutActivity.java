@@ -74,8 +74,8 @@ public class AboutActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.report_a_bug)
-    protected void onReportaBugClick() {
+    @OnClick(R.id.report_bug)
+    protected void onReportBugClick() {
         openEmail(GlobalConsts.CODE_FOR_VILNIUS_EMAIL);
     }
 
