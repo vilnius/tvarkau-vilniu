@@ -491,12 +491,17 @@ public class NewProblemActivity extends BaseActivity {
         try {
             Intent intent = builder.build(this);
             Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
-
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
             FirebaseCrash.report(e);
-            Toast.makeText(this, R.string.check_google_play_services, Toast.LENGTH_LONG).show();
+            Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.open, v -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.GOOGLE_PLAY_SERVICES));
+                    startActivity(intent);
+                })
+                .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+                .show();
         }
     }
 }

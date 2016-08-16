@@ -80,7 +80,7 @@
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
     <string name="error_submitting_problem">Įvyko klaida, bandykite dar sykį</string>
     <string name="sending_problem">Siunčiama...</string>
-    <string name="check_google_play_services">Atnaujinkite "Google Play Paslaugos" programėlę savo telefone.</string>
+    <string name="check_google_play_services">Atnaujinkite Google Play Paslaugas</string>
     <string name="my_problems_empty">Mano pranešimai tušti</string>
     <string name="my_problems_will_appear_here">Jūsų sukurti pranešimai atsiras čia</string>
     <string name="no_internet">Patikrinkite interneto ryšį</string>

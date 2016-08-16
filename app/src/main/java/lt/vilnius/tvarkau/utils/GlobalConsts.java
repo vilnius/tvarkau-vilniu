@@ -19,6 +19,7 @@ public class GlobalConsts {
     public final static String CODE_FOR_VILNIUS_EMAIL = "tvarkau.vilniu@codeforvilnius.lt";
     public final static String VILNIUS_MUNICIPALITY_EMAIL = "e.vicemeras@vilnius.lt";
     public final static String VILNIUS_MUNICIPALITY_PHONE = "1664";
+    public final static String GOOGLE_PLAY_SERVICES = "https://play.google.com/store/apps/details?id=com.google.android.gms";
 
     private GlobalConsts() {}
 }
