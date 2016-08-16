@@ -133,9 +133,9 @@ public class AboutActivity extends BaseActivity {
         String model = Build.MODEL;
         String androidVersion = Build.VERSION.RELEASE;
         if (model.startsWith(manufacturer)) {
-            return " (" + capitalize(model) + " " + androidVersion + ")";
+            return " (" + capitalize(model) + ", " + "Android " + androidVersion + ")";
         } else {
-            return " (" + capitalize(manufacturer) + " " + model + " " + androidVersion + ")";
+            return " (" + capitalize(manufacturer) + " " + model + ", " + "Android " + androidVersion + ")";
         }
     }
 
