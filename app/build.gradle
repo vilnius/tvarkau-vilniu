@@ -23,9 +23,9 @@ android {
 
     defaultConfig {
         applicationId "lt.vilnius.tvarkau"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
+        versionCode 5
         versionName "3.0"
         vectorDrawables.useSupportLibrary = true
     }
