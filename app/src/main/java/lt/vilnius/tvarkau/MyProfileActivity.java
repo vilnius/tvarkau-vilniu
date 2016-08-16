@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -16,6 +17,7 @@ import butterknife.OnClick;
 import lt.vilnius.tvarkau.fragments.MyProfileFragment;
 import lt.vilnius.tvarkau.utils.GoogleSignInHelper;
 import lt.vilnius.tvarkau.utils.GoogleSignInHelper.GooglePlusSignInInterface;
+import lt.vilnius.tvarkau.utils.KeyboardUtils;
 
 import static com.google.android.gms.common.SignInButton.COLOR_DARK;
 import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
@@ -76,8 +78,12 @@ public class MyProfileActivity extends BaseActivity implements GooglePlusSignInI
 
     @Override
     public void onBackPressed() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            KeyboardUtils.closeSoftKeyboard(this, view);
+        }
         if (profileFragment != null && !profileFragment.isEditedByUser()) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.MyDialogTheme)
                     .setMessage(getString(R.string.discard_changes_title))
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->

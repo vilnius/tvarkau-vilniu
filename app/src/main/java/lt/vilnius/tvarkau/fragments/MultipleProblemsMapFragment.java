@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.List;
 
@@ -87,7 +88,10 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
             }
         };
 
-        Action1<Throwable> onError = Throwable::printStackTrace;
+        Action1<Throwable> onError = throwable -> {
+            throwable.printStackTrace();
+            FirebaseCrash.report(throwable);
+        };
 
         legacyApiService.getProblems(request)
             .subscribeOn(Schedulers.io())

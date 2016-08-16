@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -66,6 +67,7 @@ import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
+import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.Observable;
@@ -200,6 +202,7 @@ public class NewProblemActivity extends BaseActivity {
         if (validateProblemInputs()) {
 
             ProgressDialog progressDialog = createProgressDialog();
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
             Observable<String[]> photoObservable;
@@ -219,6 +222,7 @@ public class NewProblemActivity extends BaseActivity {
                             return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     })
@@ -248,6 +252,7 @@ public class NewProblemActivity extends BaseActivity {
 
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
+                FirebaseCrash.report(throwable);
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
@@ -368,8 +373,11 @@ public class NewProblemActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        if (reportProblemDescription.hasFocus()) {
+            KeyboardUtils.closeSoftKeyboard(this, reportProblemDescription);
+        }
         if (isEditedByUser()) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.MyDialogTheme)
                 .setMessage(getString(R.string.discard_changes_title))
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
@@ -446,8 +454,9 @@ public class NewProblemActivity extends BaseActivity {
     private void showIncorrectPlaceSnackbar() {
         View view = this.getCurrentFocus();
         snackbar = Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view));
-        snackbar.show();
+        snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view))
+            .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+            .show();
     }
 
     private void setPhotos(String[] photoArray) {
@@ -495,6 +504,7 @@ public class NewProblemActivity extends BaseActivity {
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
+            FirebaseCrash.report(e);
             Toast.makeText(this, R.string.check_google_play_services, Toast.LENGTH_LONG).show();
         }
     }

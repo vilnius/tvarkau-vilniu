@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/server_not_responding_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingBottom="120dp"
+    android:drawableTop="@drawable/ic_warning"
+    android:fontFamily="sans-serif-regular"
+    android:text="@string/server_does_not_respond"
+    android:textColor="@color/black_38"
+    android:textSize="18sp" />

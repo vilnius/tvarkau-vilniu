@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 import static android.app.Activity.RESULT_OK;
@@ -105,10 +106,14 @@ public class MyProfileFragment extends Fragment {
 
         getActivity().setResult(RESULT_OK);
 
-        Toast.makeText(getContext(), "User profile saved. " +
-                "Implement sending logic.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Beta versijoje registracija dar neveikia", Toast.LENGTH_SHORT).show();
 
         getActivity().finish();
+
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            KeyboardUtils.closeSoftKeyboard(getActivity(), view);
+        }
     }
 
     private void setUpUserProfile() {

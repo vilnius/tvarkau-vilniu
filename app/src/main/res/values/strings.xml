@@ -79,10 +79,14 @@
     <string name="error_problem_type_is_empty">Prašome pasirinkti problemos tipą</string>
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
     <string name="error_submitting_problem">Įvyko klaida, bandykite dar sykį</string>
-    <string name="sending_problem">Siunčiama</string>
+    <string name="sending_problem">Siunčiama...</string>
     <string name="check_google_play_services">Patikrinkite Google Play paslaugas!</string>
     <string name="my_problems_empty">Mano pranešimai tušti</string>
     <string name="my_problems_will_appear_here">Jūsų sukurti pranešimai atsiras čia</string>
+    <string name="no_internet">Patikrinkite interneto ryšį</string>
+    <string name="server_does_not_respond">Atsiprašome, problemos su serveriu</string>
+    <string name="try_again">Bandykite dar sykį</string>
+    <string name="no_connection">Nepavyko prisijungti</string>
     <string name="thanks_to">Ypatingai dėkojame</string>
     <string name="contribute_with_code">Prisidėkite savo kodu</string>
     <string name="thanks_to_contributors"><a href="https://lt.linkedin.com/in/platonaite">Ineta Platonaitė</a>,
@@ -106,7 +110,7 @@
         <item>Pastatų administravimas</item>
         <item>Statinių priežiūra</item>
         <item>Tiltų, viadukų, tunelių ir estakadų priežiūra</item>
-        <item>Transporto priemonių stovėjimo tvarkos pažeidimai</item>
+        <item>Transporto priemonių stovėjimo tvarkos pažeidimai (laikinai neveikia)</item>
         <item>Triukšmo prevencijos viešosiose vietose taisyklių pažeidimas</item>
         <item>Tvarkymo ir švaros taisyklių pažeidimas</item>
         <item>Viešasis transportas</item>

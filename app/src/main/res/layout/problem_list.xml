@@ -2,8 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
@@ -23,33 +22,39 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-        <LinearLayout
-            android:id="@+id/my_problems_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingBottom="120dp"
-            android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/my_problems_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="120dp"
+        android:gravity="center">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_empty_state_my_reports"
-                android:paddingBottom="8dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:src="@drawable/ic_empty_state_my_reports" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_problems_empty"
-                android:fontFamily="sans-serif-regular"
-                android:textSize="18sp"
-                android:paddingBottom="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:fontFamily="sans-serif-regular"
+            android:text="@string/my_problems_empty"
+            android:textColor="@color/black_38"
+            android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-regular"
-                android:text="@string/my_problems_will_appear_here" />
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-regular"
+            android:text="@string/my_problems_will_appear_here"
+            android:textColor="@color/black_38" />
+    </LinearLayout>
+
+    <include layout="@layout/no_internet" />
+
+    <include layout="@layout/server_not_responding" />
 
 </android.support.design.widget.CoordinatorLayout>

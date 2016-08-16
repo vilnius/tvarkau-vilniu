@@ -25,4 +25,10 @@
 
     <color name="no_photo_text_color">#a9a9a9</color>
 
+    <color name="snackbar_action_text">#3bdfff</color>
+
+    <color name="black_38">#9E9E9E</color>
+    <color name="problem_date">#6d6d6d</color>
+    <color name="problem_address">#27aae1</color>
+
 </resources>
