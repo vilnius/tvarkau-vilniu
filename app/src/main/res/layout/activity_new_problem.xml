@@ -17,29 +17,21 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="268dp">
+                android:layout_height="272dp">
 
                 <include
                     android:id="@+id/photo_gallery_layout"
                     layout="@layout/problem_photo_gallery" />
 
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/report_problem_take_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/rounded_background">
-
-                    <ImageView
-                        android:id="@+id/report_problem_take_photo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
-                        android:clickable="true"
-                        android:src="@drawable/ic_photo_camera_white" />
-                </FrameLayout>
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_photo_camera_white" />
             </FrameLayout>
 
             <GridLayout
