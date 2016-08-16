@@ -17,7 +17,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="268dp">
 
                 <include
                     android:id="@+id/photo_gallery_layout"
@@ -27,7 +27,8 @@
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_gravity="end|bottom"
-                    android:layout_margin="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:background="@drawable/rounded_background">
 
                     <ImageView
@@ -44,7 +45,9 @@
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="28dp"
+                android:layout_marginRight="28dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginBottom="28dp"
                 android:alignmentMode="alignBounds"
                 android:columnCount="2"
                 android:columnOrderPreserved="true"
