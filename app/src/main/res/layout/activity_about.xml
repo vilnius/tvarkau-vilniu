@@ -117,6 +117,14 @@
                     android:textColor="@color/black_87" />
 
                 <TextView
+                    android:id="@+id/report_bug"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:text="@string/report_bug"
+                    android:textColor="@color/colorPrimary" />
+
+                <TextView
                     android:id="@+id/rate_app"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,14 +138,6 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:text="@string/contribute_with_code"
-                    android:textColor="@color/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/contact_us"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
-                    android:text="@string/contact_us"
                     android:textColor="@color/colorPrimary" />
 
                 <TextView

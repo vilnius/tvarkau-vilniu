@@ -55,7 +55,7 @@
     <string name="title_about">Apie</string>
     <string name="support_us">Norite mus paremti?</string>
     <string name="rate_app">Įvertinkite programėlę</string>
-    <string name="contact_us">Parašykite mums</string>
+    <string name="report_bug">Praneškite apie klaidą</string>
     <string name="facebook_page">Sekite Facebook</string>
     <string name="meetup_page">Prisijunkite prie Meetup grupės</string>
     <string name="municipality_contacts">Vilniaus miesto savivaldybės kontaktai</string>
@@ -80,7 +80,7 @@
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
     <string name="error_submitting_problem">Įvyko klaida, bandykite dar sykį</string>
     <string name="sending_problem">Siunčiama...</string>
-    <string name="check_google_play_services">Patikrinkite Google Play paslaugas!</string>
+    <string name="check_google_play_services">Atnaujinkite "Google Play Paslaugos" programėlę savo telefone.</string>
     <string name="my_problems_empty">Mano pranešimai tušti</string>
     <string name="my_problems_will_appear_here">Jūsų sukurti pranešimai atsiras čia</string>
     <string name="no_internet">Patikrinkite interneto ryšį</string>

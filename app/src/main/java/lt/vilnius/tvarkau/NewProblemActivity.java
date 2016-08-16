@@ -3,12 +3,10 @@ package lt.vilnius.tvarkau;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +38,6 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +62,7 @@ import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
+import lt.vilnius.tvarkau.utils.BitmapUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
@@ -98,7 +95,7 @@ public class NewProblemActivity extends BaseActivity {
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
     private static final String ANONYMOUS_USER_SESSION_IS = "null";
-    private static final String PROBLEM_PREFERENCE_KEY = "problem";
+    public static final String PROBLEM_PREFERENCE_KEY = "problem";
 
 
     @BindView(R.id.toolbar)
@@ -211,26 +208,19 @@ public class NewProblemActivity extends BaseActivity {
                 photos = new String[problemImagesURIs.size()];
 
                 photoObservable = Observable.from(problemImagesURIs)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .map(uri -> Uri.fromFile(new File(uri.toString())))
-                    .map(uri -> {
-                        Bitmap bitmap = null;
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
-                            byte[] byteArrayImage = byteArrayOutputStream.toByteArray();
-                            return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            FirebaseCrash.report(e);
-                            return null;
-                        }
-                    })
+                    .map(BitmapUtils::convertToBase64EncodedString)
                     .toList()
                     .map(photos -> {
-                        String[] photoArray = new String[photos.size()];
-                        photos.toArray(photoArray);
-                        return photoArray;
+                        if (photos.size() > 0) {
+                            String[] photoArray = new String[photos.size()];
+                            photos.toArray(photoArray);
+                            return photoArray;
+                        } else {
+                            return null;
+                        }
                     });
             } else {
                 photoObservable = Observable.just(null);
@@ -257,22 +247,24 @@ public class NewProblemActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
 
-            photoObservable.flatMap(photos -> Observable.just(
-                new GetNewProblemParams.Builder()
-                    .setSessionId(ANONYMOUS_USER_SESSION_IS)
-                    .setDescription(reportProblemDescription.getText().toString())
-                    .setType(reportType.getName())
-                    .setAddress(address)
-                    .setLatitude(locationCords.latitude)
-                    .setLongitude(locationCords.longitude)
-                    .setPhoto(photos)
-                    .setEmail(null)
-                    .setPhone(null)
-                    .setMessageDescription(null)
-                    .create())
-            ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
-                .flatMap(request -> legacyApiService.postNewProblem(request))
+            photoObservable
                 .subscribeOn(Schedulers.io())
+                .flatMap(photos ->
+                    Observable.just(
+                        new GetNewProblemParams.Builder()
+                            .setSessionId(ANONYMOUS_USER_SESSION_IS)
+                            .setDescription(reportProblemDescription.getText().toString())
+                            .setType(reportType.getName())
+                            .setAddress(address)
+                            .setLatitude(locationCords.latitude)
+                            .setLongitude(locationCords.longitude)
+                            .setPhoto(photos)
+                            .setEmail(null)
+                            .setPhone(null)
+                            .setMessageDescription(null)
+                            .create())
+                ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
+                .flatMap(request -> legacyApiService.postNewProblem(request))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     onSuccess,
