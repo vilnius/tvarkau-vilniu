@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -114,7 +115,7 @@ public class AboutActivity extends BaseActivity {
     private void openEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:" + emailAddress));
-        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_email_subject));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_email_subject) + getDeviceInfo());
         if (intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         } else {
@@ -124,6 +125,29 @@ public class AboutActivity extends BaseActivity {
                     AboutActivity.super.onBackPressed())
                 .create()
                 .show();
+        }
+    }
+
+    private String getDeviceInfo() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        String androidVersion = Build.VERSION.RELEASE;
+        if (model.startsWith(manufacturer)) {
+            return " (" + capitalize(model) + " " + androidVersion + ")";
+        } else {
+            return " (" + capitalize(manufacturer) + " " + model + " " + androidVersion + ")";
+        }
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
         }
     }
 }
