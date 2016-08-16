@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -112,14 +112,14 @@ public class NewProblemActivity extends BaseActivity {
     Spinner reportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
     EditText reportProblemDescription;
-    @BindView(R.id.report_problem_take_photo)
-    FloatingActionButton reportProblemTakePhoto;
     @BindView(R.id.report_problem_location_wrapper)
     TextInputLayout reportProblemLocationWrapper;
     @BindView(R.id.report_problem_description_wrapper)
     TextInputLayout reportProblemDescriptionWrapper;
     @BindView(R.id.report_problem_type_wrapper)
     TextInputLayout reportProblemTypeWrapper;
+    @BindView(R.id.report_problem_take_photo)
+    ImageView reportProblemTakePhoto;
 
     @State
     File lastPhotoFile;
