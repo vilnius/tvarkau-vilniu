@@ -26,13 +26,11 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.crash.FirebaseCrash;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -244,9 +242,7 @@ public class NewProblemActivity extends BaseActivity {
             };
 
             Action1<Throwable> onError = throwable -> {
-                throwable.printStackTrace();
-                FirebaseCrash.report(throwable);
-                Crashlytics.logException(throwable);
+                LogApp.logCrash(throwable);
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
@@ -407,9 +403,7 @@ public class NewProblemActivity extends BaseActivity {
                     try {
                         addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        FirebaseCrash.report(e);
-                        Crashlytics.logException(e);
+                        LogApp.logCrash(e);
                     }
                     if (addresses != null && addresses.size() > 0) {
                         if (addresses.get(0).getLocality() != null) {
@@ -501,9 +495,7 @@ public class NewProblemActivity extends BaseActivity {
             Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            FirebaseCrash.report(e);
-            Crashlytics.logException(e);
+            LogApp.logCrash(e);
             Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.open, v -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com" +

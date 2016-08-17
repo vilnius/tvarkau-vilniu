@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.entity.Profile;
 
 /**
@@ -64,9 +63,7 @@ public class SharedPrefsManager {
                 return new Profile();
             }
         } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            FirebaseCrash.report(e);
-            Crashlytics.logException(e);
+            LogApp.logCrash(e);
             return null;
         }
     }

@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
@@ -29,6 +27,7 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.MainActivity;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.ProblemsListActivity;
@@ -193,9 +192,7 @@ public class ProblemDetailFragment extends Fragment {
             };
 
             Action1<Throwable> onError = throwable -> {
-                throwable.printStackTrace();
-                FirebaseCrash.report(throwable);
-                Crashlytics.logException(throwable);
+                LogApp.logCrash(throwable);
                 showNoConnectionSnackbar();
                 if (noInternetView.isShown()){
                     noInternetView.setVisibility(View.GONE);

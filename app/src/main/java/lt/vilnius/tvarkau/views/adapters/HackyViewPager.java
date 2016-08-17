@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import lt.vilnius.tvarkau.LogApp;
+
 /**
  * Hacky fix for Issue #4 and
  * http://code.google.com/p/android/issues/detail?id=18990
@@ -33,7 +35,7 @@ public class HackyViewPager extends ViewPager {
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            LogApp.logCrash(e);
             return false;
         }
     }
