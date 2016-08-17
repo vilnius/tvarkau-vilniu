@@ -156,7 +156,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="3281bbdfaacbf4a1f9c9b70b6566996a669ae94e" />
+            android:value="33cce6891f8d5ae5c92235382a89bc0e9d7ca255" />
     </application>
 
 </manifest>
