@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
@@ -91,6 +92,7 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
             FirebaseCrash.report(throwable);
+            Crashlytics.logException(throwable);
         };
 
         legacyApiService.getProblems(request)

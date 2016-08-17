@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -242,6 +243,7 @@ public class NewProblemActivity extends BaseActivity {
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
                 FirebaseCrash.report(throwable);
+                Crashlytics.logException(throwable);
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
@@ -404,6 +406,7 @@ public class NewProblemActivity extends BaseActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                         FirebaseCrash.report(e);
+                        Crashlytics.logException(e);
                     }
                     if (addresses != null && addresses.get(0).getLocality() != null) {
                         String city = addresses.get(0).getLocality();
@@ -495,6 +498,7 @@ public class NewProblemActivity extends BaseActivity {
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
             FirebaseCrash.report(e);
+            Crashlytics.logException(e);
             Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.open, v -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.GOOGLE_PLAY_SERVICES));

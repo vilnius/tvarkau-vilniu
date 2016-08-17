@@ -154,6 +154,9 @@
                 android:value=".ProblemDetailActivity"/>
         </activity>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3281bbdfaacbf4a1f9c9b70b6566996a669ae94e" />
     </application>
 
 </manifest>

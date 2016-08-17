@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -194,6 +195,7 @@ public class ProblemDetailFragment extends Fragment {
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
                 FirebaseCrash.report(throwable);
+                Crashlytics.logException(throwable);
                 showNoConnectionSnackbar();
                 if (noInternetView.isShown()){
                     noInternetView.setVisibility(View.GONE);

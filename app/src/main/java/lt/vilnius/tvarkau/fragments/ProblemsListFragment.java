@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.greenrobot.eventbus.EventBus;
@@ -252,6 +253,7 @@ public class ProblemsListFragment extends Fragment {
             Action1<Throwable> onError = throwable -> {
                 throwable.printStackTrace();
                 FirebaseCrash.report(throwable);
+                Crashlytics.logException(throwable);
                 if (getView() != null) {
                     serverNotRespondingView.setVisibility(View.VISIBLE);
                     adapter.hideLoader();
@@ -298,6 +300,7 @@ public class ProblemsListFragment extends Fragment {
         Action1<Throwable> onError = throwable -> {
             throwable.printStackTrace();
             FirebaseCrash.report(throwable);
+            Crashlytics.logException(throwable);
             serverNotRespondingView.setVisibility(View.VISIBLE);
             adapter.hideLoader();
             swipeContainer.setRefreshing(false);
