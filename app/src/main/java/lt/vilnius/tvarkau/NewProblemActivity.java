@@ -411,7 +411,7 @@ public class NewProblemActivity extends BaseActivity {
                         FirebaseCrash.report(e);
                         Crashlytics.logException(e);
                     }
-                    if (addresses != null && addresses.get(0).getLocality() != null) {
+                    if (addresses != null && addresses.size() > 0) {
                         String city = addresses.get(0).getLocality();
                         if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
                             address = addresses.get(0).getAddressLine(0);
