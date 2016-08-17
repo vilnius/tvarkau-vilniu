@@ -235,6 +235,9 @@ public class NewProblemActivity extends BaseActivity {
                         .apply();
                     EventBus.getDefault().post(new NewProblemAddedEvent());
                     progressDialog.dismiss();
+                    if (reportProblemDescription.hasFocus()) {
+                        KeyboardUtils.closeSoftKeyboard(this, reportProblemDescription);
+                    }
                     Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
                     finish();
                 }
