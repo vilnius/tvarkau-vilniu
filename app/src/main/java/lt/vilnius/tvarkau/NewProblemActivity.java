@@ -412,17 +412,19 @@ public class NewProblemActivity extends BaseActivity {
                         Crashlytics.logException(e);
                     }
                     if (addresses != null && addresses.size() > 0) {
-                        String city = addresses.get(0).getLocality();
-                        if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                            address = addresses.get(0).getAddressLine(0);
-                            reportProblemLocationWrapper.setError(null);
-                            addProblemLocation.setText(address);
-                            locationCords = latLng;
-                            if (snackbar != null && snackbar.isShown()) {
-                                snackbar.dismiss();
+                        if (addresses.get(0).getLocality() != null) {
+                            String city = addresses.get(0).getLocality();
+                            if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
+                                address = addresses.get(0).getAddressLine(0);
+                                reportProblemLocationWrapper.setError(null);
+                                addProblemLocation.setText(address);
+                                locationCords = latLng;
+                                if (snackbar != null && snackbar.isShown()) {
+                                    snackbar.dismiss();
+                                }
+                            } else {
+                                showIncorrectPlaceSnackbar();
                             }
-                        } else {
-                            showIncorrectPlaceSnackbar();
                         }
                     } else {
                         showIncorrectPlaceSnackbar();
@@ -504,7 +506,8 @@ public class NewProblemActivity extends BaseActivity {
             Crashlytics.logException(e);
             Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.open, v -> {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.gms"));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com" +
+                        ".google.android.gms"));
                     startActivity(intent);
                 })
                 .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
