@@ -15,7 +15,7 @@ public class DeviceUtils {
         }
     }
 
-    public static String capitalize(String s) {
+    private static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
         }
