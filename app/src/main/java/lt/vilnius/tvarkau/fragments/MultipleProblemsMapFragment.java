@@ -7,7 +7,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.List;
 
@@ -16,14 +15,15 @@ import javax.inject.Singleton;
 
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
+import lt.vilnius.tvarkau.LogApp;
+import lt.vilnius.tvarkau.ProblemDetailActivity;
+import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.api.ApiMethod;
 import lt.vilnius.tvarkau.api.ApiRequest;
 import lt.vilnius.tvarkau.api.ApiResponse;
 import lt.vilnius.tvarkau.api.GetProblemsParams;
 import lt.vilnius.tvarkau.api.LegacyApiModule;
 import lt.vilnius.tvarkau.api.LegacyApiService;
-import lt.vilnius.tvarkau.ProblemDetailActivity;
-import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -88,10 +88,7 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
             }
         };
 
-        Action1<Throwable> onError = throwable -> {
-            throwable.printStackTrace();
-            FirebaseCrash.report(throwable);
-        };
+        Action1<Throwable> onError = LogApp::logCrash;
 
         legacyApiService.getProblems(request)
             .subscribeOn(Schedulers.io())

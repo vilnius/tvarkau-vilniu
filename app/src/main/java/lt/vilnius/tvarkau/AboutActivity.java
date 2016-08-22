@@ -15,6 +15,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.DeviceUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 
@@ -114,7 +115,7 @@ public class AboutActivity extends BaseActivity {
     private void openEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:" + emailAddress));
-        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_email_subject));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_email_subject) + DeviceUtils.getDeviceInfo());
         if (intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         } else {

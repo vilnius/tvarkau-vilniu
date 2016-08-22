@@ -15,14 +15,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/photo_gallery_layout"
-                layout="@layout/problem_photo_gallery" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="272dp">
+
+                <include
+                    android:id="@+id/photo_gallery_layout"
+                    layout="@layout/problem_photo_gallery" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/report_problem_take_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_photo_camera_white" />
+            </FrameLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="28dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="24dp"
                 android:alignmentMode="alignBounds"
                 android:columnCount="2"
                 android:columnOrderPreserved="true"
@@ -48,10 +65,10 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageView
-                    android:src="@drawable/ic_description"
-                    style="@style/NewProblemIcon"
                     android:layout_gravity="top"
-                    android:paddingTop="16dp"/>
+                    android:paddingTop="16dp"
+                    android:src="@drawable/ic_description"
+                    style="@style/NewProblemIcon" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/report_problem_description_wrapper"
@@ -67,10 +84,10 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageView
-                    android:src="@drawable/ic_type"
-                    style="@style/NewProblemIcon"
                     android:layout_gravity="top"
-                    android:paddingTop="16dp"/>
+                    android:paddingTop="16dp"
+                    android:src="@drawable/ic_type"
+                    style="@style/NewProblemIcon" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/report_problem_type_wrapper"
@@ -99,14 +116,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/report_problem_take_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_photo_camera_white"
-        app:layout_anchor="@id/photo_gallery_layout"
-        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>

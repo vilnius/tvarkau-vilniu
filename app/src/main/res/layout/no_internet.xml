@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/no_internet_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:drawableTop="@drawable/ic_warning"
-    android:fontFamily="sans-serif-regular"
-    android:paddingBottom="120dp"
-    android:text="@string/no_internet"
-    android:textColor="@color/black_38"
-    android:textSize="18sp" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        app:srcCompat="@drawable/ic_warning" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="120dp"
+        android:fontFamily="sans-serif-regular"
+        android:text="@string/no_internet"
+        android:textColor="@color/black_38"
+        android:textSize="18sp" />
+
+</LinearLayout>

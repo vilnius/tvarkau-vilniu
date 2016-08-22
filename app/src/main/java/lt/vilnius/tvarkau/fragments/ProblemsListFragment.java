@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -32,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.AppModule;
+import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.SharedPreferencesModule;
@@ -250,8 +249,7 @@ public class ProblemsListFragment extends Fragment {
             };
 
             Action1<Throwable> onError = throwable -> {
-                throwable.printStackTrace();
-                FirebaseCrash.report(throwable);
+                LogApp.logCrash(throwable);
                 if (getView() != null) {
                     serverNotRespondingView.setVisibility(View.VISIBLE);
                     adapter.hideLoader();
@@ -296,8 +294,7 @@ public class ProblemsListFragment extends Fragment {
         };
 
         Action1<Throwable> onError = throwable -> {
-            throwable.printStackTrace();
-            FirebaseCrash.report(throwable);
+            LogApp.logCrash(throwable);
             serverNotRespondingView.setVisibility(View.VISIBLE);
             adapter.hideLoader();
             swipeContainer.setRefreshing(false);

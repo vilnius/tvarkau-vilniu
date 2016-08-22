@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,7 +31,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.crash.FirebaseCrash;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -94,7 +93,6 @@ public class NewProblemActivity extends BaseActivity {
 
     private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
-    private static final String ANONYMOUS_USER_SESSION_IS = "null";
     public static final String PROBLEM_PREFERENCE_KEY = "problem";
 
 
@@ -112,14 +110,14 @@ public class NewProblemActivity extends BaseActivity {
     Spinner reportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
     EditText reportProblemDescription;
-    @BindView(R.id.report_problem_take_photo)
-    FloatingActionButton reportProblemTakePhoto;
     @BindView(R.id.report_problem_location_wrapper)
     TextInputLayout reportProblemLocationWrapper;
     @BindView(R.id.report_problem_description_wrapper)
     TextInputLayout reportProblemDescriptionWrapper;
     @BindView(R.id.report_problem_type_wrapper)
     TextInputLayout reportProblemTypeWrapper;
+    @BindView(R.id.report_problem_take_photo)
+    ImageView reportProblemTakePhoto;
 
     @State
     File lastPhotoFile;
@@ -235,14 +233,16 @@ public class NewProblemActivity extends BaseActivity {
                         .apply();
                     EventBus.getDefault().post(new NewProblemAddedEvent());
                     progressDialog.dismiss();
+                    if (reportProblemDescription.hasFocus()) {
+                        KeyboardUtils.closeSoftKeyboard(this, reportProblemDescription);
+                    }
                     Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
                     finish();
                 }
             };
 
             Action1<Throwable> onError = throwable -> {
-                throwable.printStackTrace();
-                FirebaseCrash.report(throwable);
+                LogApp.logCrash(throwable);
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
@@ -252,7 +252,7 @@ public class NewProblemActivity extends BaseActivity {
                 .flatMap(photos ->
                     Observable.just(
                         new GetNewProblemParams.Builder()
-                            .setSessionId(ANONYMOUS_USER_SESSION_IS)
+                            .setSessionId(null)
                             .setDescription(reportProblemDescription.getText().toString())
                             .setType(reportType.getName())
                             .setAddress(address)
@@ -403,21 +403,22 @@ public class NewProblemActivity extends BaseActivity {
                     try {
                         addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        FirebaseCrash.report(e);
+                        LogApp.logCrash(e);
                     }
-                    if (addresses != null && addresses.get(0).getLocality() != null) {
-                        String city = addresses.get(0).getLocality();
-                        if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                            address = addresses.get(0).getAddressLine(0);
-                            reportProblemLocationWrapper.setError(null);
-                            addProblemLocation.setText(address);
-                            locationCords = latLng;
-                            if (snackbar != null && snackbar.isShown()) {
-                                snackbar.dismiss();
+                    if (addresses != null && addresses.size() > 0) {
+                        if (addresses.get(0).getLocality() != null) {
+                            String city = addresses.get(0).getLocality();
+                            if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
+                                address = addresses.get(0).getAddressLine(0);
+                                reportProblemLocationWrapper.setError(null);
+                                addProblemLocation.setText(address);
+                                locationCords = latLng;
+                                if (snackbar != null && snackbar.isShown()) {
+                                    snackbar.dismiss();
+                                }
+                            } else {
+                                showIncorrectPlaceSnackbar();
                             }
-                        } else {
-                            showIncorrectPlaceSnackbar();
                         }
                     } else {
                         showIncorrectPlaceSnackbar();
@@ -492,12 +493,17 @@ public class NewProblemActivity extends BaseActivity {
         try {
             Intent intent = builder.build(this);
             Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
-
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            FirebaseCrash.report(e);
-            Toast.makeText(this, R.string.check_google_play_services, Toast.LENGTH_LONG).show();
+            LogApp.logCrash(e);
+            Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.open, v -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com" +
+                        ".google.android.gms"));
+                    startActivity(intent);
+                })
+                .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+                .show();
         }
     }
 }
