@@ -94,6 +94,10 @@
         <a href="https://lt.linkedin.com/in/viliusk">Vilius Kraujutis</a>,
         <a href="https://lt.linkedin.com/in/povilaspoderskis">Povilas Poderskis</a>,
         <a href="https://lt.linkedin.com/in/renatbuga">Renat Buga</a></string>
+    <string name="cancel">Atšaukti</string>
+    <string name="take_photo">Fotografuoti</string>
+    <string name="choose_photos_from_gallery">Pasirinkti iš galerijos</string>
+    <string name="add_photos">Pridėkite nuotraukų</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

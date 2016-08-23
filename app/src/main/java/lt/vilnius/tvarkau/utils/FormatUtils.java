@@ -17,6 +17,12 @@ public class FormatUtils {
         return localDateTime.format(formatter);
     }
 
+    public static String formatLocalDateTimeToSeconds(LocalDateTime localDateTime) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return localDateTime.format(formatter);
+    }
+
     public static void removeUnderlines(TextView textView) {
 
         class URLSpanNoUnderline extends URLSpan {

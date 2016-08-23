@@ -1,14 +1,18 @@
 package lt.vilnius.tvarkau.utils;
 
+import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-public class BitmapUtils {
+public class ImageUtils {
 
 
     public static String convertToBase64EncodedString(Uri uri) {
@@ -29,6 +33,7 @@ public class BitmapUtils {
         options.inJustDecodeBounds = true;
         String bitmapFilePath = new File(uri.getPath()).getAbsolutePath();
         BitmapFactory.decodeFile(bitmapFilePath, options);
+
         options.inSampleSize = calculateInSampleSize(options, requiredWidth, requiredHeight);
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(bitmapFilePath, options);
@@ -73,5 +78,32 @@ public class BitmapUtils {
     public static Bitmap scaleToFitHeight(Bitmap b, int height) {
         float factor = height / (float) b.getHeight();
         return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
+    }
+
+    public static String getPhotoPathFromUri(Activity activity, Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(columnIndex);
+            cursor.close();
+            return path;
+        } else {
+            return uri.getPath();
+        }
+    }
+
+    public static Uri getTakenPhotoFileUri(Activity activity, String fileName) {
+        if (isExternalStorageAvailable()) {
+            File mediaStorageDir = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "TvarkauVilniu");
+            return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
+        }
+        return null;
+    }
+
+    private static boolean isExternalStorageAvailable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 }
