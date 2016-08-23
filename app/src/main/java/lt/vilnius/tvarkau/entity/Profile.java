@@ -29,7 +29,9 @@ public class Profile implements Parcelable {
     public Profile(GoogleSignInAccount acct) {
         name = acct.getDisplayName();
         email = acct.getEmail();
-        pictureUrl = acct.getPhotoUrl().toString();
+        if (acct.getPhotoUrl() != null) {
+            pictureUrl = acct.getPhotoUrl().toString();
+        }
 
     }
 
