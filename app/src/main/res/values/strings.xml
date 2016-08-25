@@ -98,6 +98,7 @@
     <string name="take_photo">Fotografuoti</string>
     <string name="choose_photos_from_gallery">Pasirinkti iš galerijos</string>
     <string name="add_photos">Pridėkite nuotraukų</string>
+    <string name="error_taking_image_from_server">Įvyko problema pasirenkant nuotrauką iš galerijos, išsaugokite nuotrauką telefone ir rinkitės dar sykį.</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>

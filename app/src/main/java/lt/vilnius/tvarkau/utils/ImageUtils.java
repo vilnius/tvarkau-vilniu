@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -11,9 +13,11 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+
+import lt.vilnius.tvarkau.LogApp;
 
 public class ImageUtils {
-
 
     public static String convertToBase64EncodedString(Uri uri) {
 
@@ -38,13 +42,45 @@ public class ImageUtils {
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(bitmapFilePath, options);
 
-        final int bitmapHeight = bitmap.getHeight();
-        final int bitmapWidth = bitmap.getWidth();
+        Bitmap rotatedBitmap = rotateBitmap(bitmap, bitmapFilePath);
+
+        final int bitmapHeight = rotatedBitmap.getHeight();
+        final int bitmapWidth = rotatedBitmap.getWidth();
 
         if (bitmapHeight > bitmapWidth && bitmapHeight > requiredHeight) {
-            return scaleToFitHeight(bitmap, requiredHeight);
+            return scaleToFitHeight(rotatedBitmap, requiredHeight);
         } else if (bitmapWidth > bitmapHeight && bitmapWidth > requiredWidth) {
-            return scaleToFitWidth(bitmap, requiredWidth);
+            return scaleToFitWidth(rotatedBitmap, requiredWidth);
+        } else {
+            return bitmap;
+        }
+    }
+
+    private static Bitmap rotateBitmap(Bitmap bitmap, String filePath) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(filePath);
+        } catch (IOException e) {
+            LogApp.logCrash(e);
+        }
+        if (exif != null) {
+            String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+            int rotationAngle = 0;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                rotationAngle = 90;
+            }
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                rotationAngle = 180;
+            }
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                rotationAngle = 270;
+            }
+
+            Matrix matrix = new Matrix();
+            matrix.setRotate(rotationAngle, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         } else {
             return bitmap;
         }
@@ -87,8 +123,13 @@ public class ImageUtils {
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             String path = cursor.getString(columnIndex);
-            cursor.close();
-            return path;
+            if (path != null) {
+                cursor.close();
+                return path;
+            } else {
+                // TODO Search for solution to get image path in other ways
+                return null;
+            }
         } else {
             return uri.getPath();
         }

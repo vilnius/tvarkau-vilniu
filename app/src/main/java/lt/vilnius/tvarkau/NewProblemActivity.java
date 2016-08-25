@@ -485,12 +485,20 @@ public class NewProblemActivity extends BaseActivity {
         imagesURIs.add(uri);
         String[] imagesPath = new String[imagesURIs.size()];
         for (int i = 0; i < imagesURIs.size(); i++) {
-            imagesPath[i] = new File(ImageUtils.getPhotoPathFromUri(this, imagesURIs.get(i))).toString();
+            String path = ImageUtils.getPhotoPathFromUri(this, imagesURIs.get(i));
+            if (path != null) {
+                imagesPath[i] = new File(path).toString();
+            } else {
+                imagesURIs.remove(uri);
+                Toast.makeText(this, R.string.error_taking_image_from_server, Toast.LENGTH_LONG).show();
+            }
         }
-        if (imagesPath.length > 1) {
+        if (imagesURIs.size() > 1) {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, imagesPath));
+        if (imagesURIs.size() > 0) {
+            problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, imagesPath));
+        }
     }
 
     private void showIncorrectPlaceSnackbar() {
