@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class LegacyApiModule {
 
-    public static final String API_BASE_URL = "http://www.vilnius.lt/m/m_problems/files/mobile/";
+    public static final String API_BASE_URL = "http://www.vilnius.lt/m/m_problems/files/mobile2/";
 
     @Provides
     @Singleton

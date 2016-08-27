@@ -19,9 +19,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="272dp">
 
-                <include
-                    android:id="@+id/photo_gallery_layout"
-                    layout="@layout/problem_photo_gallery" />
+                <lt.vilnius.tvarkau.views.adapters.HackyViewPager
+                    android:id="@+id/problem_images_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp" />
+
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/problem_images_view_pager_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="220dp"
+                    app:radius="5dp" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/report_problem_take_photo"

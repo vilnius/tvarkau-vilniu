@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/camera_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp"
+        android:clickable="true"
+        android:text="@string/take_photo"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/black_87" />
+
+    <TextView
+        android:id="@+id/gallery_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:text="@string/choose_photos_from_gallery"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/black_87" />
+
+</LinearLayout>
