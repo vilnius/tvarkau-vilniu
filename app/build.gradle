@@ -31,6 +31,7 @@ android {
         versionCode 7
         versionName "3.0"
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -85,6 +86,9 @@ ext {
     parcelerVersion = '1.1.2'
     threeTenVersion ='1.0.3'
     photoView = '1.3.0'
+    mockito = '1.10.19'
+    espresso = '2.2.2'
+    testRunner = '0.5'
 }
 
 dependencies {
@@ -149,6 +153,14 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
         transitive = true;
     }
+
+    testCompile "org.mockito:mockito-core:$mockito"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$espresso"
+    androidTestCompile("com.android.support.test.espresso:espresso-intents:$espresso")
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile "com.android.support.test:runner:$testRunner"
+    androidTestCompile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    androidTestCompile "com.android.support:support-v4:24.1.1" // 23.4.0 causes dependency error
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
