@@ -28,7 +28,7 @@ android {
         applicationId "lt.vilnius.tvarkau"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 7
+        versionCode 6
         versionName "3.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
