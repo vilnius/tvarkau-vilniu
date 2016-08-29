@@ -22,8 +22,9 @@ import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
  */
 public class MainActivity extends BaseActivity {
 
-    public static final int      GPS_PERMISSION_REQUEST_CODE = 11;
-    public static final String[] MAP_PERMISSIONS             = new String[]{ACCESS_FINE_LOCATION};
+    public static final int GPS_PERMISSION_REQUEST_CODE = 11;
+    public static final int NEW_ISSUE_REQUEST_CODE = 12;
+    public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -57,7 +58,8 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_report_problem)
     protected void onNewIssueClicked() {
-        startNewActivity(NewProblemActivity.class);
+        Intent intent = new Intent(this, NewProblemActivity.class);
+        startActivityForResult(intent, NEW_ISSUE_REQUEST_CODE);
     }
 
     @OnClick(R.id.home_list_of_problems)
@@ -69,8 +71,11 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_my_problems)
     protected void onMyProblemsClicked() {
-        Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
+        showMyProblemsList();
+    }
 
+    private void showMyProblemsList() {
+        Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
         startActivity(intent);
     }
 
@@ -104,4 +109,11 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_about)
     protected void onAboutClicked() { startNewActivity(AboutActivity.class); }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == NEW_ISSUE_REQUEST_CODE) {
+            showMyProblemsList();
+        }
+    }
 }

@@ -243,6 +243,7 @@ public class NewProblemActivity extends BaseActivity {
                         KeyboardUtils.closeSoftKeyboard(this, reportProblemDescription);
                     }
                     Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 }
             };
