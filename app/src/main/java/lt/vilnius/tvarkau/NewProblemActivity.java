@@ -76,6 +76,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -91,13 +92,14 @@ public class NewProblemActivity extends BaseActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
+
     private static final int PERMISSION_REQUEST_CODE = 10;
 
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PROFILE = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
-    private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
+    private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE, ACCESS_FINE_LOCATION};
 
     public static final String PROBLEM_PREFERENCE_KEY = "problem";
 
@@ -514,7 +516,11 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_location)
     public void onProblemLocationClicked(View view) {
-        showPlacePicker(view);
+        if ((PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS))) {
+            showPlacePicker(view);
+        } else {
+            requestPermissions(REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
+        }
     }
 
     @OnItemSelected(R.id.report_problem_privacy_mode)
