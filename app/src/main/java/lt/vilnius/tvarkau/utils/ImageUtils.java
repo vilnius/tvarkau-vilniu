@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -138,6 +139,11 @@ public class ImageUtils {
     public static Uri getTakenPhotoFileUri(Activity activity, String fileName) {
         if (isExternalStorageAvailable()) {
             File mediaStorageDir = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "TvarkauVilniu");
+
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+                Log.d("ImageUtils", "Failed to create directory");
+            }
+
             return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
         }
         return null;

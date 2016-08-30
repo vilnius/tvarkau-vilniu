@@ -478,6 +478,8 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_PROFILE:
                     reportProblemPrivacyMode.setSelection(0);
                     break;
+                case REQUEST_IMAGE_CAPTURE:
+                    Toast.makeText(this, R.string.photo_capture_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
