@@ -238,15 +238,17 @@ public class ProblemDetailFragment extends Fragment {
         if ((PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS))) {
             startProblemActivity();
         } else {
-            requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.GPS_PERMISSION_REQUEST_CODE);
+            requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.MAP_PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == MainActivity.GPS_PERMISSION_REQUEST_CODE
+        if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE
             && PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS)) {
             startProblemActivity();
+        } else {
+            Toast.makeText(getActivity(), R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
         }
     }
 

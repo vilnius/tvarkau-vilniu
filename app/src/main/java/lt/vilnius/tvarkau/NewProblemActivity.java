@@ -93,13 +93,15 @@ public class NewProblemActivity extends BaseActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
 
-    private static final int PERMISSION_REQUEST_CODE = 10;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
+    private static final int MAP_PERMISSION_REQUEST_CODE = 20;
 
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PROFILE = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
-    private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE, ACCESS_FINE_LOCATION};
+    public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
+    private static final String[] LOCATION_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
     public static final String PROBLEM_PREFERENCE_KEY = "problem";
 
@@ -363,10 +365,10 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_take_photo)
     public void onTakePhotoClicked() {
-        if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
+        if (PermissionUtils.isAllPermissionsGranted(this, LOCATION_PERMISSIONS)) {
             openPhotoSelectorDialog();
         } else {
-            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -379,11 +381,18 @@ public class NewProblemActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if (PermissionUtils.isAllPermissionsGranted(this, LOCATION_PERMISSIONS)) {
                     openPhotoSelectorDialog();
                 } else {
                     Toast.makeText(this, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case MAP_PERMISSION_REQUEST_CODE:
+                if (PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
+                    showPlacePicker(getCurrentFocus());
+                } else {
+                    Toast.makeText(this, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -516,10 +525,10 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_location)
     public void onProblemLocationClicked(View view) {
-        if ((PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS))) {
+        if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
             showPlacePicker(view);
         } else {
-            requestPermissions(REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
+            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
         }
     }
 

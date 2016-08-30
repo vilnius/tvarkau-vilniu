@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +23,7 @@ import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
  */
 public class MainActivity extends BaseActivity {
 
-    public static final int GPS_PERMISSION_REQUEST_CODE = 11;
+    public static final int MAP_PERMISSION_REQUEST_CODE = 11;
     public static final int NEW_ISSUE_REQUEST_CODE = 12;
     public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
@@ -85,7 +86,7 @@ public class MainActivity extends BaseActivity {
         if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
             startProblemActivity();
         } else {
-            requestPermissions(MAP_PERMISSIONS, GPS_PERMISSION_REQUEST_CODE);
+            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -97,8 +98,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == GPS_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
+        if (requestCode == MAP_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
             startProblemActivity();
+        } else {
+            Toast.makeText(this, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
         }
     }
 

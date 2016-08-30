@@ -100,6 +100,7 @@
     <string name="add_photos">Pridėkite nuotraukų</string>
     <string name="error_taking_image_from_server">Įvyko problema pasirenkant nuotrauką iš galerijos, išsaugokite nuotrauką telefone ir rinkitės dar sykį.</string>
     <string name="photo_capture_error">Nepavyko nufotografuoti, bandykite dar sykį</string>
+    <string name="error_need_location_permission">Reikalingas lokacijos leidimas</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>
