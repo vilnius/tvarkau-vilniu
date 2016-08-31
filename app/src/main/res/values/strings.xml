@@ -102,6 +102,7 @@
     <string name="photo_capture_error">Nepavyko nufotografuoti, bandykite dar sykį</string>
     <string name="error_need_location_permission">Reikalingas lokacijos leidimas</string>
     <string name="error_registration_not_working">Registracija kol kas neveikia. Visi pranešimai anonimiški</string>
+    <string name="app_version">versija</string>
 
     <string-array name="problem_types">
         <item>Aplinkos tvarkymas</item>
