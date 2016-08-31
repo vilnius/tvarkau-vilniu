@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -31,13 +29,13 @@ public class MyProfileFragment extends Fragment {
     private SharedPrefsManager prefsManager;
 
     @BindView(R.id.profile_name)
-    EditText mProfileName;
+    EditText profileName;
 
     @BindView(R.id.profile_email)
-    EditText mProfileEmail;
+    EditText profileEmail;
 
     @BindView(R.id.profile_telephone)
-    EditText mProfileTelephone;
+    EditText profileTelephone;
 
     private Unbinder unbinder;
 
@@ -71,7 +69,7 @@ public class MyProfileFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         setUpUserProfile();
-        mProfileTelephone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        profileTelephone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 
     @Override
@@ -96,9 +94,9 @@ public class MyProfileFragment extends Fragment {
     }
 
     public void saveUserProfile() {
-        String name = mProfileName.getText().toString();
-        String email = mProfileEmail.getText().toString();
-        String phone = mProfileTelephone.getText().toString();
+        String name = profileName.getText().toString();
+        String email = profileEmail.getText().toString();
+        String phone = profileTelephone.getText().toString();
 
         Profile profile = new Profile(name, email, phone);
 
@@ -106,7 +104,7 @@ public class MyProfileFragment extends Fragment {
 
         getActivity().setResult(RESULT_OK);
 
-        Toast.makeText(getContext(), "Beta versijoje registracija dar neveikia", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.error_registration_not_working, Toast.LENGTH_LONG).show();
 
         getActivity().finish();
 
@@ -120,20 +118,20 @@ public class MyProfileFragment extends Fragment {
         if (!prefsManager.isUserAnonymous()) {
             Profile profile = Profile.returnProfile(getContext());
 
-            mProfileName.setText(profile.getName());
-            mProfileEmail.setText(profile.getEmail());
-            mProfileTelephone.setText(profile.getMobilePhone());
+            profileName.setText(profile.getName());
+            profileEmail.setText(profile.getEmail());
+            profileTelephone.setText(profile.getMobilePhone());
         }
     }
 
     public boolean isEditedByUser() {
-        if (mProfileName == null || mProfileEmail == null || mProfileTelephone == null) {
+        if (profileName == null || profileEmail == null || profileTelephone == null) {
             return true;
         }
 
-        String name = mProfileName.getText().toString();
-        String email = mProfileEmail.getText().toString();
-        String telephone = mProfileTelephone.getText().toString();
+        String name = profileName.getText().toString();
+        String email = profileEmail.getText().toString();
+        String telephone = profileTelephone.getText().toString();
 
         if (!prefsManager.isUserAnonymous()) {
             Profile oldProfile = prefsManager.getUserProfile();
@@ -144,13 +142,6 @@ public class MyProfileFragment extends Fragment {
         }
 
         return false;
-    }
-
-    public void fillFields(GoogleSignInAccount account) {
-        Profile profile = new Profile(account);
-
-        mProfileName.setText(profile.getName());
-        mProfileEmail.setText(profile.getEmail());
     }
 
     @Override

@@ -83,12 +83,4 @@
                 android:inputType="phone" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
-
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="12dp" />
-
 </LinearLayout>
