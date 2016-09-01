@@ -70,6 +70,7 @@ public class MyProfileFragment extends Fragment {
 
         setUpUserProfile();
         profileTelephone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        Toast.makeText(getContext(), R.string.error_registration_not_working, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -103,8 +104,6 @@ public class MyProfileFragment extends Fragment {
         prefsManager.saveUserDetails(profile);
 
         getActivity().setResult(RESULT_OK);
-
-        Toast.makeText(getContext(), R.string.error_registration_not_working, Toast.LENGTH_LONG).show();
 
         getActivity().finish();
 
