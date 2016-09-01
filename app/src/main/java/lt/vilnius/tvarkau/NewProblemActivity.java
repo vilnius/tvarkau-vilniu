@@ -108,7 +108,7 @@ public class NewProblemActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.report_problem_location)
-    EditText addProblemLocation;
+    EditText reportProblemLocation;
     @BindView(R.id.problem_images_view_pager)
     ViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
@@ -401,9 +401,10 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private boolean isEditedByUser() {
-        return reportProblemDescription.getText().length() > 0 ||
-            reportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-            reportType != null || locationCords != null || imagesURIs != null;
+        return reportProblemDescription.getText().length() > 0
+            || reportProblemLocation.getText().length() > 0
+            || (reportType != null && reportType.getName() != null)
+            || (imagesURIs != null && imagesURIs.size() > 0);
     }
 
     @Override
@@ -460,7 +461,7 @@ public class NewProblemActivity extends BaseActivity {
                             if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
                                 address = addresses.get(0).getAddressLine(0);
                                 reportProblemLocationWrapper.setError(null);
-                                addProblemLocation.setText(address);
+                                reportProblemLocation.setText(address);
                                 locationCords = latLng;
                                 if (snackbar != null && snackbar.isShown()) {
                                     snackbar.dismiss();
