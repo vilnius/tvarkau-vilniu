@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +40,7 @@ public class MyProfileFragment extends Fragment {
     EditText profileTelephone;
 
     private Unbinder unbinder;
+    private boolean inputsEdited;
 
     public MyProfileFragment() {
     }
@@ -52,6 +55,20 @@ public class MyProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.my_profile, container, false);
 
         unbinder = ButterKnife.bind(this, view);
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                inputsEdited = true;
+            }
+            @Override public void afterTextChanged(Editable s) {}
+        };
+
+        profileName.addTextChangedListener(textWatcher);
+        profileEmail.addTextChangedListener(textWatcher);
+        profileTelephone.addTextChangedListener(textWatcher);
 
         return view;
     }
@@ -124,22 +141,31 @@ public class MyProfileFragment extends Fragment {
     }
 
     public boolean isEditedByUser() {
-        if (profileName == null || profileEmail == null || profileTelephone == null) {
-            return false;
-        }
 
-        String name = profileName.getText().toString();
-        String email = profileEmail.getText().toString();
-        String telephone = profileTelephone.getText().toString();
+        if (prefsManager.isUserAnonymous()) {
+            if (inputsEdited) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            String name = null;
+            String email = null;
+            String telephone = null;
+            if (profileName != null) {
+                name = profileName.getText().toString();
+            }
+            if (profileEmail != null) {
+                email = profileEmail.getText().toString();
+            }
+            if (profileTelephone != null) {
+                telephone = profileTelephone.getText().toString();
+            }
 
-        if (!prefsManager.isUserAnonymous()) {
             Profile oldProfile = prefsManager.getUserProfile();
-
             Profile newProfile = new Profile(name, email, telephone);
-
             return !newProfile.equals(oldProfile);
         }
-        return false;
     }
 
     @Override
