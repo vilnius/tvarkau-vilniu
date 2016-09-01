@@ -125,7 +125,7 @@ public class MyProfileFragment extends Fragment {
 
     public boolean isEditedByUser() {
         if (profileName == null || profileEmail == null || profileTelephone == null) {
-            return true;
+            return false;
         }
 
         String name = profileName.getText().toString();
@@ -137,9 +137,8 @@ public class MyProfileFragment extends Fragment {
 
             Profile newProfile = new Profile(name, email, telephone);
 
-            return newProfile.equals(oldProfile);
+            return !newProfile.equals(oldProfile);
         }
-
         return false;
     }
 

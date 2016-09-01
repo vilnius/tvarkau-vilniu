@@ -31,7 +31,7 @@ public class MyProfileActivity extends BaseActivity {
         if (view != null) {
             KeyboardUtils.closeSoftKeyboard(this, view);
         }
-        if (profileFragment != null && !profileFragment.isEditedByUser()) {
+        if (profileFragment != null && profileFragment.isEditedByUser()) {
             new AlertDialog.Builder(this, R.style.MyDialogTheme)
                     .setMessage(getString(R.string.discard_changes_title))
                     .setIcon(android.R.drawable.ic_dialog_alert)
