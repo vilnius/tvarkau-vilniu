@@ -103,27 +103,8 @@
     <string name="error_need_location_permission">Reikalingas lokacijos leidimas</string>
     <string name="error_registration_not_working">Registracija kol kas neveikia. Visi pranešimai anonimiški.</string>
     <string name="app_version">versija</string>
-
-    <string-array name="problem_types">
-        <item>Aplinkos tvarkymas</item>
-        <item>Beglobių gyvūnų gaudymas</item>
-        <item>Dviračių takų problemos</item>
-        <item>Eismo organizavimas</item>
-        <item>Energetika ir inžineriniai tinklai</item>
-        <item>Gatvių apšvietimas</item>
-        <item>Gatvių priežiūra ir tvarkymas</item>
-        <item>Gyvūnų laikymo Vilniaus miesto Savivaldybės teritorijoje taisyklių pažeidimai</item>
-        <item>Išorinės reklamos įrengimo taisyklių pažeidimai</item>
-        <item>Kapinių priežiūra</item>
-        <item>Komunalinių atliekų tvarkymas</item>
-        <item>Pastatų administravimas</item>
-        <item>Statinių priežiūra</item>
-        <item>Tiltų, viadukų, tunelių ir estakadų priežiūra</item>
-        <item>Transporto priemonių stovėjimo tvarkos pažeidimai (laikinai neveikia)</item>
-        <item>Triukšmo prevencijos viešosiose vietose taisyklių pažeidimas</item>
-        <item>Tvarkymo ir švaros taisyklių pažeidimas</item>
-        <item>Viešasis transportas</item>
-    </string-array>
+    <string name="transport_vehicle_report_type_not_available">Transporto priemonių stovėjimo tvarkos pažeidimai (laikinai neveikia)</string>
+    <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

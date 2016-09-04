@@ -63,7 +63,6 @@ import lt.vilnius.tvarkau.api.GetNewProblemParams;
 import lt.vilnius.tvarkau.api.LegacyApiModule;
 import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
-import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
@@ -137,7 +136,7 @@ public class NewProblemActivity extends BaseActivity {
     @State
     Profile profile;
     @State
-    ReportType reportType;
+    String reportType;
     @State
     String address;
 
@@ -265,7 +264,7 @@ public class NewProblemActivity extends BaseActivity {
                         new GetNewProblemParams.Builder()
                             .setSessionId(null)
                             .setDescription(reportProblemDescription.getText().toString())
-                            .setType(reportType.getName())
+                            .setType(reportType)
                             .setAddress(address)
                             .setLatitude(locationCords.latitude)
                             .setLongitude(locationCords.longitude)
@@ -403,7 +402,7 @@ public class NewProblemActivity extends BaseActivity {
     private boolean isEditedByUser() {
         return reportProblemDescription.getText().length() > 0
             || reportProblemLocation.getText().length() > 0
-            || (reportType != null && reportType.getName() != null)
+            || (reportType != null && reportType.length() > 0)
             || (imagesURIs != null && imagesURIs.size() > 0);
     }
 
@@ -479,9 +478,9 @@ public class NewProblemActivity extends BaseActivity {
                     break;
                 case REQUEST_CHOOSE_REPORT_TYPE:
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
-                        reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
+                        reportType = data.getStringExtra(EXTRA_REPORT_TYPE);
                         reportProblemTypeWrapper.setError(null);
-                        reportProblemType.setText(reportType.getName());
+                        reportProblemType.setText(reportType);
                     }
                     break;
             }
