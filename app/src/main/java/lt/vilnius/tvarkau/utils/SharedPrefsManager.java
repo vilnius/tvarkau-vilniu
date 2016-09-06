@@ -18,45 +18,53 @@ import lt.vilnius.tvarkau.entity.Profile;
 public class SharedPrefsManager {
     private static final String PREFS_NAME = "TVARKAU-VILNIU_PREFS";
 
-
     private static final String PREF_USER_PROFILE = "UserProfile";
+    private static final String PREF_USER_ANONYMOUS = "UserAnonymous";
 
-    private static SharedPrefsManager mSingleton;
-    private static SharedPreferences mSharedPrefences;
+    private static SharedPrefsManager singleton;
+    private static SharedPreferences sharedPreferences;
 
 
     private SharedPrefsManager(Context context) {
-        mSharedPrefences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     private static void initializeInstance(Context context) {
-        if (mSingleton == null) {
-            mSingleton = new SharedPrefsManager(context);
+        if (singleton == null) {
+            singleton = new SharedPrefsManager(context);
         }
     }
 
     public static SharedPrefsManager getInstance(Context context) {
         initializeInstance(context.getApplicationContext());
-        return mSingleton;
+        return singleton;
     }
 
+    public boolean isUserAnonymous() {
+        return sharedPreferences.getBoolean(PREF_USER_ANONYMOUS, true);
+    }
 
-    public Boolean isUserAnonymous() {
-        return null == mSharedPrefences.getString(PREF_USER_PROFILE, null);
+    public void changeUserAnonymityStatus(boolean status) {
+        sharedPreferences.edit()
+            .putBoolean(PREF_USER_ANONYMOUS, status)
+            .apply();
     }
 
     public void saveUserDetails(Profile profile) {
-        SharedPreferences.Editor edit = mSharedPrefences.edit();
-        String json = profile.createJsonData();
-        edit.putString(PREF_USER_PROFILE, json);
-        edit.apply();
+        sharedPreferences.edit()
+            .putString(PREF_USER_PROFILE, profile.createJsonData())
+            .apply();
+    }
+
+    public boolean isUserDetailsSaved(){
+        return sharedPreferences.getString(PREF_USER_PROFILE, null) != null;
     }
 
     @Nullable
     public Profile getUserProfile() {
         try {
             Gson gson = new Gson();
-            String json = mSharedPrefences.getString(PREF_USER_PROFILE, null);
+            String json = sharedPreferences.getString(PREF_USER_PROFILE, null);
             if (json != null) {
                 return gson.fromJson(json, Profile.class);
             } else {
@@ -67,5 +75,4 @@ public class SharedPrefsManager {
             return null;
         }
     }
-
 }

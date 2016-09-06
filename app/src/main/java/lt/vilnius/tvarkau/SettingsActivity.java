@@ -8,8 +8,11 @@ import android.widget.Switch;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 public class SettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener{
+
+    private SharedPrefsManager prefsManager;
 
     @BindView(R.id.share_contacts_switcher)
     Switch shareContactsSwitcher;
@@ -17,9 +20,10 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefsManager = SharedPrefsManager.getInstance(this);
         setContentView(R.layout.settings_activity);
-
         ButterKnife.bind(this);
+        shareContactsSwitcher.setChecked(!prefsManager.isUserAnonymous());
         shareContactsSwitcher.setOnCheckedChangeListener(this);
     }
 
@@ -30,7 +34,11 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     }
 
     @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        // TODO edit sharedPreferences on Share contacts switch change
+        if (isChecked) {
+            prefsManager.changeUserAnonymityStatus(false);
+        } else {
+            prefsManager.changeUserAnonymityStatus(true);
+        }
     }
 
     @OnClick(R.id.import_reports_from_previous_app)

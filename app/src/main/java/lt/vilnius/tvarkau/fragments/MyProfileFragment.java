@@ -112,6 +112,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     public void saveUserProfile() {
+
         String name = profileName.getText().toString();
         String email = profileEmail.getText().toString();
         String phone = profileTelephone.getText().toString();
@@ -131,9 +132,8 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void setUpUserProfile() {
-        if (!prefsManager.isUserAnonymous()) {
+        if (prefsManager.isUserDetailsSaved()) {
             Profile profile = Profile.returnProfile(getContext());
-
             profileName.setText(profile.getName());
             profileEmail.setText(profile.getEmail());
             profileTelephone.setText(profile.getMobilePhone());
@@ -142,7 +142,7 @@ public class MyProfileFragment extends Fragment {
 
     public boolean isEditedByUser() {
 
-        if (prefsManager.isUserAnonymous()) {
+        if (!prefsManager.isUserDetailsSaved()) {
             if (inputsEdited) {
                 return true;
             } else {
@@ -152,6 +152,7 @@ public class MyProfileFragment extends Fragment {
             String name = null;
             String email = null;
             String telephone = null;
+
             if (profileName != null) {
                 name = profileName.getText().toString();
             }
@@ -171,7 +172,6 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         unbinder.unbind();
     }
 }
