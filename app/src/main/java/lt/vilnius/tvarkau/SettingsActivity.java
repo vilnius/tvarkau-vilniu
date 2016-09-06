@@ -2,8 +2,10 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +19,9 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     @BindView(R.id.share_contacts_switcher)
     Switch shareContactsSwitcher;
 
+    @BindView(R.id.edit_personal_data)
+    TextView editPersonalData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +30,7 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
         ButterKnife.bind(this);
         shareContactsSwitcher.setChecked(!prefsManager.isUserAnonymous());
         shareContactsSwitcher.setOnCheckedChangeListener(this);
+        setUpEditPersonalData(prefsManager.isUserAnonymous());
     }
 
     @OnClick(R.id.edit_personal_data)
@@ -36,8 +42,20 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             prefsManager.changeUserAnonymityStatus(false);
+            setUpEditPersonalData(false);
         } else {
             prefsManager.changeUserAnonymityStatus(true);
+            setUpEditPersonalData(true);
+        }
+    }
+
+    private void setUpEditPersonalData(boolean isUserAnonymous){
+        if (isUserAnonymous) {
+            editPersonalData.setClickable(false);
+            editPersonalData.setTextColor(ContextCompat.getColor(this, R.color.black_38));
+        } else {
+            editPersonalData.setClickable(true);
+            editPersonalData.setTextColor(ContextCompat.getColor(this, R.color.black_87));
         }
     }
 

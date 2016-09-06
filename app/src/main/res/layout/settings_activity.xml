@@ -28,16 +28,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/setting_anonymous_explanation" />
 
-            <TextView
-                android:id="@+id/edit_personal_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:text="@string/edit_personal_data"
-                android:textAllCaps="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/colorPrimary" />
-
         </LinearLayout>
 
         <Switch
@@ -48,6 +38,19 @@
             android:layout_weight="2" />
 
     </LinearLayout>
+
+    <View
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        style="@style/HorizontalDivider" />
+
+    <TextView
+        android:id="@+id/edit_personal_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_personal_data"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/black_87" />
 
     <View
         android:layout_marginBottom="16dp"
