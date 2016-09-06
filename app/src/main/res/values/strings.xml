@@ -31,7 +31,6 @@
     <string name="home_list_of_reports">Pranešimų sąrašas</string>
     <string name="home_my_problems">Mano pranešimai</string>
     <string name="home_map_of_problems">Žemėlapis</string>
-    <string name="home_my_profile">Mano profilis</string>
     <string name="home_about">Apie</string>
     <string name="discard_changes_title">Sunaikinti jūsų pakeitimus?</string>
     <string name="discard_changes_positive">Sunaikinti</string>
@@ -105,6 +104,14 @@
     <string name="app_version">versija</string>
     <string name="transport_vehicle_report_type_not_available">Transporto priemonių stovėjimo tvarkos pažeidimai (laikinai neveikia)</string>
     <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
+    <string name="home_settings">Nustatymai</string>
+    <string name="setting_anonymous_title">Naudoti kontaktinius duomenis</string>
+    <string name="setting_anonymous_explanation">Prie pranešimų galite pridėti savo asmeninius kontaktus susisiekimui. Transporto priemonių stovėjimo tvarkos pažeidimams pranešti kontaktus pateikti yra privaloma.</string>
+    <string name="edit_personal_data">Redaguoti kontaktinius duomenis</string>
+    <string name="setting_import_reports">Importuoti pranešimus iš ankstesnės programėlės</string>
+    <string name="setting_import_reports_explanation">Prisijungti į vilnius.lt profilį</string>
+    <string name="title_settings">Nustatymai</string>
+    <string name="title_edit_contacts">Redaguoti kontaktus</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

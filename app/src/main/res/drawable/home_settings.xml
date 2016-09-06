@@ -11,6 +11,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/ic_my_profile" />
+            android:src="@drawable/ic_settings" />
     </item>
 </layer-list>

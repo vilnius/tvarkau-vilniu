@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -28,7 +29,7 @@ public class MainActivity extends BaseActivity {
     public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -105,9 +106,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.home_my_profile)
-    protected void onMyProfileClicked() {
-        startNewActivity(MyProfileActivity.class);
+    @OnClick(R.id.home_settings)
+    protected void onSettingsClicked() {
+        startNewActivity(SettingsActivity.class);
     }
 
     @OnClick(R.id.home_about)

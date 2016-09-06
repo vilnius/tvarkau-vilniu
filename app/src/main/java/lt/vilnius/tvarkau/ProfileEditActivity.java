@@ -7,7 +7,7 @@ import android.view.View;
 import lt.vilnius.tvarkau.fragments.MyProfileFragment;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 
-public class MyProfileActivity extends BaseActivity {
+public class ProfileEditActivity extends BaseActivity {
 
     private MyProfileFragment profileFragment;
 
@@ -20,8 +20,8 @@ public class MyProfileActivity extends BaseActivity {
         if (savedInstanceState == null) {
             profileFragment = MyProfileFragment.getInstance();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.profile_frame, profileFragment)
-                    .commit();
+                .replace(R.id.profile_frame, profileFragment)
+                .commit();
         }
     }
 
@@ -33,11 +33,11 @@ public class MyProfileActivity extends BaseActivity {
         }
         if (profileFragment != null && profileFragment.isEditedByUser()) {
             new AlertDialog.Builder(this, R.style.MyDialogTheme)
-                    .setMessage(getString(R.string.discard_changes_title))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
-                            MyProfileActivity.super.onBackPressed())
-                    .setNegativeButton(R.string.discard_changes_negative, null).show();
+                .setMessage(getString(R.string.discard_changes_title))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
+                    ProfileEditActivity.super.onBackPressed())
+                .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();
         }

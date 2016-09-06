@@ -542,7 +542,7 @@ public class NewProblemActivity extends BaseActivity {
                 profile = Profile.returnProfile(this);
 
                 if (profile == null) {
-                    Intent intent = new Intent(this, MyProfileActivity.class);
+                    Intent intent = new Intent(this, SettingsActivity.class);
                     startActivityForResult(intent, REQUEST_PROFILE);
                 }
                 break;
