@@ -18,7 +18,7 @@
     <string name="problem_map">Pranešimų žemėlapis</string>
 
     <string name="profile_hint_email">El.paštas</string>
-    <string name="profile_hint_name">Vardas</string>
+    <string name="profile_hint_name">Vardas Pavardė</string>
     <string name="profile_hint_telephone">Telefonas</string>
     <string name="message_notsigned">Norint pasiekti profilio informacija prašome prisijungti</string>
     <string name="title_notsigned">Vartotojas neprisijungęs</string>
@@ -102,7 +102,7 @@
     <string name="error_need_location_permission">Reikalingas lokacijos leidimas</string>
     <string name="error_registration_not_working">Registracija kol kas neveikia. Visi pranešimai anonimiški.</string>
     <string name="app_version">versija</string>
-    <string name="transport_vehicle_report_type_not_available">Transporto priemonių stovėjimo tvarkos pažeidimai (laikinai neveikia)</string>
+    <string name="transport_vehicle_report_type_contacts_needed">Transporto priemonių stovėjimo tvarkos pažeidimai (Privaloma pridėti savo kontaktus)</string>
     <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
     <string name="home_settings">Nustatymai</string>
     <string name="setting_anonymous_title">Naudoti kontaktinius duomenis</string>
@@ -111,7 +111,13 @@
     <string name="setting_import_reports">Importuoti pranešimus iš ankstesnės programėlės</string>
     <string name="setting_import_reports_explanation">Prisijungti į vilnius.lt profilį</string>
     <string name="title_settings">Nustatymai</string>
-    <string name="title_edit_contacts">Redaguoti kontaktus</string>
+    <string name="title_edit_contacts">Mano kontaktai</string>
+    <string name="fill_your_contacts">Pildyti</string>
+    <string name="error_transport_type_requires_contacts">Pasirinktam pranešimo tipui privaloma pateikti asmeninius kontaktus.</string>
+    <string name="error_profile_fill_name">Įveskite vardą ir pavardę</string>
+    <string name="error_profile_fill_email">Įveskite el. pašto adresą</string>
+    <string name="error_profile_fill_telephone">Įveskite telefono numerį</string>
+    <string name="your_contact_data_saved">Jūsų duomenys išsaugoti</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

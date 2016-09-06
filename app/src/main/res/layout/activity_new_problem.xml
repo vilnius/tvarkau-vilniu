@@ -117,17 +117,6 @@
                         style="@style/NewProblemField" />
                 </android.support.design.widget.TextInputLayout>
 
-                <ImageView
-                    android:src="@drawable/ic_person"
-                    style="@style/NewProblemIcon" />
-
-                <Spinner
-                    android:id="@+id/report_problem_privacy_mode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="24dp"
-                    android:paddingRight="24dp"
-                    android:entries="@array/report_privacy_mode" />
             </GridLayout>
         </LinearLayout>
 

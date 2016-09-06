@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
@@ -39,8 +40,20 @@ public class MyProfileFragment extends Fragment {
     @BindView(R.id.profile_telephone)
     EditText profileTelephone;
 
+    @BindView(R.id.profile_name_wrapper)
+    TextInputLayout profileNameWrapper;
+
+    @BindView(R.id.profile_email_wrapper)
+    TextInputLayout profileEmailWrapper;
+
+    @BindView(R.id.profile_telephone_wrapper)
+    TextInputLayout profileTelephoneWrapper;
+
     private Unbinder unbinder;
     private boolean inputsEdited;
+    private String email;
+    private String phone;
+    private String name;
 
     public MyProfileFragment() {
     }
@@ -59,10 +72,12 @@ public class MyProfileFragment extends Fragment {
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 inputsEdited = true;
             }
+
             @Override public void afterTextChanged(Editable s) {}
         };
 
@@ -87,7 +102,6 @@ public class MyProfileFragment extends Fragment {
 
         setUpUserProfile();
         profileTelephone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        Toast.makeText(getContext(), R.string.error_registration_not_working, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -111,24 +125,61 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
-    public void saveUserProfile() {
+    private void saveUserProfile() {
 
-        String name = profileName.getText().toString();
-        String email = profileEmail.getText().toString();
-        String phone = profileTelephone.getText().toString();
+        name = profileName.getText().toString();
+        email = profileEmail.getText().toString();
+        phone = profileTelephone.getText().toString();
 
-        Profile profile = new Profile(name, email, phone);
+        if (validateProfileInputs()) {
+            Profile profile = new Profile(name, email, phone);
 
-        prefsManager.saveUserDetails(profile);
+            prefsManager.saveUserDetails(profile);
 
-        getActivity().setResult(RESULT_OK);
+            getActivity().setResult(RESULT_OK);
 
-        getActivity().finish();
+            getActivity().finish();
 
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            KeyboardUtils.closeSoftKeyboard(getActivity(), view);
+            Toast.makeText(getActivity(), R.string.your_contact_data_saved, Toast.LENGTH_SHORT).show();
+
+            prefsManager.changeUserAnonymityStatus(false);
+
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                KeyboardUtils.closeSoftKeyboard(getActivity(), view);
+            }
         }
+    }
+
+    private boolean validateProfileInputs() {
+        boolean nameIsValid = false;
+        boolean emailIsValid = false;
+        boolean phoneIsValid = false;
+
+        if (name != null && name.length() > 0) {
+            nameIsValid = true;
+            profileNameWrapper.setError(null);
+        } else {
+            profileNameWrapper.setError(getText(R.string.error_profile_fill_name));
+        }
+
+        if (email != null && email.length() > 0) {
+            // TODO add @ validation in email
+            emailIsValid = true;
+            profileEmailWrapper.setError(null);
+        } else {
+            profileEmailWrapper.setError(getText(R.string.error_profile_fill_email));
+        }
+
+        if (phone != null && phone.length() > 0) {
+            // TODO add telephone validation
+            phoneIsValid = true;
+            profileTelephoneWrapper.setError(null);
+        } else {
+            profileTelephoneWrapper.setError(getText(R.string.error_profile_fill_telephone));
+        }
+
+        return nameIsValid && emailIsValid && phoneIsValid;
     }
 
     private void setUpUserProfile() {

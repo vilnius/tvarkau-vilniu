@@ -22,11 +22,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +51,6 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 import icepick.State;
 import lt.vilnius.tvarkau.api.ApiMethod;
 import lt.vilnius.tvarkau.api.ApiRequest;
@@ -69,6 +65,7 @@ import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.ImageUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -114,8 +111,6 @@ public class NewProblemActivity extends BaseActivity {
     CirclePageIndicator problemImagesViewPagerIndicator;
     @BindView(R.id.report_problem_type)
     EditText reportProblemType;
-    @BindView(R.id.report_problem_privacy_mode)
-    Spinner reportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
     EditText reportProblemDescription;
     @BindView(R.id.report_problem_location_wrapper)
@@ -142,6 +137,7 @@ public class NewProblemActivity extends BaseActivity {
 
     private Snackbar snackbar;
     private String photoFileName;
+    private SharedPrefsManager prefsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,21 +154,15 @@ public class NewProblemActivity extends BaseActivity {
             .build()
             .inject(this);
 
+        prefsManager = SharedPrefsManager.getInstance(this);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         initProblemImagesPager();
-        initPrivacyModeSpinner();
 
         imagesURIs = new ArrayList<>();
-    }
-
-    private void initPrivacyModeSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-            R.array.report_privacy_mode, R.layout.item_report_type_spinner);
-        adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
-        reportProblemPrivacyMode.setAdapter(adapter);
     }
 
     private void initProblemImagesPager() {
@@ -205,7 +195,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     public void sendProblem() {
-        if (validateProblemInputs()) {
+        if (validateProblemInputs() && validateContacts()) {
 
             ProgressDialog progressDialog = createProgressDialog();
             progressDialog.setCancelable(false);
@@ -315,6 +305,27 @@ public class NewProblemActivity extends BaseActivity {
         }
 
         return addressIsValid && descriptionIsValid && problemTypeIsValid;
+    }
+
+    private boolean validateContacts() {
+        if (reportType.equals("Transporto priemonių stovėjimo tvarkos pažeidimai")) {
+            if (prefsManager.isUserAnonymous()) {
+                Snackbar.make(getCurrentFocus(), R.string.error_transport_type_requires_contacts, Snackbar
+                    .LENGTH_INDEFINITE)
+                    .setAction(R.string.fill_your_contacts, v -> {
+                            Intent intent = new Intent(this, ProfileEditActivity.class);
+                            startActivity(intent);
+                        }
+                    )
+                    .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+                    .show();
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 
     private void openPhotoSelectorDialog() {
@@ -481,14 +492,12 @@ public class NewProblemActivity extends BaseActivity {
                         reportType = data.getStringExtra(EXTRA_REPORT_TYPE);
                         reportProblemTypeWrapper.setError(null);
                         reportProblemType.setText(reportType);
+                        validateContacts();
                     }
                     break;
             }
         } else {
             switch (requestCode) {
-                case REQUEST_PROFILE:
-                    reportProblemPrivacyMode.setSelection(0);
-                    break;
                 case REQUEST_IMAGE_CAPTURE:
                     Toast.makeText(this, R.string.photo_capture_error, Toast.LENGTH_SHORT).show();
             }
@@ -529,23 +538,6 @@ public class NewProblemActivity extends BaseActivity {
             showPlacePicker(view);
         } else {
             requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @OnItemSelected(R.id.report_problem_privacy_mode)
-    public void onPrivacyModeSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-            case 0:
-                profile = null;
-                break;
-            case 1:
-                profile = Profile.returnProfile(this);
-
-                if (profile == null) {
-                    Intent intent = new Intent(this, SettingsActivity.class);
-                    startActivityForResult(intent, REQUEST_PROFILE);
-                }
-                break;
         }
     }
 

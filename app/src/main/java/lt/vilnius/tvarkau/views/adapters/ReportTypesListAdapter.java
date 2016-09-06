@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau.views.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,14 +40,14 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
         holder.item = reportType;
         holder.reportTypeName.setText(reportType);
 
-        // TODO change Transport category to be working if user is registered to Vilnius.lt
-        if (!holder.reportTypeName.getText().equals("Transporto priemonių stovėjimo tvarkos pažeidimai")) {
-            holder.itemView.setOnClickListener(v -> {
-                if (listener != null) listener.onReportTypeSelected(reportType);
-            });
-        } else {
-            holder.reportTypeName.setTextColor(ContextCompat.getColor(context, R.color.black_38));
-            holder.reportTypeName.setText(R.string.transport_vehicle_report_type_not_available);
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onReportTypeSelected(reportType);
+            }
+        });
+
+        if (holder.reportTypeName.getText().equals("Transporto priemonių stovėjimo tvarkos pažeidimai")) {
+            holder.reportTypeName.setText(R.string.transport_vehicle_report_type_contacts_needed);
         }
     }
 
