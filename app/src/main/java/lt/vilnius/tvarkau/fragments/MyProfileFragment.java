@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.fragments;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -13,26 +14,36 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneOffset;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
 
     private SharedPrefsManager prefsManager;
 
     @BindView(R.id.profile_name)
     EditText profileName;
+
+    @BindView(R.id.profile_birthday)
+    EditText profileBirthday;
 
     @BindView(R.id.profile_email)
     EditText profileEmail;
@@ -42,6 +53,9 @@ public class MyProfileFragment extends Fragment {
 
     @BindView(R.id.profile_name_wrapper)
     TextInputLayout profileNameWrapper;
+
+    @BindView(R.id.profile_birthday_wrapper)
+    TextInputLayout profileBirthdayWrapper;
 
     @BindView(R.id.profile_email_wrapper)
     TextInputLayout profileEmailWrapper;
@@ -54,6 +68,7 @@ public class MyProfileFragment extends Fragment {
     private String email;
     private String phone;
     private String name;
+    private LocalDate birthday;
 
     public MyProfileFragment() {
     }
@@ -82,6 +97,7 @@ public class MyProfileFragment extends Fragment {
         };
 
         profileName.addTextChangedListener(textWatcher);
+        profileBirthday.addTextChangedListener(textWatcher);
         profileEmail.addTextChangedListener(textWatcher);
         profileTelephone.addTextChangedListener(textWatcher);
 
@@ -125,6 +141,28 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
+    @OnClick(R.id.profile_birthday)
+    protected void onProfileBirthdayClick() {
+
+        LocalDate date = LocalDate.now();
+
+        int year = date.getYear();
+        // Need to adjust month as in Calendar they start from 0, not 1
+        int month = date.getMonthValue() - 1;
+        int day = date.getDayOfMonth();
+
+        DatePickerDialog dialogDatePicker = new DatePickerDialog(getActivity(), this, year, month, day);
+        dialogDatePicker.getDatePicker().setMaxDate(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        dialogDatePicker.show();
+    }
+
+    @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        // Need to adjust month as in Calendar they start from 0, not 1
+        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
+        profileBirthday.setText(FormatUtils.formatLocalDate(date));
+        birthday = date;
+    }
+
     private void saveUserProfile() {
 
         name = profileName.getText().toString();
@@ -132,7 +170,7 @@ public class MyProfileFragment extends Fragment {
         phone = profileTelephone.getText().toString();
 
         if (validateProfileInputs()) {
-            Profile profile = new Profile(name, email, phone);
+            Profile profile = new Profile(name, birthday, email, phone);
 
             prefsManager.saveUserDetails(profile);
 
@@ -153,6 +191,7 @@ public class MyProfileFragment extends Fragment {
 
     private boolean validateProfileInputs() {
         boolean nameIsValid = false;
+        boolean birthdayIsValid = false;
         boolean emailIsValid = false;
         boolean phoneIsValid = false;
 
@@ -161,6 +200,13 @@ public class MyProfileFragment extends Fragment {
             profileNameWrapper.setError(null);
         } else {
             profileNameWrapper.setError(getText(R.string.error_profile_fill_name));
+        }
+
+        if (birthday != null && FormatUtils.formatLocalDate(birthday).length() > 0) {
+            birthdayIsValid = true;
+            profileBirthdayWrapper.setError(null);
+        } else {
+            profileBirthdayWrapper.setError(getText(R.string.error_profile_fill_birthday));
         }
 
         if (email != null && email.length() > 0) {
@@ -179,13 +225,15 @@ public class MyProfileFragment extends Fragment {
             profileTelephoneWrapper.setError(getText(R.string.error_profile_fill_telephone));
         }
 
-        return nameIsValid && emailIsValid && phoneIsValid;
+        return nameIsValid && birthdayIsValid && emailIsValid && phoneIsValid;
     }
 
     private void setUpUserProfile() {
         if (prefsManager.isUserDetailsSaved()) {
             Profile profile = Profile.returnProfile(getContext());
             profileName.setText(profile.getName());
+            profileBirthday.setText(FormatUtils.formatLocalDate(profile.getBirthday()));
+            birthday = profile.getBirthday();
             profileEmail.setText(profile.getEmail());
             profileTelephone.setText(profile.getMobilePhone());
         }
@@ -215,7 +263,7 @@ public class MyProfileFragment extends Fragment {
             }
 
             Profile oldProfile = prefsManager.getUserProfile();
-            Profile newProfile = new Profile(name, email, telephone);
+            Profile newProfile = new Profile(name, birthday, email, telephone);
             return !newProfile.equals(oldProfile);
         }
     }
