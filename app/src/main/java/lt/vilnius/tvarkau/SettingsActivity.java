@@ -3,7 +3,7 @@ package lt.vilnius.tvarkau;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -24,6 +24,9 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
 
     @BindView(R.id.edit_personal_data)
     TextView editPersonalData;
+
+    @BindView(R.id.settings_first_divider)
+    View settingsFirstDivider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,11 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
 
     @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-            startProfileEditActivity();
+            if (!prefsManager.isUserDetailsSaved()) {
+                startProfileEditActivity();
+            } else {
+                setUpEditPersonalData(false);
+            }
         } else {
             prefsManager.changeUserAnonymityStatus(true);
             setUpEditPersonalData(true);
@@ -57,9 +64,12 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
 
     private void setUpEditPersonalData(boolean isUserAnonymous) {
         if (isUserAnonymous) {
-            editPersonalData.setClickable(false);
-            editPersonalData.setTextColor(ContextCompat.getColor(this, R.color.black_38));
+            editPersonalData.setVisibility(View.GONE);
+            settingsFirstDivider.setVisibility(View.GONE);
+
         } else {
+            editPersonalData.setVisibility(View.VISIBLE);
+            settingsFirstDivider.setVisibility(View.VISIBLE);
             editPersonalData.setClickable(true);
             editPersonalData.setTextColor(ContextCompat.getColor(this, R.color.black_87));
         }
@@ -70,10 +80,13 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
         if (requestCode == REQUEST_EDIT_PROFILE) {
             if (resultCode == RESULT_OK) {
                 shareContactsSwitcher.setChecked(true);
-                prefsManager.changeUserAnonymityStatus(false);
                 setUpEditPersonalData(false);
             } else {
-                shareContactsSwitcher.setChecked(false);
+                if (prefsManager.isUserAnonymous()) {
+                    shareContactsSwitcher.setChecked(false);
+                } else {
+                    shareContactsSwitcher.setChecked(true);
+                }
             }
         }
     }
