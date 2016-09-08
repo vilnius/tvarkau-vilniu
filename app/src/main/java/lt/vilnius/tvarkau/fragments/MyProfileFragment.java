@@ -35,7 +35,7 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import static android.app.Activity.RESULT_OK;
 
 
-public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private SharedPrefsManager prefsManager;
 
@@ -195,7 +195,7 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
         boolean emailIsValid = false;
         boolean phoneIsValid = false;
 
-        if (name != null && name.length() > 0) {
+        if (name != null && !name.isEmpty()) {
             nameIsValid = true;
             profileNameWrapper.setError(null);
         } else {
@@ -209,15 +209,18 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
             profileBirthdayWrapper.setError(getText(R.string.error_profile_fill_birthday));
         }
 
-        if (email != null && email.length() > 0) {
-            // TODO add @ validation in email
-            emailIsValid = true;
-            profileEmailWrapper.setError(null);
+        if (email != null && !email.isEmpty()) {
+            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailIsValid = true;
+                profileEmailWrapper.setError(null);
+            } else {
+                profileEmailWrapper.setError(getText(R.string.error_profile_email_invalid));
+            }
         } else {
             profileEmailWrapper.setError(getText(R.string.error_profile_fill_email));
         }
 
-        if (phone != null && phone.length() > 0) {
+        if (phone != null && !phone.isEmpty()) {
             // TODO add telephone validation
             phoneIsValid = true;
             profileTelephoneWrapper.setError(null);
