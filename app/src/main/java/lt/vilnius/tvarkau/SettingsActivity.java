@@ -3,9 +3,9 @@ package lt.vilnius.tvarkau;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +20,7 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     private SharedPrefsManager prefsManager;
 
     @BindView(R.id.share_contacts_switcher)
-    Switch shareContactsSwitcher;
+    SwitchCompat shareContactsSwitcher;
 
     @BindView(R.id.edit_personal_data)
     TextView editPersonalData;
