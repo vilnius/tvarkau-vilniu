@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -210,7 +211,7 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
         }
 
         if (email != null && !email.isEmpty()) {
-            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 emailIsValid = true;
                 profileEmailWrapper.setError(null);
             } else {
@@ -221,9 +222,14 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
         }
 
         if (phone != null && !phone.isEmpty()) {
-            // TODO add telephone validation
-            phoneIsValid = true;
-            profileTelephoneWrapper.setError(null);
+            phone = phone.replaceAll("[^\\d+]", "");
+            String regexStr = "^[+]?[0-9]{8,12}$";
+            if (!phone.matches(regexStr)) {
+                profileTelephoneWrapper.setError(getText(R.string.error_profile_phone_invalid));
+            } else {
+                phoneIsValid = true;
+                profileTelephoneWrapper.setError(null);
+            }
         } else {
             profileTelephoneWrapper.setError(getText(R.string.error_profile_fill_telephone));
         }
