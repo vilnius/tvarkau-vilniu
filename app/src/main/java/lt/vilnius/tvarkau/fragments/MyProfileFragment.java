@@ -197,8 +197,12 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
         boolean phoneIsValid = false;
 
         if (name != null && !name.isEmpty()) {
-            nameIsValid = true;
-            profileNameWrapper.setError(null);
+            if (name.trim().split("\\s+").length > 0 && name.length() > 7) {
+                nameIsValid = true;
+                profileNameWrapper.setError(null);
+            } else {
+                profileNameWrapper.setError(getText(R.string.error_profile_name_invalid));
+            }
         } else {
             profileNameWrapper.setError(getText(R.string.error_profile_fill_name));
         }
