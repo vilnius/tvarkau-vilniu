@@ -115,8 +115,15 @@
                     android:hint="@string/profile_hint_telephone"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
-                    android:maxLength="20"/>
+                    android:maxLength="20" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/profile_data_agreement" />
+        
     </LinearLayout>
 </ScrollView>

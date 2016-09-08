@@ -122,6 +122,7 @@
     <string name="error_profile_fill_birthday">Įveskite gimimo datą</string>
     <string name="error_profile_email_invalid">Patikrinkite, ar teisingai įvedėte el. paštą</string>
     <string name="error_profile_phone_invalid">Patikrinkite, ar teisingai įvedėte telefono numerį</string>
+    <string name="profile_data_agreement">Pateikdami duomenis sutinkate, kad jie yra jūsų, teisingi ir tikri.</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>
