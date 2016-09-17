@@ -79,12 +79,12 @@
                 app:layout_columnWeight="1" />
 
             <TextView
-                android:id="@+id/home_my_profile"
+                android:id="@+id/home_settings"
                 style="@style/HomeScreenButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/home_my_profile"
-                android:text="@string/home_my_profile"
+                android:drawableTop="@drawable/home_settings"
+                android:text="@string/home_settings"
                 app:layout_columnWeight="1" />
 
             <TextView

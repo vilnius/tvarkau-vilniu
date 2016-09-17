@@ -6,6 +6,7 @@ import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
@@ -15,6 +16,18 @@ public class FormatUtils {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return localDateTime.format(formatter);
+    }
+
+    public static String formatLocalDateTimeToSeconds(LocalDateTime localDateTime) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return localDateTime.format(formatter);
+    }
+
+    public static String formatLocalDate(LocalDate localDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
     }
 
     public static void removeUnderlines(TextView textView) {

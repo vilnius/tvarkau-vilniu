@@ -10,8 +10,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,11 +40,7 @@ public class AboutActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        String version = String.format(Locale.getDefault(), "%s.%d",
-            BuildConfig.VERSION_NAME,
-            BuildConfig.VERSION_CODE
-        );
-        versionCode.setText(version);
+        versionCode.setText(DeviceUtils.getAppVersion());
 
         Linkify.addLinks(thanksToContributors, Linkify.WEB_URLS);
         FormatUtils.removeUnderlines(thanksToContributors);
@@ -115,7 +109,9 @@ public class AboutActivity extends BaseActivity {
     private void openEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:" + emailAddress));
-        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_email_subject) + DeviceUtils.getDeviceInfo());
+        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_email_subject) + " (" +
+            DeviceUtils.getDeviceInfo() + ", " + getResources().getString(R.string.app_version) + " " +
+            DeviceUtils.getAppVersion() + ")");
         if (intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         } else {

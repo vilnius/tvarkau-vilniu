@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:spinnerStyle">@style/Widget.AppCompat.Spinner.Underlined</item>
         <item name="android:windowSoftInputMode">stateHidden</item>
+        <item name="android:datePickerStyle">@style/MyDatePicker</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -71,6 +72,13 @@
 
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:datePickerStyle">@style/MyDatePicker</item>
+    </style>
+
+    <style name="HorizontalDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
     </style>
 
 </resources>

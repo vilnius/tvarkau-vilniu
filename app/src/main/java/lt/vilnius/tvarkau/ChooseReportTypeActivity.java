@@ -4,18 +4,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import lt.vilnius.tvarkau.entity.ReportType;
+import lt.vilnius.tvarkau.api.ApiMethod;
+import lt.vilnius.tvarkau.api.ApiRequest;
+import lt.vilnius.tvarkau.api.ApiResponse;
+import lt.vilnius.tvarkau.api.GetProblemTypesParams;
+import lt.vilnius.tvarkau.api.LegacyApiModule;
+import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter.ReportTypeSelectedListener;
 
+@AutoComponent(modules = {LegacyApiModule.class})
+@AutoInjector
+@Singleton
 public class ChooseReportTypeActivity extends AppCompatActivity implements ReportTypeSelectedListener {
+
+    @Inject LegacyApiService legacyApiService;
 
     public static final String EXTRA_REPORT_TYPE = "ChooseReportTypeActivity.reportType";
 
@@ -27,6 +45,13 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DaggerChooseReportTypeActivityComponent
+            .builder()
+            .legacyApiModule(new LegacyApiModule())
+            .build()
+            .inject(this);
+
         setContentView(R.layout.activity_choose_report_type);
 
         ButterKnife.bind(this);
@@ -45,27 +70,39 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
     }
 
     private void setReportTypesAdapter() {
-        List<ReportType> reportTypes = getReportTypes();
 
-        reportTypesListAdapter = new ReportTypesListAdapter(this, reportTypes, this);
+        Action1<ApiResponse<List<String>>> onSuccess = apiResponse -> {
+            if (apiResponse.getResult() != null) {
+                List<String> reportList = apiResponse.getResult();
+                if (reportList.size() > 0) {
+                    reportTypesListAdapter = new ReportTypesListAdapter(this, reportList, this);
+                    reportTypesRecyclerView.setAdapter(reportTypesListAdapter);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        };
 
-        reportTypesRecyclerView.setAdapter(reportTypesListAdapter);
-    }
+        Action1<Throwable> onError = throwable -> {
+            LogApp.logCrash(throwable);
+            Toast.makeText(getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
+            finish();
+        };
 
-    private List<ReportType> getReportTypes() {
-        String[] types = getResources().getStringArray(R.array.problem_types);
+        ApiRequest<GetProblemTypesParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEM_TYPES, null);
 
-        ArrayList<ReportType> reportTypes = new ArrayList<>(types.length);
-
-        for (String type : types) {
-            reportTypes.add(new ReportType(type));
-        }
-
-        return reportTypes;
+        legacyApiService.getProblemTypes(request)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                onSuccess,
+                onError
+            );
     }
 
     @Override
-    public void onReportTypeSelected(ReportType reportType) {
+    public void onReportTypeSelected(String reportType) {
         Intent intent = new Intent();
 
         intent.putExtra(EXTRA_REPORT_TYPE, reportType);

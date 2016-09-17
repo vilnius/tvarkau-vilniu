@@ -4,9 +4,10 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+
+import org.threeten.bp.LocalDate;
 
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
@@ -15,26 +16,19 @@ public class Profile implements Parcelable {
 
     @SerializedName("Profile_Name")
     private String name;
+    @SerializedName("Profile_Birthday")
+    private LocalDate birthday;
     @SerializedName("Profile_Email")
     private String email;
     @SerializedName("Profile_Mobile_Phone")
     private String mobilePhone;
 
-    @SerializedName("Profile_picture_URL")
-    private String pictureUrl;
-
     public Profile() {
     }
 
-    public Profile(GoogleSignInAccount acct) {
-        name = acct.getDisplayName();
-        email = acct.getEmail();
-        pictureUrl = acct.getPhotoUrl().toString();
-
-    }
-
-    public Profile(String name, String email, String mobilePhone) {
+    public Profile(String name, LocalDate birthday, String email, String mobilePhone) {
         this.name = name;
+        this.birthday = birthday;
         this.email = email;
         this.mobilePhone = mobilePhone;
     }
@@ -45,6 +39,10 @@ public class Profile implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
     public String getEmail() {
@@ -75,8 +73,9 @@ public class Profile implements Parcelable {
             Profile profile = (Profile) o;
 
             return name.equals(profile.getName()) &&
-                    email.equals(profile.getEmail()) &&
-                    mobilePhone.equals(profile.getMobilePhone());
+                birthday.equals(profile.getBirthday()) &&
+                email.equals(profile.getEmail()) &&
+                mobilePhone.equals(profile.getMobilePhone());
         }
 
         return false;
@@ -92,14 +91,12 @@ public class Profile implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.email);
         dest.writeString(this.mobilePhone);
-        dest.writeString(this.pictureUrl);
     }
 
     protected Profile(Parcel in) {
         this.name = in.readString();
         this.email = in.readString();
         this.mobilePhone = in.readString();
-        this.pictureUrl = in.readString();
     }
 
     public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {

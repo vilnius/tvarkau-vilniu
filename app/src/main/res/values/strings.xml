@@ -18,7 +18,7 @@
     <string name="problem_map">Pranešimų žemėlapis</string>
 
     <string name="profile_hint_email">El.paštas</string>
-    <string name="profile_hint_name">Vardas</string>
+    <string name="profile_hint_name">Vardas Pavardė</string>
     <string name="profile_hint_telephone">Telefonas</string>
     <string name="message_notsigned">Norint pasiekti profilio informacija prašome prisijungti</string>
     <string name="title_notsigned">Vartotojas neprisijungęs</string>
@@ -31,9 +31,8 @@
     <string name="home_list_of_reports">Pranešimų sąrašas</string>
     <string name="home_my_problems">Mano pranešimai</string>
     <string name="home_map_of_problems">Žemėlapis</string>
-    <string name="home_my_profile">Mano profilis</string>
     <string name="home_about">Apie</string>
-    <string name="discard_changes_title">Sunaikinti jūsų pakeitmus?</string>
+    <string name="discard_changes_title">Sunaikinti jūsų pakeitimus?</string>
     <string name="discard_changes_positive">Sunaikinti</string>
     <string name="discard_changes_negative">Toliau redaguoti</string>
 
@@ -94,27 +93,37 @@
         <a href="https://lt.linkedin.com/in/viliusk">Vilius Kraujutis</a>,
         <a href="https://lt.linkedin.com/in/povilaspoderskis">Povilas Poderskis</a>,
         <a href="https://lt.linkedin.com/in/renatbuga">Renat Buga</a></string>
-
-    <string-array name="problem_types">
-        <item>Aplinkos tvarkymas</item>
-        <item>Beglobių gyvūnų gaudymas</item>
-        <item>Dviračių takų problemos</item>
-        <item>Eismo organizavimas</item>
-        <item>Energetika ir inžineriniai tinklai</item>
-        <item>Gatvių apšvietimas</item>
-        <item>Gatvių priežiūra ir tvarkymas</item>
-        <item>Gyvūnų laikymo Vilniaus miesto Savivaldybės teritorijoje taisyklių pažeidimai</item>
-        <item>Išorinės reklamos įrengimo taisyklių pažeidimai</item>
-        <item>Kapinių priežiūra</item>
-        <item>Komunalinių atliekų tvarkymas</item>
-        <item>Pastatų administravimas</item>
-        <item>Statinių priežiūra</item>
-        <item>Tiltų, viadukų, tunelių ir estakadų priežiūra</item>
-        <item>Transporto priemonių stovėjimo tvarkos pažeidimai (laikinai neveikia)</item>
-        <item>Triukšmo prevencijos viešosiose vietose taisyklių pažeidimas</item>
-        <item>Tvarkymo ir švaros taisyklių pažeidimas</item>
-        <item>Viešasis transportas</item>
-    </string-array>
+    <string name="cancel">Atšaukti</string>
+    <string name="take_photo">Fotografuoti</string>
+    <string name="choose_photos_from_gallery">Pasirinkti iš galerijos</string>
+    <string name="add_photos">Pridėkite nuotraukų</string>
+    <string name="error_taking_image_from_server">Įvyko problema pasirenkant nuotrauką iš galerijos, išsaugokite nuotrauką telefone ir rinkitės dar sykį.</string>
+    <string name="photo_capture_error">Nepavyko nufotografuoti, bandykite dar sykį</string>
+    <string name="error_need_location_permission">Reikalingas lokacijos leidimas</string>
+    <string name="error_registration_not_working">Registracija kol kas neveikia. Visi pranešimai anonimiški.</string>
+    <string name="app_version">versija</string>
+    <string name="transport_vehicle_report_type_contacts_needed">Transporto priemonių stovėjimo tvarkos pažeidimai (Privaloma pridėti savo kontaktus)</string>
+    <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
+    <string name="home_settings">Nustatymai</string>
+    <string name="setting_anonymous_title">Pridėti asmeninius duomenis</string>
+    <string name="setting_anonymous_explanation">Siųskite visų tipų pranešimus</string>
+    <string name="edit_personal_data">Redaguoti mano duomenis</string>
+    <string name="setting_import_reports">Importuoti pranešimus iš ankstesnės programėlės</string>
+    <string name="setting_import_reports_explanation">Prisijungti į vilnius.lt profilį</string>
+    <string name="title_settings">Nustatymai</string>
+    <string name="title_edit_contacts">Asmeninė informacija</string>
+    <string name="fill_your_contacts">Pildyti</string>
+    <string name="error_transport_type_requires_contacts">Reikalinga asmeninė informacija</string>
+    <string name="error_profile_fill_name">Įveskite vardą ir pavardę</string>
+    <string name="error_profile_fill_email">Įveskite el. pašto adresą</string>
+    <string name="error_profile_fill_telephone">Įveskite telefono numerį</string>
+    <string name="your_contact_data_saved">Jūsų duomenys išsaugoti</string>
+    <string name="profile_hint_birthday">Gimimo data</string>
+    <string name="error_profile_fill_birthday">Įveskite gimimo datą</string>
+    <string name="error_profile_email_invalid">Patikrinkite, ar teisingai įvedėte el. paštą</string>
+    <string name="error_profile_phone_invalid">Patikrinkite, ar teisingai įvedėte telefono numerį</string>
+    <string name="profile_data_agreement">Sutinku, kad pateikti duomenys yra mano, jie yra teisingi ir tikri.</string>
+    <string name="error_profile_name_invalid">Vardą ir Pavardę turi sudaryti bent du žodžiai</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

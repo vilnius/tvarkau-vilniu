@@ -19,27 +19,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="272dp">
 
-                <include
-                    android:id="@+id/photo_gallery_layout"
-                    layout="@layout/problem_photo_gallery" />
+                <lt.vilnius.tvarkau.views.adapters.HackyViewPager
+                    android:id="@+id/problem_images_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp" />
+
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/problem_images_view_pager_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="220dp"
+                    app:radius="5dp" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/report_problem_take_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|bottom"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="8dp"
                     android:src="@drawable/ic_photo_camera_white" />
             </FrameLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="24dp"
-                android:layout_marginLeft="24dp"
                 android:layout_marginBottom="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:alignmentMode="alignBounds"
                 android:columnCount="2"
                 android:columnOrderPreserved="true"
@@ -53,7 +61,9 @@
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/report_problem_location_wrapper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingRight="24dp">
 
                     <EditText
                         android:id="@+id/report_problem_location"
@@ -73,7 +83,9 @@
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/report_problem_description_wrapper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingRight="24dp">
 
                     <EditText
                         android:id="@+id/report_problem_description"
@@ -92,7 +104,9 @@
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/report_problem_type_wrapper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="24dp"
+                    android:paddingRight="24dp">
 
                     <EditText
                         android:id="@+id/report_problem_type"
@@ -103,15 +117,6 @@
                         style="@style/NewProblemField" />
                 </android.support.design.widget.TextInputLayout>
 
-                <ImageView
-                    android:src="@drawable/ic_person"
-                    style="@style/NewProblemIcon" />
-
-                <Spinner
-                    android:id="@+id/report_problem_privacy_mode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/report_privacy_mode" />
             </GridLayout>
         </LinearLayout>
 

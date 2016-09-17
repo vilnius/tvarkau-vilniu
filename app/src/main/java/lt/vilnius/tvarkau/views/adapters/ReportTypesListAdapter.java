@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau.views.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +12,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
-import lt.vilnius.tvarkau.entity.ReportType;
 
 public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesListAdapter.ViewHolder> {
 
-    private List<ReportType> reportTypes;
+    private List<String> reportTypes;
     private ReportTypeSelectedListener listener;
     private Context context;
 
-    public ReportTypesListAdapter(ReportTypeSelectedListener listener, List<ReportType> reportTypes, Context context) {
+    public ReportTypesListAdapter(ReportTypeSelectedListener listener, List<String> reportTypes, Context context) {
         this.reportTypes = reportTypes;
         this.listener = listener;
         this.context = context;
@@ -37,18 +35,19 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ReportType reportType = reportTypes.get(position);
+        String reportType = reportTypes.get(position);
 
         holder.item = reportType;
-        holder.reportTypeName.setText(reportType.getName());
+        holder.reportTypeName.setText(reportType);
 
-        // Temporarily Transport report type is not working, so it is disabled
-        if (!holder.reportTypeName.getText().equals(reportTypes.get(14).getName())) {
-            holder.itemView.setOnClickListener(v -> {
-                if (listener != null) listener.onReportTypeSelected(reportType);
-            });
-        } else {
-            holder.reportTypeName.setTextColor(ContextCompat.getColor(context, R.color.black_38));
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onReportTypeSelected(reportType);
+            }
+        });
+
+        if (holder.reportTypeName.getText().equals("Transporto priemonių stovėjimo tvarkos pažeidimai")) {
+            holder.reportTypeName.setText(R.string.transport_vehicle_report_type_contacts_needed);
         }
     }
 
@@ -63,7 +62,7 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ReportType item;
+        public String item;
 
         @BindView(R.id.item_report_type_name)
         public TextView reportTypeName;
@@ -76,7 +75,7 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
 
     public interface ReportTypeSelectedListener {
 
-        void onReportTypeSelected(ReportType reportType);
+        void onReportTypeSelected(String reportType);
 
     }
 }

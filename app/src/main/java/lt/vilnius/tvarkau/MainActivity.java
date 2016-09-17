@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,11 +24,12 @@ import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
  */
 public class MainActivity extends BaseActivity {
 
-    public static final int      GPS_PERMISSION_REQUEST_CODE = 11;
-    public static final String[] MAP_PERMISSIONS             = new String[]{ACCESS_FINE_LOCATION};
+    public static final int MAP_PERMISSION_REQUEST_CODE = 11;
+    public static final int NEW_ISSUE_REQUEST_CODE = 12;
+    public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -57,7 +60,8 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_report_problem)
     protected void onNewIssueClicked() {
-        startNewActivity(NewProblemActivity.class);
+        Intent intent = new Intent(this, NewProblemActivity.class);
+        startActivityForResult(intent, NEW_ISSUE_REQUEST_CODE);
     }
 
     @OnClick(R.id.home_list_of_problems)
@@ -69,8 +73,11 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_my_problems)
     protected void onMyProblemsClicked() {
-        Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
+        showMyProblemsList();
+    }
 
+    private void showMyProblemsList() {
+        Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
         startActivity(intent);
     }
 
@@ -80,7 +87,7 @@ public class MainActivity extends BaseActivity {
         if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
             startProblemActivity();
         } else {
-            requestPermissions(MAP_PERMISSIONS, GPS_PERMISSION_REQUEST_CODE);
+            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -92,16 +99,25 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == GPS_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
+        if (requestCode == MAP_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
             startProblemActivity();
+        } else {
+            Toast.makeText(this, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
         }
     }
 
-    @OnClick(R.id.home_my_profile)
-    protected void onMyProfileClicked() {
-        startNewActivity(MyProfileActivity.class);
+    @OnClick(R.id.home_settings)
+    protected void onSettingsClicked() {
+        startNewActivity(SettingsActivity.class);
     }
 
     @OnClick(R.id.home_about)
     protected void onAboutClicked() { startNewActivity(AboutActivity.class); }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == NEW_ISSUE_REQUEST_CODE) {
+            showMyProblemsList();
+        }
+    }
 }

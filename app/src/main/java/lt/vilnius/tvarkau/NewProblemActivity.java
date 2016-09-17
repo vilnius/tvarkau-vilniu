@@ -1,12 +1,14 @@
 package lt.vilnius.tvarkau;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,14 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -31,11 +32,11 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.gun0912.tedpicker.Config;
-import com.gun0912.tedpicker.ImagePickerActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneOffset;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +51,6 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 import icepick.State;
 import lt.vilnius.tvarkau.api.ApiMethod;
 import lt.vilnius.tvarkau.api.ApiRequest;
@@ -59,18 +59,20 @@ import lt.vilnius.tvarkau.api.GetNewProblemParams;
 import lt.vilnius.tvarkau.api.LegacyApiModule;
 import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Profile;
-import lt.vilnius.tvarkau.entity.ReportType;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
-import lt.vilnius.tvarkau.utils.BitmapUtils;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
+import lt.vilnius.tvarkau.utils.ImageUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
+import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -85,29 +87,30 @@ public class NewProblemActivity extends BaseActivity {
     @Inject SharedPreferences myProblemsPreferences;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int PERMISSION_REQUEST_CODE = 10;
+    private static final int GALLERY_REQUEST_CODE = 2;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
+    private static final int MAP_PERMISSION_REQUEST_CODE = 20;
 
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PROFILE = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
-    private static final String[] REQUIRED_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
+    public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
+    private static final String[] LOCATION_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
 
     public static final String PROBLEM_PREFERENCE_KEY = "problem";
-
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.report_problem_location)
-    EditText addProblemLocation;
+    EditText reportProblemLocation;
     @BindView(R.id.problem_images_view_pager)
     ViewPager problemImagesViewPager;
     @BindView(R.id.problem_images_view_pager_indicator)
     CirclePageIndicator problemImagesViewPagerIndicator;
     @BindView(R.id.report_problem_type)
     EditText reportProblemType;
-    @BindView(R.id.report_problem_privacy_mode)
-    Spinner reportProblemPrivacyMode;
     @BindView(R.id.report_problem_description)
     EditText reportProblemDescription;
     @BindView(R.id.report_problem_location_wrapper)
@@ -124,15 +127,17 @@ public class NewProblemActivity extends BaseActivity {
     @State
     LatLng locationCords;
     @State
-    ArrayList<Uri> problemImagesURIs;
+    ArrayList<Uri> imagesURIs;
     @State
     Profile profile;
     @State
-    ReportType reportType;
+    String reportType;
+    @State
     String address;
-    String[] photos;
 
     private Snackbar snackbar;
+    private String photoFileName;
+    private SharedPrefsManager prefsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,19 +154,15 @@ public class NewProblemActivity extends BaseActivity {
             .build()
             .inject(this);
 
+        prefsManager = SharedPrefsManager.getInstance(this);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         initProblemImagesPager();
-        initPrivacyModeSpinner();
-    }
 
-    private void initPrivacyModeSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-            R.array.report_privacy_mode, R.layout.item_report_type_spinner);
-        adapter.setDropDownViewResource(R.layout.item_report_type_spinner_dropdown);
-        reportProblemPrivacyMode.setAdapter(adapter);
+        imagesURIs = new ArrayList<>();
     }
 
     private void initProblemImagesPager() {
@@ -194,7 +195,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     public void sendProblem() {
-        if (validateProblemInputs()) {
+        if (validateProblemInputs() && validateContacts()) {
 
             ProgressDialog progressDialog = createProgressDialog();
             progressDialog.setCancelable(false);
@@ -202,20 +203,18 @@ public class NewProblemActivity extends BaseActivity {
 
             Observable<String[]> photoObservable;
 
-            if (problemImagesURIs != null) {
-                photos = new String[problemImagesURIs.size()];
-
-                photoObservable = Observable.from(problemImagesURIs)
+            if (imagesURIs != null) {
+                photoObservable = Observable.from(imagesURIs)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
-                    .map(uri -> Uri.fromFile(new File(uri.toString())))
-                    .map(BitmapUtils::convertToBase64EncodedString)
+                    .map(uri -> Uri.fromFile(new File(ImageUtils.getPhotoPathFromUri(this, uri))))
+                    .map(ImageUtils::convertToBase64EncodedString)
                     .toList()
-                    .map(photos -> {
-                        if (photos.size() > 0) {
-                            String[] photoArray = new String[photos.size()];
-                            photos.toArray(photoArray);
-                            return photoArray;
+                    .map(encodedPhotos -> {
+                        if (encodedPhotos.size() > 0) {
+                            String[] encodedPhotosArray = new String[encodedPhotos.size()];
+                            encodedPhotos.toArray(encodedPhotosArray);
+                            return encodedPhotosArray;
                         } else {
                             return null;
                         }
@@ -237,6 +236,7 @@ public class NewProblemActivity extends BaseActivity {
                         KeyboardUtils.closeSoftKeyboard(this, reportProblemDescription);
                     }
                     Toast.makeText(this, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 }
             };
@@ -249,16 +249,16 @@ public class NewProblemActivity extends BaseActivity {
 
             photoObservable
                 .subscribeOn(Schedulers.io())
-                .flatMap(photos ->
+                .flatMap(encodedPhotos ->
                     Observable.just(
                         new GetNewProblemParams.Builder()
                             .setSessionId(null)
                             .setDescription(reportProblemDescription.getText().toString())
-                            .setType(reportType.getName())
+                            .setType(reportType)
                             .setAddress(address)
                             .setLatitude(locationCords.latitude)
                             .setLongitude(locationCords.longitude)
-                            .setPhoto(photos)
+                            .setPhoto(encodedPhotos)
                             .setEmail(null)
                             .setPhone(null)
                             .setMessageDescription(null)
@@ -307,49 +307,102 @@ public class NewProblemActivity extends BaseActivity {
         return addressIsValid && descriptionIsValid && problemTypeIsValid;
     }
 
-    public void takePhoto() {
-        Config config = new Config();
-        config.setToolbarTitleRes(R.string.choose_photos_title);
-        config.setCameraBtnImage(R.drawable.ic_photo_camera_white);
-
-        ImagePickerActivity.setConfig(config);
-
-        Intent intent = new Intent(this, ImagePickerActivity.class);
-
-        Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(reportProblemTakePhoto, 0, 0,
-            reportProblemTakePhoto.getWidth(), reportProblemTakePhoto.getHeight()).toBundle();
-
-        if (problemImagesURIs != null) {
-            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS, problemImagesURIs);
+    private boolean validateContacts() {
+        if (reportType.equals("Transporto priemonių stovėjimo tvarkos pažeidimai")) {
+            if (prefsManager.isUserAnonymous()) {
+                Snackbar.make(getCurrentFocus(), R.string.error_transport_type_requires_contacts, Snackbar
+                    .LENGTH_INDEFINITE)
+                    .setAction(R.string.fill_your_contacts, v -> {
+                            Intent intent = new Intent(this, ProfileEditActivity.class);
+                            startActivity(intent);
+                        }
+                    )
+                    .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+                    .show();
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
         }
+    }
 
-        ActivityCompat.startActivityForResult(this, intent, REQUEST_IMAGE_CAPTURE, bundle);
+    private void openPhotoSelectorDialog() {
+
+        AlertDialog.Builder imagePickerDialogBuilder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
+
+        View view = LayoutInflater.from(this).inflate(R.layout.image_picker_dialog, null);
+        TextView cameraButton = ButterKnife.findById(view, R.id.camera_button);
+        TextView galleryButton = ButterKnife.findById(view, R.id.gallery_button);
+
+        imagePickerDialogBuilder
+            .setTitle(this.getResources().getString(R.string.add_photos))
+            .setView(view)
+            .setPositiveButton(R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
+            .create();
+
+        AlertDialog imagePickerDialog = imagePickerDialogBuilder.show();
+
+        cameraButton.setOnClickListener(v -> {
+            launchCamera();
+            imagePickerDialog.dismiss();
+        });
+
+        galleryButton.setOnClickListener(v -> {
+            openGallery();
+            imagePickerDialog.dismiss();
+        });
+    }
+
+    private void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String timestamp = FormatUtils.formatLocalDateTimeToSeconds(LocalDateTime.now(ZoneOffset.UTC));
+        photoFileName = "IMG_" + timestamp + ".jpg";
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtils.getTakenPhotoFileUri(this, photoFileName));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        }
     }
 
     @OnClick(R.id.report_problem_take_photo)
     public void onTakePhotoClicked() {
-        if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
-            takePhoto();
+        if (PermissionUtils.isAllPermissionsGranted(this, LOCATION_PERMISSIONS)) {
+            openPhotoSelectorDialog();
         } else {
-            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
     @OnClick(R.id.report_problem_type)
     public void onChooseProblemTypeClicked() {
         Intent intent = new Intent(this, ChooseReportTypeActivity.class);
-
         startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (PermissionUtils.isAllPermissionsGranted(this, REQUIRED_PERMISSIONS)) {
-                    takePhoto();
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if (PermissionUtils.isAllPermissionsGranted(this, LOCATION_PERMISSIONS)) {
+                    openPhotoSelectorDialog();
                 } else {
                     Toast.makeText(this, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case MAP_PERMISSION_REQUEST_CODE:
+                if (PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS)) {
+                    showPlacePicker(getCurrentFocus());
+                } else {
+                    Toast.makeText(this, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -358,9 +411,10 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private boolean isEditedByUser() {
-        return reportProblemDescription.getText().length() > 0 ||
-            reportProblemPrivacyMode.getSelectedItemPosition() > 0 ||
-            reportType != null || locationCords != null || problemImagesURIs != null;
+        return reportProblemDescription.getText().length() > 0
+            || reportProblemLocation.getText().length() > 0
+            || (reportType != null && reportType.length() > 0)
+            || (imagesURIs != null && imagesURIs.size() > 0);
     }
 
     @Override
@@ -385,13 +439,19 @@ public class NewProblemActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    problemImagesURIs = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-                    Uri[] problemImagesURIsArr = problemImagesURIs.toArray(new Uri[problemImagesURIs.size()]);
-                    String[] photoArray = new String[problemImagesURIsArr.length];
-                    for (int i = 0; i < problemImagesURIsArr.length; i++) {
-                        photoArray[i] = new File(problemImagesURIsArr[i].getPath()).toString();
+                    Uri takenImageUri = ImageUtils.getTakenPhotoFileUri(this, photoFileName);
+                    setImagesInViewPager(takenImageUri);
+                    break;
+                case GALLERY_REQUEST_CODE:
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            setImagesInViewPager(clipData.getItemAt(i).getUri());
+                        }
+                    } else if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        setImagesInViewPager(uri);
                     }
-                    setPhotos(photoArray);
                     break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
@@ -411,7 +471,7 @@ public class NewProblemActivity extends BaseActivity {
                             if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
                                 address = addresses.get(0).getAddressLine(0);
                                 reportProblemLocationWrapper.setError(null);
-                                addProblemLocation.setText(address);
+                                reportProblemLocation.setText(address);
                                 locationCords = latLng;
                                 if (snackbar != null && snackbar.isShown()) {
                                     snackbar.dismiss();
@@ -429,18 +489,38 @@ public class NewProblemActivity extends BaseActivity {
                     break;
                 case REQUEST_CHOOSE_REPORT_TYPE:
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
-                        reportType = data.getParcelableExtra(EXTRA_REPORT_TYPE);
+                        reportType = data.getStringExtra(EXTRA_REPORT_TYPE);
                         reportProblemTypeWrapper.setError(null);
-                        reportProblemType.setText(reportType.getName());
+                        reportProblemType.setText(reportType);
+                        validateContacts();
                     }
                     break;
             }
         } else {
             switch (requestCode) {
-                case REQUEST_PROFILE:
-                    reportProblemPrivacyMode.setSelection(0);
-                    break;
+                case REQUEST_IMAGE_CAPTURE:
+                    Toast.makeText(this, R.string.photo_capture_error, Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void setImagesInViewPager(Uri uri) {
+        imagesURIs.add(uri);
+        String[] imagesPath = new String[imagesURIs.size()];
+        for (int i = 0; i < imagesURIs.size(); i++) {
+            String path = ImageUtils.getPhotoPathFromUri(this, imagesURIs.get(i));
+            if (path != null) {
+                imagesPath[i] = new File(path).toString();
+            } else {
+                imagesURIs.remove(uri);
+                Toast.makeText(this, R.string.error_taking_image_from_server, Toast.LENGTH_LONG).show();
+            }
+        }
+        if (imagesURIs.size() > 1) {
+            problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
+        }
+        if (imagesURIs.size() > 0) {
+            problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, imagesPath));
         }
     }
 
@@ -452,39 +532,18 @@ public class NewProblemActivity extends BaseActivity {
             .show();
     }
 
-    private void setPhotos(String[] photoArray) {
-        if (photoArray.length > 1) {
-            problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
-        }
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, photoArray));
-    }
-
     @OnClick(R.id.report_problem_location)
     public void onProblemLocationClicked(View view) {
-        showPlacePicker(view);
-    }
-
-    @OnItemSelected(R.id.report_problem_privacy_mode)
-    public void onPrivacyModeSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-            case 0:
-                profile = null;
-                break;
-            case 1:
-                profile = Profile.returnProfile(this);
-
-                if (profile == null) {
-                    Intent intent = new Intent(this, MyProfileActivity.class);
-                    startActivityForResult(intent, REQUEST_PROFILE);
-                }
-                break;
+        if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
+            showPlacePicker(view);
+        } else {
+            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-
         return false;
     }
 
