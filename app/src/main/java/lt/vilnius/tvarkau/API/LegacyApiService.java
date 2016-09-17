@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.api;
 
 import java.util.List;
 
+import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -21,7 +22,9 @@ public interface LegacyApiService {
     @POST("server.php")
     Observable<ApiResponse<List<String>>> getProblemTypes(@Body ApiRequest<GetProblemTypesParams> getProblemTypesRequest);
 
-    // loginUser
+    @POST("server.php")
+    Observable<ApiResponse<LoginResponse>> loginToVilniusAccount(@Body ApiRequest<List<GetVilniusSignParams>> getVilniusSignRequest);
+
     // logoutUser
     // registerUser
 }

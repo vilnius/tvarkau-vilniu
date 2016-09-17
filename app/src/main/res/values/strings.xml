@@ -122,8 +122,17 @@
     <string name="error_profile_fill_birthday">Įveskite gimimo datą</string>
     <string name="error_profile_email_invalid">Patikrinkite, ar teisingai įvedėte el. paštą</string>
     <string name="error_profile_phone_invalid">Patikrinkite, ar teisingai įvedėte telefono numerį</string>
+    <string name="sign_in_to_vilnius_account">Prisijunkite prie vilnius.lt profilio</string>
+    <string name="vilnius_account_hint_password">Slaptažodis</string>
+    <string name="vilnius_account_hint_email">El. paštas</string>
+    <string name="error_fill_vilnius_account_email">Įveskite vilnius.lt profilio el. paštą</string>
+    <string name="error_fill_vilnius_account_password">Įveskite vilnius.lt profilio slaptažodį</string>
+    <string name="error_vilnius_account_email_invalid">Patikrinkite el. pašto adresą</string>
+    <string name="error_on_vilnius_sign">Įvyko klaida, bandykite dar sykį</string>
+    <string name="error_vilnius_account_invalid_credentials">Neteisingas el. paštas arba slaptažodis.</string>
     <string name="profile_data_agreement">Sutinku, kad pateikti duomenys yra mano, jie yra teisingi ir tikri.</string>
     <string name="error_profile_name_invalid">Vardą ir Pavardę turi sudaryti bent du žodžiai</string>
+    <string name="report_import_done">Jūsų pranešimai sėkmingai importuoti</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
@@ -12,11 +13,14 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
-public class SettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class SettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener,
+    ReportImportDialogFragment.VilniusSignInListener {
 
     private static final int REQUEST_EDIT_PROFILE = 1;
+    private static final String REPORT_IMPORT_DIALOG = "report_import_dialog";
     private SharedPrefsManager prefsManager;
 
     @BindView(R.id.share_contacts_switcher)
@@ -37,6 +41,8 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
         shareContactsSwitcher.setChecked(!prefsManager.isUserAnonymous());
         shareContactsSwitcher.setOnCheckedChangeListener(this);
         setUpEditPersonalData(prefsManager.isUserAnonymous());
+        // TODO check if user already imported his report from previous app
+        // disable second time imports
     }
 
     @OnClick(R.id.edit_personal_data)
@@ -93,7 +99,14 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
 
     @OnClick(R.id.import_reports_from_previous_app)
     protected void onImportReportFromPreviousAppClick() {
-        // TODO implement onImportReportFromPreviousAppClick
-        Toast.makeText(this, "Sorry, not yet working, need to be implemented", Toast.LENGTH_LONG).show();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ReportImportDialogFragment reportImportDialog = ReportImportDialogFragment.newInstance();
+        reportImportDialog.show(ft, REPORT_IMPORT_DIALOG);
+    }
+
+    @Override public void onVilniusSignIn() {
+        Toast.makeText(this, R.string.report_import_done, Toast.LENGTH_SHORT).show();
+        // TODO change Settings view so that user won't try to import again
+        // disable importing option if data is already imported
     }
 }
