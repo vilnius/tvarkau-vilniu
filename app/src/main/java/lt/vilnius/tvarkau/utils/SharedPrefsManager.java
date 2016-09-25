@@ -21,6 +21,7 @@ public class SharedPrefsManager {
     private static final String PREF_USER_PROFILE = "UserProfile";
     private static final String PREF_USER_ANONYMOUS = "UserAnonymous";
     private static final String PREF_USER_SESSION_ID = "UserSessionId";
+    private static final String PREF_USER_EMAIL = "UserEmail";
 
     private static SharedPrefsManager singleton;
     private static SharedPreferences sharedPreferences;
@@ -80,6 +81,12 @@ public class SharedPrefsManager {
     public void saveUserSessionId(String sessionId) {
         sharedPreferences.edit()
             .putString(PREF_USER_SESSION_ID, sessionId)
+            .apply();
+    }
+
+    public void saveUserEmail(String email) {
+        sharedPreferences.edit()
+            .putString(PREF_USER_EMAIL, email)
             .apply();
     }
 }

@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.fragments;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -14,9 +15,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,14 +33,18 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.LogApp;
+import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
+import lt.vilnius.tvarkau.SharedPreferencesModule;
 import lt.vilnius.tvarkau.api.ApiMethod;
 import lt.vilnius.tvarkau.api.ApiRequest;
 import lt.vilnius.tvarkau.api.ApiResponse;
+import lt.vilnius.tvarkau.api.GetProblemsParams;
 import lt.vilnius.tvarkau.api.GetVilniusSignParams;
 import lt.vilnius.tvarkau.api.LegacyApiModule;
 import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.LoginResponse;
+import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
@@ -45,12 +52,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-@AutoComponent(modules = {LegacyApiModule.class, AppModule.class})
+@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
 @AutoInjector
 @Singleton
 public class ReportImportDialogFragment extends DialogFragment {
 
     @Inject LegacyApiService legacyApiService;
+    @Inject SharedPreferences myProblemsPreferences;
 
     @BindView(R.id.vilnius_account_email)
     EditText vilniusAccountEmail;
@@ -151,15 +159,8 @@ public class ReportImportDialogFragment extends DialogFragment {
                         vilniusAccountLoginError.setVisibility(View.GONE);
                         if (apiResponse.getResult() != null) {
                             prefsManager.saveUserSessionId(apiResponse.getResult().getSessionId());
-                            VilniusSignInListener listener = (VilniusSignInListener) getActivity();
-                            listener.onVilniusSignIn();
-                            if (vilniusAccountEmail.hasFocus()) {
-                                KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
-                            }
-                            if (vilniusAccountPassword.hasFocus()) {
-                                KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
-                            }
-                            dialog.dismiss();
+                            prefsManager.saveUserEmail(apiResponse.getResult().getEmail());
+                            loadUserReportsFromVilniusAccount(apiResponse.getResult().getEmail(), dialog);
                         } else {
                             vilniusAccountLoginError.setVisibility(View.VISIBLE);
                             vilniusAccountLoginError.setText(R.string.error_vilnius_account_invalid_credentials);
@@ -205,6 +206,81 @@ public class ReportImportDialogFragment extends DialogFragment {
         }
 
         return emailIsValid && passwordIsValid;
+    }
+
+    private void loadUserReportsFromVilniusAccount(String email, Dialog dialog) {
+
+        GetProblemsParams params = new GetProblemsParams.Builder()
+            .setStart(0)
+            .setLimit(100)
+            .setDescriptionFilter(null)
+            .setTypeFilter(null)
+            .setAddressFilter(null)
+            .setReporterFilter(email)
+            .setDateFilter(null)
+            .setStatusFilter(null)
+            .create();
+
+        ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
+
+        Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
+            if (apiResponse.getResult().size() > 0) {
+                List<Problem> vilniusAccountReports = new ArrayList<>();
+                vilniusAccountReports.addAll(apiResponse.getResult());
+                for (Problem report : vilniusAccountReports) {
+                    String reportId = report.getIdForVilniusAccount();
+                    if (!myProblemsPreferences.getAll().isEmpty()) {
+                        for (String key : myProblemsPreferences.getAll().keySet()) {
+                            if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
+                                myProblemsPreferences
+                                    .edit()
+                                    .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                                    .apply();
+                            }
+                        }
+                    } else {
+                        myProblemsPreferences
+                            .edit()
+                            .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                            .apply();
+                    }
+                }
+                VilniusSignInListener listener = (VilniusSignInListener) getActivity();
+                listener.onVilniusSignIn();
+                if (vilniusAccountEmail.hasFocus()) {
+                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
+                }
+                if (vilniusAccountPassword.hasFocus()) {
+                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
+                }
+                dialog.dismiss();
+            } else {
+                if (vilniusAccountEmail.hasFocus()) {
+                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
+                }
+                if (vilniusAccountPassword.hasFocus()) {
+                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
+                }
+                Toast.makeText(getContext(), R.string.error_no_report_on_Vilnius_account,
+                    Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        };
+
+        Action1<Throwable> onError = throwable -> {
+            Toast.makeText(getContext(), R.string.error_loading_reports_from_vilnius_account,
+                Toast.LENGTH_SHORT).show();
+            throwable.printStackTrace();
+            LogApp.logCrash(throwable);
+        };
+
+        legacyApiService.getProblems(request)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                onSuccess,
+                onError
+            );
     }
 
     @Override

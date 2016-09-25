@@ -26,6 +26,9 @@ public class Problem {
     @SerializedName("docNo")
     public String id;
 
+    @SerializedName("problem_id")
+    public String idForVilniusAccount;
+
     // entry_date and report_date bring back the
     // same result just from different API methods
     @SerializedName("entry_date")
@@ -106,6 +109,8 @@ public class Problem {
     public String getId() {
         return id;
     }
+
+    public String getIdForVilniusAccount() { return idForVilniusAccount; }
 
     public LatLng getLatLng() {
         return new LatLng(lat, lng);
