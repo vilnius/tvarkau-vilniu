@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneOffset;
 
@@ -138,6 +140,10 @@ public class NewProblemActivity extends BaseActivity {
     private Snackbar snackbar;
     private String photoFileName;
     private SharedPrefsManager prefsManager;
+    private String reporterName;
+    private String reporterDateOfBirth;
+    private String reporterEmail;
+    private String reporterPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,6 +253,18 @@ public class NewProblemActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
 
+            if (prefsManager.isUserAnonymous()) {
+                reporterName = null;
+                reporterDateOfBirth = null;
+                reporterEmail = null;
+                reporterPhone = null;
+            } else if (prefsManager.getUserProfile() != null) {
+                reporterName = prefsManager.getUserProfile().getName();
+                reporterDateOfBirth = FormatUtils.formatLocalDate(prefsManager.getUserProfile().getBirthday());
+                reporterEmail = prefsManager.getUserProfile().getEmail();
+                reporterPhone = prefsManager.getUserProfile().getMobilePhone();
+            }
+
             photoObservable
                 .subscribeOn(Schedulers.io())
                 .flatMap(encodedPhotos ->
@@ -259,8 +277,10 @@ public class NewProblemActivity extends BaseActivity {
                             .setLatitude(locationCords.latitude)
                             .setLongitude(locationCords.longitude)
                             .setPhoto(encodedPhotos)
-                            .setEmail(null)
-                            .setPhone(null)
+                            .setEmail(reporterEmail)
+                            .setPhone(reporterPhone)
+                            .setNameOfReporter(reporterName)
+                            .setDateOfBirth(reporterDateOfBirth)
                             .setMessageDescription(null)
                             .create())
                 ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
