@@ -46,6 +46,12 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     @BindView(R.id.settings_layout)
     View settingsLayout;
 
+    @BindView(R.id.login_to_vilnius_account)
+    TextView loginToVilniusAccount;
+
+    @BindView(R.id.last_import)
+    TextView lastImport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,14 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
         shareContactsSwitcher.setChecked(!prefsManager.isUserAnonymous());
         shareContactsSwitcher.setOnCheckedChangeListener(this);
         setUpEditPersonalData(prefsManager.isUserAnonymous());
+        if (prefsManager.getUserLastReportImport() != null) {
+            lastImport.setVisibility(View.VISIBLE);
+            lastImport.setText(getResources().getString(R.string.last_import) + " " + prefsManager.getUserLastReportImport());
+            loginToVilniusAccount.setVisibility(View.GONE);
+        } else {
+            lastImport.setVisibility(View.GONE);
+            loginToVilniusAccount.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.edit_personal_data)
@@ -124,5 +138,8 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
             })
             .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
             .show();
+        lastImport.setVisibility(View.VISIBLE);
+        lastImport.setText(getResources().getString(R.string.last_import) + " " + prefsManager.getUserLastReportImport());
+        loginToVilniusAccount.setVisibility(View.GONE);
     }
 }

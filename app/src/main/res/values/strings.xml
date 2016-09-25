@@ -136,6 +136,7 @@
     <string name="error_loading_reports_from_vilnius_account">Įvyko klaida parsiunčiant jūsų pranešimus.</string>
     <string name="check_imported_reports">Peržiūrėti</string>
     <string name="error_no_report_on_Vilnius_account">Vilnius.lt profilyje pranešimų nėra</string>
+    <string name="last_import">Paskutinis importavimas</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

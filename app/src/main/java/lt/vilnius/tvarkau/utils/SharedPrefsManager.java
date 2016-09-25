@@ -22,6 +22,9 @@ public class SharedPrefsManager {
     private static final String PREF_USER_ANONYMOUS = "UserAnonymous";
     private static final String PREF_USER_SESSION_ID = "UserSessionId";
     private static final String PREF_USER_EMAIL = "UserEmail";
+    private static final String PREF_USER_PASSWORD = "UserPassword";
+    private static final String PREF_USER_LAST_IMPORT_DATE = "UserLastReportImportDate";
+
 
     private static SharedPrefsManager singleton;
     private static SharedPreferences sharedPreferences;
@@ -88,5 +91,21 @@ public class SharedPrefsManager {
         sharedPreferences.edit()
             .putString(PREF_USER_EMAIL, email)
             .apply();
+    }
+
+    public void saveUserPassword(String password) {
+        sharedPreferences.edit()
+            .putString(PREF_USER_PASSWORD, password)
+            .apply();
+    }
+
+    public void saveUserLastReportImport(String lastImportDate) {
+        sharedPreferences.edit()
+            .putString(PREF_USER_LAST_IMPORT_DATE, lastImportDate)
+            .apply();
+    }
+
+    public String getUserLastReportImport() {
+        return sharedPreferences.getString(PREF_USER_LAST_IMPORT_DATE, null);
     }
 }

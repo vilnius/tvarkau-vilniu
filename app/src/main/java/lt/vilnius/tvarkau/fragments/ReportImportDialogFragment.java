@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.threeten.bp.LocalDateTime;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.EncryptUtils;
+import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,6 +80,7 @@ public class ReportImportDialogFragment extends DialogFragment {
 
     private Unbinder unbinder;
     private SharedPrefsManager prefsManager;
+    private String password;
 
     public ReportImportDialogFragment() {}
 
@@ -148,7 +152,7 @@ public class ReportImportDialogFragment extends DialogFragment {
 
                     String email = vilniusAccountEmail.getText().toString();
 
-                    String password = vilniusAccountPassword.getText().toString();
+                    password = vilniusAccountPassword.getText().toString();
                     String encodedPassword = EncryptUtils.encrypt(password);
 
                     GetVilniusSignParams params = new GetVilniusSignParams(email, encodedPassword);
@@ -160,6 +164,9 @@ public class ReportImportDialogFragment extends DialogFragment {
                         if (apiResponse.getResult() != null) {
                             prefsManager.saveUserSessionId(apiResponse.getResult().getSessionId());
                             prefsManager.saveUserEmail(apiResponse.getResult().getEmail());
+                            prefsManager.saveUserPassword(password);
+                            LocalDateTime localDateTime = LocalDateTime.now();
+                            prefsManager.saveUserLastReportImport(FormatUtils.formatLocalDateTime(localDateTime));
                             loadUserReportsFromVilniusAccount(apiResponse.getResult().getEmail(), dialog);
                         } else {
                             vilniusAccountLoginError.setVisibility(View.VISIBLE);

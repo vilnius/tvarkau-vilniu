@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/settings_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/settings_layout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -14,23 +14,23 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:orientation="vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/setting_anonymous_title"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/black_87" />
+                android:textColor="@color/black_87"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/setting_anonymous_explanation" />
+                android:text="@string/setting_anonymous_explanation"/>
 
         </LinearLayout>
 
@@ -38,16 +38,16 @@
             android:id="@+id/share_contacts_switcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"/>
 
     </RelativeLayout>
 
     <View
+        style="@style/HorizontalDivider"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        style="@style/HorizontalDivider" />
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/edit_personal_data"
@@ -57,13 +57,13 @@
         android:layout_marginRight="16dp"
         android:text="@string/edit_personal_data"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/black_87" />
+        android:textColor="@color/black_87"/>
 
     <View
         android:id="@+id/settings_first_divider"
+        style="@style/HorizontalDivider"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        style="@style/HorizontalDivider" />
+        android:layout_marginTop="16dp"/>
 
     <LinearLayout
         android:id="@+id/import_reports_from_previous_app"
@@ -78,13 +78,25 @@
             android:layout_height="wrap_content"
             android:text="@string/setting_import_reports"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@color/black_87" />
+            android:textColor="@color/black_87"/>
 
         <TextView
+            android:id="@+id/login_to_vilnius_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/setting_import_reports_explanation" />
+            android:text="@string/setting_import_reports_explanation"/>
+
+        <TextView
+            android:id="@+id/last_import"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
+
+    <View
+        style="@style/HorizontalDivider"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>
