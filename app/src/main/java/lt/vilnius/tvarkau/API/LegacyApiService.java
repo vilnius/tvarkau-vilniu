@@ -23,7 +23,7 @@ public interface LegacyApiService {
     Observable<ApiResponse<List<String>>> getProblemTypes(@Body ApiRequest<GetProblemTypesParams> getProblemTypesRequest);
 
     @POST("server.php")
-    Observable<ApiResponse<LoginResponse>> loginToVilniusAccount(@Body ApiRequest<List<GetVilniusSignParams>> getVilniusSignRequest);
+    Observable<ApiResponse<LoginResponse>> loginToVilniusAccount(@Body ApiRequest<GetVilniusSignParams> getVilniusSignRequest);
 
     // logoutUser
     // registerUser

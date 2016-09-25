@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -142,10 +145,7 @@ public class ReportImportDialogFragment extends DialogFragment {
 
                     GetVilniusSignParams params = new GetVilniusSignParams(email, encodedPassword);
 
-                    ApiRequest<List<GetVilniusSignParams>> request = new ApiRequest<>(
-                        ApiMethod.LOGIN,
-                        Collections.singletonList(params)
-                    );
+                    ApiRequest<GetVilniusSignParams> request = new ApiRequest<>(ApiMethod.LOGIN, params);
 
                     Action1<ApiResponse<LoginResponse>> onSuccess = apiResponse -> {
                         vilniusAccountLoginError.setVisibility(View.GONE);
