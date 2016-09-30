@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -456,6 +457,7 @@ public class NewProblemActivity extends BaseActivity {
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
                     LatLng latLng = place.getLatLng();
+                    String addressFromPlacePicker = place.getAddress().toString();
 
                     Geocoder geocoder = new Geocoder(this);
 
@@ -481,7 +483,20 @@ public class NewProblemActivity extends BaseActivity {
                             }
                         }
                     } else {
-                        showIncorrectPlaceSnackbar();
+                        // Mostly when Geocoder throws IOException
+                        // backup solution which in not 100% reliable
+                        if (addressFromPlacePicker.contains(GlobalConsts.CITY_VILNIUS)) {
+                            String[] addressSlice = place.getAddress().toString().split(", ");
+                            address = addressSlice[0];
+                            reportProblemLocationWrapper.setError(null);
+                            reportProblemLocation.setText(address);
+                            locationCords = latLng;
+                            if (snackbar != null && snackbar.isShown()) {
+                                snackbar.dismiss();
+                            }
+                        } else {
+                            showIncorrectPlaceSnackbar();
+                        }
                     }
                     break;
                 case REQUEST_PROFILE:
