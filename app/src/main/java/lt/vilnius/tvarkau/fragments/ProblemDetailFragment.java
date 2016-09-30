@@ -193,12 +193,12 @@ public class ProblemDetailFragment extends Fragment {
 
             Action1<Throwable> onError = throwable -> {
                 LogApp.logCrash(throwable);
-                showNoConnectionSnackbar();
-                if (noInternetView.isShown()){
+                if (noInternetView.isShown()) {
                     noInternetView.setVisibility(View.GONE);
                 }
                 problemDetailView.setVisibility(View.GONE);
                 serverNotRespondingView.setVisibility(View.VISIBLE);
+                showNoConnectionSnackbar();
             };
 
             legacyApiService.getProblem(request)
@@ -210,6 +210,9 @@ public class ProblemDetailFragment extends Fragment {
                 );
         } else {
             problemDetailView.setVisibility(View.GONE);
+            if (serverNotRespondingView.isShown()) {
+                serverNotRespondingView.setVisibility(View.GONE);
+            }
             noInternetView.setVisibility(View.VISIBLE);
             showNoConnectionSnackbar();
         }
