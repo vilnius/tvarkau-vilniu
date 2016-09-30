@@ -38,6 +38,13 @@
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
+    <CheckBox
+        android:id="@+id/vilnius_account_remember_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vilnius_account_remember_me"
+        android:padding="3dp"/>
+
     <TextView
         android:id="@+id/vilnius_account_login_error"
         android:layout_width="match_parent"

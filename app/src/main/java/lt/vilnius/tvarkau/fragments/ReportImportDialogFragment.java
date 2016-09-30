@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +78,9 @@ public class ReportImportDialogFragment extends DialogFragment {
     @BindView(R.id.vilnius_account_password_wrapper)
     TextInputLayout vilniusAccountPasswordWrapper;
 
+    @BindView(R.id.vilnius_account_remember_me)
+    CheckBox rememberMe;
+
     @BindView(R.id.vilnius_account_login_error)
     TextView vilniusAccountLoginError;
 
@@ -115,6 +121,16 @@ public class ReportImportDialogFragment extends DialogFragment {
         unbinder = ButterKnife.bind(this, view);
 
         vilniusAccountEmail.requestFocus();
+
+        if (prefsManager.getUserRememberMeStatus()) {
+            rememberMe.setChecked(true);
+            vilniusAccountEmail.setText(prefsManager.getUserEmail());
+            vilniusAccountPassword.setText(prefsManager.getUserPassword());
+        } else {
+            rememberMe.setChecked(false);
+        }
+
+        rememberMe.setOnCheckedChangeListener((buttonView, isChecked) -> prefsManager.changeUserRememberMeStatus(isChecked));
 
         vilniusAccountLoginError.setVisibility(View.GONE);
 
@@ -231,36 +247,38 @@ public class ReportImportDialogFragment extends DialogFragment {
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
         Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult().size() > 0) {
-                List<Problem> vilniusAccountReports = new ArrayList<>();
-                vilniusAccountReports.addAll(apiResponse.getResult());
-                for (Problem report : vilniusAccountReports) {
-                    String reportId = report.getIdForVilniusAccount();
-                    if (!myProblemsPreferences.getAll().isEmpty()) {
-                        for (String key : myProblemsPreferences.getAll().keySet()) {
-                            if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
-                                myProblemsPreferences
-                                    .edit()
-                                    .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
-                                    .apply();
+            if (apiResponse.getResult() != null) {
+                if (apiResponse.getResult().size() > 0) {
+                    List<Problem> vilniusAccountReports = new ArrayList<>();
+                    vilniusAccountReports.addAll(apiResponse.getResult());
+                    for (Problem report : vilniusAccountReports) {
+                        String reportId = report.getIdForVilniusAccount();
+                        if (!myProblemsPreferences.getAll().isEmpty()) {
+                            for (String key : myProblemsPreferences.getAll().keySet()) {
+                                if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
+                                    myProblemsPreferences
+                                        .edit()
+                                        .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                                        .apply();
+                                }
                             }
+                        } else {
+                            myProblemsPreferences
+                                .edit()
+                                .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                                .apply();
                         }
-                    } else {
-                        myProblemsPreferences
-                            .edit()
-                            .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
-                            .apply();
                     }
+                    VilniusSignInListener listener = (VilniusSignInListener) getActivity();
+                    listener.onVilniusSignIn();
+                    if (vilniusAccountEmail.hasFocus()) {
+                        KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
+                    }
+                    if (vilniusAccountPassword.hasFocus()) {
+                        KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
+                    }
+                    dialog.dismiss();
                 }
-                VilniusSignInListener listener = (VilniusSignInListener) getActivity();
-                listener.onVilniusSignIn();
-                if (vilniusAccountEmail.hasFocus()) {
-                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
-                }
-                if (vilniusAccountPassword.hasFocus()) {
-                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
-                }
-                dialog.dismiss();
             } else {
                 if (vilniusAccountEmail.hasFocus()) {
                     KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);

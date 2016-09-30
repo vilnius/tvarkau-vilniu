@@ -24,6 +24,7 @@ public class SharedPrefsManager {
     private static final String PREF_USER_EMAIL = "UserEmail";
     private static final String PREF_USER_PASSWORD = "UserPassword";
     private static final String PREF_USER_LAST_IMPORT_DATE = "UserLastReportImportDate";
+    private static final String PREF_USER_REMEMBER_ME_STATUS = "UserRememberMeStatus";
 
 
     private static SharedPrefsManager singleton;
@@ -93,10 +94,18 @@ public class SharedPrefsManager {
             .apply();
     }
 
+    public String getUserEmail() {
+        return sharedPreferences.getString(PREF_USER_EMAIL, "");
+    }
+
     public void saveUserPassword(String password) {
         sharedPreferences.edit()
             .putString(PREF_USER_PASSWORD, password)
             .apply();
+    }
+
+    public String getUserPassword() {
+        return sharedPreferences.getString(PREF_USER_PASSWORD, "");
     }
 
     public void saveUserLastReportImport(String lastImportDate) {
@@ -107,5 +116,15 @@ public class SharedPrefsManager {
 
     public String getUserLastReportImport() {
         return sharedPreferences.getString(PREF_USER_LAST_IMPORT_DATE, null);
+    }
+
+    public void changeUserRememberMeStatus(boolean rememberMeStatus) {
+        sharedPreferences.edit()
+            .putBoolean(PREF_USER_REMEMBER_ME_STATUS, rememberMeStatus)
+            .apply();
+    }
+
+    public boolean getUserRememberMeStatus() {
+        return sharedPreferences.getBoolean(PREF_USER_REMEMBER_ME_STATUS, true);
     }
 }
