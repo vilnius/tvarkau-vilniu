@@ -16,6 +16,7 @@ import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.lang.reflect.Type;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -54,6 +55,7 @@ public class LegacyApiModule {
         return builder
             .authenticator(new TokenAuthenticator())
             .addInterceptor(new TokenInterceptor())
+            .connectTimeout(7, TimeUnit.SECONDS)
             .addNetworkInterceptor(chain -> {
                 Request.Builder requestBuilder = chain.request().newBuilder();
                 requestBuilder.header("Content-Type", "application/json");
