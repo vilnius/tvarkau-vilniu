@@ -28,7 +28,7 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
 
 public class SettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener,
-    ReportImportDialogFragment.VilniusSignInListener {
+    ReportImportDialogFragment.SettingsVilniusSignInListener {
 
     private static final int REQUEST_EDIT_PROFILE = 1;
     private static final String REPORT_IMPORT_DIALOG = "report_import_dialog";
@@ -126,7 +126,7 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     @OnClick(R.id.import_reports_from_previous_app)
     protected void onImportReportFromPreviousAppClick() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ReportImportDialogFragment reportImportDialog = ReportImportDialogFragment.newInstance();
+        ReportImportDialogFragment reportImportDialog = ReportImportDialogFragment.newInstance(true);
         reportImportDialog.show(ft, REPORT_IMPORT_DIALOG);
     }
 

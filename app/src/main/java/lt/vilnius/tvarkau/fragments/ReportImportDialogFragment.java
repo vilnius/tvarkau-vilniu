@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
 import org.threeten.bp.LocalDateTime;
 
 import java.io.File;
@@ -50,6 +51,7 @@ import lt.vilnius.tvarkau.api.LegacyApiModule;
 import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
@@ -84,14 +86,22 @@ public class ReportImportDialogFragment extends DialogFragment {
     @BindView(R.id.vilnius_account_login_error)
     TextView vilniusAccountLoginError;
 
+    private static final String IS_SETTINGS_ACTIVITY = "is_settings_activity";
     private Unbinder unbinder;
     private SharedPrefsManager prefsManager;
     private String password;
+    private boolean isSettingsActivity;
 
     public ReportImportDialogFragment() {}
 
-    public static ReportImportDialogFragment newInstance() {
-        return new ReportImportDialogFragment();
+    public static ReportImportDialogFragment newInstance(boolean settingsActivity) {
+        ReportImportDialogFragment importDialogFragment = new ReportImportDialogFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(IS_SETTINGS_ACTIVITY, settingsActivity);
+        importDialogFragment.setArguments(arguments);
+
+        return importDialogFragment;
     }
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,9 +115,15 @@ public class ReportImportDialogFragment extends DialogFragment {
             .legacyApiModule(new LegacyApiModule())
             .build()
             .inject(this);
+
+        if (getArguments().getBoolean(IS_SETTINGS_ACTIVITY)) {
+            isSettingsActivity = true;
+        } else {
+            isSettingsActivity = false;
+        }
     }
 
-    public interface VilniusSignInListener {
+    public interface SettingsVilniusSignInListener {
         void onVilniusSignIn();
     }
 
@@ -269,8 +285,16 @@ public class ReportImportDialogFragment extends DialogFragment {
                                 .apply();
                         }
                     }
-                    VilniusSignInListener listener = (VilniusSignInListener) getActivity();
-                    listener.onVilniusSignIn();
+
+                    if (isSettingsActivity) {
+                        SettingsVilniusSignInListener listener = (SettingsVilniusSignInListener) getActivity();
+                        listener.onVilniusSignIn();
+                    } else {
+                        EventBus.getDefault().post(new NewProblemAddedEvent());
+                        Toast.makeText(getContext(), R.string.report_import_done,
+                            Toast.LENGTH_SHORT).show();
+                    }
+
                     if (vilniusAccountEmail.hasFocus()) {
                         KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
                     }

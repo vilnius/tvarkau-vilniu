@@ -12,7 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -70,6 +72,7 @@ public class ProblemsListFragment extends Fragment {
     @BindView(R.id.my_problems_empty_view) View myProblemsEmptyView;
     @BindView(R.id.no_internet_view) View noInternetView;
     @BindView(R.id.server_not_responding_view) View serverNotRespondingView;
+    @BindView(R.id.my_problems_import) TextView myProblemsImport;
 
     private static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 20;
     private static final String ALL_PROBLEM_LIST = "all_problem_list";
@@ -95,6 +98,10 @@ public class ProblemsListFragment extends Fragment {
         arguments.putBoolean(ALL_PROBLEM_LIST, false);
         problemsListFragment.setArguments(arguments);
         return problemsListFragment;
+    }
+
+    public interface OnImportReportClickListener {
+        void onImportReportClick();
     }
 
     @Override
@@ -160,6 +167,11 @@ public class ProblemsListFragment extends Fragment {
         if (problemList.size() == 0 && shouldLoadMoreProblems) {
             getData(0);
         }
+
+        myProblemsImport.setOnClickListener(v -> {
+            OnImportReportClickListener listener = (OnImportReportClickListener) (getActivity());
+            listener.onImportReportClick();
+        });
 
         return view;
     }
