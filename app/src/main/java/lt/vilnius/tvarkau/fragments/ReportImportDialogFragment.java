@@ -7,15 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +20,7 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.threeten.bp.LocalDateTime;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -116,11 +110,7 @@ public class ReportImportDialogFragment extends DialogFragment {
             .build()
             .inject(this);
 
-        if (getArguments().getBoolean(IS_SETTINGS_ACTIVITY)) {
-            isSettingsActivity = true;
-        } else {
-            isSettingsActivity = false;
-        }
+        isSettingsActivity = getArguments().getBoolean(IS_SETTINGS_ACTIVITY);
     }
 
     public interface SettingsVilniusSignInListener {
@@ -252,12 +242,7 @@ public class ReportImportDialogFragment extends DialogFragment {
         GetProblemsParams params = new GetProblemsParams.Builder()
             .setStart(0)
             .setLimit(100)
-            .setDescriptionFilter(null)
-            .setTypeFilter(null)
-            .setAddressFilter(null)
             .setReporterFilter(email)
-            .setDateFilter(null)
-            .setStatusFilter(null)
             .create();
 
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
@@ -268,7 +253,7 @@ public class ReportImportDialogFragment extends DialogFragment {
                     List<Problem> vilniusAccountReports = new ArrayList<>();
                     vilniusAccountReports.addAll(apiResponse.getResult());
                     for (Problem report : vilniusAccountReports) {
-                        String reportId = report.getIdForVilniusAccount();
+                        String reportId = report.getReportId();
                         if (!myProblemsPreferences.getAll().isEmpty()) {
                             for (String key : myProblemsPreferences.getAll().keySet()) {
                                 if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
@@ -287,8 +272,7 @@ public class ReportImportDialogFragment extends DialogFragment {
                     }
 
                     if (isSettingsActivity) {
-                        SettingsVilniusSignInListener listener = (SettingsVilniusSignInListener) getActivity();
-                        listener.onVilniusSignIn();
+                        ((SettingsVilniusSignInListener) getActivity()).onVilniusSignIn();
                     } else {
                         EventBus.getDefault().post(new NewProblemAddedEvent());
                         Toast.makeText(getContext(), R.string.report_import_done,

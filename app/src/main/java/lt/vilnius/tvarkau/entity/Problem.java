@@ -23,11 +23,15 @@ public class Problem {
     public static final String STATUS_REGISTERED = "Registruota";
     public static final String STATUS_POSTPONED = "Atidėta";
 
+    // Report document id
+    // e.g. E50-5562\/16(3.2.10E-AP1)
     @SerializedName("docNo")
     public String id;
 
+    // Report id
+    // e.g. 17409
     @SerializedName("problem_id")
-    public String idForVilniusAccount;
+    public String reportId;
 
     // entry_date and report_date bring back the
     // same result just from different API methods
@@ -110,7 +114,7 @@ public class Problem {
         return id;
     }
 
-    public String getIdForVilniusAccount() { return idForVilniusAccount; }
+    public String getReportId() { return reportId; }
 
     public LatLng getLatLng() {
         return new LatLng(lat, lng);
