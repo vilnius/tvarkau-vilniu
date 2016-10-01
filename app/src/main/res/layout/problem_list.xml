@@ -26,9 +26,9 @@
         android:id="@+id/my_problems_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="120dp"
-        android:gravity="center">
+        android:paddingBottom="120dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -36,37 +36,46 @@
             android:paddingBottom="8dp"
             android:src="@drawable/ic_empty_state_my_reports" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:fontFamily="sans-serif-regular"
-            android:text="@string/my_problems_empty"
-            android:textColor="@color/black_38"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-regular"
-            android:text="@string/my_problems_send_report"
-            android:textColor="@color/black_38" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-regular"
-            android:text="@string/my_problems_or"
-            android:textColor="@color/black_38" />
-
-        <TextView
+        <LinearLayout
             android:id="@+id/my_problems_import"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-regular"
-            android:text="@string/my_problems_import_from_vilnius_account"
-            android:clickable="true"
-            android:textColor="@color/colorPrimary" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-regular"
+                android:paddingBottom="8dp"
+                android:text="@string/my_problems_empty"
+                android:textColor="@color/black_38"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-regular"
+                android:text="@string/my_problems_send_report"
+                android:textColor="@color/black_38" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-regular"
+                android:text="@string/my_problems_or"
+                android:textColor="@color/black_38" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-regular"
+                android:text="@string/my_problems_import_from_vilnius_account"
+                android:textColor="@color/colorPrimary" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <include layout="@layout/no_internet" />

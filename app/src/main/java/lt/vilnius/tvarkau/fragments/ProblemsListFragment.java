@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -72,7 +73,7 @@ public class ProblemsListFragment extends Fragment {
     @BindView(R.id.my_problems_empty_view) View myProblemsEmptyView;
     @BindView(R.id.no_internet_view) View noInternetView;
     @BindView(R.id.server_not_responding_view) View serverNotRespondingView;
-    @BindView(R.id.my_problems_import) TextView myProblemsImport;
+    @BindView(R.id.my_problems_import) LinearLayout myProblemsImport;
 
     private static final int PROBLEM_COUNT_LIMIT_PER_PAGE = 20;
     private static final String ALL_PROBLEM_LIST = "all_problem_list";
