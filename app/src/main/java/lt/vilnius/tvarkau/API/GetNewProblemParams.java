@@ -2,6 +2,8 @@ package lt.vilnius.tvarkau.api;
 
 import android.support.annotation.Nullable;
 
+import org.threeten.bp.LocalDate;
+
 public class GetNewProblemParams {
 
     private String sessionId;
@@ -14,10 +16,12 @@ public class GetNewProblemParams {
     private String email;
     private String phone;
     private String messageDescription;
+    private String nameOfReporter;
+    private String dateOfBirth;
 
     public GetNewProblemParams(String sessionId, String description, String type, String address, double latitude,
         double longitude, @Nullable String[] photo, @Nullable String email, @Nullable String phone,
-        @Nullable String messageDescription) {
+        @Nullable String messageDescription, @Nullable String nameOfReporter, @Nullable String dateOfBirth) {
         this.sessionId = sessionId;
         this.description = description;
         this.type = type;
@@ -28,6 +32,9 @@ public class GetNewProblemParams {
         this.email = email;
         this.phone = phone;
         this.messageDescription = messageDescription;
+        this.nameOfReporter = nameOfReporter;
+        this.dateOfBirth = dateOfBirth;
+
     }
 
     public static class Builder {
@@ -41,6 +48,8 @@ public class GetNewProblemParams {
         private String email;
         private String phone;
         private String messageDescription;
+        private String nameOfReporter;
+        private String dateOfBirth;
 
         public Builder setSessionId(String sessionId) {
             this.sessionId = sessionId;
@@ -92,9 +101,19 @@ public class GetNewProblemParams {
             return this;
         }
 
+        public Builder setNameOfReporter(String nameOfReporter){
+            this.nameOfReporter = nameOfReporter;
+            return this;
+        }
+
+        public Builder setDateOfBirth(String dateOfBirth){
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
         public GetNewProblemParams create() {
             return new GetNewProblemParams(sessionId, description, type, address, latitude, longitude, photo, email,
-                phone, messageDescription);
+                phone, messageDescription, nameOfReporter, dateOfBirth);
         }
     }
 }

@@ -7,7 +7,9 @@ public class LogApp {
 
     public static void logCrash(Throwable throwable) {
         throwable.printStackTrace();
-        FirebaseCrash.report(throwable);
-        Crashlytics.logException(throwable);
+        if (!BuildConfig.DEBUG) {
+            FirebaseCrash.report(throwable);
+            Crashlytics.logException(throwable);
+        }
     }
 }
