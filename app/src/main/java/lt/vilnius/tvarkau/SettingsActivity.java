@@ -1,7 +1,10 @@
 package lt.vilnius.tvarkau;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
@@ -9,14 +12,26 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import autodagger.AutoComponent;
+import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.api.LegacyApiModule;
+import lt.vilnius.tvarkau.api.LegacyApiService;
+import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
-public class SettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+import static lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS;
+
+public class SettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener,
+    ReportImportDialogFragment.SettingsVilniusSignInListener {
 
     private static final int REQUEST_EDIT_PROFILE = 1;
+    private static final String REPORT_IMPORT_DIALOG = "report_import_dialog";
     private SharedPrefsManager prefsManager;
 
     @BindView(R.id.share_contacts_switcher)
@@ -28,6 +43,15 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
     @BindView(R.id.settings_first_divider)
     View settingsFirstDivider;
 
+    @BindView(R.id.settings_layout)
+    View settingsLayout;
+
+    @BindView(R.id.login_to_vilnius_account)
+    TextView loginToVilniusAccount;
+
+    @BindView(R.id.last_import)
+    TextView lastImport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +61,14 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
         shareContactsSwitcher.setChecked(!prefsManager.isUserAnonymous());
         shareContactsSwitcher.setOnCheckedChangeListener(this);
         setUpEditPersonalData(prefsManager.isUserAnonymous());
+        if (prefsManager.getUserLastReportImport() != null) {
+            lastImport.setVisibility(View.VISIBLE);
+            lastImport.setText(getResources().getString(R.string.last_import) + " " + prefsManager.getUserLastReportImport());
+            loginToVilniusAccount.setVisibility(View.GONE);
+        } else {
+            lastImport.setVisibility(View.GONE);
+            loginToVilniusAccount.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.edit_personal_data)
@@ -93,7 +125,21 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
 
     @OnClick(R.id.import_reports_from_previous_app)
     protected void onImportReportFromPreviousAppClick() {
-        // TODO implement onImportReportFromPreviousAppClick
-        Toast.makeText(this, "Sorry, not yet working, need to be implemented", Toast.LENGTH_LONG).show();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ReportImportDialogFragment reportImportDialog = ReportImportDialogFragment.newInstance(true);
+        reportImportDialog.show(ft, REPORT_IMPORT_DIALOG);
+    }
+
+    @Override public void onVilniusSignIn() {
+       Snackbar.make(settingsLayout, R.string.report_import_done, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.check_imported_reports, v -> {
+                Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
+                startActivity(intent);
+            })
+            .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+            .show();
+        lastImport.setVisibility(View.VISIBLE);
+        lastImport.setText(getResources().getString(R.string.last_import) + " " + prefsManager.getUserLastReportImport());
+        loginToVilniusAccount.setVisibility(View.GONE);
     }
 }

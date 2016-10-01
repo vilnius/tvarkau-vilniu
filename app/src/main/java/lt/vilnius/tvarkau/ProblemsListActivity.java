@@ -7,6 +7,7 @@ import android.support.annotation.IntDef;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,8 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
+import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
 
@@ -29,10 +32,11 @@ import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter;
  * item details side-by-side using two vertical panes.
  */
 public class ProblemsListActivity extends AppCompatActivity
-        implements MenuItem.OnMenuItemClickListener {
+        implements MenuItem.OnMenuItemClickListener, ProblemsListFragment.OnImportReportClickListener {
 
     public static final int ALL_PROBLEMS = 0;
     public static final int MY_PROBLEMS = 1;
+    private static final String REPORT_IMPORT_DIALOG = "report_import_dialog";
 
     @IntDef({ALL_PROBLEMS, MY_PROBLEMS})
     public @interface ProblemsTabsInitialPosition {
@@ -88,7 +92,6 @@ public class ProblemsListActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -100,7 +103,6 @@ public class ProblemsListActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,5 +149,12 @@ public class ProblemsListActivity extends AppCompatActivity
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onImportReportClick() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ReportImportDialogFragment reportImportDialog = ReportImportDialogFragment.newInstance(false);
+        reportImportDialog.show(ft, REPORT_IMPORT_DIALOG);
     }
 }
