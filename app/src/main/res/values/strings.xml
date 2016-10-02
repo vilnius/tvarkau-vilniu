@@ -111,8 +111,6 @@
     <string name="setting_import_reports_explanation">Prisijungti į vilnius.lt profilį</string>
     <string name="title_settings">Nustatymai</string>
     <string name="title_edit_contacts">Asmeninė informacija</string>
-    <string name="fill_your_contacts">Pildyti</string>
-    <string name="error_transport_type_requires_contacts">Reikalinga asmeninė informacija</string>
     <string name="error_profile_fill_name">Įveskite vardą ir pavardę</string>
     <string name="error_profile_fill_email">Įveskite el. pašto adresą</string>
     <string name="error_profile_fill_telephone">Įveskite telefono numerį</string>
@@ -140,6 +138,10 @@
     <string name="my_problems_send_report">Siųskite pranešimą</string>
     <string name="my_problems_or">arba</string>
     <string name="my_problems_import_from_vilnius_account">importuokite iš Vilnius.lt profilio</string>
+    <string name="personal_data_disabled">Asmeninių duomenų pridėjimas išjungtas</string>
+    <string name="share_personal_data">Pridėti asmeninius duomenis</string>
+    <string name="add">Pridėti</string>
+    <string name="personal_data_added">Asmeniniai duomenys pridėti</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>
