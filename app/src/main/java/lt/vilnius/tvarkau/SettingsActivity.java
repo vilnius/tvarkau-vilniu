@@ -113,6 +113,7 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
             if (resultCode == RESULT_OK) {
                 shareContactsSwitcher.setChecked(true);
                 setUpEditPersonalData(false);
+                Toast.makeText(this, R.string.personal_data_saved, Toast.LENGTH_SHORT).show();
             } else {
                 if (prefsManager.isUserAnonymous()) {
                     shareContactsSwitcher.setChecked(false);

@@ -179,9 +179,6 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
 
             getActivity().finish();
 
-            Toast.makeText(getActivity(), R.string.personal_data_added, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
-
             prefsManager.changeUserAnonymityStatus(false);
 
             View view = getActivity().getCurrentFocus();

@@ -535,6 +535,8 @@ public class NewProblemActivity extends BaseActivity {
                     break;
                 case REQUEST_PERSONAL_DATA:
                     fillReportTypeField();
+                    Toast.makeText(this, R.string.personal_data_added, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
                     break;
                 case REQUEST_CHOOSE_REPORT_TYPE:
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
