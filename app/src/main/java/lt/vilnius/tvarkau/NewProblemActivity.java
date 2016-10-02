@@ -202,7 +202,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     public void sendProblem() {
-        if (validateProblemInputs() && validateContacts()) {
+        if (validateProblemInputs()) {
 
             ProgressDialog progressDialog = createProgressDialog();
             progressDialog.setCancelable(false);
