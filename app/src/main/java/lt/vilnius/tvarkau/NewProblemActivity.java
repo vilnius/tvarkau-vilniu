@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau;
 
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -95,7 +96,7 @@ public class NewProblemActivity extends BaseActivity {
     private static final int MAP_PERMISSION_REQUEST_CODE = 20;
 
     public static final int REQUEST_PLACE_PICKER = 11;
-    public static final int REQUEST_PROFILE = 12;
+    public static final int REQUEST_PERSONAL_DATA = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
     public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
@@ -201,7 +202,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     public void sendProblem() {
-        if (validateProblemInputs() && validateContacts()) {
+        if (validateProblemInputs()) {
 
             ProgressDialog progressDialog = createProgressDialog();
             progressDialog.setCancelable(false);
@@ -318,7 +319,7 @@ public class NewProblemActivity extends BaseActivity {
             reportProblemDescriptionWrapper.setError(getText(R.string.error_problem_description_is_empty));
         }
 
-        if (reportType != null) {
+        if (reportProblemType.getText().length() > 0) {
             problemTypeIsValid = true;
         } else {
             reportProblemTypeWrapper.setError(getText(R.string.error_problem_type_is_empty));
@@ -328,24 +329,34 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private boolean validateContacts() {
-        if (reportType.equals("Transporto priemonių stovėjimo tvarkos pažeidimai")) {
-            if (prefsManager.isUserAnonymous()) {
-                Snackbar.make(getCurrentFocus(), R.string.error_transport_type_requires_contacts, Snackbar
-                    .LENGTH_INDEFINITE)
-                    .setAction(R.string.fill_your_contacts, v -> {
-                            Intent intent = new Intent(this, ProfileEditActivity.class);
-                            startActivity(intent);
-                        }
-                    )
-                    .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
-                    .show();
-                return false;
-            } else {
-                return true;
-            }
+        if (reportType.equals("Transporto priemonių stovėjimo tvarkos pažeidimai") && (prefsManager.isUserAnonymous())) {
+
+            new AlertDialog.Builder(this, R.style.MyDialogTheme)
+                .setTitle(getString(R.string.personal_data_disabled))
+                .setMessage(getString(R.string.share_personal_data))
+                .setPositiveButton(getString(R.string.add), (dialog, which) -> {
+                    if (prefsManager.isUserDetailsSaved()) {
+                        fillReportTypeField();
+                        Toast.makeText(getApplicationContext(), R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), ProfileEditActivity.class);
+                        startActivityForResult(intent, REQUEST_PERSONAL_DATA);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> showReportTypePicker())
+                .show();
+            return false;
         } else {
+            fillReportTypeField();
             return true;
         }
+    }
+
+    private void fillReportTypeField() {
+        reportProblemTypeWrapper.setError(null);
+        reportProblemType.setText(reportType);
     }
 
     private void openPhotoSelectorDialog() {
@@ -404,6 +415,10 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_type)
     public void onChooseProblemTypeClicked() {
+       showReportTypePicker();
+    }
+
+    private void showReportTypePicker() {
         Intent intent = new Intent(this, ChooseReportTypeActivity.class);
         startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
     }
@@ -518,14 +533,14 @@ public class NewProblemActivity extends BaseActivity {
                         }
                     }
                     break;
-                case REQUEST_PROFILE:
-                    profile = Profile.returnProfile(this);
+                case REQUEST_PERSONAL_DATA:
+                    fillReportTypeField();
+                    Toast.makeText(this, R.string.personal_data_added, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
                     break;
                 case REQUEST_CHOOSE_REPORT_TYPE:
                     if (data.hasExtra(EXTRA_REPORT_TYPE)) {
                         reportType = data.getStringExtra(EXTRA_REPORT_TYPE);
-                        reportProblemTypeWrapper.setError(null);
-                        reportProblemType.setText(reportType);
                         validateContacts();
                     }
                     break;
