@@ -28,15 +28,15 @@ android {
         applicationId "lt.vilnius.tvarkau"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 12
+        versionCode 13
         versionName "3.1"
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
