@@ -345,8 +345,7 @@ public class NewProblemActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> reportProblemTypeWrapper.setError(
-                    getText(R.string.error_problem_type_is_empty)))
+                .setNegativeButton(R.string.cancel, (dialog, which) -> showReportTypePicker())
                 .show();
             return false;
         } else {
@@ -416,6 +415,10 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_type)
     public void onChooseProblemTypeClicked() {
+       showReportTypePicker();
+    }
+
+    private void showReportTypePicker() {
         Intent intent = new Intent(this, ChooseReportTypeActivity.class);
         startActivityForResult(intent, REQUEST_CHOOSE_REPORT_TYPE);
     }
