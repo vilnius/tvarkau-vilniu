@@ -114,7 +114,7 @@
     <string name="error_profile_fill_name">Įveskite vardą ir pavardę</string>
     <string name="error_profile_fill_email">Įveskite el. pašto adresą</string>
     <string name="error_profile_fill_telephone">Įveskite telefono numerį</string>
-    <string name="your_contact_data_saved">Jūsų duomenys pridėti</string>
+    <string name="personal_data_saved">Jūsų duomenys išsaugoti</string>
     <string name="profile_hint_birthday">Gimimo data</string>
     <string name="error_profile_fill_birthday">Įveskite gimimo datą</string>
     <string name="error_profile_email_invalid">Patikrinkite, ar teisingai įvedėte el. paštą</string>
@@ -141,7 +141,8 @@
     <string name="personal_data_disabled">Asmeninių duomenų pridėjimas išjungtas</string>
     <string name="share_personal_data">Pridėti asmeninius duomenis</string>
     <string name="add">Pridėti</string>
-    <string name="personal_data_added">Asmeniniai duomenys pridėti</string>
+    <string name="personal_data_added">Jūsų duomenys pridėti</string>
+    <string name="personal_data_sharing_enabled">Pridėjimas įjungtas</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

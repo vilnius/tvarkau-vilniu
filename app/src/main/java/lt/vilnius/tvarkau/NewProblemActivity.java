@@ -338,6 +338,7 @@ public class NewProblemActivity extends BaseActivity {
                     if (prefsManager.isUserDetailsSaved()) {
                         fillReportTypeField();
                         Toast.makeText(getApplicationContext(), R.string.personal_data_added, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     } else {
                         Intent intent = new Intent(getApplicationContext(), ProfileEditActivity.class);
