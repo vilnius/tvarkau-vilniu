@@ -138,7 +138,6 @@ public class NewProblemActivity extends BaseActivity {
     @State
     String address;
 
-    private Snackbar snackbar;
     private String photoFileName;
     private SharedPrefsManager prefsManager;
     private String reporterName;
@@ -415,7 +414,7 @@ public class NewProblemActivity extends BaseActivity {
 
     @OnClick(R.id.report_problem_type)
     public void onChooseProblemTypeClicked() {
-       showReportTypePicker();
+        showReportTypePicker();
     }
 
     private void showReportTypePicker() {
@@ -490,47 +489,29 @@ public class NewProblemActivity extends BaseActivity {
                     break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
-                    LatLng latLng = place.getLatLng();
-                    String addressFromPlacePicker = place.getAddress().toString();
+                    locationCords = place.getLatLng();
 
                     Geocoder geocoder = new Geocoder(this);
 
                     List<Address> addresses = null;
                     try {
-                        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                        addresses = geocoder.getFromLocation(locationCords.latitude, locationCords.longitude, 1);
                     } catch (IOException e) {
                         LogApp.logCrash(e);
                     }
                     if (addresses != null && addresses.size() > 0) {
                         if (addresses.get(0).getLocality() != null) {
-                            String city = addresses.get(0).getLocality();
-                            if (city.equalsIgnoreCase(GlobalConsts.CITY_VILNIUS)) {
-                                address = addresses.get(0).getAddressLine(0);
-                                reportProblemLocationWrapper.setError(null);
-                                reportProblemLocation.setText(address);
-                                locationCords = latLng;
-                                if (snackbar != null && snackbar.isShown()) {
-                                    snackbar.dismiss();
-                                }
-                            } else {
-                                showIncorrectPlaceSnackbar();
-                            }
+                            address = addresses.get(0).getAddressLine(0);
+                            reportProblemLocationWrapper.setError(null);
+                            reportProblemLocation.setText(address);
                         }
                     } else {
                         // Mostly when Geocoder throws IOException
                         // backup solution which in not 100% reliable
-                        if (addressFromPlacePicker.contains(GlobalConsts.CITY_VILNIUS)) {
-                            String[] addressSlice = place.getAddress().toString().split(", ");
-                            address = addressSlice[0];
-                            reportProblemLocationWrapper.setError(null);
-                            reportProblemLocation.setText(address);
-                            locationCords = latLng;
-                            if (snackbar != null && snackbar.isShown()) {
-                                snackbar.dismiss();
-                            }
-                        } else {
-                            showIncorrectPlaceSnackbar();
-                        }
+                        String[] addressSlice = place.getAddress().toString().split(", ");
+                        address = addressSlice[0];
+                        reportProblemLocationWrapper.setError(null);
+                        reportProblemLocation.setText(address);
                     }
                     break;
                 case REQUEST_PERSONAL_DATA:
@@ -571,14 +552,6 @@ public class NewProblemActivity extends BaseActivity {
         if (imagesURIs.size() > 0) {
             problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, imagesPath));
         }
-    }
-
-    private void showIncorrectPlaceSnackbar() {
-        View view = this.getCurrentFocus();
-        snackbar = Snackbar.make(view, R.string.error_location_incorrect, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.choose_again, v -> showPlacePicker(view))
-            .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
-            .show();
     }
 
     @OnClick(R.id.report_problem_location)

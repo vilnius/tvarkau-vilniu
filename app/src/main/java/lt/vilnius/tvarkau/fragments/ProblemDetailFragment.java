@@ -211,11 +211,17 @@ public class ProblemDetailFragment extends Fragment {
     }
 
     private void showNoConnectionSnackbar() {
-        Snackbar.make(getActivity().findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
-            .LENGTH_INDEFINITE)
-            .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
-            .setAction(R.string.try_again, v -> getData())
-            .show();
+        if (getActivity() != null) {
+            Snackbar.make(getActivity().findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
+                .LENGTH_INDEFINITE)
+                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
+                .setAction(R.string.try_again, v -> getData())
+                .show();
+        } else {
+            if (getContext() != null) {
+                Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void initProblemImagesPager(Problem problem) {
