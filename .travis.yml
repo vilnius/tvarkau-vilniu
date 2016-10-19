@@ -4,24 +4,39 @@ sudo: false
 
 jdk: oraclejdk8
 
-android:
-  components:
-    - android-23
-    - tools
-    - build-tools-23.0.3
-    - extra
-
-script:
-  - ./gradlew -s -PdisablePreDex clean assembleDebug
-
 env:
   global:
     - GRADLE_OPTS="-Xmx4g"
+    - ADB_INSTALL_TIMEOUT=15
+    - ANDROID_ABI=armeabi-v7a
+    - ANDROID_TAG=google_apis
 
-cache:
-  directories:
-    - $HOME/.gradle/caches/2.13
-    - $HOME/.gradle/caches/jars-1
-    - $HOME/.gradle/daemon
-    - $HOME/.gradle/native
-    - $HOME/.gradle/wrapper
+  matrix:
+    - TARGET=24
+    - TARGET=23
+    - TARGET=19
+
+android:
+  components:
+    - tools
+    - android-$TARGET
+    - tools
+    - build-tools-23.0.3
+    - extra
+    - extra-android-m2repository
+    - addon-google_apis-google-$TARGET
+    - sys-img-$ANDROID_ABI-google_apis-$TARGET
+
+before_script:
+  - android list target
+  - echo no | android create avd --force -n test -t "android-$TARGET" --abi $ANDROID_ABI --tag $ANDROID_TAG
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - sleep 10
+  - adb shell settings put global window_animation_scale 0 &
+  - adb shell settings put global transition_animation_scale 0 &
+  - adb shell settings put global animator_duration_scale 0 &
+  - adb shell input keyevent 82 &
+
+script:
+  - ./gradlew -s -PdisablePreDex clean assembleDebug connectedAndroidTest
