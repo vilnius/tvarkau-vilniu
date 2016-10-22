@@ -23,9 +23,6 @@ import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 
-/**
- * Created by Karolis Vycius on 2016-01-13.
- */
 public class ProblemsListAdapter
     extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

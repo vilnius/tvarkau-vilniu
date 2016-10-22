@@ -55,7 +55,6 @@ public class ProblemsListActivity extends AppCompatActivity
 
     private int initialPosition;
 
-
 //    SearchView searchView;
 
     public static Intent getStartActivityIntent(Context context, @ProblemsTabsInitialPosition int initialPosition) {

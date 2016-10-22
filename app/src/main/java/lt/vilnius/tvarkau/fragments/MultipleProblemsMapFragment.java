@@ -29,10 +29,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Gediminas Zukas on 04/05/16.
- */
-
 @AutoComponent(modules = LegacyApiModule.class)
 @AutoInjector
 @Singleton

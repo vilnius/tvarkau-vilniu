@@ -8,9 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
 
-/**
- * Created by Karolis Vycius on 2016-01-30.
- */
 public class ProblemsListViewPagerAdapter extends FragmentPagerAdapter {
 
     protected CharSequence[] titles;

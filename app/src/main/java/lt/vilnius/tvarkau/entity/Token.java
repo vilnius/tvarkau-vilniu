@@ -1,8 +1,5 @@
 package lt.vilnius.tvarkau.entity;
 
-/**
- * Created by Karolis Vycius on 2016-01-21.
- */
 public class Token {
 
     protected String token;
