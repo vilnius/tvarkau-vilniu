@@ -1,8 +1,6 @@
-package lt.vilnius.tvarkau.api;
+package lt.vilnius.tvarkau.backend;
 
 import android.support.annotation.Nullable;
-
-import org.threeten.bp.LocalDate;
 
 public class GetNewProblemParams {
 

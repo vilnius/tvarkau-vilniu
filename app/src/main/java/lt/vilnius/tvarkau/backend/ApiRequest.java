@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.api;
+package lt.vilnius.tvarkau.backend;
 
 public class ApiRequest<P> {
 

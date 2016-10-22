@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.api;
+package lt.vilnius.tvarkau.backend;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
