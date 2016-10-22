@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -12,16 +11,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lt.vilnius.tvarkau.api.LegacyApiModule;
-import lt.vilnius.tvarkau.api.LegacyApiService;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
