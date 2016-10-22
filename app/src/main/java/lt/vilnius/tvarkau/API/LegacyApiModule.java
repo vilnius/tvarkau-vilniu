@@ -55,7 +55,9 @@ public class LegacyApiModule {
         return builder
             .authenticator(new TokenAuthenticator())
             .addInterceptor(new TokenInterceptor())
-            .connectTimeout(7, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(chain -> {
                 Request.Builder requestBuilder = chain.request().newBuilder();
                 requestBuilder.header("Content-Type", "application/json");
