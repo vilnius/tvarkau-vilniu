@@ -3,12 +3,8 @@ package lt.vilnius.tvarkau;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
@@ -28,9 +24,6 @@ public class MainActivity extends BaseActivity {
     public static final int NEW_ISSUE_REQUEST_CODE = 12;
     public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +31,6 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     protected void startNewActivity(Class<?> cls) {
