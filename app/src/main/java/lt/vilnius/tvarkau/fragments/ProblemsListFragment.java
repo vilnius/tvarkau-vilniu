@@ -56,10 +56,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by Karolis Vycius on 2016-01-13.
- */
-
 @AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
 @AutoInjector
 @Singleton

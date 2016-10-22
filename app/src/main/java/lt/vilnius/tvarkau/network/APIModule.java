@@ -5,16 +5,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import lt.vilnius.tvarkau.network.service.IssueService;
-import lt.vilnius.tvarkau.network.service.MediaService;
-import lt.vilnius.tvarkau.network.service.UserService;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Karolis Vycius on 2016-01-21.
- */
 @Module
 public class APIModule {
 
@@ -45,18 +39,5 @@ public class APIModule {
     public UserService provideUserService(Retrofit retrofit) {
         return retrofit.create(UserService.class);
     }
-
-    @Provides
-    @Singleton
-    public IssueService provideIssueService(Retrofit retrofit) {
-        return retrofit.create(IssueService.class);
-    }
-
-    @Provides
-    @Singleton
-    public MediaService provideMediaService(Retrofit retrofit) {
-        return retrofit.create(MediaService.class);
-    }
-
 }
 

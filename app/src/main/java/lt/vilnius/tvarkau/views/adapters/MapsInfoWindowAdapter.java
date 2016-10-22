@@ -18,9 +18,6 @@ import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 
-/**
- * Created by Karolis Vycius on 2016-01-30.
- */
 public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     protected HashMap<String, Problem> problemHashMap;

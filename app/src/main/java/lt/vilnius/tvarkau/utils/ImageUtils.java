@@ -29,7 +29,7 @@ public class ImageUtils {
         return Base64.encodeToString(byteArrayImage, Base64.NO_WRAP);
     }
 
-    public static Bitmap createBitmap(Uri uri) {
+    private static Bitmap createBitmap(Uri uri) {
 
         final int requiredWidth = 1600;
         final int requiredHeight = 1600;
@@ -87,7 +87,7 @@ public class ImageUtils {
         }
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
 
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -112,7 +112,7 @@ public class ImageUtils {
         return Bitmap.createScaledBitmap(b, width, (int) (b.getHeight() * factor), true);
     }
 
-    public static Bitmap scaleToFitHeight(Bitmap b, int height) {
+    private static Bitmap scaleToFitHeight(Bitmap b, int height) {
         float factor = height / (float) b.getHeight();
         return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
     }

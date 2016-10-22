@@ -9,7 +9,6 @@ import autodagger.AutoComponent;
 import autodagger.AutoInjector;
 import dagger.Lazy;
 import lt.vilnius.tvarkau.entity.Token;
-import lt.vilnius.tvarkau.network.service.UserService;
 import lt.vilnius.tvarkau.utils.Authentication;
 import okhttp3.Authenticator;
 import okhttp3.Request;
@@ -17,7 +16,6 @@ import okhttp3.Response;
 import okhttp3.Route;
 
 /**
- * Created by Karolis Vycius on 2016-01-30.
  * Adapted https://github.com/square/okhttp/wiki/Recipes#handling-authentication
  */
 @AutoComponent(modules = APIModule.class)
@@ -27,8 +25,7 @@ public class TokenAuthenticator implements Authenticator {
 
     protected static final int MAX_RETRIES = 3;
 
-    @Inject
-    Lazy<UserService> userService;
+    @Inject Lazy<UserService> userService;
 
     @Override
     public Request authenticate(Route route, Response response) throws IOException {

@@ -6,9 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-/**
- * Created by Karolis Vycius on 2016-01-14.
- */
 public class PermissionUtils {
 
     private PermissionUtils() {}
@@ -21,7 +18,6 @@ public class PermissionUtils {
                 return false;
             }
         }
-
         return true;
     }
 }

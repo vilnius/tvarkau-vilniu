@@ -11,10 +11,6 @@ import org.threeten.bp.LocalDateTime;
 
 import lt.vilnius.tvarkau.R;
 
-/**
- * @author Vilius Kraujutis
- * @since 2015-11-17 03:23.
- */
 @Parcel
 public class Problem {
     public static final String STATUS_DONE = "Atlikta";
