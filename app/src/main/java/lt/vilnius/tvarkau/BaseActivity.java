@@ -5,11 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import icepick.Icepick;
 
-/**
- * Created by Karolis Vycius on 2016-01-15.
- */
-
-
 public abstract class BaseActivity extends AppCompatActivity {
 
 
@@ -17,7 +12,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
-
     }
 
     @Override

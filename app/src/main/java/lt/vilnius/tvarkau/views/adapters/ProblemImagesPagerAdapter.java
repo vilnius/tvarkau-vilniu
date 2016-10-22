@@ -14,9 +14,6 @@ import com.bumptech.glide.Glide;
 import lt.vilnius.tvarkau.FullscreenImageActivity;
 import lt.vilnius.tvarkau.R;
 
-/**
- * Created by Gediminas Zukas on 2016-04-28.
- */
 public class ProblemImagesPagerAdapter<T> extends PagerAdapter {
 
     private LayoutInflater layoutInflater;

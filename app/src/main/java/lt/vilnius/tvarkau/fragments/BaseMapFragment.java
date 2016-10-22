@@ -25,9 +25,6 @@ import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
 
-/**
- * Created by Karolis Vycius on 2016-01-13.
- */
 public abstract class BaseMapFragment extends SupportMapFragment
         implements GoogleMap.OnMarkerClickListener {
 

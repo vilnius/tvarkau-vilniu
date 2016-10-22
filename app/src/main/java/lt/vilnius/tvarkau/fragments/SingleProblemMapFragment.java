@@ -10,9 +10,6 @@ import org.parceler.Parcels;
 
 import lt.vilnius.tvarkau.entity.Problem;
 
-/**
- * Created by Gediminas Zukas on 04/05/16.
- */
 public class SingleProblemMapFragment extends BaseMapFragment implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {

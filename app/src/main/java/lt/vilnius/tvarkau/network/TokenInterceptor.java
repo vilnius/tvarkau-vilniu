@@ -9,7 +9,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Karolis Vycius on 2016-01-30.
  * Adapted https://gist.github.com/alex-shpak/da1e65f52dc916716930
  */
 public class TokenInterceptor implements Interceptor {

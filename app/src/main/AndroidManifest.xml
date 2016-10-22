@@ -56,17 +56,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        
-        <activity
-            android:name=".SignInActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:parentActivityName=".ProblemsListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProblemsListActivity"/>
-        </activity>
 
         <activity
             android:name=".ProblemDetailActivity"

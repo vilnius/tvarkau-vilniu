@@ -77,7 +77,7 @@
     <string name="error_problem_location_is_empty">Prašome pasirinkti problemos vietą</string>
     <string name="error_problem_type_is_empty">Prašome pasirinkti problemos tipą</string>
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
-    <string name="error_submitting_problem">Įvyko klaida, bandykite dar sykį</string>
+    <string name="error_submitting_problem">Atsiprašome, įvyko serverio klaida. Bandykite dar sykį.</string>
     <string name="sending_problem">Siunčiama...</string>
     <string name="check_google_play_services">Atnaujinkite Google Play Paslaugas</string>
     <string name="my_problems_empty">Mano pranešimai tušti</string>

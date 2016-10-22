@@ -49,9 +49,6 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.rate_app)
     protected void onRateAppClick() {
-        // For testing we can use previous app's package name
-        // String testPackageName = "uk.co.es4b.tvarkau_vilniu";
-
         Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
