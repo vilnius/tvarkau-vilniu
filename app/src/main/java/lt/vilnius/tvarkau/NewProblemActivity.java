@@ -128,8 +128,6 @@ public class NewProblemActivity extends BaseActivity {
     @State
     ArrayList<Uri> imagesURIs;
     @State
-    Profile profile;
-    @State
     String reportType;
     @State
     String address;
