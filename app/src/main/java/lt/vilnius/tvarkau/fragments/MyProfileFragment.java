@@ -241,9 +241,11 @@ public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDa
 
     private void setUpUserProfile() {
         if (prefsManager.isUserDetailsSaved()) {
-            Profile profile = Profile.returnProfile(getContext());
+            Profile profile = prefsManager.getUserProfile();
             profileName.setText(profile.getName());
-            profileBirthday.setText(FormatUtils.formatLocalDate(profile.getBirthday()));
+            if (profile.getBirthday() != null) {
+                profileBirthday.setText(FormatUtils.formatLocalDate(profile.getBirthday()));
+            }
             birthday = profile.getBirthday();
             profileEmail.setText(profile.getEmail());
             profileTelephone.setText(profile.getMobilePhone());
