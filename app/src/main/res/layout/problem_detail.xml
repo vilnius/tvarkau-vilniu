@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,8 +15,8 @@
 
             <include
                 android:id="@+id/problem_image_pager_layout"
-                android:elevation="3dp"
-                layout="@layout/problem_photo_gallery" />
+                layout="@layout/problem_photo_gallery"
+                android:elevation="3dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -30,18 +31,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/problem_status"
-                    android:paddingRight="16dp"
                     android:fontFamily="sans-serif-regular"
+                    android:paddingRight="16dp"
                     android:textColor="#DE000000"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    tools:text="KET pažeidimas ilgas pavadimas"/>
 
                 <TextView
                     android:id="@+id/problem_status"
+                    style="@style/ReportStatusLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    style="@style/ReportStatusLabel" />
+                    android:layout_alignTop="@id/problem_title"
+                    android:layout_marginTop="8dp"
+                    tools:background="@drawable/label_report_status_registered"
+                    tools:text="Užregistruota"/>
 
             </RelativeLayout>
 
@@ -54,7 +59,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_problem" />
+                    android:src="@drawable/ic_location_problem"/>
 
                 <TextView
                     android:id="@+id/problem_address"
@@ -62,7 +67,8 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
                     android:textColor="@color/problem_address"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:text="Gedimino pr. 11"/>
 
             </LinearLayout>
 
@@ -79,7 +85,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/issue"
                     android:textColor="@color/black_87"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/problem_entry_date"
@@ -88,7 +94,7 @@
                     android:layout_alignParentRight="true"
                     android:fontFamily="sans-serif-regular"
                     android:textColor="@color/problem_date"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
             </RelativeLayout>
 
@@ -96,20 +102,20 @@
                 android:id="@+id/problem_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="4sp"
                 android:paddingBottom="24dp"
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
                 android:paddingTop="8dp"
-                android:lineSpacingExtra="4sp"
                 android:textColor="@color/black_87"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <RelativeLayout
                 android:id="@+id/problem_answer_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="24dp"
-                android:background="#f4f4f4">
+                android:background="#f4f4f4"
+                android:padding="24dp">
 
                 <TextView
                     android:id="@+id/problem_answer_label"
@@ -118,7 +124,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/answer"
                     android:textColor="@color/black_87"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/problem_answer_date"
@@ -127,24 +133,28 @@
                     android:layout_alignParentRight="true"
                     android:fontFamily="sans-serif-regular"
                     android:textColor="@color/problem_date"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/problem_answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/problem_answer_label"
-                    android:paddingTop="8dp"
                     android:lineSpacingExtra="4sp"
+                    android:paddingTop="8dp"
                     android:textColor="@color/black_87"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
-    <include layout="@layout/no_internet" />
+    <include
+        layout="@layout/no_internet"
+        tools:visibility="gone"/>
 
-    <include layout="@layout/server_not_responding" />
+    <include
+        layout="@layout/server_not_responding"
+        tools:visibility="gone"/>
 
 </FrameLayout>
