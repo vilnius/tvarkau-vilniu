@@ -5,9 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +24,8 @@ import android.widget.Toast;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,6 +52,7 @@ import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.NetworkUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
+import lt.vilnius.tvarkau.utils.TextUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -157,7 +166,7 @@ public class ProblemDetailFragment extends Fragment {
                         problemTitle.setText(problem.getType());
                     }
                     if (problem.getDescription() != null) {
-                        problemDescription.setText(problem.getDescription());
+                        addProblemSpans(problemDescription, problem.getDescription());
                     }
                     if (problem.getAddress() != null) {
                         problemAddress.setText(problem.getAddress());
@@ -171,7 +180,7 @@ public class ProblemDetailFragment extends Fragment {
                     }
                     if (problem.getAnswer() != null) {
                         problemAnswerBlock.setVisibility(View.VISIBLE);
-                        problemAnswer.setText(problem.getAnswer());
+                        addProblemSpans(problemAnswer, problem.getAnswer());
                         problemAnswerDate.setText(problem.getAnswerDate());
                     }
                     if (problem.getPhotos() != null) {
@@ -208,6 +217,21 @@ public class ProblemDetailFragment extends Fragment {
             noInternetView.setVisibility(View.VISIBLE);
             showNoConnectionSnackbar();
         }
+    }
+
+    private void addProblemSpans(TextView textView, String text) {
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(text);
+        List<String> idOccurrences = TextUtils.findProblemIdOccurrences(text);
+
+        for (String occurrence : idOccurrences) {
+            stringBuilder.setSpan(new ProblemIssueIdSpan(occurrence),
+                    text.indexOf(occurrence),
+                    text.indexOf(occurrence) + occurrence.length(),
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+
+        textView.setText(stringBuilder, TextView.BufferType.SPANNABLE);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void showNoConnectionSnackbar() {
@@ -263,5 +287,31 @@ public class ProblemDetailFragment extends Fragment {
         intent.putExtras(data);
 
         startActivity(intent);
+    }
+
+    private class ProblemIssueIdSpan extends ClickableSpan {
+
+        private String issueId;
+
+        private ProblemIssueIdSpan(String issueId) {
+            this.issueId = issueId;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+            ds.setColor(ContextCompat.getColor(getContext(), R.color.problem_address));
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = ProblemDetailActivity.getStartActivityIntent(
+                    getContext(),
+                    issueId
+            );
+
+            ActivityCompat.startActivity(getContext(), intent, null);
+        }
     }
 }
