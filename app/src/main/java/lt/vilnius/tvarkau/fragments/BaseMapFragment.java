@@ -2,16 +2,22 @@ package lt.vilnius.tvarkau.fragments;
 
 
 import android.Manifest;
-import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -25,8 +31,12 @@ import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 public abstract class BaseMapFragment extends SupportMapFragment
-        implements GoogleMap.OnMarkerClickListener {
+        implements GoogleMap.OnMarkerClickListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     protected static final LatLng VILNIUS_LAT_LNG = new LatLng(54.687157, 25.279652);
 
@@ -40,11 +50,23 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     protected HashMap<String, Problem> problemHashMap = new HashMap<>();
 
+    private GoogleApiClient googleApi;
+    private Handler handler;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        handler = new Handler();
 
         setMarkerResources();
+
+        if (googleApi == null) {
+            googleApi = new GoogleApiClient.Builder(getContext())
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .enableAutoManage(getActivity(), this)
+                    .build();
+        }
     }
 
     private void setMarkerResources() {
@@ -61,13 +83,21 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f));
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
-            .PERMISSION_GRANTED && ActivityCompat
-            .checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
         }
 
         initMapData();
+    }
+
+    private void zoomToMyLocation(GoogleMap map, Location lastLocation) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()))
+                .zoom(17f)
+                .build();
+
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     protected void setMarkerInfoWindowAdapter() {
@@ -128,12 +158,41 @@ public abstract class BaseMapFragment extends SupportMapFragment
         marker.showInfoWindow();
         //  There is a known issue where in InfoWindow the image
         // doesn't load properly the first time. Need to reload  each time
-        final Handler handler = new Handler();
         handler.postDelayed(marker::showInfoWindow, 200);
         return false;
     }
 
     public Problem getProblemByMarker(Marker marker) {
         return problemHashMap.get(marker.getTitle());
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+            return;
+        }
+
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApi);
+        if (lastLocation != null) {
+            handler.post(() -> zoomToMyLocation(googleMap, lastLocation));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //don't care about that, can't do anything anyway
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        //don't care about that, can't do anything anyway
+    }
+
+    @Override
+    public void onDestroyView() {
+        googleMap.setOnMarkerClickListener(null);
+        googleMap = null;
+        super.onDestroyView();
     }
 }
