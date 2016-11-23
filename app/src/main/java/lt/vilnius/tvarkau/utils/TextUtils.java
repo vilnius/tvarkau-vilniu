@@ -17,8 +17,9 @@ public class TextUtils {
     }
 
     public static List<String> findProblemIdOccurrences(String source) {
-        Matcher matcher = Pattern.compile(PROBLEM_ID_REGEXP).matcher(source);
         List<String> result = new ArrayList<>();
+        Matcher matcher = Pattern.compile(PROBLEM_ID_REGEXP, Pattern.CASE_INSENSITIVE)
+                .matcher(source);
 
         while (matcher.find()) {
             result.add(matcher.group());

@@ -1,12 +1,10 @@
-package lt.vilnius.tvarkau;
+package lt.vilnius.tvarkau.utils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.List;
-
-import lt.vilnius.tvarkau.utils.TextUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,5 +41,13 @@ public class TextUtilTest {
         List<String> problemIdOccurrences = TextUtils.findProblemIdOccurrences(single);
 
         assertTrue(problemIdOccurrences.isEmpty());
+    }
+
+    @Test
+    public void includeLowerCaseProblemIds() {
+        String single = "We have a huge problem here e50-7476/16(3.2.47E-SM4).";
+        List<String> problemIdOccurrences = TextUtils.findProblemIdOccurrences(single);
+
+        assertEquals(1, problemIdOccurrences.size());
     }
 }

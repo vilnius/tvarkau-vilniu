@@ -5,15 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +18,6 @@ import android.widget.Toast;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,12 +39,12 @@ import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemParams;
 import lt.vilnius.tvarkau.backend.LegacyApiModule;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
+import lt.vilnius.tvarkau.decorators.TextViewDecorator;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.NetworkUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
-import lt.vilnius.tvarkau.utils.TextUtils;
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -76,7 +68,8 @@ public class ProblemDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String KEY_PROBLEM = "problem";
 
-    @Inject LegacyApiService legacyApiService;
+    @Inject
+    LegacyApiService legacyApiService;
 
     @BindView(R.id.problem_detail_view)
     LinearLayout problemDetailView;
@@ -133,8 +126,8 @@ public class ProblemDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(
-        LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+            LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.problem_detail, container, false);
 
         DaggerProblemDetailFragmentComponent.create().inject(this);
@@ -205,12 +198,12 @@ public class ProblemDetailFragment extends Fragment {
             };
 
             legacyApiService.getProblem(request)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    onSuccess,
-                    onError
-                );
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            onSuccess,
+                            onError
+                    );
         } else {
             problemDetailView.setVisibility(View.GONE);
             serverNotRespondingView.setVisibility(View.GONE);
@@ -220,27 +213,16 @@ public class ProblemDetailFragment extends Fragment {
     }
 
     private void addProblemSpans(TextView textView, String text) {
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(text);
-        List<String> idOccurrences = TextUtils.findProblemIdOccurrences(text);
-
-        for (String occurrence : idOccurrences) {
-            stringBuilder.setSpan(new ProblemIssueIdSpan(occurrence),
-                    text.indexOf(occurrence),
-                    text.indexOf(occurrence) + occurrence.length(),
-                    Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        }
-
-        textView.setText(stringBuilder, TextView.BufferType.SPANNABLE);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        new TextViewDecorator(textView).decorateProblemIdSpans(text);
     }
 
     private void showNoConnectionSnackbar() {
         if (getActivity() != null) {
             Snackbar.make(getActivity().findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
-                .LENGTH_INDEFINITE)
-                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
-                .setAction(R.string.try_again, v -> getData())
-                .show();
+                    .LENGTH_INDEFINITE)
+                    .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
+                    .setAction(R.string.try_again, v -> getData())
+                    .show();
         } else {
             if (getContext() != null) {
                 Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
@@ -270,7 +252,7 @@ public class ProblemDetailFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE
-            && PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS)) {
+                && PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS)) {
             startProblemActivity();
         } else {
             Toast.makeText(getActivity(), R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
@@ -289,29 +271,4 @@ public class ProblemDetailFragment extends Fragment {
         startActivity(intent);
     }
 
-    private class ProblemIssueIdSpan extends ClickableSpan {
-
-        private String issueId;
-
-        private ProblemIssueIdSpan(String issueId) {
-            this.issueId = issueId;
-        }
-
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            super.updateDrawState(ds);
-            ds.setUnderlineText(false);
-            ds.setColor(ContextCompat.getColor(getContext(), R.color.problem_address));
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = ProblemDetailActivity.getStartActivityIntent(
-                    getContext(),
-                    issueId
-            );
-
-            ActivityCompat.startActivity(getContext(), intent, null);
-        }
-    }
 }
