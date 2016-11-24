@@ -28,8 +28,8 @@ android {
         applicationId "lt.vilnius.tvarkau"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 15
-        versionName "3.2"
+        versionCode 16
+        versionName "3.3"
         vectorDrawables.useSupportLibrary = true
     }
 

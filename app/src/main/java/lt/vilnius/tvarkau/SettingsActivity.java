@@ -79,6 +79,7 @@ public class SettingsActivity extends BaseActivity implements CompoundButton.OnC
                 startProfileEditActivity();
             } else {
                 setUpEditPersonalData(false);
+                prefsManager.changeUserAnonymityStatus(false);
             }
         } else {
             prefsManager.changeUserAnonymityStatus(true);

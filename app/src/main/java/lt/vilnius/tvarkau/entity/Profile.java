@@ -12,7 +12,7 @@ import org.threeten.bp.LocalDate;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
-public class Profile implements Parcelable {
+public class Profile {
 
     @SerializedName("Profile_Name")
     private String name;
@@ -80,34 +80,4 @@ public class Profile implements Parcelable {
 
         return false;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeString(this.email);
-        dest.writeString(this.mobilePhone);
-    }
-
-    protected Profile(Parcel in) {
-        this.name = in.readString();
-        this.email = in.readString();
-        this.mobilePhone = in.readString();
-    }
-
-    public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {
-        @Override
-        public Profile createFromParcel(Parcel source) {
-            return new Profile(source);
-        }
-
-        @Override
-        public Profile[] newArray(int size) {
-            return new Profile[size];
-        }
-    };
 }
