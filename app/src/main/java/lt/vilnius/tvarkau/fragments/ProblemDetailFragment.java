@@ -39,6 +39,7 @@ import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemParams;
 import lt.vilnius.tvarkau.backend.LegacyApiModule;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
+import lt.vilnius.tvarkau.decorators.TextViewDecorator;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
@@ -67,7 +68,8 @@ public class ProblemDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String KEY_PROBLEM = "problem";
 
-    @Inject LegacyApiService legacyApiService;
+    @Inject
+    LegacyApiService legacyApiService;
 
     @BindView(R.id.problem_detail_view)
     LinearLayout problemDetailView;
@@ -124,8 +126,8 @@ public class ProblemDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(
-        LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+            LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.problem_detail, container, false);
 
         DaggerProblemDetailFragmentComponent.create().inject(this);
@@ -157,7 +159,7 @@ public class ProblemDetailFragment extends Fragment {
                         problemTitle.setText(problem.getType());
                     }
                     if (problem.getDescription() != null) {
-                        problemDescription.setText(problem.getDescription());
+                        addProblemSpans(problemDescription, problem.getDescription());
                     }
                     if (problem.getAddress() != null) {
                         problemAddress.setText(problem.getAddress());
@@ -171,7 +173,7 @@ public class ProblemDetailFragment extends Fragment {
                     }
                     if (problem.getAnswer() != null) {
                         problemAnswerBlock.setVisibility(View.VISIBLE);
-                        problemAnswer.setText(problem.getAnswer());
+                        addProblemSpans(problemAnswer, problem.getAnswer());
                         problemAnswerDate.setText(problem.getAnswerDate());
                     }
                     if (problem.getPhotos() != null) {
@@ -196,12 +198,12 @@ public class ProblemDetailFragment extends Fragment {
             };
 
             legacyApiService.getProblem(request)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    onSuccess,
-                    onError
-                );
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            onSuccess,
+                            onError
+                    );
         } else {
             problemDetailView.setVisibility(View.GONE);
             serverNotRespondingView.setVisibility(View.GONE);
@@ -210,13 +212,17 @@ public class ProblemDetailFragment extends Fragment {
         }
     }
 
+    private void addProblemSpans(TextView textView, String text) {
+        new TextViewDecorator(textView).decorateProblemIdSpans(text);
+    }
+
     private void showNoConnectionSnackbar() {
         if (getActivity() != null) {
             Snackbar.make(getActivity().findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
-                .LENGTH_INDEFINITE)
-                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
-                .setAction(R.string.try_again, v -> getData())
-                .show();
+                    .LENGTH_INDEFINITE)
+                    .setActionTextColor(ContextCompat.getColor(getContext(), R.color.snackbar_action_text))
+                    .setAction(R.string.try_again, v -> getData())
+                    .show();
         } else {
             if (getContext() != null) {
                 Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
@@ -246,7 +252,7 @@ public class ProblemDetailFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE
-            && PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS)) {
+                && PermissionUtils.isAllPermissionsGranted(getActivity(), MainActivity.MAP_PERMISSIONS)) {
             startProblemActivity();
         } else {
             Toast.makeText(getActivity(), R.string.error_need_location_permission, Toast.LENGTH_SHORT).show();
@@ -264,4 +270,5 @@ public class ProblemDetailFragment extends Fragment {
 
         startActivity(intent);
     }
+
 }
