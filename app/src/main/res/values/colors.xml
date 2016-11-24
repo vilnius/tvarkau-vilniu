@@ -30,5 +30,5 @@
     <color name="black_38">#9E9E9E</color>
     <color name="problem_date">#6d6d6d</color>
     <color name="problem_address">#27aae1</color>
-
+    <color name="link_color">#27aae1</color>
 </resources>

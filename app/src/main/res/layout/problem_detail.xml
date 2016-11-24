@@ -102,6 +102,8 @@
                 android:paddingTop="8dp"
                 android:lineSpacingExtra="4sp"
                 android:textColor="@color/black_87"
+                android:textColorLink="@color/link_color"
+                android:autoLink="all"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -137,6 +139,8 @@
                     android:paddingTop="8dp"
                     android:lineSpacingExtra="4sp"
                     android:textColor="@color/black_87"
+                    android:textColorLink="@color/link_color"
+                    android:autoLink="all"
                     android:textSize="14sp" />
 
             </RelativeLayout>
