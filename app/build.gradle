@@ -55,6 +55,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+        unitTests.all {
+            maxHeapSize '2048m'
+            minHeapSize '1600m'
+            jvmArgs "-XX:MaxPermSize=1024m"
+        }
+    }
 }
 
 repositories {
@@ -150,6 +159,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
         transitive = true;
     }
+
+    testCompile "org.robolectric:robolectric:3.1.4"
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
