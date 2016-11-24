@@ -36,7 +36,8 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {
 
-    @Inject LegacyApiService legacyApiService;
+    @Inject
+    LegacyApiService legacyApiService;
 
     private static final int PROBLEM_COUNT_LIMIT_IN_MAP = 200;
 
@@ -61,38 +62,45 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
     private void addMultipleProblemsMarkers() {
 
         GetProblemsParams params = new GetProblemsParams.Builder()
-            .setStart(0)
-            .setLimit(PROBLEM_COUNT_LIMIT_IN_MAP)
-            .setDescriptionFilter(null)
-            .setTypeFilter(null)
-            .setAddressFilter(null)
-            .setReporterFilter(null)
-            .setDateFilter(null)
-            .setStatusFilter(null)
-            .create();
+                .setStart(0)
+                .setLimit(PROBLEM_COUNT_LIMIT_IN_MAP)
+                .setDescriptionFilter(null)
+                .setTypeFilter(null)
+                .setAddressFilter(null)
+                .setReporterFilter(null)
+                .setDateFilter(null)
+                .setStatusFilter(null)
+                .create();
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
-        Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult().size() > 0) {
-                for (Problem problem : apiResponse.getResult()){
-                    placeMarkerOnTheMap(problem, false);
-                }
-                setMarkerInfoWindowAdapter();
-            }
-            else {
-                Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
-            }
+        Action1<List<Problem>> onSuccess = problems -> {
+            populateMarkers();
         };
 
-        Action1<Throwable> onError = LogApp::logCrash;
+        Action1<Throwable> onError = (throwable) -> {
+            Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
+            LogApp.logCrash(throwable);
+        };
 
         legacyApiService.getProblems(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                onSuccess,
-                onError
-            );
+                .toSingle()
+                .map(ApiResponse::getResult)
+                .doOnSuccess(problems -> {
+                    if (problems.isEmpty()) {
+                        throw new IllegalStateException("Empty problem list returned");
+                    }
+                })
+                .doOnSuccess(problems -> {
+                    for (Problem problem : problems) {
+                        problemHashMap.put(problem.getId(), problem);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        onSuccess,
+                        onError
+                );
     }
 
     @Override

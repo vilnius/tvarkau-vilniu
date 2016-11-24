@@ -46,7 +46,7 @@ public class SingleProblemMapFragment extends BaseMapFragment implements OnMapRe
 
     private void addSingleProblemMarker() {
         if (problem != null) {
-            placeMarkerOnTheMap(problem, true);
+            placeAndShowMarker(problem);
             setMapTitle(problem.getAddress());
         }
     }
