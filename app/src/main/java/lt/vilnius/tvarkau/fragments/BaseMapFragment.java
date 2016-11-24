@@ -17,7 +17,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,6 +38,8 @@ public abstract class BaseMapFragment extends SupportMapFragment
         GoogleApiClient.OnConnectionFailedListener {
 
     protected static final LatLng VILNIUS_LAT_LNG = new LatLng(54.687157, 25.279652);
+    private static final float DEFAULT_ZOOM_LEVEL = 15f;
+    private static final float CITY_BOUNDARY_DISTANCE = 15000f; //15km
 
     protected GoogleMap googleMap;
 
@@ -92,12 +93,10 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     private void zoomToMyLocation(GoogleMap map, Location lastLocation) {
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()))
-                .zoom(17f)
-                .build();
-
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()),
+                DEFAULT_ZOOM_LEVEL
+        ));
     }
 
     protected void setMarkerInfoWindowAdapter() {
@@ -174,7 +173,17 @@ public abstract class BaseMapFragment extends SupportMapFragment
         }
 
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApi);
+        boolean isInCityBoundaries = false;
+
         if (lastLocation != null) {
+            float[] results = new float[1];
+            Location.distanceBetween(lastLocation.getLatitude(), lastLocation.getLongitude(),
+                    VILNIUS_LAT_LNG.latitude, VILNIUS_LAT_LNG.longitude, results);
+
+            isInCityBoundaries = results[0] <= CITY_BOUNDARY_DISTANCE;
+        }
+
+        if (isInCityBoundaries) {
             handler.post(() -> zoomToMyLocation(googleMap, lastLocation));
         }
     }
