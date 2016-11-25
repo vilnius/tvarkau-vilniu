@@ -16,6 +16,8 @@ plugins {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.ben-manes.versions'
@@ -71,6 +73,7 @@ repositories {
     maven { url "http://repo.commonsware.com.s3.amazonaws.com" }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 ext {
@@ -161,6 +164,7 @@ dependencies {
     }
 
     testCompile "org.robolectric:robolectric:3.1.4"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
