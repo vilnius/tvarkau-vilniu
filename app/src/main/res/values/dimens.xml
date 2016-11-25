@@ -7,4 +7,6 @@
     <dimen name="home_button_size">80dp</dimen>
 
     <dimen name="problem_status_label_radius">3dp</dimen>
+
+    <dimen name="problem_map_info_thumb_width">100dp</dimen>
 </resources>

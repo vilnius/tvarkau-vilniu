@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
@@ -53,6 +54,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     private GoogleApiClient googleApi;
     private Handler handler;
+    private MapsInfoWindowAdapter infoWindowAdapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -99,13 +101,27 @@ public abstract class BaseMapFragment extends SupportMapFragment
         ));
     }
 
-    protected void setMarkerInfoWindowAdapter() {
-        googleMap.setInfoWindowAdapter(new MapsInfoWindowAdapter(getActivity(), problemHashMap));
+    private void setMarkerInfoWindowAdapter() {
+        infoWindowAdapter = new MapsInfoWindowAdapter(getActivity(), problemHashMap);
+        googleMap.setInfoWindowAdapter(infoWindowAdapter);
     }
 
     protected abstract void initMapData();
 
-    protected void placeMarkerOnTheMap(Problem problem, boolean shouldShowInfoWindow) {
+    protected void populateMarkers() {
+        for (Map.Entry<String, Problem> entry : problemHashMap.entrySet()) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(entry.getValue().getLatLng());
+            markerOptions.title(entry.getKey());
+            markerOptions.icon(getMarkerIcon(entry.getValue()));
+
+            googleMap.addMarker(markerOptions);
+        }
+
+        setMarkerInfoWindowAdapter();
+    }
+
+    protected void placeAndShowMarker(Problem problem) {
         String problemStringId = String.valueOf(problem.getId());
 
         // Hack: Google Map don't have setData method.
@@ -118,18 +134,11 @@ public abstract class BaseMapFragment extends SupportMapFragment
         markerOptions.title(problemStringId);
         markerOptions.icon(getMarkerIcon(problem));
 
-        if (shouldShowInfoWindow) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getLatLng(), 12f));
-            setMarkerInfoWindowAdapter();
-            Marker marker = googleMap.addMarker(markerOptions);
-            marker.setIcon(selectedMarker);
-            marker.showInfoWindow();
-            //  There is a known issue where in InfoWindow the image
-            // doesn't load properly the first time. Need to reload  each time
-            final Handler handler = new Handler();
-            handler.postDelayed(marker::showInfoWindow, 200);
-        } else
-            googleMap.addMarker(markerOptions);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getLatLng(), 12f));
+        setMarkerInfoWindowAdapter();
+        Marker marker = googleMap.addMarker(markerOptions);
+        marker.setIcon(selectedMarker);
+        showMarker(marker);
     }
 
     public BitmapDescriptor getMarkerIcon(Problem problem) {
@@ -154,11 +163,12 @@ public abstract class BaseMapFragment extends SupportMapFragment
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
         marker.setIcon(selectedMarker);
         EventBus.getDefault().post(new MapInfoWindowShownEvent(marker));
-        marker.showInfoWindow();
-        //  There is a known issue where in InfoWindow the image
-        // doesn't load properly the first time. Need to reload  each time
-        handler.postDelayed(marker::showInfoWindow, 200);
+        showMarker(marker);
         return false;
+    }
+
+    private void showMarker(Marker marker) {
+        infoWindowAdapter.showInfoWindow(marker);
     }
 
     public Problem getProblemByMarker(Marker marker) {
@@ -200,6 +210,9 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     @Override
     public void onDestroyView() {
+        if (infoWindowAdapter != null) {
+            infoWindowAdapter.clearMarkerImages();
+        }
         googleMap.setOnMarkerClickListener(null);
         googleMap = null;
         super.onDestroyView();
