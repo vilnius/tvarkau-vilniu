@@ -78,7 +78,6 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 Glide.with(context)
                         .load(problem.getPhotos()[0])
                         .asBitmap()
-                        .centerCrop()
                         .placeholder(R.drawable.ic_placeholder_list_of_reports)
                         .into(getTarget(marker));
             } else {
