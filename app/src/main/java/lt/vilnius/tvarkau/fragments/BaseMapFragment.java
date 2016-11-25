@@ -210,7 +210,9 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     @Override
     public void onDestroyView() {
-        infoWindowAdapter.clearMarkerImages();
+        if (infoWindowAdapter != null) {
+            infoWindowAdapter.clearMarkerImages();
+        }
         googleMap.setOnMarkerClickListener(null);
         googleMap = null;
         super.onDestroyView();
