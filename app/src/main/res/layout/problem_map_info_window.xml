@@ -73,7 +73,7 @@
 
         <ImageView
             android:id="@+id/problem_map_info_window_content_thumb"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/problem_map_info_thumb_width"
             android:layout_height="match_parent"
             android:background="#f0f0f0"
             android:scaleType="center"

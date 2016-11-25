@@ -54,6 +54,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     private GoogleApiClient googleApi;
     private Handler handler;
+    private MapsInfoWindowAdapter infoWindowAdapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -101,7 +102,8 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     private void setMarkerInfoWindowAdapter() {
-        googleMap.setInfoWindowAdapter(new MapsInfoWindowAdapter(getActivity(), problemHashMap));
+        infoWindowAdapter = new MapsInfoWindowAdapter(getActivity(), problemHashMap);
+        googleMap.setInfoWindowAdapter(infoWindowAdapter);
     }
 
     protected abstract void initMapData();
@@ -136,11 +138,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
         setMarkerInfoWindowAdapter();
         Marker marker = googleMap.addMarker(markerOptions);
         marker.setIcon(selectedMarker);
-        marker.showInfoWindow();
-        //  There is a known issue where in InfoWindow the image
-        // doesn't load properly the first time. Need to reload  each time
-        final Handler handler = new Handler();
-        handler.postDelayed(marker::showInfoWindow, 200);
+        showMarker(marker);
     }
 
     public BitmapDescriptor getMarkerIcon(Problem problem) {
@@ -165,11 +163,12 @@ public abstract class BaseMapFragment extends SupportMapFragment
         getActivity().setTitle(getProblemByMarker(marker).getAddress());
         marker.setIcon(selectedMarker);
         EventBus.getDefault().post(new MapInfoWindowShownEvent(marker));
-        marker.showInfoWindow();
-        //  There is a known issue where in InfoWindow the image
-        // doesn't load properly the first time. Need to reload  each time
-        handler.postDelayed(marker::showInfoWindow, 200);
+        showMarker(marker);
         return false;
+    }
+
+    private void showMarker(Marker marker) {
+        infoWindowAdapter.showInfoWindow(marker);
     }
 
     public Problem getProblemByMarker(Marker marker) {
@@ -211,6 +210,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
 
     @Override
     public void onDestroyView() {
+        infoWindowAdapter.clearMarkerImages();
         googleMap.setOnMarkerClickListener(null);
         googleMap = null;
         super.onDestroyView();
