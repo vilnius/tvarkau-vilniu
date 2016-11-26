@@ -80,7 +80,7 @@ ext {
     junitVersion = '4.12'
     supportLibraryVersion = '25.0.1'
     playServicesVersion = '10.0.0'
-    butterKnifeVersion = '8.0.1'
+    butterKnifeVersion = '8.4.0'
     glideVersion = '3.7.0'
     icepickVersion = '3.2.0'
     retrofitVersion = '2.1.0'
