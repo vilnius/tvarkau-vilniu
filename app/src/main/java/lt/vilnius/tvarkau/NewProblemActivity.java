@@ -3,7 +3,6 @@ package lt.vilnius.tvarkau;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -43,11 +42,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -56,8 +50,6 @@ import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetNewProblemParams;
-import lt.vilnius.tvarkau.backend.LegacyApiModule;
-import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.ImageUtils;
@@ -77,13 +69,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
-@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
-@AutoInjector
-@Singleton
 public class NewProblemActivity extends BaseActivity {
-
-    @Inject LegacyApiService legacyApiService;
-    @Inject SharedPreferences myProblemsPreferences;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
@@ -143,16 +129,7 @@ public class NewProblemActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_problem);
-
         ButterKnife.bind(this);
-
-        DaggerNewProblemActivityComponent
-            .builder()
-            .appModule(new AppModule(this.getApplication()))
-            .sharedPreferencesModule(new SharedPreferencesModule())
-            .legacyApiModule(new LegacyApiModule())
-            .build()
-            .inject(this);
 
         prefsManager = SharedPrefsManager.getInstance(this);
 
@@ -205,20 +182,20 @@ public class NewProblemActivity extends BaseActivity {
 
             if (imagesURIs != null) {
                 photoObservable = Observable.from(imagesURIs)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .map(uri -> Uri.fromFile(new File(ImageUtils.getPhotoPathFromUri(this, uri))))
-                    .map(ImageUtils::convertToBase64EncodedString)
-                    .toList()
-                    .map(encodedPhotos -> {
-                        if (encodedPhotos.size() > 0) {
-                            String[] encodedPhotosArray = new String[encodedPhotos.size()];
-                            encodedPhotos.toArray(encodedPhotosArray);
-                            return encodedPhotosArray;
-                        } else {
-                            return null;
-                        }
-                    });
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .map(uri -> Uri.fromFile(new File(ImageUtils.getPhotoPathFromUri(this, uri))))
+                        .map(ImageUtils::convertToBase64EncodedString)
+                        .toList()
+                        .map(encodedPhotos -> {
+                            if (encodedPhotos.size() > 0) {
+                                String[] encodedPhotosArray = new String[encodedPhotos.size()];
+                                encodedPhotos.toArray(encodedPhotosArray);
+                                return encodedPhotosArray;
+                            } else {
+                                return null;
+                            }
+                        });
             } else {
                 photoObservable = Observable.just(null);
             }
@@ -227,9 +204,9 @@ public class NewProblemActivity extends BaseActivity {
                 if (apiResponse.getResult() != null) {
                     String newProblemId = apiResponse.getResult().toString();
                     myProblemsPreferences
-                        .edit()
-                        .putString(PROBLEM_PREFERENCE_KEY + newProblemId, newProblemId)
-                        .apply();
+                            .edit()
+                            .putString(PROBLEM_PREFERENCE_KEY + newProblemId, newProblemId)
+                            .apply();
                     EventBus.getDefault().post(new NewProblemAddedEvent());
                     progressDialog.dismiss();
                     if (reportProblemDescription.hasFocus()) {
@@ -260,30 +237,30 @@ public class NewProblemActivity extends BaseActivity {
             }
 
             photoObservable
-                .subscribeOn(Schedulers.io())
-                .flatMap(encodedPhotos ->
-                    Observable.just(
-                        new GetNewProblemParams.Builder()
-                            .setSessionId(null)
-                            .setDescription(reportProblemDescription.getText().toString())
-                            .setType(reportType)
-                            .setAddress(address)
-                            .setLatitude(locationCords.latitude)
-                            .setLongitude(locationCords.longitude)
-                            .setPhoto(encodedPhotos)
-                            .setEmail(reporterEmail)
-                            .setPhone(reporterPhone)
-                            .setNameOfReporter(reporterName)
-                            .setDateOfBirth(reporterDateOfBirth)
-                            .setMessageDescription(null)
-                            .create())
-                ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
-                .flatMap(request -> legacyApiService.postNewProblem(request))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    onSuccess,
-                    onError
-                );
+                    .subscribeOn(Schedulers.io())
+                    .flatMap(encodedPhotos ->
+                            Observable.just(
+                                    new GetNewProblemParams.Builder()
+                                            .setSessionId(null)
+                                            .setDescription(reportProblemDescription.getText().toString())
+                                            .setType(reportType)
+                                            .setAddress(address)
+                                            .setLatitude(locationCords.latitude)
+                                            .setLongitude(locationCords.longitude)
+                                            .setPhoto(encodedPhotos)
+                                            .setEmail(reporterEmail)
+                                            .setPhone(reporterPhone)
+                                            .setNameOfReporter(reporterName)
+                                            .setDateOfBirth(reporterDateOfBirth)
+                                            .setMessageDescription(null)
+                                            .create())
+                    ).map(params -> new ApiRequest<>(ApiMethod.NEW_PROBLEM, params))
+                    .flatMap(request -> legacyApiService.postNewProblem(request))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            onSuccess,
+                            onError
+                    );
         }
     }
 
@@ -325,22 +302,22 @@ public class NewProblemActivity extends BaseActivity {
         if (reportType.equals("Transporto priemonių stovėjimo tvarkos pažeidimai") && (prefsManager.isUserAnonymous())) {
 
             new AlertDialog.Builder(this, R.style.MyDialogTheme)
-                .setTitle(getString(R.string.personal_data_disabled))
-                .setMessage(getString(R.string.share_personal_data))
-                .setPositiveButton(getString(R.string.add), (dialog, which) -> {
-                    if (prefsManager.isUserDetailsSaved()) {
-                        fillReportTypeField();
-                        Toast.makeText(getApplicationContext(), R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
-                        prefsManager.changeUserAnonymityStatus(false);
-                        dialog.dismiss();
-                    } else {
-                        Intent intent = new Intent(getApplicationContext(), ProfileEditActivity.class);
-                        startActivityForResult(intent, REQUEST_PERSONAL_DATA);
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> showReportTypePicker())
-                .show();
+                    .setTitle(getString(R.string.personal_data_disabled))
+                    .setMessage(getString(R.string.share_personal_data))
+                    .setPositiveButton(getString(R.string.add), (dialog, which) -> {
+                        if (prefsManager.isUserDetailsSaved()) {
+                            fillReportTypeField();
+                            Toast.makeText(getApplicationContext(), R.string.personal_data_sharing_enabled, Toast.LENGTH_SHORT).show();
+                            prefsManager.changeUserAnonymityStatus(false);
+                            dialog.dismiss();
+                        } else {
+                            Intent intent = new Intent(getApplicationContext(), ProfileEditActivity.class);
+                            startActivityForResult(intent, REQUEST_PERSONAL_DATA);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> showReportTypePicker())
+                    .show();
             return false;
         } else {
             fillReportTypeField();
@@ -362,10 +339,10 @@ public class NewProblemActivity extends BaseActivity {
         TextView galleryButton = ButterKnife.findById(view, R.id.gallery_button);
 
         imagePickerDialogBuilder
-            .setTitle(this.getResources().getString(R.string.add_photos))
-            .setView(view)
-            .setPositiveButton(R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
-            .create();
+                .setTitle(this.getResources().getString(R.string.add_photos))
+                .setView(view)
+                .setPositiveButton(R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
+                .create();
 
         AlertDialog imagePickerDialog = imagePickerDialogBuilder.show();
 
@@ -441,9 +418,9 @@ public class NewProblemActivity extends BaseActivity {
 
     private boolean isEditedByUser() {
         return reportProblemDescription.getText().length() > 0
-            || reportProblemLocation.getText().length() > 0
-            || (reportType != null && reportType.length() > 0)
-            || (imagesURIs != null && imagesURIs.size() > 0);
+                || reportProblemLocation.getText().length() > 0
+                || (reportType != null && reportType.length() > 0)
+                || (imagesURIs != null && imagesURIs.size() > 0);
     }
 
     @Override
@@ -453,11 +430,11 @@ public class NewProblemActivity extends BaseActivity {
         }
         if (isEditedByUser()) {
             new AlertDialog.Builder(this, R.style.MyDialogTheme)
-                .setMessage(getString(R.string.discard_changes_title))
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
-                    NewProblemActivity.super.onBackPressed())
-                .setNegativeButton(R.string.discard_changes_negative, null).show();
+                    .setMessage(getString(R.string.discard_changes_title))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
+                            NewProblemActivity.super.onBackPressed())
+                    .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();
         }
@@ -573,13 +550,13 @@ public class NewProblemActivity extends BaseActivity {
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             Timber.e(e);
             Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.open, v -> {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com" +
-                        ".google.android.gms"));
-                    startActivity(intent);
-                })
-                .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
-                .show();
+                    .setAction(R.string.open, v -> {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com" +
+                                ".google.android.gms"));
+                        startActivity(intent);
+                    })
+                    .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
+                    .show();
         }
     }
 }

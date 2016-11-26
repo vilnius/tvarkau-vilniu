@@ -3,11 +3,9 @@ package lt.vilnius.tvarkau.network;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import dagger.Lazy;
+import lt.vilnius.tvarkau.dagger.module.APIModule;
 import lt.vilnius.tvarkau.entity.Token;
 import lt.vilnius.tvarkau.utils.Authentication;
 import okhttp3.Authenticator;
@@ -18,9 +16,6 @@ import okhttp3.Route;
 /**
  * Adapted https://github.com/square/okhttp/wiki/Recipes#handling-authentication
  */
-@AutoComponent(modules = APIModule.class)
-@AutoInjector
-@Singleton
 public class TokenAuthenticator implements Authenticator {
 
     protected static final int MAX_RETRIES = 3;

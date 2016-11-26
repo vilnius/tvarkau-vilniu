@@ -24,23 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
-import lt.vilnius.tvarkau.SharedPreferencesModule;
+import lt.vilnius.tvarkau.TvarkauApplication;
 import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemsParams;
 import lt.vilnius.tvarkau.backend.GetVilniusSignParams;
-import lt.vilnius.tvarkau.backend.LegacyApiModule;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
@@ -54,9 +49,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
-@AutoInjector
-@Singleton
 public class ReportImportDialogFragment extends DialogFragment {
 
     @Inject LegacyApiService legacyApiService;
@@ -100,17 +92,15 @@ public class ReportImportDialogFragment extends DialogFragment {
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         prefsManager = SharedPrefsManager.getInstance(getActivity());
 
-        DaggerReportImportDialogFragmentComponent
-            .builder()
-            .appModule(new AppModule(this.getActivity().getApplication()))
-            .legacyApiModule(new LegacyApiModule())
-            .build()
-            .inject(this);
-
         isSettingsActivity = getArguments().getBoolean(IS_SETTINGS_ACTIVITY);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((TvarkauApplication) getActivity().getApplication()).getComponent().inject(this);
     }
 
     public interface SettingsVilniusSignInListener {

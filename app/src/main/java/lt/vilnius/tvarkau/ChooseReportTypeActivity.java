@@ -2,25 +2,17 @@ package lt.vilnius.tvarkau;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemTypesParams;
-import lt.vilnius.tvarkau.backend.LegacyApiModule;
-import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -29,12 +21,7 @@ import timber.log.Timber;
 
 import static lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter.ReportTypeSelectedListener;
 
-@AutoComponent(modules = {LegacyApiModule.class})
-@AutoInjector
-@Singleton
-public class ChooseReportTypeActivity extends AppCompatActivity implements ReportTypeSelectedListener {
-
-    @Inject LegacyApiService legacyApiService;
+public class ChooseReportTypeActivity extends BaseActivity implements ReportTypeSelectedListener {
 
     public static final String EXTRA_REPORT_TYPE = "ChooseReportTypeActivity.reportType";
 
@@ -46,13 +33,6 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DaggerChooseReportTypeActivityComponent
-            .builder()
-            .legacyApiModule(new LegacyApiModule())
-            .build()
-            .inject(this);
-
         setContentView(R.layout.activity_choose_report_type);
 
         ButterKnife.bind(this);
@@ -94,12 +74,12 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
         ApiRequest<GetProblemTypesParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEM_TYPES, null);
 
         legacyApiService.getProblemTypes(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                onSuccess,
-                onError
-            );
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        onSuccess,
+                        onError
+                );
     }
 
     @Override
