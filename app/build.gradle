@@ -166,6 +166,8 @@ dependencies {
 
     testCompile "org.robolectric:robolectric:3.1.4"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    compile 'com.jakewharton.timber:timber:4.3.1'
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
