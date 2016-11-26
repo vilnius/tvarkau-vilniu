@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.fragments;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -127,5 +128,10 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
 
         map.setOnInfoWindowClickListener(this);
         map.setOnInfoWindowCloseListener(this);
+    }
+
+    @Override
+    public void onLocationInsideCity(Location location) {
+        zoomToMyLocation(googleMap, location);
     }
 }

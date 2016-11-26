@@ -94,7 +94,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
         initMapData();
     }
 
-    private void zoomToMyLocation(GoogleMap map, Location lastLocation) {
+    protected void zoomToMyLocation(GoogleMap map, Location lastLocation) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()),
                 DEFAULT_ZOOM_LEVEL
@@ -194,8 +194,11 @@ public abstract class BaseMapFragment extends SupportMapFragment
         }
 
         if (isInCityBoundaries) {
-            handler.post(() -> zoomToMyLocation(googleMap, lastLocation));
+            handler.post(() -> onLocationInsideCity(lastLocation));
         }
+    }
+
+    public void onLocationInsideCity(Location location) {
     }
 
     @Override
