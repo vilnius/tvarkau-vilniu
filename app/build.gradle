@@ -76,7 +76,7 @@ repositories {
 ext {
     junitVersion = '4.12'
     supportLibraryVersion = '25.0.0'
-    playServicesVersion = '9.0.2'
+    playServicesVersion = '10.0.0'
     butterKnifeVersion = '8.0.1'
     glideVersion = '3.7.0'
     icepickVersion = '3.2.0'
@@ -110,6 +110,7 @@ dependencies {
 
     compile "com.google.android.gms:play-services-maps:$playServicesVersion"
     compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.android.gms:play-services-places:$playServicesVersion"
     compile "com.google.android.gms:play-services-auth:$playServicesVersion"
 
     compile "com.google.firebase:firebase-core:$playServicesVersion"
