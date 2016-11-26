@@ -27,7 +27,6 @@ import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.MainActivity;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.ProblemsListActivity;
@@ -49,6 +48,7 @@ import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * A fragment representing a single Problem detail screen.
@@ -190,7 +190,7 @@ public class ProblemDetailFragment extends Fragment {
             };
 
             Action1<Throwable> onError = throwable -> {
-                LogApp.logCrash(throwable);
+                Timber.e(throwable);
                 noInternetView.setVisibility(View.GONE);
                 problemDetailView.setVisibility(View.GONE);
                 serverNotRespondingView.setVisibility(View.VISIBLE);

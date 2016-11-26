@@ -5,7 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import lt.vilnius.tvarkau.LogApp;
+import timber.log.Timber;
+
 
 /**
  * Hacky fix for Issue #4 and
@@ -35,7 +36,7 @@ public class HackyViewPager extends ViewPager {
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            LogApp.logCrash(e);
+            Timber.e(e);
             return false;
         }
     }

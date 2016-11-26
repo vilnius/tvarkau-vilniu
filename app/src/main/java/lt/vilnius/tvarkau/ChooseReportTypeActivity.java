@@ -25,6 +25,7 @@ import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter.ReportTypeSelectedListener;
 
@@ -85,7 +86,7 @@ public class ChooseReportTypeActivity extends AppCompatActivity implements Repor
         };
 
         Action1<Throwable> onError = throwable -> {
-            LogApp.logCrash(throwable);
+            Timber.e(throwable);
             Toast.makeText(getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
             finish();
         };

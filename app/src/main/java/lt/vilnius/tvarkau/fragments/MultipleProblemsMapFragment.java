@@ -15,7 +15,6 @@ import javax.inject.Singleton;
 
 import autodagger.AutoComponent;
 import autodagger.AutoInjector;
-import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.backend.ApiMethod;
@@ -28,6 +27,7 @@ import lt.vilnius.tvarkau.entity.Problem;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 @AutoComponent(modules = LegacyApiModule.class)
 @AutoInjector
@@ -79,7 +79,7 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
 
         Action1<Throwable> onError = (throwable) -> {
             Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
-            LogApp.logCrash(throwable);
+            Timber.e(throwable);
         };
 
         legacyApiService.getProblems(request)

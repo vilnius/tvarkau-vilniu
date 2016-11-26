@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.entity.Profile;
+import timber.log.Timber;
 
 /**
  * Managing user's shared Preferences.
@@ -77,7 +77,7 @@ public class SharedPrefsManager {
                 return new Profile();
             }
         } catch (JsonSyntaxException e) {
-            LogApp.logCrash(e);
+            Timber.e(e);
             return null;
         }
     }
