@@ -75,7 +75,7 @@ repositories {
 
 ext {
     junitVersion = '4.12'
-    supportLibraryVersion = '25.0.0'
+    supportLibraryVersion = '25.0.1'
     playServicesVersion = '10.0.0'
     butterKnifeVersion = '8.0.1'
     glideVersion = '3.7.0'
