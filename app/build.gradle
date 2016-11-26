@@ -86,7 +86,6 @@ ext {
     retrofitVersion = '2.1.0'
     gsonVersion = '2.8.0'
     daggerVersion = '2.8'
-    autoDaggerVersion = '1.1'
     javaxAnnotationVersion = '1.0'
     viewPagerIndicatorVersion = '2.4.1.1@aar'
     tedPickerVersion = 'v1.0.10'
@@ -135,9 +134,6 @@ dependencies {
 
     compile "com.google.dagger:dagger:$daggerVersion"
     apt "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    apt "com.github.lukaspili.autodagger2:autodagger2-compiler:$autoDaggerVersion"
-    compile "com.github.lukaspili.autodagger2:autodagger2:$autoDaggerVersion"
 
     provided "javax.annotation:jsr250-api:$javaxAnnotationVersion"
 

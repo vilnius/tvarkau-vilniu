@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
@@ -36,7 +34,7 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import static android.app.Activity.RESULT_OK;
 
 
-public class MyProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class MyProfileFragment extends BaseFragment implements DatePickerDialog.OnDateSetListener {
 
     private SharedPrefsManager prefsManager;
 

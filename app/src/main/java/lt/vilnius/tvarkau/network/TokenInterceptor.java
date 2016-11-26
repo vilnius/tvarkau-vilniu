@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.network;
 
 import java.io.IOException;
 
+import lt.vilnius.tvarkau.dagger.module.APIModule;
 import lt.vilnius.tvarkau.entity.Token;
 import lt.vilnius.tvarkau.utils.Authentication;
 import okhttp3.Interceptor;

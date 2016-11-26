@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -19,11 +18,6 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -36,8 +30,6 @@ import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemParams;
-import lt.vilnius.tvarkau.backend.LegacyApiModule;
-import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.decorators.TextViewDecorator;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.utils.FormatUtils;
@@ -56,10 +48,7 @@ import timber.log.Timber;
  * in two-pane mode (on tablets) or a {@link ProblemDetailActivity}
  * on handsets.
  */
-@AutoComponent(modules = LegacyApiModule.class)
-@AutoInjector
-@Singleton
-public class ProblemDetailFragment extends Fragment {
+public class ProblemDetailFragment extends BaseFragment {
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -67,9 +56,6 @@ public class ProblemDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
     public static final String KEY_PROBLEM = "problem";
-
-    @Inject
-    LegacyApiService legacyApiService;
 
     @BindView(R.id.problem_detail_view)
     LinearLayout problemDetailView;
@@ -129,8 +115,6 @@ public class ProblemDetailFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.problem_detail, container, false);
-
-        DaggerProblemDetailFragmentComponent.create().inject(this);
 
         ButterKnife.bind(this, rootView);
         problemDetailView.setVisibility(View.VISIBLE);

@@ -25,7 +25,11 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import lt.vilnius.tvarkau.R;
+import lt.vilnius.tvarkau.TvarkauApplication;
+import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent;
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter;
@@ -36,6 +40,9 @@ public abstract class BaseMapFragment extends SupportMapFragment
         implements GoogleMap.OnMarkerClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+
+    @Inject
+    LegacyApiService legacyApiService;
 
     protected static final LatLng VILNIUS_LAT_LNG = new LatLng(54.687157, 25.279652);
     private static final float DEFAULT_ZOOM_LEVEL = 15f;
@@ -57,6 +64,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         handler = new Handler();
+        ((TvarkauApplication) getActivity().getApplication()).getComponent().inject(this);
 
         setMarkerResources();
 

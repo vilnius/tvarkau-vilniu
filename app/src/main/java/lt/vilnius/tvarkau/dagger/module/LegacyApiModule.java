@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.backend;
+package lt.vilnius.tvarkau.dagger.module;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import lt.vilnius.tvarkau.BuildConfig;
+import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.network.TokenAuthenticator;
 import lt.vilnius.tvarkau.network.TokenInterceptor;
 import okhttp3.OkHttpClient;

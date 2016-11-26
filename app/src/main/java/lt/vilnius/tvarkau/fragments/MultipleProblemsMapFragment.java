@@ -11,42 +11,30 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemsParams;
-import lt.vilnius.tvarkau.backend.LegacyApiModule;
-import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Problem;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-@AutoComponent(modules = LegacyApiModule.class)
-@AutoInjector
 @Singleton
 public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {
-
-    @Inject
-    LegacyApiService legacyApiService;
 
     private static final int PROBLEM_COUNT_LIMIT_IN_MAP = 200;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        DaggerMultipleProblemsMapFragmentComponent.create().inject(this);
 
         getMapAsync(this);
     }

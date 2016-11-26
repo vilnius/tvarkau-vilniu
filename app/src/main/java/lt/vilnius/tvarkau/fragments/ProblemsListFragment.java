@@ -1,10 +1,8 @@
 package lt.vilnius.tvarkau.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,25 +20,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import autodagger.AutoComponent;
-import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
-import lt.vilnius.tvarkau.SharedPreferencesModule;
 import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemParams;
 import lt.vilnius.tvarkau.backend.GetProblemsParams;
-import lt.vilnius.tvarkau.backend.LegacyApiModule;
-import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.EndlessRecyclerViewScrollListener;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
@@ -54,13 +43,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-@AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
-@AutoInjector
-@Singleton
-public class ProblemsListFragment extends Fragment {
-
-    @Inject LegacyApiService legacyApiService;
-    @Inject SharedPreferences myProblemsPreferences;
+public class ProblemsListFragment extends BaseFragment {
 
     @BindView(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.problem_list) RecyclerView recyclerView;
@@ -102,15 +85,6 @@ public class ProblemsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DaggerProblemsListFragmentComponent
-            .builder()
-            .appModule(new AppModule(this.getActivity().getApplication()))
-            .sharedPreferencesModule(new SharedPreferencesModule())
-            .legacyApiModule(new LegacyApiModule())
-            .build()
-            .inject(this);
-
         if (getArguments() != null) {
             isAllProblemList = getArguments().getBoolean(ALL_PROBLEM_LIST);
         }
@@ -159,16 +133,20 @@ public class ProblemsListFragment extends Fragment {
         noInternetView.setVisibility(View.GONE);
         serverNotRespondingView.setVisibility(View.GONE);
 
-        if (problemList.size() == 0 && shouldLoadMoreProblems) {
-            getData(0);
-        }
-
         myProblemsImport.setOnClickListener(v -> {
             OnImportReportClickListener listener = (OnImportReportClickListener) (getActivity());
             listener.onImportReportClick();
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (problemList.size() == 0 && shouldLoadMoreProblems) {
+            getData(0);
+        }
     }
 
     private void reloadData() {
