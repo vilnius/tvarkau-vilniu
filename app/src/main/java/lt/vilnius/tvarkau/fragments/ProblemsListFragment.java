@@ -31,7 +31,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.AppModule;
-import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.SharedPreferencesModule;
@@ -53,6 +52,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 @AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
 @AutoInjector
@@ -256,7 +256,7 @@ public class ProblemsListFragment extends Fragment {
             };
 
             Action1<Throwable> onError = throwable -> {
-                LogApp.logCrash(throwable);
+                Timber.e(throwable);
                 if (getView() != null) {
                     serverNotRespondingView.setVisibility(View.VISIBLE);
                     adapter.hideLoader();
@@ -301,7 +301,7 @@ public class ProblemsListFragment extends Fragment {
         };
 
         Action1<Throwable> onError = throwable -> {
-            LogApp.logCrash(throwable);
+            Timber.e(throwable);
             serverNotRespondingView.setVisibility(View.VISIBLE);
             adapter.hideLoader();
             swipeContainer.setRefreshing(false);

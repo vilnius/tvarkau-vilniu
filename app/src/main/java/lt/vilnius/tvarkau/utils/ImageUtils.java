@@ -10,13 +10,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import lt.vilnius.tvarkau.LogApp;
+import timber.log.Timber;
 
 public class ImageUtils {
 
@@ -62,7 +61,7 @@ public class ImageUtils {
         try {
             exif = new ExifInterface(filePath);
         } catch (IOException e) {
-            LogApp.logCrash(e);
+            Timber.e(e);
         }
         if (exif != null) {
             String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
@@ -141,7 +140,7 @@ public class ImageUtils {
             File mediaStorageDir = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "TvarkauVilniu");
 
             if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-                Log.d("ImageUtils", "Failed to create directory");
+                Timber.d("Failed to create directory");
             }
 
             return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));

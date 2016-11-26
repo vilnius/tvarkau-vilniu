@@ -22,7 +22,6 @@ public class TvarkauApplication extends Application {
         } else {
             Fabric.with(this, new Crashlytics());
 
-
             Timber.plant(new RemoteCrashReportingTree());
         }
 

@@ -32,7 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.AppModule;
-import lt.vilnius.tvarkau.LogApp;
 import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.SharedPreferencesModule;
@@ -53,6 +52,7 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 @AutoComponent(modules = {LegacyApiModule.class, AppModule.class, SharedPreferencesModule.class})
 @AutoInjector
@@ -197,7 +197,7 @@ public class ReportImportDialogFragment extends DialogFragment {
                     };
 
                     Action1<Throwable> onError = throwable -> {
-                        LogApp.logCrash(throwable);
+                        Timber.e(throwable);
                         vilniusAccountLoginError.setVisibility(View.VISIBLE);
                         vilniusAccountLoginError.setText(R.string.error_on_vilnius_sign);
                     };
@@ -304,7 +304,7 @@ public class ReportImportDialogFragment extends DialogFragment {
             Toast.makeText(getContext(), R.string.error_loading_reports_from_vilnius_account,
                 Toast.LENGTH_SHORT).show();
             throwable.printStackTrace();
-            LogApp.logCrash(throwable);
+            Timber.e(throwable);
         };
 
         legacyApiService.getProblems(request)

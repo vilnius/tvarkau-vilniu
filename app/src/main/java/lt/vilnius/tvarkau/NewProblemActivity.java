@@ -58,7 +58,6 @@ import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetNewProblemParams;
 import lt.vilnius.tvarkau.backend.LegacyApiModule;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
-import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.ImageUtils;
@@ -70,6 +69,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
@@ -242,7 +242,7 @@ public class NewProblemActivity extends BaseActivity {
             };
 
             Action1<Throwable> onError = throwable -> {
-                LogApp.logCrash(throwable);
+                Timber.e(throwable);
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.error_submitting_problem, Toast.LENGTH_SHORT).show();
             };
@@ -492,7 +492,7 @@ public class NewProblemActivity extends BaseActivity {
                     try {
                         addresses = geocoder.getFromLocation(locationCords.latitude, locationCords.longitude, 1);
                     } catch (IOException e) {
-                        LogApp.logCrash(e);
+                        Timber.e(e);
                     }
                     if (addresses != null && addresses.size() > 0) {
                         if (addresses.get(0).getLocality() != null) {
@@ -571,7 +571,7 @@ public class NewProblemActivity extends BaseActivity {
             Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
             ActivityCompat.startActivityForResult(this, intent, REQUEST_PLACE_PICKER, bundle);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            LogApp.logCrash(e);
+            Timber.e(e);
             Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.open, v -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com" +
