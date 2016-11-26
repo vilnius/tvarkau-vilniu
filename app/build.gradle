@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
         classpath 'io.fabric.tools:gradle:1.22.0'
     }
 }
@@ -81,7 +81,7 @@ ext {
     glideVersion = '3.7.0'
     icepickVersion = '3.2.0'
     retrofitVersion = '2.0.2'
-    gsonVersion = '2.6.2'
+    gsonVersion = '2.8.0'
     daggerVersion = '2.4'
     autoDaggerVersion = '1.1'
     javaxAnnotationVersion = '1.0'
