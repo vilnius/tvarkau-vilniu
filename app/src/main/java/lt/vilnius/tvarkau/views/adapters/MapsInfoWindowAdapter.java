@@ -32,7 +32,6 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private final Map<Marker, Bitmap> images = new HashMap<>();
     private final Map<Marker, Target<Bitmap>> targets = new HashMap<>();
 
-    protected HashMap<String, Problem> problemHashMap;
     protected View view;
     protected Context context;
 
@@ -50,8 +49,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private Marker currentMarker;
     private int thumbWidth;
 
-    public MapsInfoWindowAdapter(Activity activity, HashMap<String, Problem> problemHashMap) {
-        this.problemHashMap = problemHashMap;
+    public MapsInfoWindowAdapter(Activity activity) {
         context = activity;
         view = activity.getLayoutInflater().inflate(R.layout.problem_map_info_window, null);
         thumbWidth = context.getResources().getDimensionPixelSize(R.dimen.problem_map_info_thumb_width);
@@ -60,7 +58,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
-        Problem problem = problemHashMap.get(marker.getTitle());
+        Problem problem = (Problem) marker.getTag();
 
         descriptionView.setText(problem.getDescription());
 
