@@ -23,8 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
@@ -49,8 +48,6 @@ public abstract class BaseMapFragment extends SupportMapFragment
     protected BitmapDescriptor registeredMarker;
     protected BitmapDescriptor transferredMarker;
     protected BitmapDescriptor selectedMarker;
-
-    protected HashMap<String, Problem> problemHashMap = new HashMap<>();
 
     private GoogleApiClient googleApi;
     private Handler handler;
@@ -94,7 +91,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
         initMapData();
     }
 
-    private void zoomToMyLocation(GoogleMap map, Location lastLocation) {
+    protected void zoomToMyLocation(GoogleMap map, Location lastLocation) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()),
                 DEFAULT_ZOOM_LEVEL
@@ -102,41 +99,34 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     private void setMarkerInfoWindowAdapter() {
-        infoWindowAdapter = new MapsInfoWindowAdapter(getActivity(), problemHashMap);
+        infoWindowAdapter = new MapsInfoWindowAdapter(getActivity());
         googleMap.setInfoWindowAdapter(infoWindowAdapter);
     }
 
     protected abstract void initMapData();
 
-    protected void populateMarkers() {
-        for (Map.Entry<String, Problem> entry : problemHashMap.entrySet()) {
+    protected void populateMarkers(List<Problem> problems) {
+        for (Problem problem: problems) {
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(entry.getValue().getLatLng());
-            markerOptions.title(entry.getKey());
-            markerOptions.icon(getMarkerIcon(entry.getValue()));
+            markerOptions.position(problem.getLatLng());
+            markerOptions.icon(getMarkerIcon(problem));
 
-            googleMap.addMarker(markerOptions);
+            Marker marker = googleMap.addMarker(markerOptions);
+            marker.setTag(problem);
         }
 
         setMarkerInfoWindowAdapter();
     }
 
     protected void placeAndShowMarker(Problem problem) {
-        String problemStringId = String.valueOf(problem.getId());
-
-        // Hack: Google Map don't have setData method.
-        // There is no easy way to get problem from marker.
-        // Set problem id as marker title and keep hashmap of problems with ids
-        problemHashMap.put(problemStringId, problem);
-
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(problem.getLatLng());
-        markerOptions.title(problemStringId);
         markerOptions.icon(getMarkerIcon(problem));
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getLatLng(), 12f));
         setMarkerInfoWindowAdapter();
         Marker marker = googleMap.addMarker(markerOptions);
+        marker.setTag(problem);
         marker.setIcon(selectedMarker);
         showMarker(marker);
     }
@@ -172,7 +162,7 @@ public abstract class BaseMapFragment extends SupportMapFragment
     }
 
     public Problem getProblemByMarker(Marker marker) {
-        return problemHashMap.get(marker.getTitle());
+        return (Problem) marker.getTag();
     }
 
     @Override
@@ -194,8 +184,11 @@ public abstract class BaseMapFragment extends SupportMapFragment
         }
 
         if (isInCityBoundaries) {
-            handler.post(() -> zoomToMyLocation(googleMap, lastLocation));
+            handler.post(() -> onLocationInsideCity(lastLocation));
         }
+    }
+
+    public void onLocationInsideCity(Location location) {
     }
 
     @Override

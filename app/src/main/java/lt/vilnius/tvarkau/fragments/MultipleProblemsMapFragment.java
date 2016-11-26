@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.fragments;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -73,9 +74,7 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
                 .create();
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
-        Action1<List<Problem>> onSuccess = problems -> {
-            populateMarkers();
-        };
+        Action1<List<Problem>> onSuccess = this::populateMarkers;
 
         Action1<Throwable> onError = (throwable) -> {
             Toast.makeText(getContext(), R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show();
@@ -88,11 +87,6 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
                 .doOnSuccess(problems -> {
                     if (problems.isEmpty()) {
                         throw new IllegalStateException("Empty problem list returned");
-                    }
-                })
-                .doOnSuccess(problems -> {
-                    for (Problem problem : problems) {
-                        problemHashMap.put(problem.getId(), problem);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -127,5 +121,10 @@ public class MultipleProblemsMapFragment extends BaseMapFragment implements OnMa
 
         map.setOnInfoWindowClickListener(this);
         map.setOnInfoWindowCloseListener(this);
+    }
+
+    @Override
+    public void onLocationInsideCity(Location location) {
+        zoomToMyLocation(googleMap, location);
     }
 }
