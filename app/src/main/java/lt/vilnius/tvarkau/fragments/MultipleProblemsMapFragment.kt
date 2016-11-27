@@ -10,12 +10,10 @@ import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.backend.ApiMethod
 import lt.vilnius.tvarkau.backend.ApiRequest
-import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.entity.Problem
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
-import rx.functions.Func1
 import rx.schedulers.Schedulers
 import timber.log.Timber
 
@@ -58,7 +56,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
         legacyApiService.getProblems(request)
                 .toSingle()
-                .map<List<Problem>>(Func1<ApiResponse<List<Problem>>, List<Problem>> { it.getResult() })
+                .map { it.result }
                 .doOnSuccess { problems ->
                     if (problems.isEmpty()) {
                         throw IllegalStateException("Empty problem list returned")
@@ -73,7 +71,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        val problemId = getProblemByMarker(marker).getId()
+        val problemId = (marker.tag as Problem).getId()
 
         val intent = ProblemDetailActivity.getStartActivityIntent(activity, problemId)
 
@@ -81,7 +79,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClose(marker: Marker) {
-        val problem = getProblemByMarker(marker)
+        val problem = marker.tag as Problem
 
         activity.setTitle(R.string.title_problems_map)
 

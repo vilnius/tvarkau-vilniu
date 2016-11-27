@@ -44,8 +44,8 @@ class ProblemsMapActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (infoWindowMarker != null && infoWindowMarker!!.isInfoWindowShown) {
-            infoWindowMarker?.hideInfoWindow()
+        if (infoWindowMarker?.isInfoWindowShown ?: false) {
+            infoWindowMarker!!.hideInfoWindow()
         } else {
             super.onBackPressed()
         }

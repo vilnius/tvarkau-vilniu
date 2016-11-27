@@ -23,9 +23,10 @@ import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
-
-
-abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+abstract class BaseMapFragment : SupportMapFragment(),
+        GoogleMap.OnMarkerClickListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     protected var googleMap: GoogleMap? = null
 
@@ -36,8 +37,9 @@ abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickLi
     protected val selectedMarker: BitmapDescriptor  by lazy { BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_selected) }
 
     private var googleApi: GoogleApiClient? = null
-    private var handler: Handler? = null
     private var infoWindowAdapter: MapsInfoWindowAdapter? = null
+
+    private lateinit var handler: Handler
 
     @Inject
     lateinit var legacyApiService: LegacyApiService
@@ -63,7 +65,10 @@ abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickLi
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f))
 
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
         }
 
@@ -85,7 +90,7 @@ abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickLi
     protected abstract fun initMapData()
 
     protected fun populateMarkers(problems: List<Problem>) {
-        for (problem in problems) {
+        problems.forEach { problem ->
             val markerOptions = MarkerOptions()
             markerOptions.position(problem.latLng)
             markerOptions.icon(getMarkerIcon(problem))
@@ -107,34 +112,26 @@ abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickLi
         val marker = googleMap!!.addMarker(markerOptions)
         marker.tag = problem
         marker.setIcon(selectedMarker)
-        showMarker(marker)
+        infoWindowAdapter?.showInfoWindow(marker)
     }
 
     fun getMarkerIcon(problem: Problem): BitmapDescriptor {
-        when (problem.getStatus()) {
-            Problem.STATUS_DONE -> return doneMarker
-            Problem.STATUS_RESOLVED -> return doneMarker
-            Problem.STATUS_POSTPONED -> return postponedMarker
-            Problem.STATUS_TRANSFERRED -> return transferredMarker
-            Problem.STATUS_REGISTERED -> return registeredMarker
-            else -> return registeredMarker
+        return when (problem.getStatus()) {
+            Problem.STATUS_DONE, Problem.STATUS_RESOLVED -> doneMarker
+            Problem.STATUS_POSTPONED -> postponedMarker
+            Problem.STATUS_TRANSFERRED -> transferredMarker
+            Problem.STATUS_REGISTERED -> registeredMarker
+            else -> registeredMarker
         }
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        activity.title = getProblemByMarker(marker).getAddress()
+        activity.title = (marker.tag as Problem).getAddress()
         marker.setIcon(selectedMarker)
         EventBus.getDefault().post(MapInfoWindowShownEvent(marker))
-        showMarker(marker)
-        return false
-    }
-
-    private fun showMarker(marker: Marker) {
         infoWindowAdapter?.showInfoWindow(marker)
-    }
 
-    fun getProblemByMarker(marker: Marker): Problem {
-        return marker.tag as Problem
+        return false
     }
 
     override fun onConnected(bundle: Bundle?) {
@@ -145,7 +142,7 @@ abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickLi
         val lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApi)
         var isInCityBoundaries = false
 
-        if (lastLocation != null) {
+        lastLocation?.let {
             val results = FloatArray(1)
             Location.distanceBetween(lastLocation.latitude, lastLocation.longitude,
                     VILNIUS_LAT_LNG.latitude, VILNIUS_LAT_LNG.longitude, results)
@@ -154,7 +151,7 @@ abstract class BaseMapFragment : SupportMapFragment(), GoogleMap.OnMarkerClickLi
         }
 
         if (isInCityBoundaries) {
-            handler!!.post { onLocationInsideCity(lastLocation) }
+            handler.post { onLocationInsideCity(lastLocation) }
         }
     }
 
