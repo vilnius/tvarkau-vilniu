@@ -6,6 +6,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import lt.vilnius.tvarkau.dagger.module.IoScheduler;
+import lt.vilnius.tvarkau.dagger.module.UiScheduler;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @Module
 public class AppModule {
@@ -17,5 +22,22 @@ public class AppModule {
     }
 
     @Provides
-    @Singleton Application providesApplication() { return application; }
+    @Singleton
+    Application providesApplication() {
+        return application;
+    }
+
+    @Provides
+    @Singleton
+    @IoScheduler
+    Scheduler provideIoScheduler() {
+        return Schedulers.io();
+    }
+
+    @Provides
+    @Singleton
+    @UiScheduler
+    Scheduler provideUiScheduler() {
+        return AndroidSchedulers.mainThread();
+    }
 }

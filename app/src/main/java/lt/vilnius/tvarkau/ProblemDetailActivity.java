@@ -55,7 +55,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setTitle(problemId);
             }
-            ProblemDetailFragment fragment = ProblemDetailFragment.getInstance(problemId);
+            ProblemDetailFragment fragment = ProblemDetailFragment.Companion.getInstance(problemId);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.problem_detail_container, fragment)
                     .commit();

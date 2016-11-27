@@ -27,8 +27,6 @@ import lt.vilnius.tvarkau.utils.NetworkUtils
 import lt.vilnius.tvarkau.utils.PermissionUtils
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter
 import org.parceler.Parcels
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import timber.log.Timber
 
 /**
@@ -74,15 +72,13 @@ class ProblemDetailFragment : BaseFragment() {
     private fun getData() {
 
         if (NetworkUtils.isNetworkConnected(activity)) {
-
             val params = GetProblemParams(issueId)
             val request = ApiRequest(ApiMethod.GET_REPORT, params)
 
             legacyApiService.getProblem(request)
-                    .toSingle()
                     .map { it.result!! }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(ioScheduler)
+                    .observeOn(uiScheduler)
                     .subscribe({ problem ->
                         problem_detail_view.visible()
                         no_internet_view.gone()
@@ -118,7 +114,7 @@ class ProblemDetailFragment : BaseFragment() {
                         server_not_responding_view.visible()
                         showNoConnectionSnackbar()
 
-//                        Toast.makeText(context, R.string.error_no_problem, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.error_no_problem, Toast.LENGTH_SHORT).show()
                     })
         } else {
             problem_detail_view.gone()
@@ -154,7 +150,8 @@ class ProblemDetailFragment : BaseFragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE && PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
+        if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE
+                && PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
             startProblemActivity()
         } else {
             Toast.makeText(activity, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
@@ -179,8 +176,8 @@ class ProblemDetailFragment : BaseFragment() {
          * The fragment argument representing the item ID that this fragment
          * represents.
          */
-        val ARG_ITEM_ID = "item_id"
-        val KEY_PROBLEM = "problem"
+        const val ARG_ITEM_ID = "item_id"
+        const val KEY_PROBLEM = "problem"
 
         fun getInstance(problemId: String): ProblemDetailFragment {
             return ProblemDetailFragment().apply {

@@ -17,7 +17,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Inject
     SharedPreferences myProblemsPreferences;
 
-    private ApplicationComponent component;
+    protected ApplicationComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         component.inject(this);
     }
 
-    private ApplicationComponent buildComponent(TvarkauApplication application) {
+    protected ApplicationComponent buildComponent(TvarkauApplication application) {
         return application.getComponent();
     }
 }

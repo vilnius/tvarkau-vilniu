@@ -30,12 +30,16 @@ public class TvarkauApplication extends Application {
             Timber.plant(new RemoteCrashReportingTree());
         }
 
-        Stetho.initializeWithDefaults(this);
-        AndroidThreeTen.init(this);
+        initLibraries();
     }
 
     private void inject() {
         component = buildComponent();
+    }
+
+    protected void initLibraries() {
+        Stetho.initializeWithDefaults(this);
+        AndroidThreeTen.init(this);
     }
 
     protected ApplicationComponent buildComponent() {
