@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.utils.AnalyticsUtil
 import javax.inject.Inject
 
 /**
@@ -20,5 +21,11 @@ abstract class BaseFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity.application as TvarkauApplication).component.inject(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        AnalyticsUtil.trackCurrentFragment(activity, this)
     }
 }
