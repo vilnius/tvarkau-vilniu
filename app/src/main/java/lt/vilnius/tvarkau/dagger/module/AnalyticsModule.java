@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import lt.vilnius.tvarkau.analytics.Analytics;
+import lt.vilnius.tvarkau.analytics.RemoteAnalytics;
 
 @Module
 public class AnalyticsModule {
@@ -14,6 +15,6 @@ public class AnalyticsModule {
     @Provides
     @Singleton
     Analytics providesAnalytics(Application application) {
-        return new Analytics(application.getApplicationContext());
+        return new RemoteAnalytics(application.getApplicationContext());
     }
 }

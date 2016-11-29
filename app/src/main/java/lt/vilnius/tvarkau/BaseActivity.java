@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
 import javax.inject.Inject;
@@ -17,7 +18,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Inject
     SharedPreferences myProblemsPreferences;
 
-    private ApplicationComponent component;
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    protected ApplicationComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         component.inject(this);
     }
 
-    private ApplicationComponent buildComponent(TvarkauApplication application) {
+    protected ApplicationComponent buildComponent(TvarkauApplication application) {
         return application.getComponent();
     }
 }

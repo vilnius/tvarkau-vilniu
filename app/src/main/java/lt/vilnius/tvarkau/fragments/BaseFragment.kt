@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.dagger.module.IoScheduler
+import lt.vilnius.tvarkau.dagger.module.UiScheduler
+import rx.Scheduler
 import javax.inject.Inject
 
 /**
@@ -19,6 +22,10 @@ abstract class BaseFragment : Fragment() {
     lateinit var myProblemsPreferences: SharedPreferences
     @Inject
     lateinit var analytics: Analytics
+    @field:[Inject IoScheduler]
+    lateinit var ioScheduler: Scheduler
+    @field:[Inject UiScheduler]
+    lateinit var uiScheduler: Scheduler
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
