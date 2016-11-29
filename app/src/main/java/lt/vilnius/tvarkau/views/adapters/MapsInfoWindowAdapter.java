@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.extensions.EntityKt;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 
 /**
@@ -66,7 +67,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         timeView.setText(FormatUtils.formatLocalDateTime(problem.getEntryDate()));
 
-        problem.applyReportStatusLabel(problem.getStatus(), statusView);
+        EntityKt.applyReportStatusLabel(problem, statusView);
 
         if (problem.getPhotos() != null) {
             thumbView.setVisibility(View.VISIBLE);
@@ -74,7 +75,7 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             Bitmap image = images.get(marker);
             if (image == null) {
                 Glide.with(context)
-                        .load(problem.getPhotos()[0])
+                        .load(problem.getPhotos().get(0))
                         .asBitmap()
                         .placeholder(R.drawable.ic_placeholder_list_of_reports)
                         .into(getTarget(marker));

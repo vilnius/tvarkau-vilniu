@@ -21,6 +21,7 @@ import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.GetProblemParams
 import lt.vilnius.tvarkau.decorators.TextViewDecorator
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.extensions.applyReportStatusLabel
 import lt.vilnius.tvarkau.utils.FormatUtils
 import lt.vilnius.tvarkau.utils.GlobalConsts
 import lt.vilnius.tvarkau.utils.NetworkUtils
@@ -85,20 +86,19 @@ class ProblemDetailFragment : BaseFragment() {
                         no_internet_view.gone()
                         server_not_responding_view.gone()
 
-                        problem.type?.let { problem_title.text = it }
+                        problem.getType()?.let { problem_title.text = it }
                         problem.description?.let { problem_description.text = it }
                         problem.address?.let { problem_address.text = it }
-                        problem.entryDate?.let {
+                        problem.getEntryDate()?.let {
                             problem_entry_date.text = FormatUtils.formatLocalDateTime(it)
                         }
                         problem.status?.let {
-                            //TODO remove label status from model
-                            problem.applyReportStatusLabel(it, problem_status!!)
+                            problem.applyReportStatusLabel(problem_status!!)
                         }
                         problem.answer?.let {
                             problem_answer_block.visible()
                             addProblemSpans(problem_answer, it)
-                            problem_answer_date.text = problem.getAnswerDate()
+                            problem_answer_date.text = problem.completeDate
                         }
 
                         problem.photos?.let {

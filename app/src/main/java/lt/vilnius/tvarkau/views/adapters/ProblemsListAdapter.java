@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.ProblemDetailActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Problem;
+import lt.vilnius.tvarkau.extensions.EntityKt;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 
 public class ProblemsListAdapter
@@ -63,7 +64,7 @@ public class ProblemsListAdapter
 
             dataViewHolder.descriptionView.setText(item.getDescription());
 
-            item.applyReportStatusLabel(item.getStatus(), dataViewHolder.statusView);
+            EntityKt.applyReportStatusLabel(item, dataViewHolder.statusView);
 
             dataViewHolder.titleView.setText(item.getType());
 
@@ -72,7 +73,7 @@ public class ProblemsListAdapter
             if (item.getPhotos() != null) {
                 dataViewHolder.thumbView.setVisibility(View.VISIBLE);
                 Glide.with(activity)
-                    .load(item.getPhotos()[0])
+                    .load(item.getPhotos().get(0))
                     .into(dataViewHolder.thumbView);
             } else {
                 dataViewHolder.thumbView.setVisibility(View.GONE);

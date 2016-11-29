@@ -508,11 +508,11 @@ public class NewProblemActivity extends BaseActivity {
 
     private void setImagesInViewPager(Uri uri) {
         imagesURIs.add(uri);
-        String[] imagesPath = new String[imagesURIs.size()];
+        List<String> imagesPath = new ArrayList<>();
         for (int i = 0; i < imagesURIs.size(); i++) {
             String path = ImageUtils.getPhotoPathFromUri(this, imagesURIs.get(i));
             if (path != null) {
-                imagesPath[i] = new File(path).toString();
+                imagesPath.add(new File(path).toString());
             } else {
                 imagesURIs.remove(uri);
                 Toast.makeText(this, R.string.error_taking_image_from_server, Toast.LENGTH_LONG).show();
