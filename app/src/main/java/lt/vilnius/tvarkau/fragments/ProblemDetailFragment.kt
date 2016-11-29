@@ -77,6 +77,7 @@ class ProblemDetailFragment : BaseFragment() {
 
             legacyApiService.getProblem(request)
                     .map { it.result!! }
+                    .doOnNext { analytics.trackViewProblem(it) }
                     .subscribeOn(ioScheduler)
                     .observeOn(uiScheduler)
                     .subscribe({ problem ->

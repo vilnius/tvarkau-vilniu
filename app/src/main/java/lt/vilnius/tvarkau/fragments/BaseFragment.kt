@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.TvarkauApplication
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
@@ -19,6 +20,8 @@ abstract class BaseFragment : Fragment() {
     lateinit var legacyApiService: LegacyApiService
     @Inject
     lateinit var myProblemsPreferences: SharedPreferences
+    @Inject
+    lateinit var analytics: Analytics
     @field:[Inject IoScheduler]
     lateinit var ioScheduler: Scheduler
     @field:[Inject UiScheduler]
@@ -27,5 +30,11 @@ abstract class BaseFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity.application as TvarkauApplication).component.inject(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        analytics.trackCurrentFragment(activity, this)
     }
 }
