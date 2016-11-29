@@ -6,7 +6,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.shadows.ShadowApplication
 import org.robolectric.util.ActivityController
 
 
@@ -21,8 +20,6 @@ abstract class BaseRobolectricTest {
 
     @Before
     open fun setUp() {
-        ShadowApplication.getInstance().declareActionUnbindable("com.google.android.gms.analytics.service.START")
-
         activityController = TestActivity.newInstance().start().resume()
 
         activityController?.let { activity = it.get() }

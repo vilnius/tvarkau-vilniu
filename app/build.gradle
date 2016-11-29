@@ -95,8 +95,8 @@ ext {
     parcelerVersion = '1.1.6'
     threeTenVersion = '1.0.4'
     photoView = '1.3.1'
-    robolectric_version = '3.1.2'
-    kotlin_mockito_version = '0.7.0'
+    robolectricVersion = '3.1.2'
+    kotlinMockitoVersion = '0.7.0'
 }
 
 dependencies {
@@ -164,11 +164,11 @@ dependencies {
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junitVersion"
-    testCompile "org.robolectric:robolectric:$robolectric_version"
-    testCompile "org.robolectric:shadows-support-v4:$robolectric_version"
+    testCompile "org.robolectric:robolectric:$robolectricVersion"
+    testCompile "org.robolectric:shadows-support-v4:$robolectricVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "com.google.dagger:dagger:$daggerVersion"
-    testCompile("com.nhaarman:mockito-kotlin:$kotlin_mockito_version") {
+    testCompile("com.nhaarman:mockito-kotlin:$kotlinMockitoVersion") {
         exclude module: 'kotlin-stdlib'
     }
     testCompile 'org.easytesting:fest-util:1.2.5'

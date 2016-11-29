@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Inject
     SharedPreferences myProblemsPreferences;
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     protected ApplicationComponent component;
 
     @Override
