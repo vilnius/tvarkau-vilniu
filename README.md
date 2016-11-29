@@ -20,3 +20,11 @@ For instant messaging with team join [Tvarkau-Vilnių channel on Slack](https://
 Some tasks are in [Trello board](https://trello.com/b/PE4yjVzw/tvarkau-vilniu).
 
 Post new issues, suggestions, questions or ideas here in [Github's issues section](https://github.com/vilnius/tvarkau-vilniu/issues).
+
+## Tests
+To run tests from command line run `./gradlew testDebug`
+
+To run tests from Android Studio select test class or package, right click and select `Run Tests`
+
+### Note for Mac/Linux users
+follow small guide at http://robolectric.org/getting-started/ section `Note for Linux and Mac Users`
