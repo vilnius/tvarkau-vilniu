@@ -17,7 +17,7 @@ android:
     - 'google-gdk-license-.+'
 
 script:
-  - ./gradlew -s -PdisablePreDex clean assembleDebug
+  - ./gradlew -s -PdisablePreDex clean testDebug
 
 env:
   global:
