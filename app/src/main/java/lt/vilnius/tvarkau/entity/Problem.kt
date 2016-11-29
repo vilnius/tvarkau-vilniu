@@ -20,7 +20,7 @@ data class Problem(
         private val reportDate: LocalDateTime? = null,
         private val photo: List<String>? = null,
         private val thumbnail: String? = null,
-        val compgleteDate: String? = null,
+        val completeDate: String? = null,
         @SerializedName("x")
         private val lng: Double = 0.toDouble(),
         @SerializedName("y")
