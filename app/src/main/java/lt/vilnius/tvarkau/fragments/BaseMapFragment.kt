@@ -19,6 +19,7 @@ import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
+import lt.vilnius.tvarkau.utils.AnalyticsUtil
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
@@ -57,6 +58,12 @@ abstract class BaseMapFragment : SupportMapFragment(),
                     .enableAutoManage(activity, this)
                     .build()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        AnalyticsUtil.trackCurrentFragment(activity, this)
     }
 
     protected open fun onMapReady(map: GoogleMap) {
