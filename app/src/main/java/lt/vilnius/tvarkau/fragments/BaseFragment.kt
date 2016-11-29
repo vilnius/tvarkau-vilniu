@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.TvarkauApplication
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
-import lt.vilnius.tvarkau.utils.AnalyticsUtil
 import javax.inject.Inject
 
 /**
@@ -17,6 +17,8 @@ abstract class BaseFragment : Fragment() {
     lateinit var legacyApiService: LegacyApiService
     @Inject
     lateinit var myProblemsPreferences: SharedPreferences
+    @Inject
+    lateinit var analytics: Analytics
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -26,6 +28,6 @@ abstract class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        AnalyticsUtil.trackCurrentFragment(activity, this)
+        analytics.trackCurrentFragment(activity, this)
     }
 }

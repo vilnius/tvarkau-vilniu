@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.utils
+package lt.vilnius.tvarkau.analytics
 
 import android.app.Activity
 import android.content.Context
@@ -7,17 +7,13 @@ import android.support.v4.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
 import lt.vilnius.tvarkau.entity.Problem
 
-object AnalyticsUtil {
+class Analytics(appContext: Context) {
 
-    private lateinit var appContext: Context
-
-    private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(appContext) }
+    private val analytics: FirebaseAnalytics by lazy {
+        FirebaseAnalytics.getInstance(appContext)
+    }
 
     private val PARAM_PROBLEM_STATUS = "problem_status"
-
-    fun init(context: Context) {
-        this.appContext = context.applicationContext
-    }
 
     fun trackCurrentFragment(activity: Activity, fragment: Fragment) {
         analytics.setCurrentScreen(activity, fragment.javaClass.simpleName, null)

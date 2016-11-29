@@ -9,7 +9,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import io.fabric.sdk.android.Fabric;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 import lt.vilnius.tvarkau.dagger.component.DaggerApplicationComponent;
-import lt.vilnius.tvarkau.utils.AnalyticsUtil;
 import lt.vilnius.tvarkau.utils.RemoteCrashReportingTree;
 import timber.log.Timber;
 import timber.log.Timber.DebugTree;
@@ -22,8 +21,6 @@ public class TvarkauApplication extends Application {
     public void onCreate() {
         super.onCreate();
         inject();
-
-        AnalyticsUtil.INSTANCE.init(getApplicationContext());
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());

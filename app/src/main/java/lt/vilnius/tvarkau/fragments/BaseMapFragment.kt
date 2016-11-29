@@ -16,10 +16,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
-import lt.vilnius.tvarkau.utils.AnalyticsUtil
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
@@ -45,6 +45,9 @@ abstract class BaseMapFragment : SupportMapFragment(),
     @Inject
     lateinit var legacyApiService: LegacyApiService
 
+    @Inject
+    lateinit var analytics: Analytics
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         handler = Handler()
@@ -63,7 +66,7 @@ abstract class BaseMapFragment : SupportMapFragment(),
     override fun onResume() {
         super.onResume()
 
-        AnalyticsUtil.trackCurrentFragment(activity, this)
+        analytics.trackCurrentFragment(activity, this)
     }
 
     protected open fun onMapReady(map: GoogleMap) {

@@ -32,7 +32,6 @@ import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemParams;
 import lt.vilnius.tvarkau.decorators.TextViewDecorator;
 import lt.vilnius.tvarkau.entity.Problem;
-import lt.vilnius.tvarkau.utils.AnalyticsUtil;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.NetworkUtils;
@@ -141,7 +140,7 @@ public class ProblemDetailFragment extends BaseFragment {
                 if (apiResponse.getResult() != null) {
                     problem = apiResponse.getResult();
 
-                    AnalyticsUtil.INSTANCE.trackViewProblem(problem);
+                    analytics.trackViewProblem(problem);
 
                     if (problem.getType() != null) {
                         problemTitle.setText(problem.getType());
