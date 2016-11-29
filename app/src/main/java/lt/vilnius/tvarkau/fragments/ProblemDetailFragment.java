@@ -139,6 +139,9 @@ public class ProblemDetailFragment extends BaseFragment {
 
                 if (apiResponse.getResult() != null) {
                     problem = apiResponse.getResult();
+
+                    analytics.trackViewProblem(problem);
+
                     if (problem.getType() != null) {
                         problemTitle.setText(problem.getType());
                     }

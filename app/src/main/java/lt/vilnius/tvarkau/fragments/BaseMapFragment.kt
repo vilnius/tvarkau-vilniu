@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
@@ -44,6 +45,9 @@ abstract class BaseMapFragment : SupportMapFragment(),
     @Inject
     lateinit var legacyApiService: LegacyApiService
 
+    @Inject
+    lateinit var analytics: Analytics
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         handler = Handler()
@@ -57,6 +61,12 @@ abstract class BaseMapFragment : SupportMapFragment(),
                     .enableAutoManage(activity, this)
                     .build()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        analytics.trackCurrentFragment(activity, this)
     }
 
     protected open fun onMapReady(map: GoogleMap) {
