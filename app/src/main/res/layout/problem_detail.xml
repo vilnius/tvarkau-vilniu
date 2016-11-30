@@ -109,6 +109,7 @@
                 android:paddingTop="8dp"
                 android:textColor="@color/black_87"
                 android:textColorLink="@color/link_color"
+                android:textIsSelectable="true"
                 android:autoLink="all"
                 android:textSize="14sp"/>
 
@@ -146,6 +147,7 @@
                     android:paddingTop="8dp"
                     android:textColor="@color/black_87"
                     android:textColorLink="@color/link_color"
+                    android:textIsSelectable="true"
                     android:autoLink="all"
                     android:textSize="14sp"/>
 
