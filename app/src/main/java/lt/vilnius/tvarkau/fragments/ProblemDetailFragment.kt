@@ -69,7 +69,9 @@ class ProblemDetailFragment : BaseFragment() {
                 requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.MAP_PERMISSION_REQUEST_CODE)
             }
         }
-
+        problem_id.setOnLongClickListener {
+            copyTextToClipboard(it, R.string.problem_id_copied_to_clipboard)
+        }
         problem_title.setOnLongClickListener {
             copyTextToClipboard(it, R.string.category_copied_to_clipboard)
         }
@@ -105,6 +107,7 @@ class ProblemDetailFragment : BaseFragment() {
                         no_internet_view.gone()
                         server_not_responding_view.gone()
 
+                        problem.id?.let { problem_id.text = it }
                         problem.getType()?.let { problem_title.text = it }
                         problem.description?.let { problem_description.text = it }
                         problem.address?.let { problem_address.text = it }
