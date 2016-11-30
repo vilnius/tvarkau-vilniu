@@ -1,5 +1,8 @@
 package lt.vilnius.tvarkau.fragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -43,6 +46,10 @@ class ProblemDetailFragment : BaseFragment() {
 
     private var problem: Problem? = null
 
+    private val clipboard by lazy {
+        activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.problem_detail, container, false)
     }
@@ -62,6 +69,19 @@ class ProblemDetailFragment : BaseFragment() {
                 requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.MAP_PERMISSION_REQUEST_CODE)
             }
         }
+
+        problem_title.setOnLongClickListener {
+            copyTextToClipboard(it, R.string.category_copied_to_clipboard)
+        }
+        problem_address.setOnLongClickListener {
+            copyTextToClipboard(it, R.string.address_copied_to_clipboard)
+        }
+        problem_entry_date.setOnLongClickListener {
+            copyTextToClipboard(it, R.string.date_copied_to_clipboard)
+        }
+        problem_answer_date.setOnLongClickListener {
+            copyTextToClipboard(it, R.string.date_copied_to_clipboard)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,7 +91,6 @@ class ProblemDetailFragment : BaseFragment() {
     }
 
     private fun getData() {
-
         if (NetworkUtils.isNetworkConnected(activity)) {
             val params = GetProblemParams(issueId)
             val request = ApiRequest(ApiMethod.GET_REPORT, params)
@@ -148,6 +167,13 @@ class ProblemDetailFragment : BaseFragment() {
         problem_images_view_pager.offscreenPageLimit = 3
 
         problem_images_view_pager_indicator.setViewPager(problem_images_view_pager)
+    }
+
+    private fun copyTextToClipboard(source: View, resId: Int): Boolean {
+        if (source !is TextView) return false
+        clipboard.primaryClip = ClipData.newPlainText("data", source.text)
+        Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
+        return true
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

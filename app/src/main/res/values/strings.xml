@@ -144,6 +144,11 @@
     <string name="personal_data_added">Jūsų duomenys pridėti</string>
     <string name="personal_data_sharing_enabled">Pridėjimas įjungtas</string>
 
+    <string name="address_copied_to_clipboard">Adresas nukopijuotas</string>
+    <string name="date_copied_to_clipboard">Data nukopijuota</string>
+    <string name="category_copied_to_clipboard">Kategorija nukopijuota</string>
+    <string name="problem_id_copied_to_clipboard">Problemos ID nukopijuotas</string>
+
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>
         <item>Mano pranešimai</item>
