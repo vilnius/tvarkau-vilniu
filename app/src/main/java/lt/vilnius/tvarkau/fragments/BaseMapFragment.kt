@@ -126,7 +126,7 @@ abstract class BaseMapFragment : SupportMapFragment(),
     }
 
     fun getMarkerIcon(problem: Problem): BitmapDescriptor {
-        return when (problem.getStatus()) {
+        return when (problem.status) {
             Problem.STATUS_DONE, Problem.STATUS_RESOLVED -> doneMarker
             Problem.STATUS_POSTPONED -> postponedMarker
             Problem.STATUS_TRANSFERRED -> transferredMarker
@@ -136,7 +136,7 @@ abstract class BaseMapFragment : SupportMapFragment(),
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        activity.title = (marker.tag as Problem).getAddress()
+        activity.title = (marker.tag as Problem).address
         marker.setIcon(selectedMarker)
         EventBus.getDefault().post(MapInfoWindowShownEvent(marker))
         infoWindowAdapter?.showInfoWindow(marker)

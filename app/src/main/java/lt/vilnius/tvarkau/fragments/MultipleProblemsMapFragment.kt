@@ -71,7 +71,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        val problemId = (marker.tag as Problem).getId()
+        val problemId = (marker.tag as Problem).id
 
         val intent = ProblemDetailActivity.getStartActivityIntent(activity, problemId)
 

@@ -243,7 +243,7 @@ public class ReportImportDialogFragment extends DialogFragment {
                     List<Problem> vilniusAccountReports = new ArrayList<>();
                     vilniusAccountReports.addAll(apiResponse.getResult());
                     for (Problem report : vilniusAccountReports) {
-                        String reportId = report.getReportId();
+                        String reportId = report.getProblemId();
                         if (!myProblemsPreferences.getAll().isEmpty()) {
                             for (String key : myProblemsPreferences.getAll().keySet()) {
                                 if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {

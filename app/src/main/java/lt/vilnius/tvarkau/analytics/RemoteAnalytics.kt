@@ -20,10 +20,10 @@ class RemoteAnalytics(appContext: Context) : Analytics {
     }
 
     override fun trackViewProblem(problem: Problem) = Bundle().run {
-        putString(FirebaseAnalytics.Param.ITEM_ID, problem.getReportId())
-        putString(FirebaseAnalytics.Param.ITEM_NAME, problem.getId())
-        putString(FirebaseAnalytics.Param.ITEM_CATEGORY, problem.type)
-        putString(PARAM_PROBLEM_STATUS, problem.getStatus())
+        putString(FirebaseAnalytics.Param.ITEM_ID, problem.problemId)
+        putString(FirebaseAnalytics.Param.ITEM_NAME, problem.id)
+        putString(FirebaseAnalytics.Param.ITEM_CATEGORY, problem.getType())
+        putString(PARAM_PROBLEM_STATUS, problem.status)
 
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, this)
     }

@@ -26,7 +26,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
 
     override fun initMapData() {
         placeAndShowMarker(problem)
-        setMapTitle(problem.getAddress())
+        setMapTitle(problem.address)
     }
 
     override fun onInfoWindowClick(marker: Marker) {
@@ -36,7 +36,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
     override fun onInfoWindowClose(marker: Marker) {
         val problem = marker.tag as Problem
 
-        activity.title = problem.getAddress()
+        activity.title = problem.address
         marker.setIcon(getMarkerIcon(problem))
     }
 
@@ -47,7 +47,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
         map.setOnInfoWindowCloseListener(this)
     }
 
-    private fun setMapTitle(address: String) {
+    private fun setMapTitle(address: String?) {
         activity.title = address
     }
 
