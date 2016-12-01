@@ -68,6 +68,7 @@
                     android:id="@+id/problem_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
                     tools:text="E50-7631/16*3.2.7E-UK5)"/>
             </LinearLayout>
 

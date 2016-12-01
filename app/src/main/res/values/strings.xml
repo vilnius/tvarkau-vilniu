@@ -71,7 +71,7 @@
     <string name="error_no_problems_in_list">Nepavyko užkrauti problemų</string>
     <string name="error_no_problem">Nepavyko užkrauti problemos</string>
     <string name="problem_description_title">Problemos aprašymas</string>
-    <string name="problem_id">Pranešimo Nr.  </string>
+    <string name="problem_id">Pranešimo Nr.</string>
     <string name="issue">Pranešimas</string>
     <string name="answer">Atsakymas</string>
     <string name="error_need_camera_and_storage_permission">Reikalingas kameros ir duomenų vietos nuotraukai leidimai</string>
