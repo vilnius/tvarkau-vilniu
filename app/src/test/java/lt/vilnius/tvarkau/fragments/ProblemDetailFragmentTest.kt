@@ -1,6 +1,8 @@
 package lt.vilnius.tvarkau.fragments
 
+import android.Manifest
 import android.content.ClipboardManager
+import android.content.ComponentName
 import android.content.Context
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
@@ -8,6 +10,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.server_not_responding.*
+import lt.vilnius.tvarkau.ProblemsMapActivity
 import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.base.BaseRobolectricTest
@@ -107,6 +110,28 @@ class ProblemDetailFragmentTest : BaseRobolectricTest() {
         fragment.problem_answer_date.performLongClick()
 
         assertEquals(answerDate, clipboard.primaryClip.getItemAt(0).text)
+    }
+
+    @Test
+    fun clickOnAddress_startProblemMapsActivity() {
+        grantPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        val problemId = "problem id"
+        val problem = Problem(id = problemId)
+        whenever(api.getProblem(any())).thenReturn(problem.wrapInResponse)
+
+        val fragment = initFragment()
+        fragment.problem_address.performClick()
+
+        val shadowActivity = Shadows.shadowOf(activity)
+        val intent = shadowActivity.peekNextStartedActivity()
+
+        assertThat(intent).hasComponent(ComponentName(activity, ProblemsMapActivity::class.java))
+    }
+
+    private fun grantPermissions(vararg permissionNames: String) {
+        val application = Shadows.shadowOf(activity.application)
+        application.grantPermissions(*permissionNames)
     }
 
     private fun initFragment(): ProblemDetailFragment {

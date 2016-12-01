@@ -44,7 +44,7 @@ class ProblemDetailFragment : BaseFragment() {
     private val issueId: String
         get() = arguments.getString(ARG_ITEM_ID)
 
-    private var problem: Problem? = null
+    private lateinit var problem: Problem
 
     private val clipboard by lazy {
         activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -64,7 +64,7 @@ class ProblemDetailFragment : BaseFragment() {
 
         problem_address.setOnClickListener {
             if (PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
-                startProblemActivity()
+                startProblemActivity(problem)
             } else {
                 requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.MAP_PERMISSION_REQUEST_CODE)
             }
@@ -99,6 +99,7 @@ class ProblemDetailFragment : BaseFragment() {
 
             legacyApiService.getProblem(request)
                     .map { it.result!! }
+                    .doOnNext { problem = it }
                     .doOnNext { analytics.trackViewProblem(it) }
                     .subscribeOn(ioScheduler)
                     .observeOn(uiScheduler)
@@ -182,13 +183,13 @@ class ProblemDetailFragment : BaseFragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE
                 && PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
-            startProblemActivity()
+            startProblemActivity(problem)
         } else {
             Toast.makeText(activity, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun startProblemActivity() {
+    private fun startProblemActivity(problem: Problem) {
         val intent = Intent(activity, ProblemsMapActivity::class.java)
 
         val data = Bundle()
