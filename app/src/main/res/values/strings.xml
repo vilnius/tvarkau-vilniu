@@ -70,6 +70,8 @@
     <string name="municipality_email">e.vicemeras@vilnius.lt</string>
     <string name="error_no_problems_in_list">Nepavyko užkrauti problemų</string>
     <string name="error_no_problem">Nepavyko užkrauti problemos</string>
+    <string name="problem_description_title">Problemos aprašymas</string>
+    <string name="problem_id">Pranešimo Nr.</string>
     <string name="issue">Pranešimas</string>
     <string name="answer">Atsakymas</string>
     <string name="error_need_camera_and_storage_permission">Reikalingas kameros ir duomenų vietos nuotraukai leidimai</string>
@@ -144,6 +146,11 @@
     <string name="add">Pridėti</string>
     <string name="personal_data_added">Jūsų duomenys pridėti</string>
     <string name="personal_data_sharing_enabled">Pridėjimas įjungtas</string>
+
+    <string name="address_copied_to_clipboard">Adresas nukopijuotas</string>
+    <string name="date_copied_to_clipboard">Data nukopijuota</string>
+    <string name="category_copied_to_clipboard">Kategorija nukopijuota</string>
+    <string name="problem_id_copied_to_clipboard">Problemos ID nukopijuotas</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

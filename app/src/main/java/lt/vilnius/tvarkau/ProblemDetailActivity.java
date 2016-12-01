@@ -53,7 +53,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
             // using a fragment transaction.
             String problemId = getIntent().getStringExtra(ProblemDetailFragment.ARG_ITEM_ID);
             if (actionBar != null) {
-                actionBar.setTitle(problemId);
+                actionBar.setTitle(R.string.problem_description_title);
             }
             ProblemDetailFragment fragment = ProblemDetailFragment.Companion.getInstance(problemId);
             getSupportFragmentManager().beginTransaction()

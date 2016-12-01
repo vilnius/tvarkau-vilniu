@@ -21,7 +21,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="24dp"
+                android:paddingBottom="6dp"
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
                 android:paddingTop="18dp">
@@ -49,6 +49,28 @@
                     tools:text="Užregistruota"/>
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/problem_id"/>
+
+                <TextView
+                    android:id="@+id/problem_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    tools:text="E50-7631/16*3.2.7E-UK5)"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,6 +124,7 @@
                 android:id="@+id/problem_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoLink="all"
                 android:lineSpacingExtra="4sp"
                 android:paddingBottom="24dp"
                 android:paddingLeft="24dp"
@@ -109,7 +132,7 @@
                 android:paddingTop="8dp"
                 android:textColor="@color/black_87"
                 android:textColorLink="@color/link_color"
-                android:autoLink="all"
+                android:textIsSelectable="true"
                 android:textSize="14sp"/>
 
             <RelativeLayout
@@ -142,11 +165,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/problem_answer_label"
+                    android:autoLink="all"
                     android:lineSpacingExtra="4sp"
                     android:paddingTop="8dp"
                     android:textColor="@color/black_87"
                     android:textColorLink="@color/link_color"
-                    android:autoLink="all"
+                    android:textIsSelectable="true"
                     android:textSize="14sp"/>
 
             </RelativeLayout>
