@@ -48,8 +48,9 @@ public class ProblemImagesPagerAdapter<T> extends PagerAdapter {
             Glide.with(context).load(images.get(position)).into(problemImageView);
 
             itemView.setOnClickListener(v -> {
+                String[] array = new String[images.size()];
                 Intent intent = new Intent(context, FullscreenImageActivity.class);
-                intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, images.toArray());
+                intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, images.toArray(array));
                 intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position);
                 context.startActivity(intent);
             });
