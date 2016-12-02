@@ -31,6 +31,7 @@ import lt.vilnius.tvarkau.utils.NetworkUtils
 import lt.vilnius.tvarkau.utils.PermissionUtils
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter
 import org.parceler.Parcels
+import rx.Subscription
 import timber.log.Timber
 
 /**
@@ -45,6 +46,8 @@ class ProblemDetailFragment : BaseFragment() {
         get() = arguments.getString(ARG_ITEM_ID)
 
     private lateinit var problem: Problem
+
+    private var subscription: Subscription? = null
 
     private val clipboard by lazy {
         activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -110,7 +113,7 @@ class ProblemDetailFragment : BaseFragment() {
 
                         problem.id?.let { problem_id.text = it }
                         problem.getType()?.let { problem_title.text = it }
-                        problem.description?.let { problem_description.text = it }
+                        problem.description?.let { addProblemSpans(problem_description, it) }
                         problem.address?.let { problem_address.text = it }
                         problem.getEntryDate()?.let {
                             problem_entry_date.text = FormatUtils.formatLocalDateTime(it)
@@ -139,7 +142,7 @@ class ProblemDetailFragment : BaseFragment() {
                         showNoConnectionSnackbar()
 
                         Toast.makeText(context, R.string.error_no_problem, Toast.LENGTH_SHORT).show()
-                    })
+                    }).apply { subscription = this }
         } else {
             problem_detail_view.gone()
             server_not_responding_view.gone()
@@ -199,6 +202,11 @@ class ProblemDetailFragment : BaseFragment() {
         intent.putExtras(data)
 
         startActivity(intent)
+    }
+
+    override fun onDestroyView() {
+        subscription?.unsubscribe()
+        super.onDestroyView()
     }
 
     companion object {
