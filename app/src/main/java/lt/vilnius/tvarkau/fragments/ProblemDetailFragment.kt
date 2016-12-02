@@ -110,7 +110,7 @@ class ProblemDetailFragment : BaseFragment() {
 
                         problem.id?.let { problem_id.text = it }
                         problem.getType()?.let { problem_title.text = it }
-                        problem.description?.let { problem_description.text = it }
+                        problem.description?.let { addProblemSpans(problem_description, it) }
                         problem.address?.let { problem_address.text = it }
                         problem.getEntryDate()?.let {
                             problem_entry_date.text = FormatUtils.formatLocalDateTime(it)
