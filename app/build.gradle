@@ -1,12 +1,10 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-        classpath 'io.fabric.tools:gradle:1.22.0'
     }
 }
 
@@ -17,7 +15,6 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
 apply plugin: 'com.github.ben-manes.versions'
 
 android {
@@ -69,7 +66,6 @@ android {
 repositories {
     maven { url "https://clojars.org/repo/" }
     maven { url "http://repo.commonsware.com.s3.amazonaws.com" }
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
     mavenCentral()
 }
@@ -154,9 +150,6 @@ dependencies {
     compile "com.jakewharton.threetenabp:threetenabp:$threeTenVersion"
 
     compile "com.github.chrisbanes:PhotoView:$photoView"
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        transitive = true;
-    }
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.jakewharton.timber:timber:4.3.1'

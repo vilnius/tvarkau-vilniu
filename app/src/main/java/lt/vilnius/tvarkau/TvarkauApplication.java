@@ -2,11 +2,9 @@ package lt.vilnius.tvarkau;
 
 import android.app.Application;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
-import io.fabric.sdk.android.Fabric;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 import lt.vilnius.tvarkau.dagger.component.DaggerApplicationComponent;
 import lt.vilnius.tvarkau.utils.RemoteCrashReportingTree;
@@ -25,8 +23,6 @@ public class TvarkauApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());
         } else {
-            Fabric.with(this, new Crashlytics());
-
             Timber.plant(new RemoteCrashReportingTree());
         }
 
