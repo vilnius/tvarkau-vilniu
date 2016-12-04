@@ -111,6 +111,8 @@ class ProblemDetailFragment : BaseFragment() {
                         no_internet_view.gone()
                         server_not_responding_view.gone()
 
+                        initProblemImagesPager(problem)
+
                         problem.id?.let { problem_id.text = it }
                         problem.getType()?.let { problem_title.text = it }
                         problem.description?.let { addProblemSpans(problem_description, it) }
@@ -127,13 +129,9 @@ class ProblemDetailFragment : BaseFragment() {
                             problem_answer_date.text = problem.completeDate
                         }
 
-                        problem.photos?.let {
-                            if (it.size == 1) {
-                                problem_images_view_pager_indicator.gone()
-                            }
-
-                            initProblemImagesPager(problem)
-                        } ?: problem_image_pager_layout.gone()
+                        if (problem.photos == null || problem.photos!!.count() == 1) {
+                            problem_images_view_pager_indicator.gone()
+                        }
                     }, {
                         Timber.e(it)
                         no_internet_view.gone()
@@ -168,9 +166,7 @@ class ProblemDetailFragment : BaseFragment() {
     }
 
     private fun initProblemImagesPager(problem: Problem) {
-        val photos = problem.photos
-
-        problem_images_view_pager.adapter = ProblemImagesPagerAdapter(context, photos)
+        problem_images_view_pager.adapter = ProblemImagesPagerAdapter(context, problem)
         problem_images_view_pager.offscreenPageLimit = 3
 
         problem_images_view_pager_indicator.setViewPager(problem_images_view_pager)

@@ -143,7 +143,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void initProblemImagesPager() {
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, null));
+        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, new ArrayList<>()));
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
         problemImagesViewPagerIndicator.setVisibility(View.GONE);
@@ -522,7 +522,7 @@ public class NewProblemActivity extends BaseActivity {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
         if (imagesURIs.size() > 0) {
-            problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, imagesPath));
+            problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, imagesPath));
         }
     }
 
