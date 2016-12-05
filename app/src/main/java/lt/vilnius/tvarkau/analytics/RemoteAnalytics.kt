@@ -14,9 +14,18 @@ class RemoteAnalytics(appContext: Context) : Analytics {
     }
 
     private val PARAM_PROBLEM_STATUS = "problem_status"
+    private val PARAM_FRAGMENT_ACTIVITY = "activity"
 
     override fun trackCurrentFragment(activity: Activity, fragment: Fragment) {
-        analytics.setCurrentScreen(activity, fragment.javaClass.simpleName, null)
+        val fragmentName = fragment.javaClass.simpleName
+
+        Bundle().run {
+            putString(PARAM_FRAGMENT_ACTIVITY, activity.javaClass.simpleName)
+
+            analytics.logEvent("open_$fragmentName", this)
+        }
+
+        analytics.setCurrentScreen(activity, fragmentName, null)
     }
 
     override fun trackViewProblem(problem: Problem) = Bundle().run {
