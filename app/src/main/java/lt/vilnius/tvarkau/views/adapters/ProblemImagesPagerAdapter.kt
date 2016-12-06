@@ -43,7 +43,7 @@ class ProblemImagesPagerAdapter(private val problem: Problem,
     fun instantiateProblemMap(mapView: View): View {
         mapView.problem_map_view.onCreate(null)
         mapView.problem_map_view.getMapAsync {
-            it.run {
+            with(it) {
                 setOnMapClickListener { listener.onMapClicked() }
                 moveCamera(CameraUpdateFactory.newLatLng(problem.latLng))
                 uiSettings.isMapToolbarEnabled = false
