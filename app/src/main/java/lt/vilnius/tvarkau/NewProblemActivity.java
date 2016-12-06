@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneOffset;
 
@@ -56,7 +57,7 @@ import lt.vilnius.tvarkau.utils.ImageUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
-import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter;
+import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -69,7 +70,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
-public class NewProblemActivity extends BaseActivity {
+public class NewProblemActivity extends BaseActivity implements NewProblemPhotosPagerAdapter.OnPhotoClickedListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
@@ -143,7 +144,7 @@ public class NewProblemActivity extends BaseActivity {
     }
 
     private void initProblemImagesPager() {
-        problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter(this, null));
+        problemImagesViewPager.setAdapter(new NewProblemPhotosPagerAdapter(new ArrayList<>(), this));
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
         problemImagesViewPagerIndicator.setVisibility(View.GONE);
@@ -522,7 +523,7 @@ public class NewProblemActivity extends BaseActivity {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
         if (imagesURIs.size() > 0) {
-            problemImagesViewPager.setAdapter(new ProblemImagesPagerAdapter<>(this, imagesPath));
+            problemImagesViewPager.setAdapter(new NewProblemPhotosPagerAdapter(imagesPath, this));
         }
     }
 
@@ -558,5 +559,15 @@ public class NewProblemActivity extends BaseActivity {
                     .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text))
                     .show();
         }
+    }
+
+    @Override
+    public void onPhotoClicked(int position, @NotNull List<String> photos) {
+        String[] array = new String[photos.size()];
+        Intent intent = new Intent(this, FullscreenImageActivity.class);
+        intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, photos.toArray(array));
+        intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position);
+
+        startActivity(intent);
     }
 }
