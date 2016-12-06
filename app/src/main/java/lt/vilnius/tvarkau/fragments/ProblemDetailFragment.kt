@@ -40,7 +40,7 @@ import timber.log.Timber
  * in two-pane mode (on tablets) or a [ProblemDetailActivity]
  * on handsets.
  */
-class ProblemDetailFragment : BaseFragment() {
+class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemImageClickedListener {
 
     private val issueId: String
         get() = arguments.getString(ARG_ITEM_ID)
@@ -166,7 +166,7 @@ class ProblemDetailFragment : BaseFragment() {
     }
 
     private fun initProblemImagesPager(problem: Problem) {
-        problem_images_view_pager.adapter = ProblemImagesPagerAdapter(context, problem)
+        problem_images_view_pager.adapter = ProblemImagesPagerAdapter(problem, this)
         problem_images_view_pager.offscreenPageLimit = 3
 
         problem_images_view_pager_indicator.setViewPager(problem_images_view_pager)
@@ -198,6 +198,18 @@ class ProblemDetailFragment : BaseFragment() {
         intent.putExtras(data)
 
         startActivity(intent)
+    }
+
+    override fun onMapClicked() {
+        startProblemActivity(problem)
+    }
+
+    override fun onPhotoClicked(position: Int, photos: List<String>) {
+        val intent = Intent(context, FullscreenImageActivity::class.java)
+        intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, photos.toTypedArray())
+        intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position)
+
+        context.startActivity(intent)
     }
 
     override fun onDestroyView() {
