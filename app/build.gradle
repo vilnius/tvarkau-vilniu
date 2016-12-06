@@ -131,9 +131,7 @@ dependencies {
     provided "javax.annotation:jsr250-api:$javaxAnnotationVersion"
 
     compile "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
-
-    compile "com.github.ParkSangGwon:TedPicker:$tedPickerVersion"
-
+    
     compile "org.greenrobot:eventbus:$eventBusVersion"
 
     compile "com.facebook.stetho:stetho:$stethoVersion"
