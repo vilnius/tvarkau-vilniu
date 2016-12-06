@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.vinted.extensions.gone
+import com.vinted.extensions.goneIf
 import com.vinted.extensions.visible
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
@@ -129,9 +130,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
                             problem_answer_date.text = problem.completeDate
                         }
 
-                        if (problem.photos == null || problem.photos!!.count() == 1) {
-                            problem_images_view_pager_indicator.gone()
-                        }
+                        problem_images_view_pager_indicator.goneIf(problem.photos.orEmpty().isEmpty())
                     }, {
                         Timber.e(it)
                         no_internet_view.gone()
