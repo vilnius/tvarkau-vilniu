@@ -8,6 +8,7 @@ import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.GetNewProblemParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.base.BaseRobolectricTest
+import lt.vilnius.tvarkau.fragments.interactors.MyReportsInteractor
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import org.junit.Test
 import rx.Observable.just
@@ -25,10 +26,12 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
     val api = mock<LegacyApiService>()
     val photoProvider = mock<ReportPhotoProvider>()
     val analytics = mock<Analytics>()
+    val myReportsInteractor = mock<MyReportsInteractor>()
 
     val fixture: NewReportInteractor by lazy {
         NewReportInteractorImpl(
                 api,
+                myReportsInteractor,
                 photoProvider,
                 Schedulers.immediate(),
                 activity.getString(R.string.report_description_timestamp_template),
@@ -155,5 +158,21 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
         fixture.submitReport(emptyReport).subscribe()
 
         verify(analytics).trackReportRegistration(type, 2)
+    }
+
+    @Test
+    fun submitSuccess_myReportIdStored() {
+        val type = "some_type"
+        val emptyReport = NewReportData(
+                reportType = type,
+                latitude = 0.0,
+                longitude = 0.0
+        )
+
+        whenever(api.postNewProblem(any())).thenReturn(just(successResponse))
+
+        fixture.submitReport(emptyReport).subscribe()
+
+        verify(myReportsInteractor).saveReportId("1")
     }
 }

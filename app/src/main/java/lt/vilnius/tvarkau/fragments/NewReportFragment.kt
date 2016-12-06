@@ -27,8 +27,6 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.model.LatLng
-import com.vinted.extensions.gone
-import com.vinted.extensions.visible
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_new_report.*
 import kotlinx.android.synthetic.main.image_picker_dialog.view.*
@@ -38,6 +36,9 @@ import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
+import lt.vilnius.tvarkau.fragments.interactors.SharedPreferencesMyReportsInteractor
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractorImpl
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractorImpl
 import lt.vilnius.tvarkau.mvp.interactors.ReportPhotoProviderImpl
@@ -81,6 +82,7 @@ class NewReportFragment : BaseFragment(),
         NewReportPresenterImpl(
                 NewReportInteractorImpl(
                         legacyApiService,
+                        SharedPreferencesMyReportsInteractor(myProblemsPreferences),
                         ReportPhotoProviderImpl(context),
                         ioScheduler,
                         getString(R.string.report_description_timestamp_template),
@@ -288,13 +290,7 @@ class NewReportFragment : BaseFragment(),
         Toast.makeText(context, R.string.error_submitting_problem, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showSuccess(reportId: String) {
-        //TODO move to interactor when shared pref wrapper is implemented
-        myProblemsPreferences
-                .edit()
-                .putString(PROBLEM_PREFERENCE_KEY + reportId, reportId)
-                .apply()
-
+    override fun showSuccess() {
         EventBus.getDefault().post(NewProblemAddedEvent())
 
         activity.currentFocus?.run {
@@ -616,8 +612,6 @@ class NewReportFragment : BaseFragment(),
 
         val TAKE_PHOTO_PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
         val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-
-        const val PROBLEM_PREFERENCE_KEY = "problem"
 
         const val PARKING_VIOLATIONS = "Transporto priemonių stovėjimo tvarkos pažeidimai"
 

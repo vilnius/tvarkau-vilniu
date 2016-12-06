@@ -11,20 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.vinted.extensions.gone
-import com.vinted.extensions.goneIf
-import com.vinted.extensions.visible
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.problem_photo_gallery.*
 import kotlinx.android.synthetic.main.server_not_responding.*
 import lt.vilnius.tvarkau.*
-import lt.vilnius.tvarkau.backend.ApiMethod
-import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.GetProblemParams
+import lt.vilnius.tvarkau.backend.requests.GetReportRequest
 import lt.vilnius.tvarkau.decorators.TextViewDecorator
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.applyReportStatusLabel
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.goneIf
+import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.utils.FormatUtils
 import lt.vilnius.tvarkau.utils.GlobalConsts
 import lt.vilnius.tvarkau.utils.NetworkUtils
@@ -83,9 +82,8 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     private fun getData() {
         if (NetworkUtils.isNetworkConnected(activity)) {
             val params = GetProblemParams(issueId)
-            val request = ApiRequest(ApiMethod.GET_REPORT, params)
 
-            subscription = legacyApiService.getProblem(request)
+            subscription = legacyApiService.getProblem(GetReportRequest(params))
                     .map { it.result!! }
                     .doOnNext { problem = it }
                     .doOnNext { analytics.trackViewProblem(it) }

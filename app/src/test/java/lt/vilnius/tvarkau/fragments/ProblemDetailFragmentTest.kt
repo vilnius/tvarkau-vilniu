@@ -9,14 +9,13 @@ import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.server_not_responding.*
 import lt.vilnius.tvarkau.ProblemsMapActivity
-import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.base.BaseRobolectricTest
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.wrapInResponse
 import org.assertj.android.api.Assertions.assertThat
 import org.junit.Test
 import org.robolectric.Shadows
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -26,13 +25,6 @@ class ProblemDetailFragmentTest : BaseRobolectricTest() {
 
     @Inject
     lateinit var api: LegacyApiService
-
-    private val Problem.wrapInResponse: Observable<ApiResponse<Problem>>
-        get() {
-            val response = ApiResponse<Problem>()
-            response.result = this
-            return Observable.just(response)
-        }
 
     override fun setUp() {
         super.setUp()

@@ -18,5 +18,5 @@ interface NewReportView {
 
     fun showError(error: Throwable)
 
-    fun showSuccess(reportId: String)
+    fun showSuccess()
 }

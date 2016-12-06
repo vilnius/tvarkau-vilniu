@@ -74,7 +74,7 @@ class NewReportPresenterImpl(
     }
 
     private fun handleSuccess(reportId: String) {
-        view.showSuccess(reportId)
+        view.showSuccess()
     }
 
     private fun handleError(error: Throwable) {
