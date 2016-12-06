@@ -34,6 +34,7 @@
                     android:fontFamily="sans-serif-regular"
                     android:paddingRight="16dp"
                     android:textColor="#DE000000"
+                    android:textIsSelectable="true"
                     android:textSize="24sp"
                     tools:text="KET pažeidimas ilgas pavadimas"/>
 
@@ -69,6 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:textIsSelectable="true"
                     tools:text="E50-7631/16*3.2.7E-UK5)"/>
             </LinearLayout>
 
@@ -89,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
                     android:textColor="@color/problem_address"
+                    android:textIsSelectable="true"
                     android:textSize="14sp"
                     tools:text="Gedimino pr. 11"/>
 
@@ -116,6 +119,7 @@
                     android:layout_alignParentRight="true"
                     android:fontFamily="sans-serif-regular"
                     android:textColor="@color/problem_date"
+                    android:textIsSelectable="true"
                     android:textSize="14sp"/>
 
             </RelativeLayout>
@@ -158,6 +162,7 @@
                     android:layout_alignParentRight="true"
                     android:fontFamily="sans-serif-regular"
                     android:textColor="@color/problem_date"
+                    android:textIsSelectable="true"
                     android:textSize="14sp"/>
 
                 <TextView
