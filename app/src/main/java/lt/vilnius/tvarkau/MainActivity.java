@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
+import lt.vilnius.tvarkau.activity.ReportRegistrationActivity;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 
@@ -51,6 +53,14 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent(this, NewProblemActivity.class);
         startActivityForResult(intent, NEW_ISSUE_REQUEST_CODE);
     }
+
+    @OnLongClick(R.id.home_report_problem)
+    protected boolean onNewIssueLongClicked() {
+        Intent intent = new Intent(this, ReportRegistrationActivity.class);
+        startActivityForResult(intent, NEW_ISSUE_REQUEST_CODE);
+        return true;
+    }
+
 
     @OnClick(R.id.home_list_of_problems)
     protected void onProblemsListClicked() {
@@ -100,7 +110,9 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick(R.id.home_about)
-    protected void onAboutClicked() { startNewActivity(AboutActivity.class); }
+    protected void onAboutClicked() {
+        startNewActivity(AboutActivity.class);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
