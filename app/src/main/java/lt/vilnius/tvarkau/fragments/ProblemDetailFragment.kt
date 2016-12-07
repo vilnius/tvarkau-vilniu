@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.vinted.extensions.gone
+import com.vinted.extensions.goneIf
 import com.vinted.extensions.visible
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
@@ -39,7 +40,7 @@ import timber.log.Timber
  * in two-pane mode (on tablets) or a [ProblemDetailActivity]
  * on handsets.
  */
-class ProblemDetailFragment : BaseFragment() {
+class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemImageClickedListener {
 
     private val issueId: String
         get() = arguments.getString(ARG_ITEM_ID)
@@ -95,6 +96,8 @@ class ProblemDetailFragment : BaseFragment() {
                         no_internet_view.gone()
                         server_not_responding_view.gone()
 
+                        initProblemImagesPager(problem)
+
                         problem.id?.let { problem_id.text = it }
                         problem.getType()?.let { problem_title.text = it }
                         problem.description?.let { addProblemSpans(problem_description, it) }
@@ -111,13 +114,7 @@ class ProblemDetailFragment : BaseFragment() {
                             problem_answer_date.text = problem.completeDate
                         }
 
-                        problem.photos?.let {
-                            if (it.size == 1) {
-                                problem_images_view_pager_indicator.gone()
-                            }
-
-                            initProblemImagesPager(problem)
-                        } ?: problem_image_pager_layout.gone()
+                        problem_images_view_pager_indicator.goneIf(problem.photos.orEmpty().isEmpty())
                     }, {
                         Timber.e(it)
                         no_internet_view.gone()
@@ -152,9 +149,7 @@ class ProblemDetailFragment : BaseFragment() {
     }
 
     private fun initProblemImagesPager(problem: Problem) {
-        val photos = problem.photos
-
-        problem_images_view_pager.adapter = ProblemImagesPagerAdapter(context, photos)
+        problem_images_view_pager.adapter = ProblemImagesPagerAdapter(problem, this)
         problem_images_view_pager.offscreenPageLimit = 3
 
         problem_images_view_pager_indicator.setViewPager(problem_images_view_pager)
@@ -179,6 +174,18 @@ class ProblemDetailFragment : BaseFragment() {
         intent.putExtras(data)
 
         startActivity(intent)
+    }
+
+    override fun onMapClicked() {
+        startProblemActivity(problem)
+    }
+
+    override fun onPhotoClicked(position: Int, photos: List<String>) {
+        val intent = Intent(context, FullscreenImageActivity::class.java)
+        intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, photos.toTypedArray())
+        intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position)
+
+        context.startActivity(intent)
     }
 
     override fun onDestroyView() {
