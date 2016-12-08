@@ -149,7 +149,7 @@ dependencies {
     compile "com.github.chrisbanes:PhotoView:$photoView"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.jakewharton.timber:timber:4.3.1'
+    compile 'com.jakewharton.timber:timber:4.4.0'
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
