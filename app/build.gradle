@@ -98,7 +98,7 @@ ext {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:support-fragment:$supportLibraryVersion"
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
     compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
@@ -107,7 +107,6 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:$playServicesVersion"
     compile "com.google.android.gms:play-services-location:$playServicesVersion"
     compile "com.google.android.gms:play-services-places:$playServicesVersion"
-    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
 
     compile "com.google.firebase:firebase-core:$playServicesVersion"
     compile "com.google.firebase:firebase-crash:$playServicesVersion"
@@ -132,9 +131,7 @@ dependencies {
     provided "javax.annotation:jsr250-api:$javaxAnnotationVersion"
 
     compile "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
-
-    compile "com.github.ParkSangGwon:TedPicker:$tedPickerVersion"
-
+    
     compile "org.greenrobot:eventbus:$eventBusVersion"
 
     compile "com.facebook.stetho:stetho:$stethoVersion"

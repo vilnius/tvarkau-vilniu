@@ -28,6 +28,7 @@
     <color name="snackbar_action_text">#3bdfff</color>
 
     <color name="black_38">#9E9E9E</color>
+    <color name="black_87">#de000000</color>
     <color name="problem_date">#6d6d6d</color>
     <color name="problem_address">#27aae1</color>
     <color name="link_color">#27aae1</color>
