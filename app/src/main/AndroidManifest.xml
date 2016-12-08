@@ -155,9 +155,20 @@
                 android:value=".SettingsActivity"/>
         </activity>
 
+        <activity
+            android:name=".activity.ReportRegistrationActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_choose_problem_type"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="33cce6891f8d5ae5c92235382a89bc0e9d7ca255" />
+            android:value="33cce6891f8d5ae5c92235382a89bc0e9d7ca255"/>
     </application>
 
 </manifest>
