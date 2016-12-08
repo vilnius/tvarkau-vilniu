@@ -26,5 +26,23 @@ To run tests from command line run `./gradlew testDebug`
 
 To run tests from Android Studio select test class or package, right click and select `Run Tests`
 
+## Versioning
+Fluid versioning is used for this project.
+
+The number in the first position (**1**.2.3.4) indicates a **major release**.
+
+The number in the second position (1.**2**.3.4) indicates a **minor release**.
+
+The number in the third position (1.2.**3**.4) indicates a **bug fix release**.
+
+The number in the fourth position (1.2.3.**4**) indicates a **special micro release**.
+
+Version numbers should be changed in `app/build.gradle` file.
+
+## Publishing
+
+After merging pull request with master branch app will be automatically published to Google play Beta track and tag with version name will appear in GitHub.
+
+
 ### Note for Mac/Linux users
 follow small guide at http://robolectric.org/getting-started/ section `Note for Linux and Mac Users`
