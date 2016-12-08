@@ -75,7 +75,7 @@ ext {
     tedPickerVersion = 'v1.0.10'
     eventBusVersion = '3.0.0'
     stethoVersion = '1.4.1'
-    okhttp3LoggingInterceptorVersion = '3.4.2'
+    okhttpVersion = '3.5.0'
     rxAndroidVersion = '1.2.1'
     rxJavaVersion = '1.2.3'
     parcelerVersion = '1.1.6'
@@ -126,7 +126,9 @@ dependencies {
 
     compile "com.facebook.stetho:stetho:$stethoVersion"
     compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3LoggingInterceptorVersion"
+
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
     compile "io.reactivex:rxandroid:$rxAndroidVersion"
     compile "io.reactivex:rxjava:$rxJavaVersion"
