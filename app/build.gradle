@@ -176,6 +176,12 @@ dependencies {
     testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
 }
 
+task versionName() << {
+    description = "Prints version name"
+
+    println android.defaultConfig.versionName
+}
+
 // https://github.com/ben-manes/gradle-versions-plugin
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
