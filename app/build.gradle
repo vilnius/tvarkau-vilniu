@@ -140,15 +140,15 @@ dependencies {
 
     compile "com.github.chrisbanes:PhotoView:$photoView"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile 'com.jakewharton.timber:timber:4.4.0'
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testCompile "junit:junit:$junitVersion"
     testCompile "org.robolectric:robolectric:$robolectricVersion"
     testCompile "org.robolectric:shadows-support-v4:$robolectricVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testCompile "com.google.dagger:dagger:$daggerVersion"
     testCompile("com.nhaarman:mockito-kotlin:$kotlinMockitoVersion") {
         exclude module: 'kotlin-stdlib'
