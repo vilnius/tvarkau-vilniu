@@ -7,6 +7,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+def versionMajor = 3
+def versionMinor = 5
+def versionPatch = 0
+def versionMicro = 0
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
@@ -15,8 +20,8 @@ android {
         applicationId "lt.vilnius.tvarkau"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 17
-        versionName "3.4"
+        versionCode versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionMicro
+        versionName "$versionMajor.$versionMinor.$versionPatch.$versionMicro"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -161,6 +166,12 @@ dependencies {
 
     // https://github.com/robolectric/robolectric/issues/1932#issuecomment-219796474
     testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+}
+
+task versionName() << {
+    description "Prints version name"
+
+    println android.defaultConfig.versionName
 }
 
 // https://github.com/ben-manes/gradle-versions-plugin
