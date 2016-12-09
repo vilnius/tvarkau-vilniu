@@ -30,7 +30,7 @@ android {
         applicationId "lt.vilnius.tvarkau"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode versionMajor * 1000000 + versionMinor * 10000 * versionPatch * 100 + versionMicro
+        versionCode versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionMicro
         versionName "$versionMajor.$versionMinor.$versionPatch.$versionMicro"
         vectorDrawables.useSupportLibrary = true
     }
@@ -177,7 +177,7 @@ dependencies {
 }
 
 task versionName() << {
-    description = "Prints version name"
+    description "Prints version name"
 
     println android.defaultConfig.versionName
 }
