@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.utils;
 
+import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -24,10 +25,14 @@ public class FormatUtils {
         return localDateTime.format(formatter);
     }
 
-    public static String formatLocalDate(LocalDate localDate) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return localDate.format(formatter);
+    @Nullable
+    public static String formatLocalDate(@Nullable LocalDate localDate) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return localDate.format(formatter);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     public static void removeUnderlines(TextView textView) {
@@ -36,7 +41,9 @@ public class FormatUtils {
             public URLSpanNoUnderline(String url) {
                 super(url);
             }
-            @Override public void updateDrawState(TextPaint ds) {
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
             }
@@ -44,7 +51,7 @@ public class FormatUtils {
 
         Spannable s = new SpannableString(textView.getText());
         URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
-        for (URLSpan span: spans) {
+        for (URLSpan span : spans) {
             int start = s.getSpanStart(span);
             int end = s.getSpanEnd(span);
             s.removeSpan(span);
