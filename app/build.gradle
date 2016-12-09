@@ -1,21 +1,11 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-    }
-}
-
 plugins {
     id "me.tatarka.retrolambda" version "3.4.0"
+    id 'com.github.ben-manes.versions' version '0.13.0'
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileSdkVersion 25
@@ -85,14 +75,14 @@ ext {
     tedPickerVersion = 'v1.0.10'
     eventBusVersion = '3.0.0'
     stethoVersion = '1.4.1'
-    okhttp3LoggingInterceptorVersion = '3.4.2'
+    okhttpVersion = '3.5.0'
     rxAndroidVersion = '1.2.1'
     rxJavaVersion = '1.2.3'
     parcelerVersion = '1.1.6'
     threeTenVersion = '1.0.4'
     photoView = '1.3.1'
-    robolectricVersion = '3.1.2'
-    kotlinMockitoVersion = '0.7.0'
+    robolectricVersion = '3.1.4'
+    kotlinMockitoVersion = '1.0.0'
 }
 
 dependencies {
@@ -136,7 +126,9 @@ dependencies {
 
     compile "com.facebook.stetho:stetho:$stethoVersion"
     compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3LoggingInterceptorVersion"
+
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
     compile "io.reactivex:rxandroid:$rxAndroidVersion"
     compile "io.reactivex:rxjava:$rxJavaVersion"
@@ -148,15 +140,15 @@ dependencies {
 
     compile "com.github.chrisbanes:PhotoView:$photoView"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.jakewharton.timber:timber:4.3.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile 'com.jakewharton.timber:timber:4.4.0'
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testCompile "junit:junit:$junitVersion"
     testCompile "org.robolectric:robolectric:$robolectricVersion"
     testCompile "org.robolectric:shadows-support-v4:$robolectricVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testCompile "com.google.dagger:dagger:$daggerVersion"
     testCompile("com.nhaarman:mockito-kotlin:$kotlinMockitoVersion") {
         exclude module: 'kotlin-stdlib'
