@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
-import butterknife.ButterKnife
-import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.app_bar.*
 import lt.vilnius.tvarkau.utils.DeviceUtils
@@ -22,7 +20,6 @@ class AboutActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_about)
-        ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -32,9 +29,16 @@ class AboutActivity : BaseActivity() {
         Linkify.addLinks(thanks_to_contributors, Linkify.WEB_URLS)
         FormatUtils.removeUnderlines(thanks_to_contributors)
         thanks_to_contributors.movementMethod = LinkMovementMethod.getInstance()
+
+        rate_app.setOnClickListener { onRateAppClick() }
+        contribute_with_code.setOnClickListener { onClickContributeWithCode() }
+        report_bug.setOnClickListener { onReportBugClick() }
+        facebook_page.setOnClickListener { onFacebookPageClick() }
+        meetup_page.setOnClickListener { onMeetupPageClick() }
+        phone_select_view.setOnClickListener { onPhoneViewClick() }
+        municipality_email.setOnClickListener { onMunicipalityEmailClick() }
     }
 
-    @OnClick(R.id.rate_app)
     fun onRateAppClick() {
         val uri = Uri.parse("market://details?id=$packageName")
         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -48,24 +52,20 @@ class AboutActivity : BaseActivity() {
 
     }
 
-    @OnClick(R.id.contribute_with_code)
     fun onClickContributeWithCode() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.CODE_FOR_VILNIUS_TRELLO))
         startActivity(intent)
     }
 
-    @OnClick(R.id.report_bug)
     fun onReportBugClick() {
         openEmail(GlobalConsts.CODE_FOR_VILNIUS_EMAIL)
     }
 
-    @OnClick(R.id.visit_our_website)
     fun onVisitOurWebsiteClick() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.CODE_FOR_VILNIUS_WEBSITE))
         startActivity(intent)
     }
 
-    @OnClick(R.id.facebook_page)
     fun onFacebookPageClick() {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + GlobalConsts.CODE_FOR_VILNIUS_FACEBOOK_ID)))
@@ -74,19 +74,16 @@ class AboutActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.meetup_page)
     fun onMeetupPageClick() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.CODE_FOR_VILNIUS_MEETUP))
         startActivity(intent)
     }
 
-    @OnClick(R.id.phone_select_view)
     fun onPhoneViewClick() {
         val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel: ${GlobalConsts.VILNIUS_MUNICIPALITY_PHONE}"))
         startActivity(intent)
     }
 
-    @OnClick(R.id.municipality_email)
     fun onMunicipalityEmailClick() {
         openEmail(GlobalConsts.VILNIUS_MUNICIPALITY_EMAIL)
     }
