@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.problem_images_view_pager_item.view.*
 import lt.vilnius.tvarkau.R
+import java.io.File
 
 
-class NewProblemPhotosPagerAdapter(private val photos: List<String>,
+class NewProblemPhotosPagerAdapter(private val photos: List<File>,
                                    private val listener: OnPhotoClickedListener) : PagerAdapter() {
 
     override fun getCount(): Int = if (photos.isNotEmpty()) photos.count() else 1
@@ -37,7 +38,7 @@ class NewProblemPhotosPagerAdapter(private val photos: List<String>,
     fun instantiateProblemPhoto(position: Int, view: View): View {
         Glide.with(view.context).load(photos[position]).into(view.problem_image_view)
 
-        view.problem_image_view.setOnClickListener { listener.onPhotoClicked(position, photos) }
+        view.problem_image_view.setOnClickListener { listener.onPhotoClicked(position, photos.map(File::toString)) }
 
         return view
     }

@@ -1,13 +1,12 @@
 package lt.vilnius.tvarkau;
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -35,8 +34,6 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneOffset;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,32 +55,27 @@ import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PermissionUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
 public class NewProblemActivity extends BaseActivity implements NewProblemPhotosPagerAdapter.OnPhotoClickedListener {
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int GALLERY_REQUEST_CODE = 2;
-
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
+    private static final int TAKE_PHOTO_PERMISSIONS_REQUEST_CODE = 10;
     private static final int MAP_PERMISSION_REQUEST_CODE = 20;
 
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PERSONAL_DATA = 12;
     public static final int REQUEST_CHOOSE_REPORT_TYPE = 13;
 
-    public static final String[] MAP_PERMISSIONS = new String[]{ACCESS_FINE_LOCATION};
-    private static final String[] LOCATION_PERMISSIONS = {WRITE_EXTERNAL_STORAGE, CAMERA, READ_EXTERNAL_STORAGE};
+    public static final String[] TAKE_PHOTO_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+    public static final String[] MAP_PERMISSIONS = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
     public static final String PROBLEM_PREFERENCE_KEY = "problem";
 
@@ -109,11 +101,9 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
     ImageView reportProblemTakePhoto;
 
     @State
-    File lastPhotoFile;
-    @State
     LatLng locationCords;
     @State
-    ArrayList<Uri> imagesURIs;
+    List<File> imageFiles = new ArrayList<>();
     @State
     String reportType;
     @State
@@ -139,12 +129,10 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         initProblemImagesPager();
-
-        imagesURIs = new ArrayList<>();
     }
 
     private void initProblemImagesPager() {
-        problemImagesViewPager.setAdapter(new NewProblemPhotosPagerAdapter(new ArrayList<>(), this));
+        problemImagesViewPager.setAdapter(new NewProblemPhotosPagerAdapter(imageFiles, this));
         problemImagesViewPager.setOffscreenPageLimit(3);
         problemImagesViewPagerIndicator.setViewPager(problemImagesViewPager);
         problemImagesViewPagerIndicator.setVisibility(View.GONE);
@@ -181,13 +169,13 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
 
             Observable<String[]> photoObservable;
 
-            if (imagesURIs != null) {
-                photoObservable = Observable.from(imagesURIs)
+            if (imageFiles != null && !imageFiles.isEmpty()) {
+                photoObservable = Observable.from(imageFiles)
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.io())
-                        .map(uri -> Uri.fromFile(new File(ImageUtils.getPhotoPathFromUri(this, uri))))
-                        .map(ImageUtils::convertToBase64EncodedString)
+                        .map(p -> ImageUtils.convertToBase64EncodedString(this, p))
                         .toList()
+                        .filter(p -> p != null)
                         .map(encodedPhotos -> {
                             if (encodedPhotos.size() > 0) {
                                 String[] encodedPhotosArray = new String[encodedPhotos.size()];
@@ -332,15 +320,18 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
     }
 
     private void openPhotoSelectorDialog() {
-
         AlertDialog.Builder imagePickerDialogBuilder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
 
         View view = LayoutInflater.from(this).inflate(R.layout.image_picker_dialog, null);
         TextView cameraButton = ButterKnife.findById(view, R.id.camera_button);
         TextView galleryButton = ButterKnife.findById(view, R.id.gallery_button);
 
+        if (!EasyImage.canDeviceHandleGallery(this)) {
+            galleryButton.setVisibility(View.GONE);
+        }
+
         imagePickerDialogBuilder
-                .setTitle(this.getResources().getString(R.string.add_photos))
+                .setTitle(R.string.add_photos)
                 .setView(view)
                 .setPositiveButton(R.string.cancel, (dialog, whichButton) -> dialog.dismiss())
                 .create();
@@ -348,41 +339,28 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
         AlertDialog imagePickerDialog = imagePickerDialogBuilder.show();
 
         cameraButton.setOnClickListener(v -> {
-            launchCamera();
+            EasyImage.openCamera(this, 0);
             imagePickerDialog.dismiss();
         });
 
         galleryButton.setOnClickListener(v -> {
-            openGallery();
+            EasyImage.openGallery(this, 0, true);
             imagePickerDialog.dismiss();
         });
     }
 
-    private void launchCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String timestamp = FormatUtils.formatLocalDateTimeToSeconds(LocalDateTime.now(ZoneOffset.UTC));
-        photoFileName = "IMG_" + timestamp + ".jpg";
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtils.getTakenPhotoFileUri(this, photoFileName));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, GALLERY_REQUEST_CODE);
-        }
-    }
-
     @OnClick(R.id.report_problem_take_photo)
     public void onTakePhotoClicked() {
-        if (PermissionUtils.isAllPermissionsGranted(this, LOCATION_PERMISSIONS)) {
-            openPhotoSelectorDialog();
+        if (PermissionUtils.isAllPermissionsGranted(this, TAKE_PHOTO_PERMISSIONS)) {
+            takePhoto();
         } else {
-            ActivityCompat.requestPermissions(this, LOCATION_PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, TAKE_PHOTO_PERMISSIONS,
+                    TAKE_PHOTO_PERMISSIONS_REQUEST_CODE);
         }
+    }
+
+    private void takePhoto() {
+        openPhotoSelectorDialog();
     }
 
     @OnClick(R.id.report_problem_type)
@@ -398,9 +376,9 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if (PermissionUtils.isAllPermissionsGranted(this, LOCATION_PERMISSIONS)) {
-                    openPhotoSelectorDialog();
+            case TAKE_PHOTO_PERMISSIONS_REQUEST_CODE:
+                if (PermissionUtils.isAllPermissionsGranted(this, TAKE_PHOTO_PERMISSIONS)) {
+                    takePhoto();
                 } else {
                     Toast.makeText(this, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show();
                 }
@@ -421,7 +399,7 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
         return reportProblemDescription.getText().length() > 0
                 || reportProblemLocation.getText().length() > 0
                 || (reportType != null && reportType.length() > 0)
-                || (imagesURIs != null && imagesURIs.size() > 0);
+                || (imageFiles != null && imageFiles.size() > 0);
     }
 
     @Override
@@ -443,23 +421,30 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                Toast.makeText(NewProblemActivity.this, R.string.photo_capture_error,
+                        Toast.LENGTH_SHORT).show();
+                Timber.w(e, "Unable to take a picture");
+            }
+
+            @Override
+            public void onImagesPicked(List<File> imageFiles, EasyImage.ImageSource source, int type) {
+                setImagesInViewPager(imageFiles);
+            }
+
+            @Override
+            public void onCanceled(EasyImage.ImageSource source, int type) {
+                if (source == EasyImage.ImageSource.CAMERA) {
+                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(NewProblemActivity.this);
+                    if (photoFile != null) photoFile.delete();
+                }
+            }
+        });
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_IMAGE_CAPTURE:
-                    Uri takenImageUri = ImageUtils.getTakenPhotoFileUri(this, photoFileName);
-                    setImagesInViewPager(takenImageUri);
-                    break;
-                case GALLERY_REQUEST_CODE:
-                    ClipData clipData = data.getClipData();
-                    if (clipData != null) {
-                        for (int i = 0; i < clipData.getItemCount(); i++) {
-                            setImagesInViewPager(clipData.getItemAt(i).getUri());
-                        }
-                    } else if (data.getData() != null) {
-                        Uri uri = data.getData();
-                        setImagesInViewPager(uri);
-                    }
-                    break;
                 case REQUEST_PLACE_PICKER:
                     Place place = PlacePicker.getPlace(this, data);
                     locationCords = place.getLatLng();
@@ -499,31 +484,19 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
                     }
                     break;
             }
-        } else {
-            switch (requestCode) {
-                case REQUEST_IMAGE_CAPTURE:
-                    Toast.makeText(this, R.string.photo_capture_error, Toast.LENGTH_SHORT).show();
-            }
         }
+
     }
 
-    private void setImagesInViewPager(Uri uri) {
-        imagesURIs.add(uri);
-        List<String> imagesPath = new ArrayList<>();
-        for (int i = 0; i < imagesURIs.size(); i++) {
-            String path = ImageUtils.getPhotoPathFromUri(this, imagesURIs.get(i));
-            if (path != null) {
-                imagesPath.add(new File(path).toString());
-            } else {
-                imagesURIs.remove(uri);
-                Toast.makeText(this, R.string.error_taking_image_from_server, Toast.LENGTH_LONG).show();
-            }
-        }
-        if (imagesURIs.size() > 1) {
+
+    private void setImagesInViewPager(List<File> imageFiles) {
+        this.imageFiles = imageFiles;
+
+        if (imageFiles.size() > 1) {
             problemImagesViewPagerIndicator.setVisibility(View.VISIBLE);
         }
-        if (imagesURIs.size() > 0) {
-            problemImagesViewPager.setAdapter(new NewProblemPhotosPagerAdapter(imagesPath, this));
+        if (imageFiles.size() > 0) {
+            problemImagesViewPager.setAdapter(new NewProblemPhotosPagerAdapter(imageFiles, this));
         }
     }
 
@@ -532,7 +505,7 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
         if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
             showPlacePicker(view);
         } else {
-            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -570,4 +543,5 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
 
         startActivity(intent);
     }
+
 }
