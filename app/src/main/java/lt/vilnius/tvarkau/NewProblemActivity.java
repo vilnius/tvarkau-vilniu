@@ -505,7 +505,7 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
         if ((PermissionUtils.isAllPermissionsGranted(this, MAP_PERMISSIONS))) {
             showPlacePicker(view);
         } else {
-            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE);
         }
     }
 
