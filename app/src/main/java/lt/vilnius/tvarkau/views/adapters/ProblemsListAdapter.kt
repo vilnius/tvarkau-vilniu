@@ -45,6 +45,7 @@ class ProblemsListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is DataViewHolder) {
             val item = values[position]
+            val problemId = item.problemId
 
             item.applyReportStatusLabel(holder.itemView.problem_list_content_status)
             holder.itemView.problem_list_content_description.text = item.description
@@ -60,9 +61,8 @@ class ProblemsListAdapter(
                 holder.itemView.problem_list_content_thumb.gone()
             }
 
-            holder.itemView.problem_list_content.tag = item.id
             holder.itemView.problem_list_content.setOnClickListener { view ->
-                val intent = ProblemDetailActivity.getStartActivityIntent(activity, view.tag as String)
+                val intent = ProblemDetailActivity.getStartActivityIntent(activity, problemId)
                 val bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
                         view.width, view.height).toBundle()
 
