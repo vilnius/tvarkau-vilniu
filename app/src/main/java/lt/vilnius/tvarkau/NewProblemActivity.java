@@ -424,6 +424,8 @@ public class NewProblemActivity extends BaseActivity implements NewProblemPhotos
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                Toast.makeText(NewProblemActivity.this, R.string.photo_capture_error,
+                        Toast.LENGTH_SHORT).show();
                 Timber.w(e, "Unable to take a picture");
             }
 
