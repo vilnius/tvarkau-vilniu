@@ -47,6 +47,7 @@
     <string name="profile_submit">Išsaugoti</string>
     <string name="hint_location">Vieta</string>
     <string name="hint_description">Aprašymas</string>
+    <string name="hint_report_date_time">Pažeidimo data ir laikas</string>
     <string name="no_photo">Nėra nuotraukos</string>
     <string name="hint_problem_type">Tipas</string>
     <string name="error_location_incorrect">Pasirinkote vietą ne Vilniaus mieste.</string>

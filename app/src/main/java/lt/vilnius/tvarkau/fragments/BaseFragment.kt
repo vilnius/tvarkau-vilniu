@@ -37,4 +37,8 @@ abstract class BaseFragment : Fragment() {
 
         analytics.trackCurrentFragment(activity, this)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
 }

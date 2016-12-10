@@ -11,4 +11,8 @@ public class ApiRequest<P> {
         this.id = method.getId();
         this.params = params;
     }
+
+    public P getParams() {
+        return params;
+    }
 }
