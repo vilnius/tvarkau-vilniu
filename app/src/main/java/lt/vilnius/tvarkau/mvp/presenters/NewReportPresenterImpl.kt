@@ -27,7 +27,7 @@ class NewReportPresenterImpl(
 
     override fun initWithReportType(reportType: String) {
         if (reportType == NewReportFragment.TRAFFIC_VIOLATIONS) {
-            view.showPersonalDataFields()
+            view.showPersonalDataFields(null)
         }
     }
 

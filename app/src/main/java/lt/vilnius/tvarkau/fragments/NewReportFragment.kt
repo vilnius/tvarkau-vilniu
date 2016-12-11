@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.problem_detail.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.NewProblemActivity.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractorImpl
 import lt.vilnius.tvarkau.mvp.interactors.ReportPhotoProviderImpl
@@ -140,12 +141,15 @@ class NewReportFragment : BaseFragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         presenter.onAttach()
+        presenter.initWithReportType(reportType)
     }
 
-    override fun showPersonalDataFields() {
+    override fun showPersonalDataFields(profile: Profile?) {
+        new_report_date_time_container.visible()
+        new_report_birthday_container.visible()
+        new_report_email_container.visible()
+        new_report_name_container.visible()
 
-
-        //TODO show fields
         //TODO fill personal data fields
     }
 

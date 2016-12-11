@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.mvp.views
 
+import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
 
 /**
@@ -11,7 +12,7 @@ interface NewReportView {
 
     fun hideProgress()
 
-    fun showPersonalDataFields()
+    fun showPersonalDataFields(profile: Profile?)
 
     fun showValidationError(error: FieldAwareValidator.ValidationException)
 
