@@ -85,7 +85,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
             val params = GetProblemParams(issueId)
             val request = ApiRequest(ApiMethod.GET_REPORT, params)
 
-            legacyApiService.getProblem(request)
+            subscription = legacyApiService.getProblem(request)
                     .map { it.result!! }
                     .doOnNext { problem = it }
                     .doOnNext { analytics.trackViewProblem(it) }

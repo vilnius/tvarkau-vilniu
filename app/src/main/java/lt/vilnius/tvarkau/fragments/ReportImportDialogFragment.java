@@ -44,6 +44,7 @@ import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -77,6 +78,7 @@ public class ReportImportDialogFragment extends DialogFragment {
     private SharedPrefsManager prefsManager;
     private String password;
     private boolean isSettingsActivity;
+    private Subscription subscription;
 
     public ReportImportDialogFragment() {}
 
@@ -192,7 +194,7 @@ public class ReportImportDialogFragment extends DialogFragment {
                         vilniusAccountLoginError.setText(R.string.error_on_vilnius_sign);
                     };
 
-                    legacyApiService.loginToVilniusAccount(request)
+                    subscription = legacyApiService.loginToVilniusAccount(request)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -308,6 +310,9 @@ public class ReportImportDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroyView() {
+        if(subscription != null) {
+            subscription.unsubscribe();
+        }
         super.onDestroyView();
         unbinder.unbind();
     }
