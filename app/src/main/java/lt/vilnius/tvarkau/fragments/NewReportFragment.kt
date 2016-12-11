@@ -109,6 +109,7 @@ class NewReportFragment : BaseFragment(),
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         with(activity as AppCompatActivity) {
             setSupportActionBar(toolbar)
