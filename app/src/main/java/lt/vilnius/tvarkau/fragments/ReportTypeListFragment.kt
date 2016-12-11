@@ -58,7 +58,7 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
 
         val request = ApiRequest<GetProblemTypesParams>(ApiMethod.GET_PROBLEM_TYPES, null)
 
-        legacyApiService.getProblemTypes(request)
+        subscription = legacyApiService.getProblemTypes(request)
                 .toSingle()
                 .doOnSubscribe { report_types_progress.visible() }
                 .doOnUnsubscribe { report_types_progress.gone() }

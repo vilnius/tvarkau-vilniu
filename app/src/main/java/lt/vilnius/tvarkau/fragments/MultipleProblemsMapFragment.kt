@@ -12,6 +12,7 @@ import lt.vilnius.tvarkau.backend.ApiMethod
 import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.entity.Problem
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.schedulers.Schedulers
@@ -22,6 +23,9 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {
+
+    private var subscription: Subscription? = null
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -54,7 +58,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
             Timber.e(throwable)
         }
 
-        legacyApiService.getProblems(request)
+        subscription = legacyApiService.getProblems(request)
                 .toSingle()
                 .map { it.result }
                 .doOnSuccess { problems ->
@@ -95,6 +99,11 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun onLocationInsideCity(location: Location) {
         zoomToMyLocation(googleMap!!, location)
+    }
+
+    override fun onDestroyView() {
+        subscription?.unsubscribe()
+        super.onDestroyView()
     }
 
     companion object {
