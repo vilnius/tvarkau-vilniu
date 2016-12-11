@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.problem_detail.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.NewProblemActivity.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractorImpl
@@ -248,7 +249,7 @@ class NewReportFragment : BaseFragment(),
         }
 
         Toast.makeText(context, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show()
-        //TODO pass through to activity to complete navigation
+        (activity as ReportRegistrationActivity).onReportSubmitted()
     }
 
     fun onTakePhotoClicked() {

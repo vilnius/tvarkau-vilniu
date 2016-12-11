@@ -25,6 +25,11 @@ class ReportRegistrationActivity : BaseActivity() {
                 .commit()
     }
 
+    fun onReportSubmitted() {
+        setResult(RESULT_OK)
+        finish()
+    }
+
     override fun onBackPressed() {
         if (!supportFragmentManager.popBackStackImmediate()) {
             super.onBackPressed()
