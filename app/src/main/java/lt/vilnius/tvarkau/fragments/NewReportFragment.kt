@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.content.res.AppCompatResources
 import android.util.Patterns
 import android.view.*
 import android.widget.DatePicker
@@ -166,6 +167,10 @@ class NewReportFragment : BaseFragment(),
 
     override fun showPersonalDataFields(profile: Profile?) {
         new_report_date_time_container.visible()
+
+        val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_autorenew)
+        report_problem_date_time.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+
         new_report_birthday_container.visible()
         new_report_email_container.visible()
         new_report_name_container.visible()

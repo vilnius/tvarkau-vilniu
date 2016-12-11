@@ -123,7 +123,6 @@
                         <EditText
                             android:id="@+id/report_problem_date_time"
                             style="@style/NewProblemField"
-                            android:drawableRight="@drawable/ic_autorenew"
                             android:focusable="false"
                             android:hint="@string/hint_report_date_time"
                             android:inputType="datetime"/>
