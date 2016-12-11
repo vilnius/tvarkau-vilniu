@@ -1,9 +1,12 @@
 package lt.vilnius.tvarkau.mvp.presenters
 
+import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.fragments.NewReportFragment
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractor
+import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
+import org.threeten.bp.LocalDate
 import rx.Scheduler
 import rx.Subscription
 
@@ -12,6 +15,7 @@ import rx.Subscription
  */
 class NewReportPresenterImpl(
         private val interactor: NewReportInteractor,
+        private val personalDataInteractor: PersonalDataInteractor,
         private val view: NewReportView,
         private val uiScheduler: Scheduler
 ) : NewReportPresenter {
@@ -27,13 +31,14 @@ class NewReportPresenterImpl(
 
     override fun initWithReportType(reportType: String) {
         if (reportType == NewReportFragment.TRAFFIC_VIOLATIONS) {
-            view.showPersonalDataFields(null)
+            view.showPersonalDataFields(personalDataInteractor.getPersonalData())
         }
     }
 
     override fun submitProblem(validator: FieldAwareValidator<NewReportData>) {
         validator.toSingle()
                 .flatMap { interactor.submitReport(it) }
+                .doOnSuccess { updatePersonalData(validator.get()) }
                 .doOnSubscribe { view.showProgress() }
                 .doOnUnsubscribe { view.hideProgress() }
                 .observeOn(uiScheduler)
@@ -43,6 +48,19 @@ class NewReportPresenterImpl(
                     handleError(it)
                 })
                 .apply { subscription = this }
+    }
+
+    private fun updatePersonalData(reportData: NewReportData) {
+        if (reportData.reportType != NewReportFragment.TRAFFIC_VIOLATIONS) return
+
+        val current = personalDataInteractor.getPersonalData() ?: Profile()
+
+        current.birthday = LocalDate.parse(reportData.dateOfBirth)
+        current.email = reportData.email
+        current.name = reportData.name
+        current.mobilePhone = reportData.phone
+
+        personalDataInteractor.storePersonalData(current)
     }
 
     private fun handleSuccess(reportId: String) {

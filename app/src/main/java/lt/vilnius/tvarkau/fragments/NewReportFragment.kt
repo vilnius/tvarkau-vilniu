@@ -1,7 +1,9 @@
 package lt.vilnius.tvarkau.fragments
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.ProgressDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
@@ -14,7 +16,10 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Patterns
 import android.view.*
+import android.widget.DatePicker
+import android.widget.TimePicker
 import android.widget.Toast
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -32,16 +37,18 @@ import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractorImpl
+import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractorImpl
 import lt.vilnius.tvarkau.mvp.interactors.ReportPhotoProviderImpl
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
-import lt.vilnius.tvarkau.utils.FieldAwareValidator
-import lt.vilnius.tvarkau.utils.KeyboardUtils
-import lt.vilnius.tvarkau.utils.PermissionUtils
+import lt.vilnius.tvarkau.utils.*
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
 import org.greenrobot.eventbus.EventBus
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
 import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.EasyImage
 import timber.log.Timber
@@ -54,6 +61,8 @@ import java.util.*
  */
 class NewReportFragment : BaseFragment(),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener,
         NewReportView {
 
     var locationCords: LatLng? = null
@@ -65,6 +74,9 @@ class NewReportFragment : BaseFragment(),
                         legacyApiService,
                         ReportPhotoProviderImpl(context),
                         ioScheduler
+                ),
+                PersonalDataInteractorImpl(
+                        SharedPrefsManager.getInstance(context)
                 ),
                 this,
                 uiScheduler
@@ -117,6 +129,13 @@ class NewReportFragment : BaseFragment(),
         }
 
         report_problem_take_photo.setOnClickListener { onTakePhotoClicked() }
+        report_problem_submitter_birthday.setOnClickListener {
+            onBirthdayClicked()
+        }
+
+        report_problem_date_time.setOnClickListener {
+            funOnProblemDateTimeClicked()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -150,7 +169,11 @@ class NewReportFragment : BaseFragment(),
         new_report_email_container.visible()
         new_report_name_container.visible()
 
-        //TODO fill personal data fields
+        profile?.let {
+            report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(it.birthday))
+            report_problem_submitter_email.setText(it.email)
+            report_problem_submitter_name.setText(it.name)
+        }
     }
 
     private fun createValidator(): FieldAwareValidator<NewReportData> {
@@ -160,14 +183,13 @@ class NewReportFragment : BaseFragment(),
                 address = problem_address.text.toString(),
                 latitude = locationCords?.latitude,
                 longitude = locationCords?.longitude,
-                email = null,
-                phone = null,
-                name = null,
-                dateOfBirth = null,
+                email = report_problem_submitter_email.text.toString(),
+                name = report_problem_submitter_name.text.toString(),
+                dateOfBirth = report_problem_submitter_birthday.text.toString(),
                 photoUrls = imageFiles
         )
 
-        val validator = FieldAwareValidator.of(data)
+        var validator = FieldAwareValidator.of(data)
                 .validate({ it.address.isNotBlank() },
                         report_problem_location_wrapper.id,
                         getText(R.string.error_problem_location_is_empty).toString())
@@ -175,12 +197,26 @@ class NewReportFragment : BaseFragment(),
                         report_problem_description_wrapper.id,
                         getText(R.string.error_problem_description_is_empty).toString())
 
-        return if (validatePersonalData) {
-            //TODO validate fields
-            validator.validate({ false }, 1, "")
-        } else {
-            validator
+        if (validatePersonalData) {
+            validator = validator
+                    .validate({ it.email?.isNotBlank() ?: false },
+                            report_problem_submitter_email_wrapper.id,
+                            getString(R.string.error_profile_fill_email))
+                    .validate({ Patterns.EMAIL_ADDRESS.matcher(it.email).matches() },
+                            report_problem_submitter_email_wrapper.id,
+                            getString(R.string.error_profile_fill_email))
+                    .validate({ it.name?.isNotBlank() ?: false },
+                            report_problem_submitter_name_wrapper.id,
+                            getText(R.string.error_profile_fill_name).toString())
+                    .validate({ it.dateOfBirth?.isNotBlank() ?: false },
+                            report_problem_submitter_birthday_wrapper.id,
+                            getText(R.string.error_profile_fill_birthday).toString())
+                    .validate({ it.photoUrls.size >= 2 },
+                            0,
+                            getText(R.string.error_minimum_photo_requirement).toString())
         }
+
+        return validator
     }
 
     override fun showValidationError(error: FieldAwareValidator.ValidationException) {
@@ -375,7 +411,7 @@ class NewReportFragment : BaseFragment(),
         }
     }
 
-    fun onProblemLocationClicked(view: View) {
+    private fun onProblemLocationClicked(view: View) {
         if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
             showPlacePicker(view)
         } else {
@@ -408,6 +444,33 @@ class NewReportFragment : BaseFragment(),
                         startActivity(intent)
                     }.setActionTextColor(getColor(context, R.color.snackbar_action_text)).show()
         }
+    }
+
+    private fun onBirthdayClicked() {
+        val date = LocalDate.now()
+
+        val year = date.year
+        // Need to adjust month as in Calendar they start from 0, not 1
+        val month = date.monthValue - 1
+        val day = date.dayOfMonth
+
+        val dialogDatePicker = DatePickerDialog(activity, this, year, month, day)
+        dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+        dialogDatePicker.show()
+    }
+
+    private fun funOnProblemDateTimeClicked() {
+        //TODO figure out hot to show date AND time picker at the same time
+    }
+
+    override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
+
+    }
+
+    override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        // Need to adjust month as in Calendar they start from 0, not 1
+        val date = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
+        report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(date))
     }
 
     override fun onPhotoClicked(position: Int, photos: List<String>) {

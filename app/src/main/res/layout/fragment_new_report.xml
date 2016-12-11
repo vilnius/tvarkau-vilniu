@@ -98,7 +98,6 @@
                             style="@style/NewProblemField"
                             android:hint="@string/hint_description"
                             android:inputType="textCapSentences|textMultiLine"/>
-
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -125,7 +124,9 @@
                             android:id="@+id/report_problem_date_time"
                             style="@style/NewProblemField"
                             android:drawableRight="@drawable/ic_autorenew"
-                            android:hint="@string/hint_report_date_time"/>
+                            android:focusable="false"
+                            android:hint="@string/hint_report_date_time"
+                            android:inputType="datetime"/>
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -151,8 +152,8 @@
                         <EditText
                             android:id="@+id/report_problem_submitter_name"
                             style="@style/NewProblemField"
-                            android:focusableInTouchMode="false"
-                            android:hint="@string/profile_hint_name"/>
+                            android:hint="@string/profile_hint_name"
+                            android:inputType="textPersonName"/>
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -178,7 +179,9 @@
                         <EditText
                             android:id="@+id/report_problem_submitter_birthday"
                             style="@style/NewProblemField"
-                            android:hint="@string/profile_hint_birthday"/>
+                            android:focusable="false"
+                            android:hint="@string/profile_hint_birthday"
+                            android:inputType="date"/>
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 

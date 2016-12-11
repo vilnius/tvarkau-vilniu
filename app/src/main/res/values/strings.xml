@@ -79,6 +79,7 @@
     <string name="error_problem_description_is_empty">Prašome įvesti problemos aprašymą</string>
     <string name="error_problem_location_is_empty">Prašome pasirinkti problemos vietą</string>
     <string name="error_problem_type_is_empty">Prašome pasirinkti problemos tipą</string>
+    <string name="error_minimum_photo_requirement">Prašome prisegti mažiausiai 2 nuotraukas</string>
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
     <string name="error_submitting_problem">Atsiprašome, įvyko serverio klaida. Bandykite dar sykį.</string>
     <string name="sending_problem">Siunčiama...</string>
