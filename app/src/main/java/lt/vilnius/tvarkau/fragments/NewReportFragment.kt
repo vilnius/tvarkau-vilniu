@@ -56,14 +56,13 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.Calendar.*
 
 /**
  * @author Martynas Jurkus
  */
 class NewReportFragment : BaseFragment(),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
-        DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener,
         NewReportView {
 
     var locationCords: LatLng? = null
@@ -134,8 +133,9 @@ class NewReportFragment : BaseFragment(),
             onBirthdayClicked()
         }
 
+        //TODO add refresh button click listener to set current date and time
         report_problem_date_time.setOnClickListener {
-            funOnProblemDateTimeClicked()
+            onProblemDateTimeClicked()
         }
     }
 
@@ -455,23 +455,45 @@ class NewReportFragment : BaseFragment(),
         val month = date.monthValue - 1
         val day = date.dayOfMonth
 
-        val dialogDatePicker = DatePickerDialog(activity, this, year, month, day)
+        val dialogDatePicker = DatePickerDialog(activity, { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+            val selectedDate = LocalDate.of(year, month + 1, day)
+            report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(selectedDate))
+        }, year, month, day)
         dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
         dialogDatePicker.show()
     }
 
-    private fun funOnProblemDateTimeClicked() {
-        //TODO figure out hot to show date AND time picker at the same time
-    }
+    private fun onProblemDateTimeClicked() {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date()
 
-    override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
+        val year = calendar.get(YEAR)
+        val month = calendar.get(MONTH)
+        val day = calendar.get(DAY_OF_MONTH)
 
-    }
+        val dialogDatePicker = DatePickerDialog(activity, { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+            calendar.set(YEAR, year)
+            calendar.set(MONTH, month)
+            calendar.set(DAY_OF_MONTH, day)
 
-    override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int) {
-        // Need to adjust month as in Calendar they start from 0, not 1
-        val date = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
-        report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(date))
+            TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
+                calendar.set(HOUR, hour)
+                calendar.set(MINUTE, minutes)
+
+                val dateTime = LocalDateTime.of(
+                        calendar.get(YEAR),
+                        calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
+                        calendar.get(DAY_OF_MONTH),
+                        calendar.get(HOUR),
+                        calendar.get(MINUTE)
+                )
+
+                report_problem_date_time.setText(FormatUtils.formatLocalDateTime(dateTime))
+            }, 0, 0, true).show()
+        }, year, month, day)
+
+        dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+        dialogDatePicker.show()
     }
 
     override fun onPhotoClicked(position: Int, photos: List<String>) {
