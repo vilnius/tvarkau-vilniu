@@ -45,9 +45,9 @@ class NewReportPresenterImpl(
         validator.toSingle()
                 .flatMap { interactor.submitReport(it) }
                 .doOnSuccess { updatePersonalData(validator.get()) }
+                .observeOn(uiScheduler)
                 .doOnSubscribe { view.showProgress() }
                 .doOnUnsubscribe { view.hideProgress() }
-                .observeOn(uiScheduler)
                 .subscribe({
                     handleSuccess(it)
                 }, {
