@@ -7,8 +7,8 @@ import org.assertj.android.api.widget.AbstractLinearLayoutAssert
 /**
  * @author Martynas Jurkus
  */
-
-class TextInputLayoutAssert private constructor(actual: TextInputLayout) : AbstractLinearLayoutAssert<TextInputLayoutAssert, TextInputLayout>(actual, TextInputLayoutAssert::class.java) {
+class TextInputLayoutAssert private constructor(actual: TextInputLayout) :
+        AbstractLinearLayoutAssert<TextInputLayoutAssert, TextInputLayout>(actual, TextInputLayoutAssert::class.java) {
 
     fun noError(): TextInputLayoutAssert {
         val actualError = actual.error.emptyToNull()

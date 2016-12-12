@@ -79,7 +79,89 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         fragment.doSubmitReport()
 
         assertThat(fragment.report_problem_location_wrapper).noError()
-        assertThat(fragment.report_problem_description_wrapper).hasError(R.string.error_problem_description_is_empty)
+        assertThat(fragment.report_problem_description_wrapper)
+                .hasError(R.string.error_problem_description_is_empty)
+    }
+
+    @Test
+    fun submit_parkingViolation_validateName() {
+        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+
+        fillAllFields(fragment)
+        fragment.report_problem_submitter_name.setText("")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_name_wrapper)
+                .hasError(R.string.error_profile_fill_name)
+
+        fragment.report_problem_submitter_name.setText("myname")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_name_wrapper)
+                .hasError(R.string.error_profile_name_invalid)
+
+        fragment.report_problem_submitter_name.setText("valid name")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_name_wrapper).noError()
+    }
+
+    @Test
+    fun submit_parkingViolation_validateEmail() {
+        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+
+        fillAllFields(fragment)
+        fragment.report_problem_submitter_email.setText("")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_email_wrapper)
+                .hasError(R.string.error_profile_fill_email)
+
+        fragment.report_problem_submitter_email.setText("invalidemail")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_email_wrapper)
+                .hasError(R.string.error_profile_email_invalid)
+
+        fragment.report_problem_submitter_email.setText("valid@email.com")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_email_wrapper).noError()
+    }
+
+    @Test
+    fun submit_parkingViolation_validateBirthday() {
+        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+
+        fillAllFields(fragment)
+        fragment.report_problem_submitter_birthday.setText("")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_birthday_wrapper)
+                .hasError(R.string.error_profile_fill_birthday)
+
+        fragment.report_problem_submitter_email.setText("1894-01-01")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_birthday_wrapper)
+                .noError()
+    }
+
+    @Test
+    fun submit_parkingViolation_validateDateTime() {
+        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+
+        fillAllFields(fragment)
+        fragment.report_problem_date_time.setText("")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_date_time_wrapper)
+                .hasError(R.string.error_report_fill_date_time)
+
+        fragment.report_problem_date_time.setText("2017-01-01 00:00")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_date_time_wrapper)
+                .noError()
+    }
+
+    private fun fillAllFields(fragment: NewReportFragment) {
+        fragment.report_problem_location.setText("Some location")
+        fragment.report_problem_description.setText("Some description")
+        fragment.report_problem_submitter_email.setText("some@email.com")
+        fragment.report_problem_submitter_name.setText("some name")
+        fragment.report_problem_date_time.setText("2017-01-01 00:00")
+        fragment.report_problem_submitter_birthday.setText("1984-01-01")
     }
 
     private fun NewReportFragment.doSubmitReport() {

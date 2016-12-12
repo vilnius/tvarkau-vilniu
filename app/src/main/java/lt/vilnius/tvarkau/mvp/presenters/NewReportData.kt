@@ -11,6 +11,7 @@ data class NewReportData(
         val address: String = "",
         val latitude: Double? = null,
         val longitude: Double? = null,
+        val dateTime: String? = null,
         val email: String? = null,
         val phone: String? = null,
         val name: String? = null,

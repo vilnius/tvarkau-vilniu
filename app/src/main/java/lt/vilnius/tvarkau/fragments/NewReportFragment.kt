@@ -199,11 +199,12 @@ class NewReportFragment : BaseFragment(),
 
     private fun createValidator(): FieldAwareValidator<NewReportData> {
         val data = NewReportData(
-                description = report_problem_description.text.toString(),
                 reportType = reportType,
+                description = report_problem_description.text.toString(),
                 address = report_problem_location.text.toString(),
                 latitude = locationCords?.latitude,
                 longitude = locationCords?.longitude,
+                dateTime = report_problem_date_time.text.toString(),
                 email = report_problem_submitter_email.text.toString(),
                 name = report_problem_submitter_name.text.toString(),
                 dateOfBirth = report_problem_submitter_birthday.text.toString(),
@@ -220,15 +221,21 @@ class NewReportFragment : BaseFragment(),
 
         if (validatePersonalData) {
             validator = validator
+                    .validate({ it.dateTime?.isNotBlank() ?: false },
+                            report_problem_date_time_wrapper.id,
+                            getString(R.string.error_report_fill_date_time))
                     .validate({ it.email?.isNotBlank() ?: false },
                             report_problem_submitter_email_wrapper.id,
                             getString(R.string.error_profile_fill_email))
                     .validate({ Patterns.EMAIL_ADDRESS.matcher(it.email).matches() },
                             report_problem_submitter_email_wrapper.id,
-                            getString(R.string.error_profile_fill_email))
+                            getString(R.string.error_profile_email_invalid))
                     .validate({ it.name?.isNotBlank() ?: false },
                             report_problem_submitter_name_wrapper.id,
                             getText(R.string.error_profile_fill_name).toString())
+                    .validate({ it.name!!.split(" ").size >= 2 },
+                            report_problem_submitter_name_wrapper.id,
+                            getText(R.string.error_profile_name_invalid).toString())
                     .validate({ it.dateOfBirth?.isNotBlank() ?: false },
                             report_problem_submitter_birthday_wrapper.id,
                             getText(R.string.error_profile_fill_birthday).toString())
@@ -243,12 +250,16 @@ class NewReportFragment : BaseFragment(),
     override fun showValidationError(error: FieldAwareValidator.ValidationException) {
         report_problem_location_wrapper.error = null
         report_problem_description_wrapper.error = null
+        report_problem_date_time_wrapper.error = null
+        report_problem_submitter_name_wrapper.error = null
+        report_problem_submitter_birthday_wrapper.error = null
+        report_problem_submitter_email_wrapper.error = null
 
         view?.findViewById(error.viewId)?.let {
             if (it is TextInputLayout) {
                 it.error = error.message
             }
-        }
+        } ?: Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
     }
 
     override fun showError(error: Throwable) {
@@ -352,7 +363,7 @@ class NewReportFragment : BaseFragment(),
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         EasyImage.handleActivityResult(requestCode, resultCode, data, activity, object : DefaultCallback() {
             override fun onImagePickerError(e: Exception?, source: EasyImage.ImageSource?, type: Int) {
                 Toast.makeText(activity, R.string.photo_capture_error, Toast.LENGTH_SHORT).show()
