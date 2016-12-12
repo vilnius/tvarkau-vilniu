@@ -32,7 +32,6 @@ import com.vinted.extensions.visible
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_new_report.*
 import kotlinx.android.synthetic.main.image_picker_dialog.view.*
-import kotlinx.android.synthetic.main.problem_detail.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.NewProblemActivity.*
 import lt.vilnius.tvarkau.R
@@ -202,7 +201,7 @@ class NewReportFragment : BaseFragment(),
         val data = NewReportData(
                 description = report_problem_description.text.toString(),
                 reportType = reportType,
-                address = problem_address.text.toString(),
+                address = report_problem_location.text.toString(),
                 latitude = locationCords?.latitude,
                 longitude = locationCords?.longitude,
                 email = report_problem_submitter_email.text.toString(),
