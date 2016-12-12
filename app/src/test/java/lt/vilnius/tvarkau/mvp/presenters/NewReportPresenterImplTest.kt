@@ -76,7 +76,7 @@ class NewReportPresenterImplTest {
     fun submitProblem_trafficViolation_success_updatePersonalData() {
         whenever(interactor.submitReport(any())).thenReturn(Single.just("1"))
         val validator = FieldAwareValidator.of(NewReportData(
-                reportType = NewReportFragment.TRAFFIC_VIOLATIONS,
+                reportType = NewReportFragment.PARKING_VIOLATIONS,
                 email = "test@email.com",
                 dateOfBirth = "2000-01-01"
         ))

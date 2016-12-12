@@ -20,6 +20,7 @@ import android.support.v7.content.res.AppCompatResources
 import android.util.Patterns
 import android.view.*
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -46,6 +47,7 @@ import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.utils.*
+import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
 import org.greenrobot.eventbus.EventBus
 import org.threeten.bp.LocalDate
@@ -87,7 +89,7 @@ class NewReportFragment : BaseFragment(),
     var progressDialog: ProgressDialog? = null
 
     val validatePersonalData: Boolean
-        get() = reportType == TRAFFIC_VIOLATIONS
+        get() = reportType == PARKING_VIOLATIONS
 
     lateinit var reportType: String
 
@@ -135,7 +137,6 @@ class NewReportFragment : BaseFragment(),
             onBirthdayClicked()
         }
 
-        //TODO add refresh button click listener to set current date and time
         report_problem_date_time.setOnClickListener {
             onProblemDateTimeClicked()
         }
@@ -171,6 +172,20 @@ class NewReportFragment : BaseFragment(),
 
         val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_autorenew)
         report_problem_date_time.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+        report_problem_date_time.setOnTouchListener { view, event ->
+            val DRAWABLE_RIGHT = 2
+
+            var result = false
+            val ediText = view as EditText
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= (ediText.right - ediText.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+                    report_problem_date_time.setText(formatLocalDateTime(LocalDateTime.now()))
+                    result = true
+                }
+            }
+
+            result
+        }
 
         new_report_birthday_container.visible()
         new_report_email_container.visible()
@@ -320,7 +335,6 @@ class NewReportFragment : BaseFragment(),
                 || imageFiles.isNotEmpty()
     }
 
-    //TODO handle on back pressed
     fun onBackPressed() {
         if (report_problem_description.hasFocus()) {
             KeyboardUtils.closeSoftKeyboard(activity, report_problem_description)
@@ -494,7 +508,7 @@ class NewReportFragment : BaseFragment(),
                         calendar.get(MINUTE)
                 )
 
-                report_problem_date_time.setText(FormatUtils.formatLocalDateTime(dateTime))
+                report_problem_date_time.setText(formatLocalDateTime(dateTime))
             }, 0, 0, true).show()
         }, year, month, day)
 
@@ -532,7 +546,7 @@ class NewReportFragment : BaseFragment(),
     }
 
     companion object {
-        const val TRAFFIC_VIOLATIONS = "Transporto priemonių stovėjimo tvarkos pažeidimai"
+        const val PARKING_VIOLATIONS = "Transporto priemonių stovėjimo tvarkos pažeidimai"
 
         private const val SAVE_LOCATION = "location"
         private const val SAVE_PHOTOS = "photos"

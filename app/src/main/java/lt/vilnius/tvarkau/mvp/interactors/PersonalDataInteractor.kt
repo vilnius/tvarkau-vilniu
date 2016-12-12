@@ -10,4 +10,6 @@ interface PersonalDataInteractor {
     fun getPersonalData(): Profile?
 
     fun storePersonalData(profile: Profile)
+
+    fun isUserAnonymous(): Boolean
 }

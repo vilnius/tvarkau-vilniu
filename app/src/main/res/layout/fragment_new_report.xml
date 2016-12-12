@@ -123,7 +123,9 @@
                         <EditText
                             android:id="@+id/report_problem_date_time"
                             style="@style/NewProblemField"
+                            android:cursorVisible="false"
                             android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/hint_report_date_time"
                             android:inputType="datetime"/>
                     </android.support.design.widget.TextInputLayout>

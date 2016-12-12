@@ -17,4 +17,8 @@ class PersonalDataInteractorImpl(
     override fun storePersonalData(profile: Profile) {
         sharedPrefsManager.saveUserDetails(profile)
     }
+
+    override fun isUserAnonymous(): Boolean {
+        return sharedPrefsManager.isUserAnonymous
+    }
 }

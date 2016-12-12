@@ -30,8 +30,14 @@ class NewReportPresenterImpl(
     }
 
     override fun initWithReportType(reportType: String) {
-        if (reportType == NewReportFragment.TRAFFIC_VIOLATIONS) {
-            view.showPersonalDataFields(personalDataInteractor.getPersonalData())
+        if (reportType == NewReportFragment.PARKING_VIOLATIONS) {
+            val profile = if (!personalDataInteractor.isUserAnonymous()) {
+                personalDataInteractor.getPersonalData()
+            } else {
+                null
+            }
+
+            view.showPersonalDataFields(profile)
         }
     }
 
@@ -51,7 +57,10 @@ class NewReportPresenterImpl(
     }
 
     private fun updatePersonalData(reportData: NewReportData) {
-        if (reportData.reportType != NewReportFragment.TRAFFIC_VIOLATIONS) return
+        if (reportData.reportType != NewReportFragment.PARKING_VIOLATIONS
+                || personalDataInteractor.isUserAnonymous()) {
+            return
+        }
 
         val current = personalDataInteractor.getPersonalData() ?: Profile()
 
