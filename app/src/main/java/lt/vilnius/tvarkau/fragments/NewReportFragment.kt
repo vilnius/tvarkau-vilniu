@@ -70,7 +70,7 @@ class NewReportFragment : BaseFragment(),
     var locationCords: LatLng? = null
     var imageFiles = ArrayList<File>()
 
-    val presenter: NewReportPresenter by lazy {
+    private val presenter: NewReportPresenter by lazy {
         NewReportPresenterImpl(
                 NewReportInteractorImpl(
                         legacyApiService,
@@ -85,12 +85,12 @@ class NewReportFragment : BaseFragment(),
         )
     }
 
-    var progressDialog: ProgressDialog? = null
+    private var progressDialog: ProgressDialog? = null
 
-    val validatePersonalData: Boolean
+    private val validatePersonalData: Boolean
         get() = reportType == PARKING_VIOLATIONS
 
-    lateinit var reportType: String
+    private lateinit var reportType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

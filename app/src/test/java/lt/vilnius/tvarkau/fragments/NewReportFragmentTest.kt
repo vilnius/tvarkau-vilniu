@@ -8,7 +8,11 @@ import lt.vilnius.tvarkau.base.BaseRobolectricTest
 import org.assertj.android.api.Assertions.assertThat
 import org.junit.Test
 import org.robolectric.fakes.RoboMenuItem
+import org.robolectric.shadows.ShadowLooper
+import org.robolectric.shadows.ShadowToast
+import java.io.File
 import javax.inject.Inject
+import kotlin.test.assertEquals
 
 /**
  * @author Martynas Jurkus
@@ -153,6 +157,20 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_date_time_wrapper)
                 .noError()
+    }
+
+    @Test
+    fun submit_parkingViolation_validatePhotos() {
+        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+
+        fillAllFields(fragment)
+        fragment.imageFiles.add(File("some file"))
+
+        fragment.doSubmitReport()
+
+        ShadowLooper.idleMainLooper()
+        assertEquals(activity.getString(R.string.error_minimum_photo_requirement),
+                ShadowToast.getTextOfLatestToast())
     }
 
     private fun fillAllFields(fragment: NewReportFragment) {
