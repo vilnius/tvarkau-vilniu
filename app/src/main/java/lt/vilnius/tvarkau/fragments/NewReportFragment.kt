@@ -551,6 +551,8 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun onDestroyView() {
+        progressDialog?.hide()
+        progressDialog = null
         presenter.onDetach()
         super.onDestroyView()
     }

@@ -22,7 +22,6 @@ class NewReportInteractorImpl(
 
         return Observable.from(data.photoUrls)
                 .map { photoConverter.convert(it) }
-                .filter { it != null }
                 .toList()
                 .map { it.toTypedArray() }
                 .map { if (it.isEmpty()) null else it }

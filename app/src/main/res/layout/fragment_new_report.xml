@@ -154,7 +154,7 @@
                             android:id="@+id/report_problem_submitter_name"
                             style="@style/NewProblemField"
                             android:hint="@string/profile_hint_name"
-                            android:inputType="textPersonName"/>
+                            android:inputType="textPersonName|textCapWords"/>
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 

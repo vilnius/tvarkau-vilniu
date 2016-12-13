@@ -12,18 +12,10 @@ class FieldAwareValidator<T> private constructor(
         private val exception: ValidationException? = null
 ) {
 
-    private var nested: FieldAwareValidator<*>? = null
-
     fun validate(predicate: (T) -> Boolean, viewId: Int, message: String): FieldAwareValidator<T> {
         if (exception == null && !predicate(obj)) {
             return FieldAwareValidator(obj, ValidationException(viewId, message))
         }
-
-        return this
-    }
-
-    fun <E> validate(validator: FieldAwareValidator<E>): FieldAwareValidator<T> {
-        nested = validator
 
         return this
     }
@@ -38,8 +30,6 @@ class FieldAwareValidator<T> private constructor(
             throw exception
         }
 
-        nested?.get()
-
         return result
     }
 
@@ -49,7 +39,7 @@ class FieldAwareValidator<T> private constructor(
 
     companion object {
         fun <T> of(obj: T): FieldAwareValidator<T> {
-            return FieldAwareValidator(obj);
+            return FieldAwareValidator(obj)
         }
     }
 
