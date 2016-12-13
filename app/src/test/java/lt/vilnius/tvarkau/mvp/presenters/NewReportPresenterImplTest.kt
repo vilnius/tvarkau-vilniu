@@ -84,7 +84,6 @@ class NewReportPresenterImplTest {
         fixture.submitProblem(validator)
 
         verify(view).showSuccess("1")
-        verify(personalDataInteractor).getPersonalData()
         verify(personalDataInteractor).storePersonalData(any())
     }
 }
