@@ -62,14 +62,13 @@ class NewReportPresenterImpl(
             return
         }
 
-        val current = personalDataInteractor.getPersonalData() ?: Profile()
-
-        current.birthday = LocalDate.parse(reportData.dateOfBirth)
-        current.email = reportData.email
-        current.name = reportData.name
-        current.mobilePhone = reportData.phone
-
-        personalDataInteractor.storePersonalData(current)
+        personalDataInteractor.storePersonalData(
+                Profile(
+                        reportData.name,
+                        LocalDate.parse(reportData.dateOfBirth),
+                        reportData.email,
+                        reportData.phone
+                ))
     }
 
     private fun handleSuccess(reportId: String) {
