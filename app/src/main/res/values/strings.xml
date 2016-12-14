@@ -47,6 +47,7 @@
     <string name="profile_submit">Išsaugoti</string>
     <string name="hint_location">Vieta</string>
     <string name="hint_description">Aprašymas</string>
+    <string name="hint_report_date_time">Pažeidimo data ir laikas</string>
     <string name="no_photo">Nėra nuotraukos</string>
     <string name="hint_problem_type">Tipas</string>
     <string name="error_location_incorrect">Pasirinkote vietą ne Vilniaus mieste.</string>
@@ -78,6 +79,8 @@
     <string name="error_problem_description_is_empty">Prašome įvesti problemos aprašymą</string>
     <string name="error_problem_location_is_empty">Prašome pasirinkti problemos vietą</string>
     <string name="error_problem_type_is_empty">Prašome pasirinkti problemos tipą</string>
+    <string name="error_minimum_photo_requirement">Prašome prisegti mažiausiai 2 nuotraukas</string>
+    <string name="error_report_fill_date_time">Nurodykite įvykio laiką ir datą</string>
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
     <string name="error_submitting_problem">Atsiprašome, įvyko serverio klaida. Bandykite dar sykį.</string>
     <string name="sending_problem">Siunčiama...</string>

@@ -1,15 +1,9 @@
 package lt.vilnius.tvarkau.entity;
 
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.LocalDate;
-
-import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 
 public class Profile {
@@ -53,8 +47,16 @@ public class Profile {
         return mobilePhone;
     }
 
-    public static Profile returnProfile(Context con) {
-        return SharedPrefsManager.getInstance(con).getUserProfile();
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
     public String createJsonData() {
@@ -73,9 +75,9 @@ public class Profile {
             Profile profile = (Profile) o;
 
             return name.equals(profile.getName()) &&
-                birthday.equals(profile.getBirthday()) &&
-                email.equals(profile.getEmail()) &&
-                mobilePhone.equals(profile.getMobilePhone());
+                    birthday.equals(profile.getBirthday()) &&
+                    email.equals(profile.getEmail()) &&
+                    mobilePhone.equals(profile.getMobilePhone());
         }
 
         return false;
