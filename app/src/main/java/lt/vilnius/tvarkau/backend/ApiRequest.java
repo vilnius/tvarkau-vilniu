@@ -1,5 +1,7 @@
 package lt.vilnius.tvarkau.backend;
 
+import android.support.annotation.VisibleForTesting;
+
 public class ApiRequest<P> {
 
     private String method;
@@ -10,5 +12,10 @@ public class ApiRequest<P> {
         this.method = method.name().toLowerCase();
         this.id = method.getId();
         this.params = params;
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public P getParams() {
+        return params;
     }
 }

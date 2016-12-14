@@ -35,6 +35,10 @@ public class GetNewProblemParams {
 
     }
 
+    public String[] getPhoto() {
+        return photo;
+    }
+
     public static class Builder {
         private String sessionId;
         private String description;

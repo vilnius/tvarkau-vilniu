@@ -67,8 +67,8 @@ import static lt.vilnius.tvarkau.ChooseReportTypeActivity.EXTRA_REPORT_TYPE;
 
 public class NewProblemActivity extends BaseActivity implements NewProblemPhotosPagerAdapter.OnPhotoClickedListener {
 
-    private static final int TAKE_PHOTO_PERMISSIONS_REQUEST_CODE = 10;
-    private static final int MAP_PERMISSION_REQUEST_CODE = 20;
+    public static final int TAKE_PHOTO_PERMISSIONS_REQUEST_CODE = 10;
+    public static final int MAP_PERMISSION_REQUEST_CODE = 20;
 
     public static final int REQUEST_PLACE_PICKER = 11;
     public static final int REQUEST_PERSONAL_DATA = 12;
