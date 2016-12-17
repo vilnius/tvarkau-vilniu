@@ -33,10 +33,10 @@ class NewReportInteractorImpl(
                             .setLatitude(data.latitude!!)
                             .setLongitude(data.longitude!!)
                             .setPhoto(it)
-                            .setEmail(data.email)
-                            .setPhone(data.phone)
-                            .setNameOfReporter(data.name)
-                            .setDateOfBirth(data.dateOfBirth)
+                            .setEmail(data.email.emptyToNull())
+                            .setPhone(data.phone.emptyToNull())
+                            .setNameOfReporter(data.name.emptyToNull())
+                            .setDateOfBirth(data.dateOfBirth.emptyToNull())
                             .create()
 
                     legacyApiService.postNewProblem(ApiRequest(NEW_PROBLEM, params))
@@ -45,4 +45,6 @@ class NewReportInteractorImpl(
                 .subscribeOn(ioScheduler)
                 .toSingle()
     }
+
+    fun String?.emptyToNull() = if (this.isNullOrBlank()) null else this
 }
