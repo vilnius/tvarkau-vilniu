@@ -153,6 +153,10 @@ class NewReportFragment : BaseFragment(),
                 return true
             }
             R.id.action_send -> {
+                activity.currentFocus?.let {
+                    KeyboardUtils.closeSoftKeyboard(activity, it)
+                }
+
                 presenter.submitProblem(createValidator())
                 return true
             }
@@ -189,6 +193,7 @@ class NewReportFragment : BaseFragment(),
         new_report_birthday_container.visible()
         new_report_email_container.visible()
         new_report_name_container.visible()
+        report_problem_personal_data_agreement.visible()
 
         profile?.let {
             report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(it.birthday))
@@ -248,12 +253,12 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun showValidationError(error: FieldAwareValidator.ValidationException) {
-        report_problem_location_wrapper.error = null
-        report_problem_description_wrapper.error = null
-        report_problem_date_time_wrapper.error = null
-        report_problem_submitter_name_wrapper.error = null
-        report_problem_submitter_birthday_wrapper.error = null
-        report_problem_submitter_email_wrapper.error = null
+        report_problem_location_wrapper.isErrorEnabled = false
+        report_problem_description_wrapper.isErrorEnabled = false
+        report_problem_date_time_wrapper.isErrorEnabled = false
+        report_problem_submitter_name_wrapper.isErrorEnabled = false
+        report_problem_submitter_birthday_wrapper.isErrorEnabled = false
+        report_problem_submitter_email_wrapper.isErrorEnabled = false
 
         view?.findViewById(error.viewId)?.let {
             if (it is TextInputLayout) {
