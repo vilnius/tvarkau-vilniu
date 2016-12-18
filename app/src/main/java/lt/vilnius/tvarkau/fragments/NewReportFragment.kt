@@ -541,9 +541,9 @@ class NewReportFragment : BaseFragment(),
                 setProgressStyle(ProgressDialog.STYLE_SPINNER)
                 setCancelable(false)
             }
-        } else {
-            progressDialog?.show()
         }
+
+        progressDialog?.show()
     }
 
     override fun hideProgress() {
