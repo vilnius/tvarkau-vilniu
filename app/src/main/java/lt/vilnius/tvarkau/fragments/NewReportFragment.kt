@@ -495,6 +495,7 @@ class NewReportFragment : BaseFragment(),
             report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(selectedDate))
         }, year, month, day)
         dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+        dialogDatePicker.setTitle(null)
         dialogDatePicker.show()
     }
 
@@ -506,28 +507,31 @@ class NewReportFragment : BaseFragment(),
         val month = calendar.get(MONTH)
         val day = calendar.get(DAY_OF_MONTH)
 
-        val dialogDatePicker = DatePickerDialog(activity, { datePicker: DatePicker, year: Int, month: Int, day: Int ->
-            calendar.set(YEAR, year)
-            calendar.set(MONTH, month)
-            calendar.set(DAY_OF_MONTH, day)
+        val dialogDatePicker = DatePickerDialog(
+                activity,
+                { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+                    calendar.set(YEAR, year)
+                    calendar.set(MONTH, month)
+                    calendar.set(DAY_OF_MONTH, day)
 
-            TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
-                calendar.set(HOUR, hour)
-                calendar.set(MINUTE, minutes)
+                    TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
+                        calendar.set(HOUR, hour)
+                        calendar.set(MINUTE, minutes)
 
-                val dateTime = LocalDateTime.of(
-                        calendar.get(YEAR),
-                        calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
-                        calendar.get(DAY_OF_MONTH),
-                        calendar.get(HOUR),
-                        calendar.get(MINUTE)
-                )
+                        val dateTime = LocalDateTime.of(
+                                calendar.get(YEAR),
+                                calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
+                                calendar.get(DAY_OF_MONTH),
+                                calendar.get(HOUR),
+                                calendar.get(MINUTE)
+                        )
 
-                report_problem_date_time.setText(formatLocalDateTime(dateTime))
-            }, 0, 0, true).show()
-        }, year, month, day)
+                        report_problem_date_time.setText(formatLocalDateTime(dateTime))
+                    }, 0, 0, true).show()
+                }, year, month, day)
 
         dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+        dialogDatePicker.setTitle(null)
         dialogDatePicker.show()
     }
 
@@ -552,7 +556,7 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun hideProgress() {
-        progressDialog?.hide()
+        progressDialog?.dismiss()
     }
 
     override fun onDestroyView() {
