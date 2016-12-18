@@ -18,6 +18,7 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lt.vilnius.tvarkau.activity.ReportRegistrationActivity;
 import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.utils.GlobalConsts;
@@ -117,7 +118,7 @@ public class ProblemsListActivity extends AppCompatActivity
 
     @OnClick(R.id.fab_report_problem)
     public void onNewProblemClicked(View view) {
-        Intent intent = new Intent(this, NewProblemActivity.class);
+        Intent intent = new Intent(this, ReportRegistrationActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0,
                 view.getWidth(), view.getHeight()).toBundle();
 
