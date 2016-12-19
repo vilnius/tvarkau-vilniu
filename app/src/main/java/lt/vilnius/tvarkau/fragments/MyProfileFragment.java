@@ -152,6 +152,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
 
         DatePickerDialog dialogDatePicker = new DatePickerDialog(getActivity(), this, year, month, day);
         dialogDatePicker.getDatePicker().setMaxDate(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        dialogDatePicker.setTitle(null);
         dialogDatePicker.show();
     }
 

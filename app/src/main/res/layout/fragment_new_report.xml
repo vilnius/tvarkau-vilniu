@@ -1,10 +1,10 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include layout="@layout/app_bar"/>
+    <include layout="@layout/app_bar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,14 +23,14 @@
                 <lt.vilnius.tvarkau.views.adapters.HackyViewPager
                     android:id="@+id/problem_images_view_pager"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"/>
+                    android:layout_height="240dp" />
 
                 <com.viewpagerindicator.CirclePageIndicator
                     android:id="@+id/problem_images_view_pager_indicator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="220dp"
-                    app:radius="5dp"/>
+                    app:radius="5dp" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/report_problem_take_photo"
@@ -40,7 +40,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/ic_photo_camera_white"/>
+                    android:src="@drawable/ic_photo_camera_white" />
             </FrameLayout>
 
             <LinearLayout
@@ -58,7 +58,7 @@
 
                     <ImageView
                         style="@style/NewProblemIcon"
-                        android:src="@drawable/ic_location_add_problem"/>
+                        android:src="@drawable/ic_location_add_problem" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/report_problem_location_wrapper"
@@ -67,13 +67,13 @@
                         android:paddingEnd="24dp"
                         android:paddingRight="24dp">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/report_problem_location"
                             style="@style/NewProblemField"
                             android:cursorVisible="false"
                             android:ellipsize="end"
                             android:focusableInTouchMode="false"
-                            android:hint="@string/hint_location"/>
+                            android:hint="@string/hint_location" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -84,7 +84,7 @@
 
                     <ImageView
                         style="@style/NewProblemIcon"
-                        android:src="@drawable/ic_description"/>
+                        android:src="@drawable/ic_description" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/report_problem_description_wrapper"
@@ -93,11 +93,11 @@
                         android:paddingEnd="24dp"
                         android:paddingRight="24dp">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/report_problem_description"
                             style="@style/NewProblemField"
                             android:hint="@string/hint_description"
-                            android:inputType="textCapSentences|textMultiLine"/>
+                            android:inputType="textCapSentences|textMultiLine" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -111,7 +111,7 @@
 
                     <ImageView
                         style="@style/NewProblemIcon"
-                        app:srcCompat="@drawable/ic_watch"/>
+                        app:srcCompat="@drawable/ic_watch" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/report_problem_date_time_wrapper"
@@ -120,14 +120,14 @@
                         android:paddingEnd="24dp"
                         android:paddingRight="24dp">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/report_problem_date_time"
                             style="@style/NewProblemField"
                             android:cursorVisible="false"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:hint="@string/hint_report_date_time"
-                            android:inputType="datetime"/>
+                            android:inputType="datetime" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -141,7 +141,7 @@
 
                     <ImageView
                         style="@style/NewProblemIcon"
-                        android:src="@drawable/ic_person"/>
+                        android:src="@drawable/ic_person" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/report_problem_submitter_name_wrapper"
@@ -150,11 +150,11 @@
                         android:paddingEnd="24dp"
                         android:paddingRight="24dp">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/report_problem_submitter_name"
                             style="@style/NewProblemField"
                             android:hint="@string/profile_hint_name"
-                            android:inputType="textPersonName|textCapWords"/>
+                            android:inputType="textPersonName|textCapWords" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -168,7 +168,7 @@
 
                     <ImageView
                         style="@style/NewProblemIcon"
-                        app:srcCompat="@drawable/ic_cake"/>
+                        app:srcCompat="@drawable/ic_cake" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/report_problem_submitter_birthday_wrapper"
@@ -177,12 +177,12 @@
                         android:paddingEnd="24dp"
                         android:paddingRight="24dp">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/report_problem_submitter_birthday"
                             style="@style/NewProblemField"
                             android:focusable="false"
                             android:hint="@string/profile_hint_birthday"
-                            android:inputType="date"/>
+                            android:inputType="date" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -196,7 +196,7 @@
 
                     <ImageView
                         style="@style/NewProblemIcon"
-                        android:src="@drawable/ic_email"/>
+                        android:src="@drawable/ic_email" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/report_problem_submitter_email_wrapper"
@@ -205,13 +205,22 @@
                         android:paddingEnd="24dp"
                         android:paddingRight="24dp">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/report_problem_submitter_email"
                             style="@style/NewProblemField"
                             android:hint="@string/profile_hint_email"
-                            android:inputType="textEmailAddress"/>
+                            android:inputType="textEmailAddress" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/report_problem_personal_data_agreement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="@string/profile_data_agreement"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

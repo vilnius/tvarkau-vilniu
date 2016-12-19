@@ -17,9 +17,9 @@
     </style>
 
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="FullscreenAppBar" parent="AppTheme.AppBarOverlay">
         <item name="android:background">@drawable/gradient_toolbar</item>
@@ -63,11 +63,11 @@
     <style name="NewProblemIcon">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">24dp</item>
+        <item name="android:layout_margin">6dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="NewProblemField">
-        <item name="android:paddingLeft">12dp</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_width">match_parent</item>

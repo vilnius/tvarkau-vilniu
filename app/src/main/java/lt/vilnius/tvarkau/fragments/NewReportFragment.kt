@@ -153,6 +153,10 @@ class NewReportFragment : BaseFragment(),
                 return true
             }
             R.id.action_send -> {
+                activity.currentFocus?.let {
+                    KeyboardUtils.closeSoftKeyboard(activity, it)
+                }
+
                 presenter.submitProblem(createValidator())
                 return true
             }
@@ -189,6 +193,7 @@ class NewReportFragment : BaseFragment(),
         new_report_birthday_container.visible()
         new_report_email_container.visible()
         new_report_name_container.visible()
+        report_problem_personal_data_agreement.visible()
 
         profile?.let {
             report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(it.birthday))
@@ -248,12 +253,12 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun showValidationError(error: FieldAwareValidator.ValidationException) {
-        report_problem_location_wrapper.error = null
-        report_problem_description_wrapper.error = null
-        report_problem_date_time_wrapper.error = null
-        report_problem_submitter_name_wrapper.error = null
-        report_problem_submitter_birthday_wrapper.error = null
-        report_problem_submitter_email_wrapper.error = null
+        report_problem_location_wrapper.isErrorEnabled = false
+        report_problem_description_wrapper.isErrorEnabled = false
+        report_problem_date_time_wrapper.isErrorEnabled = false
+        report_problem_submitter_name_wrapper.isErrorEnabled = false
+        report_problem_submitter_birthday_wrapper.isErrorEnabled = false
+        report_problem_submitter_email_wrapper.isErrorEnabled = false
 
         view?.findViewById(error.viewId)?.let {
             if (it is TextInputLayout) {
@@ -490,6 +495,7 @@ class NewReportFragment : BaseFragment(),
             report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(selectedDate))
         }, year, month, day)
         dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+        dialogDatePicker.setTitle(null)
         dialogDatePicker.show()
     }
 
@@ -501,28 +507,31 @@ class NewReportFragment : BaseFragment(),
         val month = calendar.get(MONTH)
         val day = calendar.get(DAY_OF_MONTH)
 
-        val dialogDatePicker = DatePickerDialog(activity, { datePicker: DatePicker, year: Int, month: Int, day: Int ->
-            calendar.set(YEAR, year)
-            calendar.set(MONTH, month)
-            calendar.set(DAY_OF_MONTH, day)
+        val dialogDatePicker = DatePickerDialog(
+                activity,
+                { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+                    calendar.set(YEAR, year)
+                    calendar.set(MONTH, month)
+                    calendar.set(DAY_OF_MONTH, day)
 
-            TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
-                calendar.set(HOUR, hour)
-                calendar.set(MINUTE, minutes)
+                    TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
+                        calendar.set(HOUR, hour)
+                        calendar.set(MINUTE, minutes)
 
-                val dateTime = LocalDateTime.of(
-                        calendar.get(YEAR),
-                        calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
-                        calendar.get(DAY_OF_MONTH),
-                        calendar.get(HOUR),
-                        calendar.get(MINUTE)
-                )
+                        val dateTime = LocalDateTime.of(
+                                calendar.get(YEAR),
+                                calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
+                                calendar.get(DAY_OF_MONTH),
+                                calendar.get(HOUR),
+                                calendar.get(MINUTE)
+                        )
 
-                report_problem_date_time.setText(formatLocalDateTime(dateTime))
-            }, 0, 0, true).show()
-        }, year, month, day)
+                        report_problem_date_time.setText(formatLocalDateTime(dateTime))
+                    }, 0, 0, true).show()
+                }, year, month, day)
 
         dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+        dialogDatePicker.setTitle(null)
         dialogDatePicker.show()
     }
 
@@ -541,18 +550,17 @@ class NewReportFragment : BaseFragment(),
                 setProgressStyle(ProgressDialog.STYLE_SPINNER)
                 setCancelable(false)
             }
-        } else {
-            progressDialog?.show()
         }
+
+        progressDialog?.show()
     }
 
     override fun hideProgress() {
-        progressDialog?.hide()
+        progressDialog?.dismiss()
     }
 
     override fun onDestroyView() {
-        progressDialog?.hide()
-        progressDialog = null
+        progressDialog?.dismiss()
         presenter.onDetach()
         super.onDestroyView()
     }
