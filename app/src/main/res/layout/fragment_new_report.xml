@@ -218,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:text="@string/profile_data_agreement"
+                    android:text="@string/new_report_personal_data_agreement"
                     android:visibility="gone"
                     tools:visibility="visible" />
             </LinearLayout>
