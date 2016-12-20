@@ -14,21 +14,17 @@ import java.io.File
 class NewProblemPhotosPagerAdapter(private val photos: List<File>,
                                    private val listener: OnPhotoClickedListener) : PagerAdapter() {
 
-    override fun getCount(): Int = if (photos.isNotEmpty()) photos.count() else 1
+    override fun getCount(): Int = photos.count()
 
     override fun isViewFromObject(view: View, any: Any): Boolean = view === any
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val layoutInflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        val itemView: View
-
-        if (photos.isEmpty()) {
-            itemView = layoutInflater.inflate(R.layout.no_image, container, false)
-        } else {
-            itemView = instantiateProblemPhoto(position,
-                    layoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false))
-        }
+        val itemView = instantiateProblemPhoto(
+                position,
+                layoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false)
+        )
 
         container.addView(itemView)
 
