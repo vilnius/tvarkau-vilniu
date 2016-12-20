@@ -107,7 +107,7 @@
     <string name="error_need_location_permission">Reikalingas lokacijos leidimas</string>
     <string name="error_registration_not_working">Registracija kol kas neveikia. Visi pranešimai anonimiški.</string>
     <string name="app_version">versija</string>
-    <string name="transport_vehicle_report_type_contacts_needed">Transporto priemonių stovėjimo tvarkos pažeidimai (Privaloma pridėti savo kontaktus)</string>
+    <string name="transport_vehicle_report_type_contacts_needed">Transporto priemonių stovėjimo tvarkos pažeidimai (Būtina pridėti nuotraukas)</string>
     <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
     <string name="home_settings">Nustatymai</string>
     <string name="setting_anonymous_title">Pridėti asmeninius duomenis</string>
