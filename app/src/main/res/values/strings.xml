@@ -134,6 +134,7 @@
     <string name="error_on_vilnius_sign">Įvyko klaida, bandykite dar sykį</string>
     <string name="error_vilnius_account_invalid_credentials">Neteisingas el. paštas arba slaptažodis.</string>
     <string name="profile_data_agreement">Sutinku, kad pateikti duomenys yra mano, jie yra teisingi ir tikri.</string>
+    <string name="new_report_personal_data_agreement">Sutinku, kad pateikti duomenys yra mano, jie yra teisingi ir tikri.\n\nJūsų asmeninė informacija yra reikalinga siekiant suteikti teisinį pagrindą Jūsų pranešimui. Duomenys bus matomoi savivaldybės darbuotojų ir gali būti perduoti valdžos institucijoms atsakingoms už administracinių baudų skyrimą.</string>
     <string name="error_profile_name_invalid">Vardą ir Pavardę turi sudaryti bent du žodžiai</string>
     <string name="report_import_done">Jūsų pranešimai sėkmingai importuoti</string>
     <string name="error_loading_reports_from_vilnius_account">Įvyko klaida parsiunčiant jūsų pranešimus.</string>
