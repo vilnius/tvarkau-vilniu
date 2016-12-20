@@ -15,7 +15,8 @@ import rx.Single
 class NewReportInteractorImpl(
         val legacyApiService: LegacyApiService,
         val photoConverter: ReportPhotoProvider,
-        val ioScheduler: Scheduler
+        val ioScheduler: Scheduler,
+        val reportDescriptionTemplate: String
 ) : NewReportInteractor {
 
     override fun submitReport(data: NewReportData): Single<String> {
@@ -26,8 +27,14 @@ class NewReportInteractorImpl(
                 .map { it.toTypedArray() }
                 .map { if (it.isEmpty()) null else it }
                 .flatMap {
+                    val description = if (data.dateTime.isNullOrBlank()) {
+                        data.description
+                    } else {
+                        reportDescriptionTemplate.format(data.description, data.dateTime)
+                    }
+
                     val params = GetNewProblemParams.Builder()
-                            .setDescription(data.description)
+                            .setDescription(description)
                             .setType(data.reportType)
                             .setAddress(data.address)
                             .setLatitude(data.latitude!!)

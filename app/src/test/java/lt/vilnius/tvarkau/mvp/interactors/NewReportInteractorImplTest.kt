@@ -1,21 +1,25 @@
 package lt.vilnius.tvarkau.mvp.interactors
 
 import com.nhaarman.mockito_kotlin.*
+import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.GetNewProblemParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.base.BaseRobolectricTest
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import org.junit.Test
 import rx.Observable.just
 import rx.schedulers.Schedulers
 import java.io.File
+import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * @author Martynas Jurkus
  */
-class NewReportInteractorImplTest {
+class NewReportInteractorImplTest : BaseRobolectricTest() {
 
     val api = mock<LegacyApiService>()
     val photoProvider = mock<ReportPhotoProvider>()
@@ -24,7 +28,8 @@ class NewReportInteractorImplTest {
         NewReportInteractorImpl(
                 api,
                 photoProvider,
-                Schedulers.immediate()
+                Schedulers.immediate(),
+                activity.getString(R.string.report_description_timestamp_template)
         )
     }
 
@@ -79,5 +84,56 @@ class NewReportInteractorImplTest {
                 .assertError(RuntimeException::class.java)
 
         verify(api, never()).postNewProblem(any())
+    }
+
+    @Test
+    fun submit_withDateTime_descriptionFormatted() {
+        val report = NewReportData(
+                description = "sample",
+                dateTime = "2020-10-10 10:00",
+                latitude = 0.0,
+                longitude = 0.0,
+                photoUrls = emptyList()
+        )
+
+        val captor = argumentCaptor<ApiRequest<GetNewProblemParams>>()
+        whenever(api.postNewProblem(captor.capture())).thenReturn(just(successResponse))
+
+        fixture.submitReport(report)
+                .test()
+                .assertNoErrors()
+                .assertValue("1")
+
+        verify(api).postNewProblem(any())
+        verify(photoProvider, never()).convert(any())
+
+        val description = captor.firstValue.params.description
+
+        assertTrue { description.contains("2020-10-10 10:00") }
+    }
+
+    @Test
+    fun submit_whoutDateTime_useOriginalDescription() {
+        val report = NewReportData(
+                description = "sample",
+                latitude = 0.0,
+                longitude = 0.0,
+                photoUrls = emptyList()
+        )
+
+        val captor = argumentCaptor<ApiRequest<GetNewProblemParams>>()
+        whenever(api.postNewProblem(captor.capture())).thenReturn(just(successResponse))
+
+        fixture.submitReport(report)
+                .test()
+                .assertNoErrors()
+                .assertValue("1")
+
+        verify(api).postNewProblem(any())
+        verify(photoProvider, never()).convert(any())
+
+        val description = captor.firstValue.params.description
+
+        assertEquals(report.description, description)
     }
 }
