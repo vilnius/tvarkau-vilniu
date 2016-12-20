@@ -75,7 +75,8 @@ class NewReportFragment : BaseFragment(),
                 NewReportInteractorImpl(
                         legacyApiService,
                         ReportPhotoProviderImpl(context),
-                        ioScheduler
+                        ioScheduler,
+                        getString(R.string.report_description_timestamp_template)
                 ),
                 PersonalDataInteractorImpl(
                         SharedPrefsManager.getInstance(context)
