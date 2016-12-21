@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -12,6 +13,12 @@ import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 public class FormatUtils {
+
+    private static final DateTimeFormatter EXIF_DATE_TIME = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
+
+    public static String formatExifAsLocalDateTime(@NonNull String exifDateTime) {
+        return formatLocalDateTime(LocalDateTime.parse(exifDateTime, EXIF_DATE_TIME));
+    }
 
     public static String formatLocalDateTime(LocalDateTime localDateTime) {
 

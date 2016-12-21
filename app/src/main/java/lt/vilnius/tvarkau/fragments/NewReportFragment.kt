@@ -377,6 +377,18 @@ class NewReportFragment : BaseFragment(),
             }
 
             override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
+                try {
+                    val photoTimeStamp = imageFiles.firstOrNull()?.let { ImageUtils.getExifTimeStamp(it) }
+
+                    photoTimeStamp?.let {
+                        val formatted = FormatUtils.formatExifAsLocalDateTime(it)
+
+                        report_problem_date_time.setText(formatted)
+                    }
+                } catch (e: Throwable) {
+                    Timber.e("Failed to parse exif date", e)
+                }
+
                 setImagesInViewPager(imageFiles)
             }
 
