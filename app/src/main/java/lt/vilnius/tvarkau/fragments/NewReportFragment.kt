@@ -36,6 +36,7 @@ import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.NewProblemActivity.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
+import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractorImpl
@@ -45,6 +46,8 @@ import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
+import lt.vilnius.tvarkau.prefs.BooleanPreference
+import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.utils.*
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
@@ -59,6 +62,8 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import java.util.Calendar.*
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * @author Martynas Jurkus
@@ -66,6 +71,9 @@ import java.util.Calendar.*
 class NewReportFragment : BaseFragment(),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
         NewReportView {
+
+    @field:[Inject Named(Preferences.DISPLAY_PHOTO_INSTRUCTIONS)]
+    lateinit var displayPhotoHints: BooleanPreference
 
     var locationCords: LatLng? = null
     var imageFiles = ArrayList<File>()
@@ -169,6 +177,10 @@ class NewReportFragment : BaseFragment(),
         super.onActivityCreated(savedInstanceState)
         presenter.onAttach()
         presenter.initWithReportType(reportType)
+    }
+
+    override fun onInject(component: ApplicationComponent) {
+        component.inject(this)
     }
 
     override fun showPersonalDataFields(profile: Profile?) {

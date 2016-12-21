@@ -5,12 +5,13 @@ import javax.inject.Singleton;
 import dagger.Component;
 import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.BaseActivity;
-import lt.vilnius.tvarkau.SharedPreferencesModule;
 import lt.vilnius.tvarkau.dagger.module.APIModule;
 import lt.vilnius.tvarkau.dagger.module.AnalyticsModule;
 import lt.vilnius.tvarkau.dagger.module.LegacyApiModule;
+import lt.vilnius.tvarkau.dagger.module.SharedPreferencesModule;
 import lt.vilnius.tvarkau.fragments.BaseFragment;
 import lt.vilnius.tvarkau.fragments.BaseMapFragment;
+import lt.vilnius.tvarkau.fragments.NewReportFragment;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 
 /**
@@ -22,7 +23,7 @@ import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
         APIModule.class,
         SharedPreferencesModule.class,
         AppModule.class,
-        AnalyticsModule.class
+        AnalyticsModule.class,
 })
 public interface ApplicationComponent {
 
@@ -33,4 +34,6 @@ public interface ApplicationComponent {
     void inject(BaseMapFragment fragment);
 
     void inject(ReportImportDialogFragment fragment);
+
+    void inject(NewReportFragment fragment);
 }
