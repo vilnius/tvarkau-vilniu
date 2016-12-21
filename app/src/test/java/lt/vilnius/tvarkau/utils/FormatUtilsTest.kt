@@ -1,9 +1,8 @@
 package lt.vilnius.tvarkau.utils
 
 import org.junit.Test
-import org.threeten.bp.format.DateTimeParseException
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.assertNull
 
 /**
  * @author Martynas Jurkus
@@ -12,9 +11,7 @@ class FormatUtilsTest {
 
     @Test
     fun formatExif_invalidFormat() {
-        assertFailsWith(DateTimeParseException::class) {
-            FormatUtils.formatExifAsLocalDateTime("2010-10-10 00:00:00")
-        }
+        assertNull(FormatUtils.formatExifAsLocalDateTime("2010-10-10 00:00:00"))
     }
 
     @Test
