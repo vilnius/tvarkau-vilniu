@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import rx.Scheduler
@@ -29,7 +30,11 @@ abstract class BaseFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (activity.application as TvarkauApplication).component.inject(this)
+        onInject((activity.application as TvarkauApplication).component)
+    }
+
+    protected open fun onInject(component: ApplicationComponent) {
+        component.inject(this)
     }
 
     override fun onResume() {
