@@ -376,6 +376,17 @@ class NewReportFragment : BaseFragment(),
             }
 
             override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
+                var timeStamp = imageFiles.firstOrNull()
+                        ?.let { ImageUtils.getExifTimeStamp(it) }
+                        ?.let { FormatUtils.formatExifAsLocalDateTime(it) }
+
+                if (timeStamp == null) {
+                    timeStamp = imageFiles.firstOrNull()
+                            ?.let { FormatUtils.formatLocalDateTime(Date(it.lastModified())) }
+                }
+
+                timeStamp?.let { report_problem_date_time.setText(it) }
+
                 setImagesInViewPager(imageFiles)
             }
 
@@ -516,14 +527,14 @@ class NewReportFragment : BaseFragment(),
                     calendar.set(DAY_OF_MONTH, day)
 
                     TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
-                        calendar.set(HOUR, hour)
+                        calendar.set(HOUR_OF_DAY, hour)
                         calendar.set(MINUTE, minutes)
 
                         val dateTime = LocalDateTime.of(
                                 calendar.get(YEAR),
                                 calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
                                 calendar.get(DAY_OF_MONTH),
-                                calendar.get(HOUR),
+                                calendar.get(HOUR_OF_DAY),
                                 calendar.get(MINUTE)
                         )
 
