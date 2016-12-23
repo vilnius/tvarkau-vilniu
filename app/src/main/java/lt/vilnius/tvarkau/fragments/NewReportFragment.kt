@@ -72,7 +72,7 @@ class NewReportFragment : BaseFragment(),
         NewReportView {
 
     @field:[Inject Named(Preferences.DISPLAY_PHOTO_INSTRUCTIONS)]
-    lateinit var displayPhotoHints: BooleanPreference
+    lateinit var displayPhotoInstructions: BooleanPreference
 
     var locationCords: LatLng? = null
     var imageFiles = ArrayList<File>()
@@ -97,6 +97,9 @@ class NewReportFragment : BaseFragment(),
 
     private val validatePersonalData: Boolean
         get() = reportType == PARKING_VIOLATIONS
+
+    private val shouldDisplayPhotoInstructions: Boolean
+        get() = reportType == PARKING_VIOLATIONS && displayPhotoInstructions.get()
 
     private lateinit var reportType: String
 
@@ -302,13 +305,19 @@ class NewReportFragment : BaseFragment(),
 
     fun onTakePhotoClicked() {
         if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
-            openPhotoSelectorDialog()
+            openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
         } else {
             requestPermissions(TAKE_PHOTO_PERMISSIONS, TAKE_PHOTO_PERMISSIONS_REQUEST_CODE)
         }
     }
 
-    private fun openPhotoSelectorDialog() {
+    private fun openPhotoSelectorDialog(displayPhotoInstructions: Boolean) {
+        if (displayPhotoInstructions) {
+            arguments.putBoolean(KEY_TAKE_PHOTO, true)
+            (activity as ReportRegistrationActivity).displayPhotoInstructions()
+            return
+        }
+
         val imagePickerDialogBuilder = AlertDialog.Builder(context, R.style.MyDialogTheme)
 
         val view = LayoutInflater.from(context).inflate(R.layout.image_picker_dialog, null)
@@ -343,7 +352,7 @@ class NewReportFragment : BaseFragment(),
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             TAKE_PHOTO_PERMISSIONS_REQUEST_CODE -> if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
-                openPhotoSelectorDialog()
+                openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
             } else {
                 Toast.makeText(context, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
             }
@@ -583,6 +592,14 @@ class NewReportFragment : BaseFragment(),
         progressDialog?.dismiss()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (arguments.containsKey(KEY_TAKE_PHOTO)) {
+            arguments.remove(KEY_TAKE_PHOTO)
+            openPhotoSelectorDialog(displayPhotoInstructions = false)
+        }
+    }
+
     override fun onDestroyView() {
         progressDialog?.dismiss()
         presenter.onDetach()
@@ -596,6 +613,7 @@ class NewReportFragment : BaseFragment(),
         private const val SAVE_PHOTOS = "photos"
 
         const val KEY_REPORT_TYPE = "report_type"
+        const val KEY_TAKE_PHOTO = "take_photo"
 
         fun newInstance(problemType: String): NewReportFragment {
             return NewReportFragment().apply {
