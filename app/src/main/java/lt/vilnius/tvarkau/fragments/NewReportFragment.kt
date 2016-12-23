@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
-import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AlertDialog
@@ -305,7 +304,7 @@ class NewReportFragment : BaseFragment(),
         if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
             openPhotoSelectorDialog()
         } else {
-            requestPermissions(activity, TAKE_PHOTO_PERMISSIONS, TAKE_PHOTO_PERMISSIONS_REQUEST_CODE)
+            requestPermissions(TAKE_PHOTO_PERMISSIONS, TAKE_PHOTO_PERMISSIONS_REQUEST_CODE)
         }
     }
 
@@ -349,7 +348,7 @@ class NewReportFragment : BaseFragment(),
                 Toast.makeText(context, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
             }
             MAP_PERMISSION_REQUEST_CODE -> if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
-                showPlacePicker(activity.currentFocus)
+                showPlacePicker(view!!)
             } else {
                 Toast.makeText(context, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
             }
@@ -389,6 +388,17 @@ class NewReportFragment : BaseFragment(),
             }
 
             override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
+                var timeStamp = imageFiles.firstOrNull()
+                        ?.let { ImageUtils.getExifTimeStamp(it) }
+                        ?.let { FormatUtils.formatExifAsLocalDateTime(it) }
+
+                if (timeStamp == null) {
+                    timeStamp = imageFiles.firstOrNull()
+                            ?.let { FormatUtils.formatLocalDateTime(Date(it.lastModified())) }
+                }
+
+                timeStamp?.let { report_problem_date_time.setText(it) }
+
                 setImagesInViewPager(imageFiles)
             }
 
@@ -437,6 +447,7 @@ class NewReportFragment : BaseFragment(),
                         report_problem_location.setText(address)
                     }
                 }
+
             }
         }
     }
@@ -464,7 +475,7 @@ class NewReportFragment : BaseFragment(),
         if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
             showPlacePicker(view)
         } else {
-            requestPermissions(activity, MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE)
+            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE)
         }
     }
 
@@ -528,14 +539,14 @@ class NewReportFragment : BaseFragment(),
                     calendar.set(DAY_OF_MONTH, day)
 
                     TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
-                        calendar.set(HOUR, hour)
+                        calendar.set(HOUR_OF_DAY, hour)
                         calendar.set(MINUTE, minutes)
 
                         val dateTime = LocalDateTime.of(
                                 calendar.get(YEAR),
                                 calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
                                 calendar.get(DAY_OF_MONTH),
-                                calendar.get(HOUR),
+                                calendar.get(HOUR_OF_DAY),
                                 calendar.get(MINUTE)
                         )
 
