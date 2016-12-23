@@ -1,14 +1,9 @@
-package com.vinted.data.prefs
+package lt.vilnius.tvarkau.prefs
 
 import android.content.SharedPreferences
-import lt.vilnius.tvarkau.prefs.BasePreferenceImpl
-import lt.vilnius.tvarkau.prefs.IntPreference
-import lt.vilnius.tvarkau.prefs.Serializer
 
 /**
  * @author Martynas Jurkus
- *
- * @since 2014-03-24
  */
 open class IntPreferenceImpl(preferences: SharedPreferences,
                              key: String,

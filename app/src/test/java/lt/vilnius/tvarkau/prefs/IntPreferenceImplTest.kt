@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau.prefs
 
-import com.vinted.data.prefs.IntPreferenceImpl
+import lt.vilnius.tvarkau.prefs.IntPreferenceImpl
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
