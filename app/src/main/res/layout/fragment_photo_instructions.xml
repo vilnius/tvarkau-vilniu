@@ -13,9 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/photo_instructions_title"
+            android:textColor="@color/black_87"
             android:textStyle="bold" />
 
         <ImageView
@@ -32,7 +33,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:gravity="center"
-            android:text="@string/photo_instructions_first_photo_hint" />
+            android:text="@string/photo_instructions_first_photo_hint"
+            android:textColor="@color/black_87" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -46,7 +48,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:gravity="center"
-            android:text="@string/photo_instructions_second_photo_hint" />
+            android:text="@string/photo_instructions_second_photo_hint"
+            android:textColor="@color/black_87" />
 
         <CheckBox
             android:id="@+id/photo_instructions_dont_show"
@@ -54,18 +57,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="32dp"
-            android:text="@string/photo_instructions_don_show_again" />
+            android:layout_marginTop="16dp"
+            android:text="@string/photo_instructions_don_show_again"
+            android:textColor="@color/black_87" />
 
 
         <Button
             android:id="@+id/photo_instructions_btn_ok"
+            style="@style/ButtonPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/photo_instructions_button_ok"
-            android:textColor="@android:color/white" />
+            android:minWidth="200dp"
+            android:text="@string/photo_instructions_button_ok" />
     </LinearLayout>
 </ScrollView>

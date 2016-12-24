@@ -11,4 +11,10 @@
         <item name="android:headerBackground">@color/colorAccent</item>
         <item name="colorControlNormal">@android:color/white</item>
     </style>
+
+    <style name="ButtonPrimary" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">8dp</item>
+    </style>
 </resources>
