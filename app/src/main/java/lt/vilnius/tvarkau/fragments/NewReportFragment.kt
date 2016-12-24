@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.fragments
 
+import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
@@ -32,7 +33,6 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_new_report.*
 import kotlinx.android.synthetic.main.image_picker_dialog.view.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
-import lt.vilnius.tvarkau.NewProblemActivity.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
@@ -590,6 +590,16 @@ class NewReportFragment : BaseFragment(),
     }
 
     companion object {
+
+        const val TAKE_PHOTO_PERMISSIONS_REQUEST_CODE = 10
+        const val MAP_PERMISSION_REQUEST_CODE = 20
+        const val REQUEST_PLACE_PICKER = 11
+
+        val TAKE_PHOTO_PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+        val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        const val PROBLEM_PREFERENCE_KEY = "problem"
+
         const val PARKING_VIOLATIONS = "Transporto priemonių stovėjimo tvarkos pažeidimai"
 
         private const val SAVE_LOCATION = "location"
