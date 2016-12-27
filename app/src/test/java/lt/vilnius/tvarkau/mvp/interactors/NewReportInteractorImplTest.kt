@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.mvp.interactors
 
 import com.nhaarman.mockito_kotlin.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.GetNewProblemParams
@@ -23,13 +24,15 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
 
     val api = mock<LegacyApiService>()
     val photoProvider = mock<ReportPhotoProvider>()
+    val analytics = mock<Analytics>()
 
     val fixture: NewReportInteractor by lazy {
         NewReportInteractorImpl(
                 api,
                 photoProvider,
                 Schedulers.immediate(),
-                activity.getString(R.string.report_description_timestamp_template)
+                activity.getString(R.string.report_description_timestamp_template),
+                analytics
         )
     }
 
@@ -113,7 +116,7 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
     }
 
     @Test
-    fun submit_whoutDateTime_useOriginalDescription() {
+    fun submit_wthoutDateTime_useOriginalDescription() {
         val report = NewReportData(
                 description = "sample",
                 latitude = 0.0,
@@ -135,5 +138,22 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
         val description = captor.firstValue.params.description
 
         assertEquals(report.description, description)
+    }
+
+    @Test
+    fun submitSuccess_trackingPerformed() {
+        val type = "some_type"
+        val emptyReport = NewReportData(
+                reportType = type,
+                latitude = 0.0,
+                longitude = 0.0,
+                photoUrls = listOf(File("one"), File("two"))
+        )
+
+        whenever(api.postNewProblem(any())).thenReturn(just(successResponse))
+
+        fixture.submitReport(emptyReport).subscribe()
+
+        verify(analytics).trackReportRegistration(type, 2)
     }
 }

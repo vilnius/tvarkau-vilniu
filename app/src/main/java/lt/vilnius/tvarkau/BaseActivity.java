@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import icepick.Icepick;
+import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 
@@ -17,6 +18,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     LegacyApiService legacyApiService;
     @Inject
     SharedPreferences myProblemsPreferences;
+    @Inject
+    Analytics analytics;
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     protected ApplicationComponent component;

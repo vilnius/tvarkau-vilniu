@@ -12,4 +12,12 @@ interface Analytics {
     fun trackCurrentFragment(activity: Activity, fragment: Fragment)
 
     fun trackViewProblem(problem: Problem)
+
+    fun trackReportRegistration(reportType: String, photoCount: Int)
+
+    fun trackReportValidation(validationError: String)
+
+    fun trackPersonalDataSharingEnabled(enabled: Boolean)
+
+    fun trackLogIn()
 }

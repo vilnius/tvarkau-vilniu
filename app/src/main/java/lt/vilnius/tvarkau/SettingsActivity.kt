@@ -62,6 +62,7 @@ class SettingsActivity : BaseActivity(),
         } else {
             prefsManager.changeUserAnonymityStatus(true)
             setUpedit_personal_data(true)
+            analytics.trackPersonalDataSharingEnabled(enabled = false)
         }
     }
 

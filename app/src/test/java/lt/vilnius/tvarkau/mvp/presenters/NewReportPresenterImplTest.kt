@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.mvp.presenters
 
 import com.nhaarman.mockito_kotlin.*
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.fragments.NewReportFragment
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractor
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
@@ -18,13 +19,15 @@ class NewReportPresenterImplTest {
     val interactor = mock<NewReportInteractor>()
     val view = mock<NewReportView>()
     val personalDataInteractor = mock<PersonalDataInteractor>()
+    val analytics = mock<Analytics>()
 
     val fixture: NewReportPresenter by lazy {
         NewReportPresenterImpl(
                 interactor,
                 personalDataInteractor,
                 view,
-                Schedulers.immediate()
+                Schedulers.immediate(),
+                analytics
         )
     }
 
@@ -85,5 +88,16 @@ class NewReportPresenterImplTest {
 
         verify(view).showSuccess("1")
         verify(personalDataInteractor).storePersonalData(any())
+    }
+
+    @Test
+    fun submitProblem_validationFail_trackingPerformed() {
+        val data = NewReportData()
+        val validator = FieldAwareValidator.of(data)
+                .validate({ false }, 1, "Validation message")
+
+        fixture.submitProblem(validator)
+
+        verify(analytics).trackReportValidation(eq("Validation message"))
     }
 }
