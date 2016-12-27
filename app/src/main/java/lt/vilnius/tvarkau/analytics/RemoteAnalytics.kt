@@ -37,7 +37,7 @@ class RemoteAnalytics(appContext: Context) : Analytics {
 
     override fun trackReportRegistration(reportType: String, photoCount: Int) {
         val params = Bundle().apply {
-            putString(PARAM_REPORT_TYPE, reportType)
+            putString(FirebaseAnalytics.Param.CONTENT_TYPE, reportType)
             putInt(PARAM_PHOTO_COUNT, photoCount)
         }
 
@@ -67,7 +67,6 @@ class RemoteAnalytics(appContext: Context) : Analytics {
     companion object {
         private const val PARAM_PROBLEM_STATUS = "problem_status"
         private const val PARAM_FRAGMENT_ACTIVITY = "activity"
-        private const val PARAM_REPORT_TYPE = "type"
         private const val PARAM_PHOTO_COUNT = "photo_count"
         private const val PARAM_VALIDATION_MESSAGE = "validation_message"
         private const val PARAM_ENABLED = "enabled"
