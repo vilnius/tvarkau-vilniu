@@ -180,6 +180,8 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
 
             prefsManager.changeUserAnonymityStatus(false);
 
+            analytics.trackPersonalDataSharingEnabled(true);
+
             View view = getActivity().getCurrentFocus();
             if (view != null) {
                 KeyboardUtils.closeSoftKeyboard(getActivity(), view);

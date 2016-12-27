@@ -13,8 +13,6 @@ class RemoteAnalytics(appContext: Context) : Analytics {
         FirebaseAnalytics.getInstance(appContext)
     }
 
-    private val PARAM_PROBLEM_STATUS = "problem_status"
-    private val PARAM_FRAGMENT_ACTIVITY = "activity"
 
     override fun trackCurrentFragment(activity: Activity, fragment: Fragment) {
         val fragmentName = fragment.javaClass.simpleName
@@ -37,4 +35,45 @@ class RemoteAnalytics(appContext: Context) : Analytics {
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, this)
     }
 
+    override fun trackReportRegistration(reportType: String, photoCount: Int) {
+        val params = Bundle().apply {
+            putString(PARAM_REPORT_TYPE, reportType)
+            putInt(PARAM_PHOTO_COUNT, photoCount)
+        }
+
+        analytics.logEvent(EVENT_NEW_REPORT, params)
+    }
+
+    override fun trackReportValidation(validationError: String) {
+        val params = Bundle().apply {
+            putString(PARAM_VALIDATION_MESSAGE, validationError)
+        }
+
+        analytics.logEvent(EVENT_VALIDATION_ERROR, params)
+    }
+
+    override fun trackPersonalDataSharingEnabled(enabled: Boolean) {
+        val params = Bundle().apply {
+            putBoolean(PARAM_ENABLED, enabled)
+        }
+
+        analytics.logEvent(EVENT_SHARE_PERSONAL_DATA, params)
+    }
+
+    override fun trackLogIn() {
+        analytics.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
+    }
+
+    companion object {
+        private const val PARAM_PROBLEM_STATUS = "problem_status"
+        private const val PARAM_FRAGMENT_ACTIVITY = "activity"
+        private const val PARAM_REPORT_TYPE = "type"
+        private const val PARAM_PHOTO_COUNT = "photo_count"
+        private const val PARAM_VALIDATION_MESSAGE = "validation_message"
+        private const val PARAM_ENABLED = "enabled"
+
+        private const val EVENT_NEW_REPORT = "new_report"
+        private const val EVENT_VALIDATION_ERROR = "validation_error"
+        private const val EVENT_SHARE_PERSONAL_DATA = "personal_data"
+    }
 }

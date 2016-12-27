@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.mvp.presenters
 
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.fragments.NewReportFragment
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractor
@@ -17,7 +18,8 @@ class NewReportPresenterImpl(
         private val interactor: NewReportInteractor,
         private val personalDataInteractor: PersonalDataInteractor,
         private val view: NewReportView,
-        private val uiScheduler: Scheduler
+        private val uiScheduler: Scheduler,
+        private val analytics: Analytics
 ) : NewReportPresenter {
 
     private var subscription: Subscription? = null
@@ -77,7 +79,10 @@ class NewReportPresenterImpl(
 
     private fun handleError(error: Throwable) {
         when (error) {
-            is FieldAwareValidator.ValidationException -> view.showValidationError(error)
+            is FieldAwareValidator.ValidationException -> {
+                view.showValidationError(error)
+                analytics.trackReportValidation(error.message ?: "no message")
+            }
             else -> view.showError(error)
         }
     }
