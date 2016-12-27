@@ -32,7 +32,7 @@ public class TextViewDecorator {
 
     public void decorateProblemIdSpans(String text) {
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(text);
-        List<String> idOccurrences = TextUtils.findProblemIdOccurrences(text);
+        List<String> idOccurrences = TextUtils.INSTANCE.findProblemIdOccurrences(text);
 
         int start = 0;
         int end;
