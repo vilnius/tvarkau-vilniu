@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau.activity
 import android.os.Bundle
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.fragments.NewReportFragment
+import lt.vilnius.tvarkau.fragments.PhotoInstructionsFragment
 import lt.vilnius.tvarkau.fragments.ReportTypeListFragment
 
 class ReportRegistrationActivity : BaseActivity() {
@@ -21,6 +22,14 @@ class ReportRegistrationActivity : BaseActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .replace(android.R.id.content, NewReportFragment.newInstance(reportType))
+                .addToBackStack(null)
+                .commit()
+    }
+
+    fun displayPhotoInstructions() {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(android.R.id.content, PhotoInstructionsFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
     }
