@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.TvarkauApplication;
 import lt.vilnius.tvarkau.backend.ApiMethod;
@@ -251,14 +250,14 @@ public class ReportImportDialogFragment extends DialogFragment {
                                 if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
                                     myProblemsPreferences
                                         .edit()
-                                        .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                                        .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
                                         .apply();
                                 }
                             }
                         } else {
                             myProblemsPreferences
                                 .edit()
-                                .putString(NewProblemActivity.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                                    .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
                                 .apply();
                         }
                     }

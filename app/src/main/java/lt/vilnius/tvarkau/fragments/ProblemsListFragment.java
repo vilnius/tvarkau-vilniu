@@ -23,7 +23,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import lt.vilnius.tvarkau.NewProblemActivity;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
@@ -310,7 +309,7 @@ public class ProblemsListFragment extends BaseFragment {
                     } else {
                         myProblemsPreferences
                             .edit()
-                            .remove(NewProblemActivity.PROBLEM_PREFERENCE_KEY + id)
+                            .remove(NewReportFragment.PROBLEM_PREFERENCE_KEY + id)
                             .apply();
                     }
                 },
