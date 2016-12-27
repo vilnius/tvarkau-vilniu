@@ -12,6 +12,7 @@ import lt.vilnius.tvarkau.dagger.module.SharedPreferencesModule;
 import lt.vilnius.tvarkau.fragments.BaseFragment;
 import lt.vilnius.tvarkau.fragments.BaseMapFragment;
 import lt.vilnius.tvarkau.fragments.NewReportFragment;
+import lt.vilnius.tvarkau.fragments.PhotoInstructionsFragment;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 
 /**
@@ -36,4 +37,6 @@ public interface ApplicationComponent {
     void inject(ReportImportDialogFragment fragment);
 
     void inject(NewReportFragment fragment);
+
+    void inject(PhotoInstructionsFragment fragment);
 }
