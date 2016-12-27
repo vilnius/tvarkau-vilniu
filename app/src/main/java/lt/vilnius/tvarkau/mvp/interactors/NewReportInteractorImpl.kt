@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.mvp.interactors
 
+import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.ApiMethod.NEW_PROBLEM
 import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.GetNewProblemParams
@@ -16,7 +17,8 @@ class NewReportInteractorImpl(
         val legacyApiService: LegacyApiService,
         val photoConverter: ReportPhotoProvider,
         val ioScheduler: Scheduler,
-        val reportDescriptionTemplate: String
+        val reportDescriptionTemplate: String,
+        val analytics: Analytics
 ) : NewReportInteractor {
 
     override fun submitReport(data: NewReportData): Single<String> {
@@ -51,6 +53,9 @@ class NewReportInteractorImpl(
                 .map { it.result.toString() }
                 .subscribeOn(ioScheduler)
                 .toSingle()
+                .doOnSuccess {
+                    analytics.trackReportRegistration(data.reportType, data.photoUrls.size)
+                }
     }
 
     fun String?.emptyToNull() = if (this.isNullOrBlank()) null else this

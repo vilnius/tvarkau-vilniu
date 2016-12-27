@@ -83,13 +83,15 @@ class NewReportFragment : BaseFragment(),
                         legacyApiService,
                         ReportPhotoProviderImpl(context),
                         ioScheduler,
-                        getString(R.string.report_description_timestamp_template)
+                        getString(R.string.report_description_timestamp_template),
+                        analytics
                 ),
                 PersonalDataInteractorImpl(
                         SharedPrefsManager.getInstance(context)
                 ),
                 this,
-                uiScheduler
+                uiScheduler,
+                analytics
         )
     }
 

@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.TvarkauApplication;
+import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.backend.ApiMethod;
 import lt.vilnius.tvarkau.backend.ApiRequest;
 import lt.vilnius.tvarkau.backend.ApiResponse;
@@ -53,6 +54,7 @@ public class ReportImportDialogFragment extends DialogFragment {
 
     @Inject LegacyApiService legacyApiService;
     @Inject SharedPreferences myProblemsPreferences;
+    @Inject Analytics analytics;
 
     @BindView(R.id.vilnius_account_email)
     EditText vilniusAccountEmail;
@@ -175,6 +177,8 @@ public class ReportImportDialogFragment extends DialogFragment {
                     Action1<ApiResponse<LoginResponse>> onSuccess = apiResponse -> {
                         vilniusAccountLoginError.setVisibility(View.GONE);
                         if (apiResponse.getResult() != null) {
+                            analytics.trackLogIn();
+
                             prefsManager.saveUserSessionId(apiResponse.getResult().getSessionId());
                             prefsManager.saveUserEmail(apiResponse.getResult().getEmail());
                             prefsManager.saveUserPassword(password);
