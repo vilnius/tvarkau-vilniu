@@ -53,6 +53,7 @@ class TextUtilTest {
         val text = "Two sameE50-7476/16(3.2.47E-SM4) ids zzzE50-7476/16(3.2.47E-SM4))))"
         val occurrences = TextUtils.findProblemIdOccurrences(text)
 
+        assertEquals(2, occurrences.size)
         assertEquals("E50-7476/16(3.2.47E-SM4)", occurrences[0])
         assertEquals("E50-7476/16(3.2.47E-SM4)", occurrences[1])
     }
