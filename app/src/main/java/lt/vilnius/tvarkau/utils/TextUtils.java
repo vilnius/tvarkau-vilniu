@@ -5,20 +5,22 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+
 /**
  * @author Martynas Jurkus
  */
 
 public class TextUtils {
 
-    private final static String PROBLEM_ID_REGEXP = "E50-\\S+\\)";
+    private final static String PROBLEM_ID_REGEXP = "E50-\\S+?\\)";
 
     private TextUtils() {
     }
 
     public static List<String> findProblemIdOccurrences(String source) {
         List<String> result = new ArrayList<>();
-        Matcher matcher = Pattern.compile(PROBLEM_ID_REGEXP, Pattern.CASE_INSENSITIVE)
+        Matcher matcher = Pattern.compile(PROBLEM_ID_REGEXP, CASE_INSENSITIVE)
                 .matcher(source);
 
         while (matcher.find()) {
