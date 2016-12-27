@@ -24,12 +24,12 @@ class TextUtilTest {
     @Test
     fun findMultipleProblemIds() {
         val multiple = "We have tow huge problems this one E50-7476/16(3.2.47E-SM4) and " +
-                "this one E50-111111/16(3.2.47E-SM4)."
+                "this one A51-111/16(3.2.47E-SM4)."
         val problemIdOccurrences = TextUtils.findProblemIdOccurrences(multiple)
 
         assertEquals(2, problemIdOccurrences.size.toLong())
         assertEquals("E50-7476/16(3.2.47E-SM4)", problemIdOccurrences[0])
-        assertEquals("E50-111111/16(3.2.47E-SM4)", problemIdOccurrences[1])
+        assertEquals("A51-111/16(3.2.47E-SM4)", problemIdOccurrences[1])
     }
 
     @Test

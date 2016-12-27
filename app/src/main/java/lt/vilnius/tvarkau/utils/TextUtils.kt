@@ -10,7 +10,7 @@ import java.util.regex.Pattern.CASE_INSENSITIVE
 
 object TextUtils {
 
-    private val PROBLEM_ID_REGEXP = "E50-\\S+?\\)"
+    private val PROBLEM_ID_REGEXP = "[A-Z]\\d{2}-\\d+\\/\\d+\\(\\S+?\\)"
     private val PROBLEM_ID_PATTERN = Pattern.compile(PROBLEM_ID_REGEXP, CASE_INSENSITIVE)
 
     fun findProblemIdOccurrences(source: String): List<String> {
