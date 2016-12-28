@@ -1,8 +1,6 @@
 package lt.vilnius.tvarkau.utils
 
-import java.util.*
-import java.util.regex.Pattern
-import java.util.regex.Pattern.CASE_INSENSITIVE
+import kotlin.text.RegexOption.IGNORE_CASE
 
 /**
  * @author Martynas Jurkus
@@ -10,17 +8,9 @@ import java.util.regex.Pattern.CASE_INSENSITIVE
 
 object TextUtils {
 
-    private val PROBLEM_ID_REGEXP = "[A-Z]\\d{2}-\\d+\\/\\d+\\(\\S+?\\)"
-    private val PROBLEM_ID_PATTERN = Pattern.compile(PROBLEM_ID_REGEXP, CASE_INSENSITIVE)
+    private val PROBLEM_ID_REGEXP = "[A-Z]\\d{2}-\\d+\\/\\d+\\(\\S+?\\)".toRegex(IGNORE_CASE)
 
-    fun findProblemIdOccurrences(source: String): List<String> {
-        val result = ArrayList<String>()
-        val matcher = PROBLEM_ID_PATTERN.matcher(source)
-
-        while (matcher.find()) {
-            result.add(matcher.group())
-        }
-
-        return result
+    fun findReportIdOccurrences(source: String): List<String> {
+        return PROBLEM_ID_REGEXP.findAll(source).map { it.value }.toList()
     }
 }
