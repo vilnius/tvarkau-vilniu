@@ -52,23 +52,29 @@ public class ChooseReportTypeActivity extends BaseActivity implements ReportType
 
     private void setReportTypesAdapter() {
 
-        Action1<ApiResponse<List<String>>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult() != null) {
-                List<String> reportList = apiResponse.getResult();
-                if (reportList.size() > 0) {
-                    reportTypesListAdapter = new ReportTypesListAdapter(this, reportList, this);
-                    reportTypesRecyclerView.setAdapter(reportTypesListAdapter);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
-                    finish();
+        Action1<ApiResponse<List<String>>> onSuccess = new Action1<ApiResponse<List<String>>>() {
+            @Override
+            public void call(ApiResponse<List<String>> apiResponse) {
+                if (apiResponse.getResult() != null) {
+                    List<String> reportList = apiResponse.getResult();
+                    if (reportList.size() > 0) {
+                        reportTypesListAdapter = new ReportTypesListAdapter(ChooseReportTypeActivity.this, reportList, ChooseReportTypeActivity.this);
+                        reportTypesRecyclerView.setAdapter(reportTypesListAdapter);
+                    } else {
+                        Toast.makeText(ChooseReportTypeActivity.this.getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
+                        ChooseReportTypeActivity.this.finish();
+                    }
                 }
             }
         };
 
-        Action1<Throwable> onError = throwable -> {
-            Timber.e(throwable);
-            Toast.makeText(getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
-            finish();
+        Action1<Throwable> onError = new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                Timber.e(throwable);
+                Toast.makeText(ChooseReportTypeActivity.this.getApplicationContext(), R.string.error_loading_report_types, Toast.LENGTH_SHORT).show();
+                ChooseReportTypeActivity.this.finish();
+            }
         };
 
         ApiRequest<GetProblemTypesParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEM_TYPES, null);

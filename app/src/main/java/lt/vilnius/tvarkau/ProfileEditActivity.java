@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -35,8 +36,12 @@ public class ProfileEditActivity extends BaseActivity {
             new AlertDialog.Builder(this, R.style.MyDialogTheme)
                 .setMessage(getString(R.string.discard_changes_title))
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(R.string.discard_changes_positive, (dialog, whichButton) ->
-                    ProfileEditActivity.super.onBackPressed())
+                .setPositiveButton(R.string.discard_changes_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        ProfileEditActivity.super.onBackPressed();
+                    }
+                })
                 .setNegativeButton(R.string.discard_changes_negative, null).show();
         } else {
             super.onBackPressed();

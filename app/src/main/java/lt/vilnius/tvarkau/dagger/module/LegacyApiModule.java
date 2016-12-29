@@ -15,6 +15,7 @@ import com.google.gson.JsonSerializer;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +27,10 @@ import lt.vilnius.tvarkau.BuildConfig;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.network.TokenAuthenticator;
 import lt.vilnius.tvarkau.network.TokenInterceptor;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -59,10 +62,13 @@ public class LegacyApiModule {
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
-            .addNetworkInterceptor(chain -> {
-                Request.Builder requestBuilder = chain.request().newBuilder();
-                requestBuilder.header("Content-Type", "application/json");
-                return chain.proceed(requestBuilder.build());
+            .addNetworkInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request.Builder requestBuilder = chain.request().newBuilder();
+                    requestBuilder.header("Content-Type", "application/json");
+                    return chain.proceed(requestBuilder.build());
+                }
             })
             .build();
     }
