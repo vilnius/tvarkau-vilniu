@@ -28,21 +28,24 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.item_report_type, parent, false);
+                .inflate(R.layout.item_report_type, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String reportType = reportTypes.get(position);
+        final String reportType = reportTypes.get(position);
 
         holder.item = reportType;
         holder.reportTypeName.setText(reportType);
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onReportTypeSelected(reportType);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onReportTypeSelected(reportType);
+                }
             }
         });
 
@@ -52,6 +55,7 @@ public class ReportTypesListAdapter extends RecyclerView.Adapter<ReportTypesList
     }
 
     public void setReportTypeSelectedListener(ReportTypeSelectedListener listener) {
+
         this.listener = listener;
     }
 

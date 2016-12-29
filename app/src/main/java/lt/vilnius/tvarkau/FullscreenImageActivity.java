@@ -71,12 +71,15 @@ public class FullscreenImageActivity extends BaseActivity {
     }
 
     private void initializePager() {
-        problemImagesViewPager.setAdapter(new FullscreenImagesPagerAdapter<>(this, photos, v -> {
-            if (getSupportActionBar() != null) {
-                if (getSupportActionBar().isShowing()) {
-                    getSupportActionBar().hide();
-                } else {
-                    getSupportActionBar().show();
+        problemImagesViewPager.setAdapter(new FullscreenImagesPagerAdapter<>(this, photos, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FullscreenImageActivity.this.getSupportActionBar() != null) {
+                    if (FullscreenImageActivity.this.getSupportActionBar().isShowing()) {
+                        FullscreenImageActivity.this.getSupportActionBar().hide();
+                    } else {
+                        FullscreenImageActivity.this.getSupportActionBar().show();
+                    }
                 }
             }
         }));

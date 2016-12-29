@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.fragments;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,8 +56,10 @@ import timber.log.Timber;
 
 public class ReportImportDialogFragment extends DialogFragment {
 
-    @Inject LegacyApiService legacyApiService;
-    @Inject Analytics analytics;
+    @Inject
+    LegacyApiService legacyApiService;
+    @Inject
+    Analytics analytics;
     @Inject
     @Named(Preferences.MY_PROBLEMS_PREFERENCES)
     SharedPreferences myProblemsPreferences;
@@ -85,7 +89,8 @@ public class ReportImportDialogFragment extends DialogFragment {
     private boolean isSettingsActivity;
     private Subscription subscription;
 
-    public ReportImportDialogFragment() {}
+    public ReportImportDialogFragment() {
+    }
 
     public static ReportImportDialogFragment newInstance(boolean settingsActivity) {
         ReportImportDialogFragment importDialogFragment = new ReportImportDialogFragment();
@@ -97,7 +102,8 @@ public class ReportImportDialogFragment extends DialogFragment {
         return importDialogFragment;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefsManager = SharedPrefsManager.getInstance(getActivity());
 
@@ -133,7 +139,12 @@ public class ReportImportDialogFragment extends DialogFragment {
             rememberMe.setChecked(false);
         }
 
-        rememberMe.setOnCheckedChangeListener((buttonView, isChecked) -> prefsManager.changeUserRememberMeStatus(isChecked));
+        rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                prefsManager.changeUserRememberMeStatus(isChecked);
+            }
+        });
 
         vilniusAccountLoginError.setVisibility(View.GONE);
 
@@ -141,14 +152,17 @@ public class ReportImportDialogFragment extends DialogFragment {
 
         alertDialogBuilder.setPositiveButton(R.string.ok, null);
 
-        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> {
-            if (vilniusAccountEmail.hasFocus()) {
-                KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
+        alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (vilniusAccountEmail.hasFocus()) {
+                    KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountEmail);
+                }
+                if (vilniusAccountPassword.hasFocus()) {
+                    KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountPassword);
+                }
+                dialog.dismiss();
             }
-            if (vilniusAccountPassword.hasFocus()) {
-                KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
-            }
-            dialog.dismiss();
         });
 
         Dialog dialog = alertDialogBuilder.create();
@@ -165,49 +179,58 @@ public class ReportImportDialogFragment extends DialogFragment {
 
             Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
 
-            positiveButton.setOnClickListener(view -> {
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (validateVilniusSignInputFields()) {
+                    if (ReportImportDialogFragment.this.validateVilniusSignInputFields()) {
 
-                    String email = vilniusAccountEmail.getText().toString();
+                        String email = vilniusAccountEmail.getText().toString();
 
-                    password = vilniusAccountPassword.getText().toString();
-                    String encodedPassword = EncryptUtils.encrypt(password);
+                        password = vilniusAccountPassword.getText().toString();
+                        String encodedPassword = EncryptUtils.encrypt(password);
 
-                    GetVilniusSignParams params = new GetVilniusSignParams(email, encodedPassword);
+                        GetVilniusSignParams params = new GetVilniusSignParams(email, encodedPassword);
 
-                    ApiRequest<GetVilniusSignParams> request = new ApiRequest<>(ApiMethod.LOGIN, params);
+                        ApiRequest<GetVilniusSignParams> request = new ApiRequest<>(ApiMethod.LOGIN, params);
 
-                    Action1<ApiResponse<LoginResponse>> onSuccess = apiResponse -> {
-                        vilniusAccountLoginError.setVisibility(View.GONE);
-                        if (apiResponse.getResult() != null) {
-                            analytics.trackLogIn();
+                        Action1<ApiResponse<LoginResponse>> onSuccess = new Action1<ApiResponse<LoginResponse>>() {
+                            @Override
+                            public void call(ApiResponse<LoginResponse> apiResponse) {
+                                vilniusAccountLoginError.setVisibility(View.GONE);
+                                if (apiResponse.getResult() != null) {
+                                    analytics.trackLogIn();
 
-                            prefsManager.saveUserSessionId(apiResponse.getResult().getSessionId());
-                            prefsManager.saveUserEmail(apiResponse.getResult().getEmail());
-                            prefsManager.saveUserPassword(password);
-                            LocalDateTime localDateTime = LocalDateTime.now();
-                            prefsManager.saveUserLastReportImport(FormatUtils.formatLocalDateTime(localDateTime));
-                            loadUserReportsFromVilniusAccount(apiResponse.getResult().getEmail(), dialog);
-                        } else {
-                            vilniusAccountLoginError.setVisibility(View.VISIBLE);
-                            vilniusAccountLoginError.setText(R.string.error_vilnius_account_invalid_credentials);
-                        }
-                    };
+                                    prefsManager.saveUserSessionId(apiResponse.getResult().getSessionId());
+                                    prefsManager.saveUserEmail(apiResponse.getResult().getEmail());
+                                    prefsManager.saveUserPassword(password);
+                                    LocalDateTime localDateTime = LocalDateTime.now();
+                                    prefsManager.saveUserLastReportImport(FormatUtils.formatLocalDateTime(localDateTime));
+                                    ReportImportDialogFragment.this.loadUserReportsFromVilniusAccount(apiResponse.getResult().getEmail(), dialog);
+                                } else {
+                                    vilniusAccountLoginError.setVisibility(View.VISIBLE);
+                                    vilniusAccountLoginError.setText(R.string.error_vilnius_account_invalid_credentials);
+                                }
+                            }
+                        };
 
-                    Action1<Throwable> onError = throwable -> {
-                        Timber.e(throwable);
-                        vilniusAccountLoginError.setVisibility(View.VISIBLE);
-                        vilniusAccountLoginError.setText(R.string.error_on_vilnius_sign);
-                    };
+                        Action1<Throwable> onError = new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                Timber.e(throwable);
+                                vilniusAccountLoginError.setVisibility(View.VISIBLE);
+                                vilniusAccountLoginError.setText(R.string.error_on_vilnius_sign);
+                            }
+                        };
 
-                    subscription = legacyApiService.loginToVilniusAccount(request)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                            onSuccess,
-                            onError
-                        );
+                        subscription = legacyApiService.loginToVilniusAccount(request)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        onSuccess,
+                                        onError
+                                );
+                    }
                 }
             });
         }
@@ -236,88 +259,94 @@ public class ReportImportDialogFragment extends DialogFragment {
         return emailIsValid && passwordIsValid;
     }
 
-    private void loadUserReportsFromVilniusAccount(String email, Dialog dialog) {
+    private void loadUserReportsFromVilniusAccount(String email, final Dialog dialog) {
 
         GetProblemsParams params = new GetProblemsParams.Builder()
-            .setStart(0)
-            .setLimit(100)
-            .setReporterFilter(email)
-            .create();
+                .setStart(0)
+                .setLimit(100)
+                .setReporterFilter(email)
+                .create();
 
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
-        Action1<ApiResponse<List<Problem>>> onSuccess = apiResponse -> {
-            if (apiResponse.getResult() != null) {
-                if (apiResponse.getResult().size() > 0) {
-                    List<Problem> vilniusAccountReports = new ArrayList<>();
-                    vilniusAccountReports.addAll(apiResponse.getResult());
-                    for (Problem report : vilniusAccountReports) {
-                        String reportId = report.getProblemId();
-                        if (!myProblemsPreferences.getAll().isEmpty()) {
-                            for (String key : myProblemsPreferences.getAll().keySet()) {
-                                if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
-                                    myProblemsPreferences
+        Action1<ApiResponse<List<Problem>>> onSuccess = new Action1<ApiResponse<List<Problem>>>() {
+            @Override
+            public void call(ApiResponse<List<Problem>> apiResponse) {
+                if (apiResponse.getResult() != null) {
+                    if (apiResponse.getResult().size() > 0) {
+                        List<Problem> vilniusAccountReports = new ArrayList<>();
+                        vilniusAccountReports.addAll(apiResponse.getResult());
+                        for (Problem report : vilniusAccountReports) {
+                            String reportId = report.getProblemId();
+                            if (!myProblemsPreferences.getAll().isEmpty()) {
+                                for (String key : myProblemsPreferences.getAll().keySet()) {
+                                    if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
+                                        myProblemsPreferences
+                                                .edit()
+                                                .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
+                                                .apply();
+                                    }
+                                }
+                            } else {
+                                myProblemsPreferences
                                         .edit()
                                         .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
                                         .apply();
-                                }
                             }
-                        } else {
-                            myProblemsPreferences
-                                .edit()
-                                    .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
-                                .apply();
                         }
-                    }
 
-                    if (isSettingsActivity) {
-                        ((SettingsVilniusSignInListener) getActivity()).onVilniusSignIn();
-                    } else {
-                        EventBus.getDefault().post(new NewProblemAddedEvent());
-                        Toast.makeText(getContext(), R.string.report_import_done,
-                            Toast.LENGTH_SHORT).show();
-                    }
+                        if (isSettingsActivity) {
+                            ((SettingsVilniusSignInListener) ReportImportDialogFragment.this.getActivity()).onVilniusSignIn();
+                        } else {
+                            EventBus.getDefault().post(new NewProblemAddedEvent());
+                            Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.report_import_done,
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
+                        if (vilniusAccountEmail.hasFocus()) {
+                            KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountEmail);
+                        }
+                        if (vilniusAccountPassword.hasFocus()) {
+                            KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountPassword);
+                        }
+                        dialog.dismiss();
+                    }
+                } else {
                     if (vilniusAccountEmail.hasFocus()) {
-                        KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
+                        KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountEmail);
                     }
                     if (vilniusAccountPassword.hasFocus()) {
-                        KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
+                        KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountPassword);
                     }
+                    Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.error_no_report_on_Vilnius_account,
+                            Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
-            } else {
-                if (vilniusAccountEmail.hasFocus()) {
-                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountEmail);
-                }
-                if (vilniusAccountPassword.hasFocus()) {
-                    KeyboardUtils.closeSoftKeyboard(getActivity(), vilniusAccountPassword);
-                }
-                Toast.makeText(getContext(), R.string.error_no_report_on_Vilnius_account,
-                    Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
             }
         };
 
-        Action1<Throwable> onError = throwable -> {
-            Toast.makeText(getContext(), R.string.error_loading_reports_from_vilnius_account,
-                Toast.LENGTH_SHORT).show();
-            throwable.printStackTrace();
-            Timber.e(throwable);
+        Action1<Throwable> onError = new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.error_loading_reports_from_vilnius_account,
+                        Toast.LENGTH_SHORT).show();
+                throwable.printStackTrace();
+                Timber.e(throwable);
+            }
         };
 
         legacyApiService.getProblems(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                onSuccess,
-                onError
-            );
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        onSuccess,
+                        onError
+                );
     }
 
     @Override
     public void onDestroyView() {
-        if(subscription != null) {
+        if (subscription != null) {
             subscription.unsubscribe();
         }
         super.onDestroyView();
