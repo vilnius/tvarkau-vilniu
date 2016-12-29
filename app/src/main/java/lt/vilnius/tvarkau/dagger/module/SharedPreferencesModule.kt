@@ -9,6 +9,7 @@ import lt.vilnius.tvarkau.prefs.BooleanPreference
 import lt.vilnius.tvarkau.prefs.BooleanPreferenceImpl
 import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
+import lt.vilnius.tvarkau.prefs.Preferences.PREFS_NAME
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -17,7 +18,15 @@ class SharedPreferencesModule {
 
     @Provides
     @Singleton
-    internal fun providesSharedPreferences(application: Application): SharedPreferences {
+    @Named(PREFS_NAME)
+    fun providerApplicationPreferences(application: Application): SharedPreferences {
+        return application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    @Named(MY_PROBLEMS_PREFERENCES)
+    fun provideMyProblemPreferences(application: Application): SharedPreferences {
         return application.getSharedPreferences(MY_PROBLEMS_PREFERENCES, Context.MODE_PRIVATE)
     }
 
@@ -25,7 +34,7 @@ class SharedPreferencesModule {
     @Singleton
     @Named(DISPLAY_PHOTO_INSTRUCTIONS)
     fun providePhotoInstructions(
-            preference: SharedPreferences
+            @Named(PREFS_NAME) preference: SharedPreferences
     ): BooleanPreference {
         return BooleanPreferenceImpl(preference, DISPLAY_PHOTO_INSTRUCTIONS, true)
     }
