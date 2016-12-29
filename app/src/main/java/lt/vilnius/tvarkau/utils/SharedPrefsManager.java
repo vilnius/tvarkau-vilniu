@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import lt.vilnius.tvarkau.entity.Profile;
+import lt.vilnius.tvarkau.prefs.Preferences;
 import timber.log.Timber;
 
 /**
@@ -16,7 +17,6 @@ import timber.log.Timber;
  * but later on it also will help us to store actual user information.
  */
 public class SharedPrefsManager {
-    private static final String PREFS_NAME = "TVARKAU-VILNIU_PREFS";
 
     private static final String PREF_USER_PROFILE = "UserProfile";
     private static final String PREF_USER_ANONYMOUS = "UserAnonymous";
@@ -32,7 +32,7 @@ public class SharedPrefsManager {
 
 
     private SharedPrefsManager(Context context) {
-        sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getApplicationContext().getSharedPreferences(Preferences.PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     private static void initializeInstance(Context context) {
