@@ -9,8 +9,10 @@ import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
+import lt.vilnius.tvarkau.prefs.Preferences
 import rx.Scheduler
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * @author Martynas Jurkus
@@ -19,7 +21,7 @@ abstract class BaseFragment : Fragment() {
 
     @Inject
     lateinit var legacyApiService: LegacyApiService
-    @Inject
+    @field:[Inject Named(Preferences.MY_PROBLEMS_PREFERENCES)]
     lateinit var myProblemsPreferences: SharedPreferences
     @Inject
     lateinit var analytics: Analytics
