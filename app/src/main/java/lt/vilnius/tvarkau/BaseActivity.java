@@ -6,17 +6,21 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import icepick.Icepick;
 import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 
+import static lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Inject
     LegacyApiService legacyApiService;
     @Inject
+    @Named(MY_PROBLEMS_PREFERENCES)
     SharedPreferences myProblemsPreferences;
     @Inject
     Analytics analytics;

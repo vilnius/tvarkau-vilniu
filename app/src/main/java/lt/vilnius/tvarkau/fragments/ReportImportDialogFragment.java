@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +43,7 @@ import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
+import lt.vilnius.tvarkau.prefs.Preferences;
 import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
@@ -57,9 +59,10 @@ public class ReportImportDialogFragment extends DialogFragment {
     @Inject
     LegacyApiService legacyApiService;
     @Inject
-    SharedPreferences myProblemsPreferences;
-    @Inject
     Analytics analytics;
+    @Inject
+    @Named(Preferences.MY_PROBLEMS_PREFERENCES)
+    SharedPreferences myProblemsPreferences;
 
     @BindView(R.id.vilnius_account_email)
     EditText vilniusAccountEmail;
