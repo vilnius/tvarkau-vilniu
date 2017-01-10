@@ -130,6 +130,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
 
     override fun hideLoader() {
         adapter.hideLoader()
+        adapter.notifyDataSetChanged()
     }
 
     override fun showEmptyState() {
