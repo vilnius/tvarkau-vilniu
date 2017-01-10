@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.problem_list.*
 import kotlinx.android.synthetic.main.server_not_responding.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
-import lt.vilnius.tvarkau.events_listeners.EndlessRecyclerViewScrollListener
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
@@ -25,6 +24,7 @@ import lt.vilnius.tvarkau.fragments.presenters.MyReportListPresenterImpl
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter
+import lt.vilnius.tvarkau.widgets.EndlessScrollListener
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
@@ -37,9 +37,9 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
     private val isAllProblemList: Boolean
         get() = arguments.getBoolean(ALL_PROBLEM_LIST)
 
-    private var shouldLoadMoreProblems = true
-    private var isLoading = false
     private var reloadingAllReports = false
+    private var page = 0
+    private lateinit var scrollListener: EndlessScrollListener
 
     private val presenter: ProblemListPresenter by lazy {
         if (isAllProblemList) {
@@ -88,12 +88,8 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
 
         val linearLayoutManager = LinearLayoutManager(activity)
         problem_list.layoutManager = linearLayoutManager
-        problem_list.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                //Scroll listener always starts from page 1
-                getReports(page - 1)
-            }
-        })
+        scrollListener = EndlessScrollListener({ getReports() })
+        problem_list.addOnScrollListener(scrollListener)
 
         problem_list.adapter = adapter
 
@@ -108,8 +104,8 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (problemList.isEmpty() && shouldLoadMoreProblems) {
-            getReports(page = 0)
+        if (problemList.isEmpty()) {
+            getReports()
         }
 
         presenter.onAttach()
@@ -119,6 +115,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
         swipe_container.isRefreshing = false
 
         if (reloadingAllReports) {
+            reloadingAllReports = false
             problemList.clear()
             problemList.addAll(reports)
             adapter.notifyDataSetChanged()
@@ -142,7 +139,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
     }
 
     override fun markLoading(isLoading: Boolean) {
-        this.isLoading = isLoading
+        scrollListener.isLoading = isLoading
 
         if (!isLoading) {
             swipe_container.isRefreshing = false
@@ -160,27 +157,32 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
 
     private fun reloadData() {
         reloadingAllReports = true
-        getReports(0)
+        page = 0
+        getReports()
     }
 
-    private fun getReports(page: Int) {
-        if (isLoading) return
+    private fun getReports() {
+        if (scrollListener.isLoading) return
+        scrollListener.isLoading = true
 
         presenter.getReportsForPage(page)
+        page++
     }
 
     private fun showNoConnectionSnackbar(lastPage: Int) {
         Snackbar.make(activity.findViewById(R.id.coordinator_layout), R.string.no_connection, Snackbar
                 .LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
-                .setAction(R.string.try_again) { getReports(page = lastPage) }
+                .setAction(R.string.try_again) {
+                    page = lastPage
+                    getReports()
+                }
                 .show()
     }
 
     @Subscribe
     fun onNewProblemAddedEvent(event: NewProblemAddedEvent) {
-        shouldLoadMoreProblems = true
-        isLoading = false
+        scrollListener.isLoading = false
         reloadData()
     }
 
