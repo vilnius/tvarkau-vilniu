@@ -90,6 +90,8 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
         problem_list.layoutManager = linearLayoutManager
         scrollListener = EndlessScrollListener({ getReports() })
         problem_list.addOnScrollListener(scrollListener)
+        //scroll listener should load only where pagination is possible
+        scrollListener.isEnabled = isAllProblemList
 
         problem_list.adapter = adapter
 

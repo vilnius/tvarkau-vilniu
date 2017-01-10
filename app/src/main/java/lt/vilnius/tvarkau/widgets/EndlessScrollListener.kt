@@ -12,6 +12,7 @@ class EndlessScrollListener(
 ) : RecyclerView.OnScrollListener() {
 
     var isLoading = false
+    var isEnabled = true
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -23,7 +24,7 @@ class EndlessScrollListener(
     }
 
     private fun onScrolled(firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-        if (!isLoading && (totalItemCount - firstVisibleItem - visibleItemCount) < loadItemPerPage / 2) {
+        if (!isLoading && isEnabled && (totalItemCount - firstVisibleItem - visibleItemCount) < loadItemPerPage / 2) {
             load()
         }
     }
