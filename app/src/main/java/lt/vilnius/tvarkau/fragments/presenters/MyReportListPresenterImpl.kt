@@ -31,6 +31,7 @@ class MyReportListPresenterImpl(
                     if (it.isEmpty()) {
                         view.showEmptyState()
                     } else {
+                        view.hideEmptyState()
                         view.onReportsLoaded(it)
                     }
                 }, {
