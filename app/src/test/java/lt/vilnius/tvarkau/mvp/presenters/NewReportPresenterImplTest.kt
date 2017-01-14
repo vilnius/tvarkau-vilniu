@@ -81,7 +81,7 @@ class NewReportPresenterImplTest {
         val validator = FieldAwareValidator.of(NewReportData(
                 reportType = NewReportFragment.PARKING_VIOLATIONS,
                 email = "test@email.com",
-                dateOfBirth = "2000-01-01"
+                personalCode = "38411111111"
         ))
 
         fixture.submitProblem(validator)

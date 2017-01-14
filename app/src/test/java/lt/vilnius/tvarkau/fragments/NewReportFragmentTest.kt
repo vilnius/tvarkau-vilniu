@@ -36,7 +36,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         assertThat(fragment.new_report_email_container).isNotVisible
         assertThat(fragment.new_report_name_container).isNotVisible
         assertThat(fragment.new_report_date_time_container).isNotVisible
-        assertThat(fragment.new_report_birthday_container).isNotVisible
+        assertThat(fragment.new_report_personal_code_container).isNotVisible
     }
 
     @Test
@@ -48,7 +48,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         assertThat(fragment.new_report_email_container).isVisible
         assertThat(fragment.new_report_name_container).isVisible
         assertThat(fragment.new_report_date_time_container).isVisible
-        assertThat(fragment.new_report_birthday_container).isVisible
+        assertThat(fragment.new_report_personal_code_container).isVisible
     }
 
     @Test
@@ -128,18 +128,23 @@ class NewReportFragmentTest : BaseRobolectricTest() {
     }
 
     @Test
-    fun submit_parkingViolation_validateBirthday() {
+    fun submit_parkingViolation_validatePersonalCode() {
         val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
 
         fillAllFields(fragment)
-        fragment.report_problem_submitter_birthday.setText("")
+        fragment.report_problem_submitter_personal_code.setText("")
         fragment.doSubmitReport()
-        assertThat(fragment.report_problem_submitter_birthday_wrapper)
-                .hasError(R.string.error_profile_fill_birthday)
+        assertThat(fragment.report_problem_submitter_personal_code_wrapper)
+                .hasError(R.string.error_new_report_enter_personal_code)
 
-        fragment.report_problem_submitter_email.setText("1894-01-01")
+        fragment.report_problem_submitter_personal_code.setText("zoom")
         fragment.doSubmitReport()
-        assertThat(fragment.report_problem_submitter_birthday_wrapper)
+        assertThat(fragment.report_problem_submitter_personal_code_wrapper)
+                .hasError(R.string.error_new_report_invalid_personal_code)
+
+        fragment.report_problem_submitter_personal_code.setText("34508028198")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_submitter_personal_code_wrapper)
                 .noError()
     }
 
@@ -179,7 +184,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         fragment.report_problem_submitter_email.setText("some@email.com")
         fragment.report_problem_submitter_name.setText("some name")
         fragment.report_problem_date_time.setText("2017-01-01 00:00")
-        fragment.report_problem_submitter_birthday.setText("1984-01-01")
+        fragment.report_problem_submitter_personal_code.setText("34508028198")
     }
 
     private fun NewReportFragment.doSubmitReport() {

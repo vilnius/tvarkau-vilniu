@@ -7,7 +7,6 @@ import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractor
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
-import org.threeten.bp.LocalDate
 import rx.Scheduler
 import rx.Subscription
 
@@ -67,7 +66,8 @@ class NewReportPresenterImpl(
         personalDataInteractor.storePersonalData(
                 Profile(
                         reportData.name,
-                        LocalDate.parse(reportData.dateOfBirth),
+                        null,
+                        reportData.personalCode,
                         reportData.email,
                         reportData.phone
                 ))

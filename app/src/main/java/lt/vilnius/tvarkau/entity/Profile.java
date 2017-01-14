@@ -16,13 +16,16 @@ public class Profile {
     private String email;
     @SerializedName("Profile_Mobile_Phone")
     private String mobilePhone;
+    @SerializedName("personal_code")
+    private String personalCode;
 
     public Profile() {
     }
 
-    public Profile(String name, LocalDate birthday, String email, String mobilePhone) {
+    public Profile(String name, LocalDate birthday, String personalCode, String email, String mobilePhone) {
         this.name = name;
         this.birthday = birthday;
+        this.personalCode = personalCode;
         this.email = email;
         this.mobilePhone = mobilePhone;
     }
@@ -57,6 +60,10 @@ public class Profile {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    }
+
+    public String getPersonalCode() {
+        return personalCode;
     }
 
     public String createJsonData() {

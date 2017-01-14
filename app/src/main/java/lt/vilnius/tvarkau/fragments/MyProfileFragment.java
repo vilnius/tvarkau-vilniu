@@ -170,7 +170,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
         phone = profileTelephone.getText().toString();
 
         if (validateProfileInputs()) {
-            Profile profile = new Profile(name, birthday, email, phone);
+            Profile profile = new Profile(name, birthday, null, email, phone);
 
             prefsManager.saveUserDetails(profile);
 
@@ -277,7 +277,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
             }
 
             Profile oldProfile = prefsManager.getUserProfile();
-            Profile newProfile = new Profile(name, birthday, email, telephone);
+            Profile newProfile = new Profile(name, birthday, null, email, telephone);
             return !newProfile.equals(oldProfile);
         }
     }

@@ -15,6 +15,6 @@ data class NewReportData(
         val email: String? = null,
         val phone: String? = null,
         val name: String? = null,
-        val dateOfBirth: String? = null,
+        val personalCode: String? = null,
         val photoUrls: List<File> = emptyList()
 )
