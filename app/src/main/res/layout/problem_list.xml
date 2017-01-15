@@ -28,7 +28,9 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="120dp">
+        android:paddingBottom="120dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"

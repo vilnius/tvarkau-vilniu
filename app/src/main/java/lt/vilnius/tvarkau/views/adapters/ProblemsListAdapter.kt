@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.vinted.extensions.gone
-import com.vinted.extensions.visible
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
 import kotlinx.android.synthetic.main.problem_list_content.view.*
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R

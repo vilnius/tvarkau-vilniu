@@ -22,11 +22,11 @@ public class ProblemsListViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ProblemsListFragment.getAllProblemList();
+                return ProblemsListFragment.Companion.allReportsListInstance();
             case 1:
-                return ProblemsListFragment.getMyProblemList();
+                return ProblemsListFragment.Companion.myReportsListInstance();
             default:
-                return ProblemsListFragment.getAllProblemList();
+                return ProblemsListFragment.Companion.allReportsListInstance();
         }
     }
 

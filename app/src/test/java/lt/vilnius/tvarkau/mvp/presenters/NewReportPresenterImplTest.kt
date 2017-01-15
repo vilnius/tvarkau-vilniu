@@ -40,7 +40,7 @@ class NewReportPresenterImplTest {
 
         verify(view).showProgress()
         verify(view).hideProgress()
-        verify(view).showSuccess("1")
+        verify(view).showSuccess()
     }
 
     @Test
@@ -86,7 +86,7 @@ class NewReportPresenterImplTest {
 
         fixture.submitProblem(validator)
 
-        verify(view).showSuccess("1")
+        verify(view).showSuccess()
         verify(personalDataInteractor).storePersonalData(any())
     }
 

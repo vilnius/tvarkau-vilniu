@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.vinted.extensions.gone
-import com.vinted.extensions.visible
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_report_type_list.*
 import lt.vilnius.tvarkau.BaseActivity
