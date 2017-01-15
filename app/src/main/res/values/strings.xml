@@ -47,6 +47,7 @@
     <string name="profile_submit">Išsaugoti</string>
     <string name="hint_location">Vieta</string>
     <string name="hint_description">Aprašymas</string>
+    <string name="report_submit_hint_personal_code">Asmens kodas</string>
     <string name="hint_report_date_time">Pažeidimo data ir laikas</string>
     <string name="no_photo">Nėra nuotraukos</string>
     <string name="hint_problem_type">Tipas</string>
@@ -125,6 +126,8 @@
     <string name="error_profile_fill_birthday">Įveskite gimimo datą</string>
     <string name="error_profile_email_invalid">Patikrinkite, ar teisingai įvedėte el. paštą</string>
     <string name="error_profile_phone_invalid">Patikrinkite, ar teisingai įvedėte telefono numerį</string>
+    <string name="error_new_report_enter_personal_code">Įveskite asmens kodą</string>
+    <string name="error_new_report_invalid_personal_code">Patikrinkite, ar teisingai įvedėte asmens kodą</string>
     <string name="sign_in_to_vilnius_account">Prisijunkite prie vilnius.lt profilio</string>
     <string name="vilnius_account_hint_password">Slaptažodis</string>
     <string name="vilnius_account_hint_email">El. paštas</string>

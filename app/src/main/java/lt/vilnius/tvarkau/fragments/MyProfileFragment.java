@@ -85,14 +85,17 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 inputsEdited = true;
             }
 
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         };
 
         profileName.addTextChangedListener(textWatcher);
@@ -156,7 +159,8 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
         dialogDatePicker.show();
     }
 
-    @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         // Need to adjust month as in Calendar they start from 0, not 1
         LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
         profileBirthday.setText(FormatUtils.formatLocalDate(date));
@@ -170,7 +174,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
         phone = profileTelephone.getText().toString();
 
         if (validateProfileInputs()) {
-            Profile profile = new Profile(name, birthday, email, phone);
+            Profile profile = new Profile(name, birthday, email, phone, null);
 
             prefsManager.saveUserDetails(profile);
 
@@ -277,7 +281,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
             }
 
             Profile oldProfile = prefsManager.getUserProfile();
-            Profile newProfile = new Profile(name, birthday, email, telephone);
+            Profile newProfile = new Profile(name, birthday, null, email, telephone);
             return !newProfile.equals(oldProfile);
         }
     }

@@ -47,7 +47,7 @@ class NewReportInteractorImpl(
                             .setEmail(data.email.emptyToNull())
                             .setPhone(data.phone.emptyToNull())
                             .setNameOfReporter(data.name.emptyToNull())
-                            .setDateOfBirth(data.dateOfBirth.emptyToNull())
+                            .setDateOfBirth(data.personalCode.emptyToNull())
                             .create()
 
                     legacyApiService.postNewProblem(ApiRequest(NEW_PROBLEM, params))

@@ -52,7 +52,6 @@ import lt.vilnius.tvarkau.utils.*
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
 import org.greenrobot.eventbus.EventBus
-import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -147,9 +146,6 @@ class NewReportFragment : BaseFragment(),
         }
 
         report_problem_take_photo.setOnClickListener { onTakePhotoClicked() }
-        report_problem_submitter_birthday.setOnClickListener {
-            onBirthdayClicked()
-        }
 
         report_problem_date_time.setOnClickListener {
             onProblemDateTimeClicked()
@@ -209,15 +205,15 @@ class NewReportFragment : BaseFragment(),
             result
         }
 
-        new_report_birthday_container.visible()
+        new_report_personal_code_container.visible()
         new_report_email_container.visible()
         new_report_name_container.visible()
         report_problem_personal_data_agreement.visible()
 
         profile?.let {
-            report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(it.birthday))
             report_problem_submitter_email.setText(it.email)
             report_problem_submitter_name.setText(it.name)
+            report_problem_submitter_personal_code.setText(it.personalCode)
         }
     }
 
@@ -231,7 +227,7 @@ class NewReportFragment : BaseFragment(),
                 dateTime = report_problem_date_time.text.toString(),
                 email = report_problem_submitter_email.text.toString(),
                 name = report_problem_submitter_name.text.toString(),
-                dateOfBirth = report_problem_submitter_birthday.text.toString(),
+                personalCode = report_problem_submitter_personal_code.text.toString(),
                 photoUrls = imageFiles
         )
 
@@ -260,9 +256,12 @@ class NewReportFragment : BaseFragment(),
                     .validate({ it.name!!.split(" ").size >= 2 },
                             report_problem_submitter_name_wrapper.id,
                             getText(R.string.error_profile_name_invalid).toString())
-                    .validate({ it.dateOfBirth?.isNotBlank() ?: false },
-                            report_problem_submitter_birthday_wrapper.id,
-                            getText(R.string.error_profile_fill_birthday).toString())
+                    .validate({ it.personalCode?.isNotBlank() ?: false },
+                            report_problem_submitter_personal_code_wrapper.id,
+                            getText(R.string.error_new_report_enter_personal_code).toString())
+                    .validate({ PersonalCodeValidator.validate(it.personalCode!!) },
+                            report_problem_submitter_personal_code_wrapper.id,
+                            getText(R.string.error_new_report_invalid_personal_code).toString())
                     .validate({ it.photoUrls.size >= 2 },
                             0,
                             getText(R.string.error_minimum_photo_requirement).toString())
@@ -276,7 +275,7 @@ class NewReportFragment : BaseFragment(),
         report_problem_description_wrapper.isErrorEnabled = false
         report_problem_date_time_wrapper.isErrorEnabled = false
         report_problem_submitter_name_wrapper.isErrorEnabled = false
-        report_problem_submitter_birthday_wrapper.isErrorEnabled = false
+        report_problem_submitter_personal_code_wrapper.isErrorEnabled = false
         report_problem_submitter_email_wrapper.isErrorEnabled = false
 
         view?.findViewById(error.viewId)?.let {
@@ -511,23 +510,6 @@ class NewReportFragment : BaseFragment(),
                         startActivity(intent)
                     }.setActionTextColor(getColor(context, R.color.snackbar_action_text)).show()
         }
-    }
-
-    private fun onBirthdayClicked() {
-        val date = LocalDate.now()
-
-        val year = date.year
-        // Need to adjust month as in Calendar they start from 0, not 1
-        val month = date.monthValue - 1
-        val day = date.dayOfMonth
-
-        val dialogDatePicker = DatePickerDialog(activity, { datePicker: DatePicker, year: Int, month: Int, day: Int ->
-            val selectedDate = LocalDate.of(year, month + 1, day)
-            report_problem_submitter_birthday.setText(FormatUtils.formatLocalDate(selectedDate))
-        }, year, month, day)
-        dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
-        dialogDatePicker.setTitle(null)
-        dialogDatePicker.show()
     }
 
     private fun onProblemDateTimeClicked() {
