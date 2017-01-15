@@ -25,7 +25,7 @@ data class Problem(
         private val lng: Double = 0.toDouble(),
         @SerializedName("y")
         private val lat: Double = 0.toDouble()
-) {
+) : Comparable<Problem> {
     fun getType(): String? {
         return typeName ?: type
     }
@@ -41,6 +41,10 @@ data class Problem(
         get() {
             return photo ?: thumbnail?.let { listOf(it) }
         }
+
+    override fun compareTo(other: Problem): Int {
+        return getEntryDate()?.compareTo(other.getEntryDate()) ?: 0
+    }
 
     companion object {
         const val STATUS_DONE = "Atlikta"

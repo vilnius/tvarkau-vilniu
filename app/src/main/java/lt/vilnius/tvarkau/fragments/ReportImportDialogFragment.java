@@ -43,6 +43,8 @@ import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
+import lt.vilnius.tvarkau.fragments.interactors.MyReportsInteractor;
+import lt.vilnius.tvarkau.fragments.interactors.SharedPreferencesMyReportsInteractor;
 import lt.vilnius.tvarkau.prefs.Preferences;
 import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
@@ -88,6 +90,7 @@ public class ReportImportDialogFragment extends DialogFragment {
     private String password;
     private boolean isSettingsActivity;
     private Subscription subscription;
+    private MyReportsInteractor myReportsInteractor;
 
     public ReportImportDialogFragment() {
     }
@@ -114,6 +117,8 @@ public class ReportImportDialogFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((TvarkauApplication) getActivity().getApplication()).getComponent().inject(this);
+
+        myReportsInteractor = new SharedPreferencesMyReportsInteractor(myProblemsPreferences);
     }
 
     public interface SettingsVilniusSignInListener {
@@ -278,20 +283,18 @@ public class ReportImportDialogFragment extends DialogFragment {
                         vilniusAccountReports.addAll(apiResponse.getResult());
                         for (Problem report : vilniusAccountReports) {
                             String reportId = report.getProblemId();
-                            if (!myProblemsPreferences.getAll().isEmpty()) {
-                                for (String key : myProblemsPreferences.getAll().keySet()) {
-                                    if (!reportId.equals(myProblemsPreferences.getString(key, ""))) {
-                                        myProblemsPreferences
-                                                .edit()
-                                                .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
-                                                .apply();
+
+                            List<String> ids = myReportsInteractor.getReportIdsImmediate();
+                            if (!ids.isEmpty()) {
+                                for (String id : ids) {
+                                    if (reportId != null && !reportId.equals(id)) {
+                                        myReportsInteractor.saveReportId(reportId);
                                     }
                                 }
                             } else {
-                                myProblemsPreferences
-                                        .edit()
-                                        .putString(NewReportFragment.PROBLEM_PREFERENCE_KEY + reportId, reportId)
-                                        .apply();
+                                if (reportId != null) {
+                                    myReportsInteractor.saveReportId(reportId);
+                                }
                             }
                         }
 

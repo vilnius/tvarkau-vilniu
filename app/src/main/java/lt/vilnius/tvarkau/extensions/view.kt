@@ -1,4 +1,4 @@
-package com.vinted.extensions
+package lt.vilnius.tvarkau.extensions
 
 import android.view.View
 

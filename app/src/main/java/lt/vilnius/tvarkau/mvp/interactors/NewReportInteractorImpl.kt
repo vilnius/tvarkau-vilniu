@@ -5,6 +5,7 @@ import lt.vilnius.tvarkau.backend.ApiMethod.NEW_PROBLEM
 import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.GetNewProblemParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.fragments.interactors.MyReportsInteractor
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import rx.Observable
 import rx.Scheduler
@@ -14,11 +15,12 @@ import rx.Single
  * @author Martynas Jurkus
  */
 class NewReportInteractorImpl(
-        val legacyApiService: LegacyApiService,
-        val photoConverter: ReportPhotoProvider,
-        val ioScheduler: Scheduler,
-        val reportDescriptionTemplate: String,
-        val analytics: Analytics
+        private val legacyApiService: LegacyApiService,
+        private val myReportsInteractor: MyReportsInteractor,
+        private val photoConverter: ReportPhotoProvider,
+        private val ioScheduler: Scheduler,
+        private val reportDescriptionTemplate: String,
+        private val analytics: Analytics
 ) : NewReportInteractor {
 
     override fun submitReport(data: NewReportData): Single<String> {
@@ -53,6 +55,7 @@ class NewReportInteractorImpl(
                 .map { it.result.toString() }
                 .subscribeOn(ioScheduler)
                 .toSingle()
+                .doOnSuccess { myReportsInteractor.saveReportId(it) }
                 .doOnSuccess {
                     analytics.trackReportRegistration(data.reportType, data.photoUrls.size)
                 }
