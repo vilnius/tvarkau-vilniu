@@ -31,7 +31,7 @@ class ReportRegistrationActivity : BaseActivity() {
                 .beginTransaction()
                 .replace(android.R.id.content, PhotoInstructionsFragment.newInstance())
                 .addToBackStack(null)
-                .commit()
+                .commitAllowingStateLoss()
     }
 
     fun onReportSubmitted() {
