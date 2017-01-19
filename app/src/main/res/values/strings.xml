@@ -46,9 +46,9 @@
     <string name="error_phone_number_incorrect">Blogas telefono numeris</string>
     <string name="profile_submit">Išsaugoti</string>
     <string name="hint_location">Vieta</string>
-    <string name="hint_description">Aprašymas</string>
+    <string name="hint_description">Trumpas aprašymas</string>
     <string name="report_submit_hint_personal_code">Asmens kodas</string>
-    <string name="hint_new_report_licence_plate">Automobilio valstybinis numeris</string>
+    <string name="hint_new_report_licence_plate">Automobilio valst. nr.</string>
     <string name="hint_report_date_time">Pažeidimo data ir laikas</string>
     <string name="no_photo">Nėra nuotraukos</string>
     <string name="hint_problem_type">Tipas</string>
