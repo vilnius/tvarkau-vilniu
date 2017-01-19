@@ -6,10 +6,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:padding="12dp"
-        android:paddingTop="6dp"
-        android:focusableInTouchMode="true">
+        android:paddingTop="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,8 +18,8 @@
             android:padding="4dp">
 
             <ImageView
-                android:src="@drawable/ic_person"
-                style="@style/MyProfileIcon" />
+                style="@style/MyProfileIcon"
+                android:src="@drawable/ic_person" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/profile_name_wrapper"
@@ -44,23 +44,22 @@
             android:padding="4dp">
 
             <ImageView
-                app:srcCompat="@drawable/ic_cake"
-                style="@style/MyProfileIcon" />
+                style="@style/MyProfileIcon"
+                app:srcCompat="@drawable/ic_personal_code" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/profile_birthday_wrapper"
+                android:id="@+id/profile_personal_code_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:padding="3dp">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/profile_birthday"
+                    android:id="@+id/profile_personal_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:hint="@string/profile_hint_birthday"
-                    android:inputType="date" />
+                    android:hint="@string/profile_hint_personal_code"
+                    android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -71,8 +70,8 @@
             android:padding="4dp">
 
             <ImageView
-                android:src="@drawable/ic_email"
-                style="@style/MyProfileIcon" />
+                style="@style/MyProfileIcon"
+                android:src="@drawable/ic_email" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/profile_email_wrapper"
@@ -98,8 +97,8 @@
             android:padding="4dp">
 
             <ImageView
-                android:src="@drawable/ic_phone"
-                style="@style/MyProfileIcon" />
+                style="@style/MyProfileIcon"
+                android:src="@drawable/ic_phone" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/profile_telephone_wrapper"
@@ -124,6 +123,6 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/profile_data_agreement" />
-        
+
     </LinearLayout>
 </ScrollView>
