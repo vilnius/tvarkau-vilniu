@@ -12,7 +12,7 @@ interface NewReportView {
 
     fun hideProgress()
 
-    fun showPersonalDataFields(profile: Profile?)
+    fun showParkingViolationFields(profile: Profile?)
 
     fun showValidationError(error: FieldAwareValidator.ValidationException)
 

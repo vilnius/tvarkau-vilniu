@@ -46,8 +46,9 @@
     <string name="error_phone_number_incorrect">Blogas telefono numeris</string>
     <string name="profile_submit">Išsaugoti</string>
     <string name="hint_location">Vieta</string>
-    <string name="hint_description">Aprašymas</string>
+    <string name="hint_description">Trumpas aprašymas</string>
     <string name="report_submit_hint_personal_code">Asmens kodas</string>
+    <string name="hint_new_report_licence_plate">Automobilio valst. nr.</string>
     <string name="hint_report_date_time">Pažeidimo data ir laikas</string>
     <string name="no_photo">Nėra nuotraukos</string>
     <string name="hint_problem_type">Tipas</string>
@@ -82,6 +83,7 @@
     <string name="error_problem_type_is_empty">Prašome pasirinkti problemos tipą</string>
     <string name="error_minimum_photo_requirement">Prašome prisegti mažiausiai 2 nuotraukas</string>
     <string name="error_report_fill_date_time">Nurodykite įvykio laiką ir datą</string>
+    <string name="error_new_report_fill_licence_plate">Nurodykite automobilio valstybinį numerį</string>
     <string name="problem_successfully_sent">Jūsų pranešimas sėkmingai išsiųstas</string>
     <string name="error_submitting_problem">Atsiprašome, įvyko serverio klaida. Bandykite dar sykį.</string>
     <string name="sending_problem">Siunčiama...</string>
@@ -154,7 +156,7 @@
     <string name="add">Pridėti</string>
     <string name="personal_data_added">Jūsų duomenys pridėti</string>
     <string name="personal_data_sharing_enabled">Pridėjimas įjungtas</string>
-    <string name="report_description_timestamp_template" formatted="false">%s\nPažeidimo data ir laikas: %s</string>
+    <string name="report_description_timestamp_template" formatted="false">%s\nPažeidimo data ir laikas: %s \n Automobilio valst. nr: %s</string>
     <string name="photo_instructions_title">Padarykite mažiausiai dvi nuotraukas</string>
     <string name="photo_instructions_first_photo_hint">Nuotrauka, kurioje aiškiai matosi automobilis ir kelio ženklas ar kelio ženklinimas, draudžiantis stovėjimą</string>
     <string name="photo_instructions_second_photo_hint">Nuotrauka, kurioje iš arti matomas automobilio numeris ir ar yra (nėra) palikta neįgaliųjų asmenų automobilių statymo kortelė</string>

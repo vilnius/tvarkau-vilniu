@@ -38,7 +38,7 @@ class NewReportPresenterImpl(
                 null
             }
 
-            view.showPersonalDataFields(profile)
+            view.showParkingViolationFields(profile)
         }
     }
 

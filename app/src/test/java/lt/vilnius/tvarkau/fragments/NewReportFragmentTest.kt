@@ -178,6 +178,23 @@ class NewReportFragmentTest : BaseRobolectricTest() {
                 ShadowToast.getTextOfLatestToast())
     }
 
+    @Test
+    fun submit_parkingViolation_validateLacencePlate() {
+        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+
+        fillAllFields(fragment)
+        fragment.report_problem_licence_plate_number.setText("")
+        fragment.doSubmitReport()
+
+        assertThat(fragment.report_problem_licence_plate_number_wrapper)
+                .hasError(R.string.error_new_report_fill_licence_plate)
+
+        fragment.report_problem_licence_plate_number.setText("AAA111")
+        fragment.doSubmitReport()
+        assertThat(fragment.report_problem_licence_plate_number_wrapper)
+                .noError()
+    }
+
     private fun fillAllFields(fragment: NewReportFragment) {
         fragment.report_problem_location.setText("Some location")
         fragment.report_problem_description.setText("Some description")
@@ -185,6 +202,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         fragment.report_problem_submitter_name.setText("some name")
         fragment.report_problem_date_time.setText("2017-01-01 00:00")
         fragment.report_problem_submitter_personal_code.setText("34508028198")
+        fragment.report_problem_licence_plate_number.setText("AAA111")
     }
 
     private fun NewReportFragment.doSubmitReport() {
