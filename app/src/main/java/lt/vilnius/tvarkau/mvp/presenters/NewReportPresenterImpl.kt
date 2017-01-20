@@ -50,7 +50,7 @@ class NewReportPresenterImpl(
                 .doOnSubscribe { view.showProgress() }
                 .doOnUnsubscribe { view.hideProgress() }
                 .subscribe({
-                    handleSuccess(it)
+                    handleSuccess()
                 }, {
                     handleError(it)
                 })
@@ -65,15 +65,14 @@ class NewReportPresenterImpl(
 
         personalDataInteractor.storePersonalData(
                 Profile(
-                        reportData.name,
-                        null,
-                        reportData.personalCode,
-                        reportData.email,
-                        reportData.phone
+                        name = reportData.name,
+                        personalCode = reportData.personalCode,
+                        email = reportData.email,
+                        mobilePhone = reportData.phone
                 ))
     }
 
-    private fun handleSuccess(reportId: String) {
+    private fun handleSuccess() {
         view.showSuccess()
     }
 

@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -14,35 +13,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
-
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneOffset;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.entity.Profile;
-import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
+import lt.vilnius.tvarkau.utils.PersonalCodeValidator;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class MyProfileFragment extends BaseFragment implements DatePickerDialog.OnDateSetListener {
+public class MyProfileFragment extends BaseFragment {
 
     private SharedPrefsManager prefsManager;
 
     @BindView(R.id.profile_name)
     EditText profileName;
 
-    @BindView(R.id.profile_birthday)
-    EditText profileBirthday;
+    @BindView(R.id.profile_personal_code)
+    EditText profilePersonalCode;
 
     @BindView(R.id.profile_email)
     EditText profileEmail;
@@ -53,8 +46,8 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
     @BindView(R.id.profile_name_wrapper)
     TextInputLayout profileNameWrapper;
 
-    @BindView(R.id.profile_birthday_wrapper)
-    TextInputLayout profileBirthdayWrapper;
+    @BindView(R.id.profile_personal_code_wrapper)
+    TextInputLayout profilePersonalCodeWrapper;
 
     @BindView(R.id.profile_email_wrapper)
     TextInputLayout profileEmailWrapper;
@@ -67,7 +60,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
     private String email;
     private String phone;
     private String name;
-    private LocalDate birthday;
+    private String personalCode;
 
     public MyProfileFragment() {
     }
@@ -99,7 +92,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
         };
 
         profileName.addTextChangedListener(textWatcher);
-        profileBirthday.addTextChangedListener(textWatcher);
+        profilePersonalCode.addTextChangedListener(textWatcher);
         profileEmail.addTextChangedListener(textWatcher);
         profileTelephone.addTextChangedListener(textWatcher);
 
@@ -143,38 +136,15 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
         }
     }
 
-    @OnClick(R.id.profile_birthday)
-    protected void onProfileBirthdayClick() {
-
-        LocalDate date = LocalDate.now();
-
-        int year = date.getYear();
-        // Need to adjust month as in Calendar they start from 0, not 1
-        int month = date.getMonthValue() - 1;
-        int day = date.getDayOfMonth();
-
-        DatePickerDialog dialogDatePicker = new DatePickerDialog(getActivity(), this, year, month, day);
-        dialogDatePicker.getDatePicker().setMaxDate(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
-        dialogDatePicker.setTitle(null);
-        dialogDatePicker.show();
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        // Need to adjust month as in Calendar they start from 0, not 1
-        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
-        profileBirthday.setText(FormatUtils.formatLocalDate(date));
-        birthday = date;
-    }
-
     private void saveUserProfile() {
 
         name = profileName.getText().toString();
         email = profileEmail.getText().toString();
         phone = profileTelephone.getText().toString();
+        personalCode = profilePersonalCode.getText().toString();
 
         if (validateProfileInputs()) {
-            Profile profile = new Profile(name, birthday, email, phone, null);
+            Profile profile = new Profile(name, email, phone, personalCode);
 
             prefsManager.saveUserDetails(profile);
 
@@ -195,7 +165,7 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
 
     private boolean validateProfileInputs() {
         boolean nameIsValid = false;
-        boolean birthdayIsValid = false;
+        boolean personalCodeIsValid = false;
         boolean emailIsValid = false;
         boolean phoneIsValid = false;
 
@@ -210,11 +180,13 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
             profileNameWrapper.setError(getText(R.string.error_profile_fill_name));
         }
 
-        if (birthday != null && FormatUtils.formatLocalDate(birthday).length() > 0) {
-            birthdayIsValid = true;
-            profileBirthdayWrapper.setError(null);
+        if (personalCode == null) {
+            profilePersonalCodeWrapper.setError(getText(R.string.error_profile_fill_personal_code));
+        } else if (!PersonalCodeValidator.INSTANCE.validate(personalCode)) {
+            profilePersonalCodeWrapper.setError(getText(R.string.error_new_report_invalid_personal_code));
         } else {
-            profileBirthdayWrapper.setError(getText(R.string.error_profile_fill_birthday));
+            personalCodeIsValid = true;
+            profilePersonalCodeWrapper.setError(null);
         }
 
         if (email != null && !email.isEmpty()) {
@@ -241,17 +213,14 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
             profileTelephoneWrapper.setError(getText(R.string.error_profile_fill_telephone));
         }
 
-        return nameIsValid && birthdayIsValid && emailIsValid && phoneIsValid;
+        return nameIsValid && personalCodeIsValid && emailIsValid && phoneIsValid;
     }
 
     private void setUpUserProfile() {
         if (prefsManager.isUserDetailsSaved()) {
             Profile profile = prefsManager.getUserProfile();
             profileName.setText(profile.getName());
-            if (profile.getBirthday() != null) {
-                profileBirthday.setText(FormatUtils.formatLocalDate(profile.getBirthday()));
-            }
-            birthday = profile.getBirthday();
+            profilePersonalCode.setText(profile.getPersonalCode());
             profileEmail.setText(profile.getEmail());
             profileTelephone.setText(profile.getMobilePhone());
         }
@@ -260,15 +229,12 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
     public boolean isEditedByUser() {
 
         if (!prefsManager.isUserDetailsSaved()) {
-            if (inputsEdited) {
-                return true;
-            } else {
-                return false;
-            }
+            return inputsEdited;
         } else {
             String name = null;
             String email = null;
             String telephone = null;
+            String personalCode = null;
 
             if (profileName != null) {
                 name = profileName.getText().toString();
@@ -279,9 +245,12 @@ public class MyProfileFragment extends BaseFragment implements DatePickerDialog.
             if (profileTelephone != null) {
                 telephone = profileTelephone.getText().toString();
             }
+            if (profilePersonalCode != null) {
+                personalCode = profilePersonalCode.getText().toString();
+            }
 
             Profile oldProfile = prefsManager.getUserProfile();
-            Profile newProfile = new Profile(name, birthday, null, email, telephone);
+            Profile newProfile = new Profile(name, email, telephone, personalCode);
             return !newProfile.equals(oldProfile);
         }
     }

@@ -124,8 +124,9 @@
     <string name="error_profile_fill_email">Įveskite el. pašto adresą</string>
     <string name="error_profile_fill_telephone">Įveskite telefono numerį</string>
     <string name="personal_data_saved">Jūsų duomenys išsaugoti</string>
-    <string name="profile_hint_birthday">Gimimo data</string>
-    <string name="error_profile_fill_birthday">Įveskite gimimo datą</string>
+    <string name="profile_hint_personal_code">Asmens kodas</string>
+    <string name="error_profile_fill_personal_code">Įveskite asmens kodą</string>
+    <string name="error_profile_invalid_personal_code">Patikrinkite, ar teisingai įvedėte asmens kodą</string>
     <string name="error_profile_email_invalid">Patikrinkite, ar teisingai įvedėte el. paštą</string>
     <string name="error_profile_phone_invalid">Patikrinkite, ar teisingai įvedėte telefono numerį</string>
     <string name="error_new_report_enter_personal_code">Įveskite asmens kodą</string>
