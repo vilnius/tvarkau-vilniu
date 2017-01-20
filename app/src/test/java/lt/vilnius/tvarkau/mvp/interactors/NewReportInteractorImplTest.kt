@@ -97,6 +97,7 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
         val report = NewReportData(
                 description = "sample",
                 dateTime = "2020-10-10 10:00",
+                licencePlate = "AAA111",
                 latitude = 0.0,
                 longitude = 0.0,
                 photoUrls = emptyList()
@@ -116,6 +117,7 @@ class NewReportInteractorImplTest : BaseRobolectricTest() {
         val description = captor.firstValue.params.description
 
         assertTrue { description.contains("2020-10-10 10:00") }
+        assertTrue { description.contains("AAA111") }
     }
 
     @Test

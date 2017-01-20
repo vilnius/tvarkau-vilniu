@@ -34,7 +34,7 @@ class NewReportInteractorImpl(
                     val description = if (data.dateTime.isNullOrBlank()) {
                         data.description
                     } else {
-                        reportDescriptionTemplate.format(data.description, data.dateTime)
+                        reportDescriptionTemplate.format(data.description, data.dateTime, data.licencePlate)
                     }
 
                     val params = GetNewProblemParams.Builder()

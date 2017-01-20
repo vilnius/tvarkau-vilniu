@@ -98,7 +98,7 @@ class NewReportFragment : BaseFragment(),
 
     private var progressDialog: ProgressDialog? = null
 
-    private val validatePersonalData: Boolean
+    private val validateParkingViolationData: Boolean
         get() = reportType == PARKING_VIOLATIONS
 
     private val shouldDisplayPhotoInstructions: Boolean
@@ -185,8 +185,9 @@ class NewReportFragment : BaseFragment(),
         component.inject(this)
     }
 
-    override fun showPersonalDataFields(profile: Profile?) {
+    override fun showParkingViolationFields(profile: Profile?) {
         new_report_date_time_container.visible()
+        new_report_licence_plate_container.visible()
 
         val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_autorenew)
         report_problem_date_time.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
@@ -228,7 +229,8 @@ class NewReportFragment : BaseFragment(),
                 email = report_problem_submitter_email.text.toString(),
                 name = report_problem_submitter_name.text.toString(),
                 personalCode = report_problem_submitter_personal_code.text.toString(),
-                photoUrls = imageFiles
+                photoUrls = imageFiles,
+                licencePlate = report_problem_licence_plate_number.text.toString()
         )
 
         var validator = FieldAwareValidator.of(data)
@@ -239,8 +241,11 @@ class NewReportFragment : BaseFragment(),
                         report_problem_description_wrapper.id,
                         getText(R.string.error_problem_description_is_empty).toString())
 
-        if (validatePersonalData) {
+        if (validateParkingViolationData) {
             validator = validator
+                    .validate({ it.licencePlate?.isNotBlank() ?: false },
+                            report_problem_licence_plate_number_wrapper.id,
+                            getString(R.string.error_new_report_fill_licence_plate))
                     .validate({ it.dateTime?.isNotBlank() ?: false },
                             report_problem_date_time_wrapper.id,
                             getString(R.string.error_report_fill_date_time))
@@ -277,6 +282,7 @@ class NewReportFragment : BaseFragment(),
         report_problem_submitter_name_wrapper.isErrorEnabled = false
         report_problem_submitter_personal_code_wrapper.isErrorEnabled = false
         report_problem_submitter_email_wrapper.isErrorEnabled = false
+        report_problem_licence_plate_number_wrapper.isErrorEnabled = false
 
         view?.findViewById(error.viewId)?.let {
             if (it is TextInputLayout) {
