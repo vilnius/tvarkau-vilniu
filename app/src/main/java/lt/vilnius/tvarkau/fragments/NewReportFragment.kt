@@ -306,6 +306,21 @@ class NewReportFragment : BaseFragment(),
         (activity as ReportRegistrationActivity).onReportSubmitted()
     }
 
+    override fun fillReportDateTime(dateTime: String) {
+        report_problem_date_time.setText(dateTime)
+    }
+
+    override fun displayImages(imageFiles: List<File>) {
+        this.imageFiles.addAll(imageFiles)
+
+        problem_images_view_pager.adapter.notifyDataSetChanged()
+
+        if (imageFiles.size > 1) {
+            problem_images_view_pager_indicator.visible()
+            problem_images_view_pager.currentItem = imageFiles.size - 1
+        }
+    }
+
     fun onTakePhotoClicked() {
         if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
             openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
@@ -400,18 +415,7 @@ class NewReportFragment : BaseFragment(),
             }
 
             override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
-                var timeStamp = imageFiles.firstOrNull()
-                        ?.let { ImageUtils.getExifTimeStamp(it) }
-                        ?.let { FormatUtils.formatExifAsLocalDateTime(it) }
-
-                if (timeStamp == null) {
-                    timeStamp = imageFiles.firstOrNull()
-                            ?.let { FormatUtils.formatLocalDateTime(Date(it.lastModified())) }
-                }
-
-                timeStamp?.let { report_problem_date_time.setText(it) }
-
-                setImagesInViewPager(imageFiles)
+                presenter.onImagesPicked(imageFiles)
             }
 
             override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
@@ -469,17 +473,6 @@ class NewReportFragment : BaseFragment(),
         outState?.let {
             it.putParcelable(SAVE_LOCATION, locationCords)
             it.putSerializable(SAVE_PHOTOS, imageFiles)
-        }
-    }
-
-    private fun setImagesInViewPager(newImageFiles: List<File>) {
-        this.imageFiles.addAll(newImageFiles)
-
-        problem_images_view_pager.adapter.notifyDataSetChanged()
-
-        if (imageFiles.size > 1) {
-            problem_images_view_pager_indicator.visible()
-            problem_images_view_pager.currentItem = imageFiles.size - 1
         }
     }
 

@@ -7,8 +7,12 @@ import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractor
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
+import lt.vilnius.tvarkau.utils.FormatUtils
+import lt.vilnius.tvarkau.utils.ImageUtils
 import rx.Scheduler
 import rx.Subscription
+import java.io.File
+import java.util.*
 
 /**
  * @author Martynas Jurkus
@@ -22,6 +26,7 @@ class NewReportPresenterImpl(
 ) : NewReportPresenter {
 
     private var subscription: Subscription? = null
+    private lateinit var reportType: String
 
     override fun onAttach() {
     }
@@ -31,6 +36,8 @@ class NewReportPresenterImpl(
     }
 
     override fun initWithReportType(reportType: String) {
+        this.reportType = reportType
+
         if (reportType == NewReportFragment.PARKING_VIOLATIONS) {
             val profile = if (!personalDataInteractor.isUserAnonymous()) {
                 personalDataInteractor.getPersonalData()
@@ -55,6 +62,23 @@ class NewReportPresenterImpl(
                     handleError(it)
                 })
                 .apply { subscription = this }
+    }
+
+    override fun onImagesPicked(imageFiles: List<File>) {
+        if (reportType == NewReportFragment.PARKING_VIOLATIONS) {
+            var timeStamp = imageFiles.firstOrNull()
+                    ?.let { ImageUtils.getExifTimeStamp(it) }
+                    ?.let { FormatUtils.formatExifAsLocalDateTime(it) }
+
+            if (timeStamp == null) {
+                timeStamp = imageFiles.firstOrNull()
+                        ?.let { FormatUtils.formatLocalDateTime(Date(it.lastModified())) }
+            }
+
+            timeStamp?.let { view.fillReportDateTime(it) }
+        }
+
+        view.displayImages(imageFiles)
     }
 
     private fun updatePersonalData(reportData: NewReportData) {
