@@ -5,6 +5,7 @@ import android.content.ComponentName
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.android.synthetic.main.loading.*
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.server_not_responding.*
@@ -38,7 +39,8 @@ class ProblemDetailFragmentTest : BaseRobolectricTest() {
 
         val fragment = initFragment()
 
-        assertThat(fragment.problem_detail_view).isVisible
+        assertThat(fragment.problem_detail_scroll_view).isVisible
+        assertThat(fragment.loading_view).isGone
         assertThat(fragment.no_internet_view).isGone
         assertThat(fragment.server_not_responding_view).isGone
         assertThat(fragment.problem_answer_block).isGone
