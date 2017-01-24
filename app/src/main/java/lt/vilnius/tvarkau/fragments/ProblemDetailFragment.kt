@@ -1,7 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -48,10 +46,6 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     private lateinit var problem: Problem
 
     private var subscription: Subscription? = null
-
-    private val clipboard by lazy {
-        activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.problem_detail, container, false)
