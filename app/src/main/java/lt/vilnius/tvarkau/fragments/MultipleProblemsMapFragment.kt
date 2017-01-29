@@ -25,7 +25,15 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         GoogleMap.OnInfoWindowCloseListener {
 
     private var subscription: Subscription? = null
+    private var zoomedToMyLocation = false
 
+    override fun onCreate(bundle: Bundle?) {
+        super.onCreate(bundle)
+
+        if (bundle != null) {
+            zoomedToMyLocation = bundle.getBoolean(EXTRA_ZOOMED_TO_MY_LOCATION)
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -98,8 +106,18 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onLocationInsideCity(location: Location) {
-        zoomToMyLocation(googleMap!!, location)
+        if (!zoomedToMyLocation) {
+            zoomedToMyLocation = true;
+            zoomToMyLocation(googleMap!!, location)
+        }
     }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        bundle.putBoolean(EXTRA_ZOOMED_TO_MY_LOCATION, zoomedToMyLocation)
+
+        super.onSaveInstanceState(bundle)
+    }
+
 
     override fun onDestroyView() {
         subscription?.unsubscribe()
@@ -109,6 +127,8 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     companion object {
 
         private val PROBLEM_COUNT_LIMIT_IN_MAP = 200
+
+        private val EXTRA_ZOOMED_TO_MY_LOCATION = "zoomed_to_my_location";
 
         val instance: MultipleProblemsMapFragment
             get() = MultipleProblemsMapFragment()
