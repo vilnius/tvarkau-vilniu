@@ -81,18 +81,6 @@
         </activity>
 
         <activity
-            android:name=".NewProblemActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_new_problem"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
-
-        <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_settings"
@@ -104,20 +92,17 @@
                 android:value=".MainActivity"/>
         </activity>
 
-        <activity
-            android:name="com.gun0912.tedpicker.ImagePickerActivity"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ChooseReportTypeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_choose_problem_type"
-            android:parentActivityName=".NewProblemActivity"
+            android:parentActivityName=".activity.ReportRegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".NewProblemActivity"/>
+                android:value=".activity.ReportRegistrationActivity"/>
         </activity>
 
         <activity
