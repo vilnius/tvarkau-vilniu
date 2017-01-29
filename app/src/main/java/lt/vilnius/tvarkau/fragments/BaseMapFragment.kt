@@ -7,7 +7,6 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,8 +25,7 @@ import javax.inject.Inject
 
 abstract class BaseMapFragment : SupportMapFragment(),
         GoogleMap.OnMarkerClickListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks {
 
     protected var googleMap: GoogleMap? = null
 
@@ -58,7 +56,6 @@ abstract class BaseMapFragment : SupportMapFragment(),
             googleApi = GoogleApiClient.Builder(context)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
-                    .enableAutoManage(activity, this)
                     .build()
         }
     }
@@ -67,6 +64,16 @@ abstract class BaseMapFragment : SupportMapFragment(),
         super.onResume()
 
         analytics.trackCurrentFragment(activity, this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        googleApi?.connect()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        googleApi?.disconnect()
     }
 
     protected open fun onMapReady(map: GoogleMap) {
@@ -172,9 +179,6 @@ abstract class BaseMapFragment : SupportMapFragment(),
         //don't care about that, can't do anything anyway
     }
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        //don't care about that, can't do anything anyway
-    }
 
     override fun onDestroyView() {
         infoWindowAdapter?.clearMarkerImages()
