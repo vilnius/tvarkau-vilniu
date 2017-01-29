@@ -330,6 +330,8 @@ class NewReportFragment : BaseFragment(),
     }
 
     private fun openPhotoSelectorDialog(displayPhotoInstructions: Boolean) {
+        activity.currentFocus?.let { KeyboardUtils.closeSoftKeyboard(activity, it) }
+
         if (displayPhotoInstructions) {
             arguments.putBoolean(KEY_TAKE_PHOTO, true)
             (activity as ReportRegistrationActivity).displayPhotoInstructions()
