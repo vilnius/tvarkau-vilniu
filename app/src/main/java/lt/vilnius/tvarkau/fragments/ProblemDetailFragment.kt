@@ -1,7 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -11,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.loading.*
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.problem_photo_gallery.*
@@ -48,21 +47,12 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
 
     private var subscription: Subscription? = null
 
-    private val clipboard by lazy {
-        activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.problem_detail, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        problem_detail_view.visible()
-        problem_answer_block.gone()
-        no_internet_view.gone()
-        server_not_responding_view.gone()
 
         problem_address.setOnClickListener {
             if (PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
@@ -87,10 +77,11 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
                     .map { it.result!! }
                     .doOnNext { problem = it }
                     .doOnNext { analytics.trackViewProblem(it) }
+                    .doOnSubscribe { showLoading() }
+                    .doOnUnsubscribe { hideLoading() }
                     .subscribeOn(ioScheduler)
                     .observeOn(uiScheduler)
                     .subscribe({ problem ->
-                        problem_detail_view.visible()
                         no_internet_view.gone()
                         server_not_responding_view.gone()
 
@@ -113,21 +104,36 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
                         }
 
                         problem_images_view_pager_indicator.goneIf(problem.photos.orEmpty().isEmpty())
+
+                        problem_detail_scroll_view.visible()
                     }, {
                         Timber.e(it)
                         no_internet_view.gone()
-                        problem_detail_view.gone()
+                        problem_detail_scroll_view.gone()
                         server_not_responding_view.visible()
                         showNoConnectionSnackbar()
 
                         Toast.makeText(context, R.string.error_no_problem, Toast.LENGTH_SHORT).show()
                     }).apply { subscription = this }
         } else {
-            problem_detail_view.gone()
+            problem_detail_scroll_view.gone()
             server_not_responding_view.gone()
             no_internet_view.visible()
             showNoConnectionSnackbar()
         }
+    }
+
+    private fun showLoading() {
+        server_not_responding_view.gone()
+        no_internet_view.gone()
+        problem_detail_scroll_view.gone()
+        problem_answer_block.gone()
+
+        loading_view.visible()
+    }
+
+    private fun hideLoading() {
+        loading_view.gone()
     }
 
     private fun addProblemSpans(textView: TextView, text: String) {

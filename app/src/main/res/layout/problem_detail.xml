@@ -1,14 +1,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/problem_detail_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/problem_detail_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -16,7 +16,7 @@
             <include
                 android:id="@+id/problem_image_pager_layout"
                 layout="@layout/problem_photo_gallery"
-                android:elevation="3dp"/>
+                android:elevation="3dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:textColor="#DE000000"
                     android:textIsSelectable="true"
                     android:textSize="24sp"
-                    tools:text="KET pažeidimas ilgas pavadimas"/>
+                    tools:text="KET pažeidimas ilgas pavadimas" />
 
                 <TextView
                     android:id="@+id/problem_status"
@@ -47,7 +47,7 @@
                     android:layout_alignTop="@id/problem_title"
                     android:layout_marginTop="8dp"
                     tools:background="@drawable/label_report_status_registered"
-                    tools:text="Užregistruota"/>
+                    tools:text="Užregistruota" />
 
             </RelativeLayout>
 
@@ -63,7 +63,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/problem_id"/>
+                    android:text="@string/problem_id" />
 
                 <TextView
                     android:id="@+id/problem_id"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:textIsSelectable="true"
-                    tools:text="E50-7631/16*3.2.7E-UK5)"/>
+                    tools:text="E50-7631/16*3.2.7E-UK5)" />
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +83,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_problem"/>
+                    android:src="@drawable/ic_location_problem" />
 
                 <TextView
                     android:id="@+id/problem_address"
@@ -93,7 +93,7 @@
                     android:textColor="@color/problem_address"
                     android:textIsSelectable="true"
                     android:textSize="14sp"
-                    tools:text="Gedimino pr. 11"/>
+                    tools:text="Gedimino pr. 11" />
 
             </LinearLayout>
 
@@ -110,7 +110,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/issue"
                     android:textColor="@color/black_87"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/problem_entry_date"
@@ -120,7 +120,7 @@
                     android:fontFamily="sans-serif-regular"
                     android:textColor="@color/problem_date"
                     android:textIsSelectable="true"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 
@@ -137,7 +137,7 @@
                 android:textColor="@color/black_87"
                 android:textColorLink="@color/link_color"
                 android:textIsSelectable="true"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/problem_answer_block"
@@ -153,7 +153,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/answer"
                     android:textColor="@color/black_87"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/problem_answer_date"
@@ -163,7 +163,7 @@
                     android:fontFamily="sans-serif-regular"
                     android:textColor="@color/problem_date"
                     android:textIsSelectable="true"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/problem_answer"
@@ -176,7 +176,7 @@
                     android:textColor="@color/black_87"
                     android:textColorLink="@color/link_color"
                     android:textIsSelectable="true"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -184,10 +184,14 @@
 
     <include
         layout="@layout/no_internet"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
     <include
         layout="@layout/server_not_responding"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
+
+    <include
+        layout="@layout/loading"
+        android:visibility="gone" />
 
 </FrameLayout>
