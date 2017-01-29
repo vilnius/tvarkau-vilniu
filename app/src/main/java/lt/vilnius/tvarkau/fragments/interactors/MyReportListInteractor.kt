@@ -28,6 +28,7 @@ class MyReportListInteractor(
                 }
                 .filter { it != null }
                 .toList()
+                .map { it.sortedBy { it.getEntryDate() } }
                 .subscribeOn(ioScheduler)
                 .toSingle()
     }
