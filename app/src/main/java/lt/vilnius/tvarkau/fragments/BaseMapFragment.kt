@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-
 import android.Manifest
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
@@ -17,10 +16,14 @@ import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.dagger.module.IoScheduler
+import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
 import org.greenrobot.eventbus.EventBus
+import rx.Scheduler
 import javax.inject.Inject
 
 abstract class BaseMapFragment : SupportMapFragment(),
@@ -42,15 +45,18 @@ abstract class BaseMapFragment : SupportMapFragment(),
 
     @Inject
     lateinit var legacyApiService: LegacyApiService
-
     @Inject
     lateinit var analytics: Analytics
+    @field:[Inject IoScheduler]
+    lateinit var ioScheduler: Scheduler
+    @field:[Inject UiScheduler]
+    lateinit var uiScheduler: Scheduler
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         handler = Handler()
 
-        (activity.application as TvarkauApplication).component.inject(this)
+        onInject((activity.application as TvarkauApplication).component)
 
         if (googleApi == null) {
             googleApi = GoogleApiClient.Builder(context)
@@ -58,6 +64,10 @@ abstract class BaseMapFragment : SupportMapFragment(),
                     .addConnectionCallbacks(this)
                     .build()
         }
+    }
+
+    open protected fun onInject(component: ApplicationComponent) {
+        component.inject(this)
     }
 
     override fun onResume() {
@@ -88,8 +98,6 @@ abstract class BaseMapFragment : SupportMapFragment(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
         }
-
-        initMapData()
     }
 
     protected fun zoomToMyLocation(map: GoogleMap, lastLocation: Location) {
@@ -104,9 +112,9 @@ abstract class BaseMapFragment : SupportMapFragment(),
         googleMap?.setInfoWindowAdapter(infoWindowAdapter)
     }
 
-    protected abstract fun initMapData()
-
     protected fun populateMarkers(problems: List<Problem>) {
+        googleMap?.clear()
+
         problems.forEach { problem ->
             val markerOptions = MarkerOptions()
             markerOptions.position(problem.latLng)

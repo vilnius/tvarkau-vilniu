@@ -12,8 +12,10 @@ import lt.vilnius.tvarkau.dagger.module.LegacyApiModule;
 import lt.vilnius.tvarkau.dagger.module.SharedPreferencesModule;
 import lt.vilnius.tvarkau.fragments.BaseFragment;
 import lt.vilnius.tvarkau.fragments.BaseMapFragment;
+import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment;
 import lt.vilnius.tvarkau.fragments.NewReportFragment;
 import lt.vilnius.tvarkau.fragments.PhotoInstructionsFragment;
+import lt.vilnius.tvarkau.fragments.ReportFilterFragment;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.fragments.ReportTypeListFragment;
 
@@ -37,6 +39,8 @@ public interface ApplicationComponent {
 
     void inject(BaseMapFragment fragment);
 
+    void inject(MultipleProblemsMapFragment fragment);
+
     void inject(ReportImportDialogFragment fragment);
 
     void inject(NewReportFragment fragment);
@@ -44,4 +48,6 @@ public interface ApplicationComponent {
     void inject(PhotoInstructionsFragment fragment);
 
     void inject(ReportTypeListFragment fragment);
+
+    void inject(ReportFilterFragment fragment);
 }

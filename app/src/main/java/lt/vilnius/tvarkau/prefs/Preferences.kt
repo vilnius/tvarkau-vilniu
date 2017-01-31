@@ -5,7 +5,9 @@ package lt.vilnius.tvarkau.prefs
  */
 object Preferences {
 
-    const val PREFS_NAME = "TVARKAU-VILNIU_PREFS"
+    const val COMMON_PREFERENCES = "TVARKAU-VILNIU_PREFS"
     const val MY_PROBLEMS_PREFERENCES = "my_problem_preferences"
     const val DISPLAY_PHOTO_INSTRUCTIONS = "display_photo_instructions"
+    const val SELECTED_FILTER_REPORT_STATUS = "filter_report_status"
+    const val SELECTED_FILTER_REPORT_TYPE = "filter_report_type"
 }

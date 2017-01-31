@@ -23,8 +23,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
         getMapAsync(this)
     }
 
-
-    override fun initMapData() {
+    private fun initMapData() {
         placeAndShowMarker(problem)
         setMapTitle(problem.address)
     }
@@ -45,6 +44,8 @@ class SingleProblemMapFragment : BaseMapFragment(),
 
         map.setOnInfoWindowClickListener(this)
         map.setOnInfoWindowCloseListener(this)
+
+        initMapData()
     }
 
     private fun setMapTitle(address: String?) {

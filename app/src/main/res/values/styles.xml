@@ -91,4 +91,20 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:padding">8dp</item>
     </style>
+
+    <style name="ReportFilter" />
+
+    <style name="ReportFilter.Status">
+        <item name="android:textColor">@drawable/color_filter_report_status</item>
+        <item name="android:background">@drawable/bg_filter_report_status</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:selectable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="ReportFilter.Title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:alpha">0.54</item>
+    </style>
 </resources>
