@@ -99,11 +99,11 @@ class MyReportListInteractorTest {
         val problems = listOf(
                 Problem(
                         id = "any",
-                        entryDate = LocalDateTime.of(2017, 1, 1, 12, 3)
+                        entryDate = LocalDateTime.of(2017, 1, 1, 12, 2)
                 ),
                 Problem(
                         id = "any_1",
-                        entryDate = LocalDateTime.of(2017, 1, 1, 12, 2)
+                        entryDate = LocalDateTime.of(2017, 1, 1, 12, 3)
                 ),
                 Problem(
                         id = "any_2",
@@ -121,6 +121,6 @@ class MyReportListInteractorTest {
                 .test()
                 .onNextEvents.first()
 
-        assertEquals(sorted[0], problems[2])
+        assertEquals(sorted[0], problems[1])
     }
 }
