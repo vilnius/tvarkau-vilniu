@@ -179,6 +179,8 @@ class NewReportFragment : BaseFragment(),
         super.onActivityCreated(savedInstanceState)
         presenter.onAttach()
         presenter.initWithReportType(reportType)
+
+        EasyImage.configuration(context).setAllowMultiplePickInGallery(true)
     }
 
     override fun onInject(component: ApplicationComponent) {
@@ -364,7 +366,7 @@ class NewReportFragment : BaseFragment(),
         }
 
         galleryButton.setOnClickListener {
-            EasyImage.openGallery(this, 0, true)
+            EasyImage.openGallery(this, 0)
             imagePickerDialog.dismiss()
         }
     }
@@ -579,6 +581,11 @@ class NewReportFragment : BaseFragment(),
             arguments.remove(KEY_TAKE_PHOTO)
             openPhotoSelectorDialog(displayPhotoInstructions = false)
         }
+    }
+
+    override fun onDestroy() {
+        EasyImage.clearConfiguration(context)
+        super.onDestroy()
     }
 
     override fun onDestroyView() {
