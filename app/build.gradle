@@ -145,7 +145,7 @@ dependencies {
     compile "com.github.chrisbanes:PhotoView:$photoView"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile 'com.jakewharton.timber:timber:4.4.0'
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
     compile 'com.github.jkwiecien:EasyImage:1.4.1'
 
