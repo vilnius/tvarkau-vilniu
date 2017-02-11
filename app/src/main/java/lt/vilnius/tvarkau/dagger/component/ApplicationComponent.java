@@ -7,6 +7,7 @@ import lt.vilnius.tvarkau.AppModule;
 import lt.vilnius.tvarkau.BaseActivity;
 import lt.vilnius.tvarkau.dagger.module.APIModule;
 import lt.vilnius.tvarkau.dagger.module.AnalyticsModule;
+import lt.vilnius.tvarkau.dagger.module.DataModule;
 import lt.vilnius.tvarkau.dagger.module.LegacyApiModule;
 import lt.vilnius.tvarkau.dagger.module.SharedPreferencesModule;
 import lt.vilnius.tvarkau.fragments.BaseFragment;
@@ -14,6 +15,7 @@ import lt.vilnius.tvarkau.fragments.BaseMapFragment;
 import lt.vilnius.tvarkau.fragments.NewReportFragment;
 import lt.vilnius.tvarkau.fragments.PhotoInstructionsFragment;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
+import lt.vilnius.tvarkau.fragments.ReportTypeListFragment;
 
 /**
  * @author Martynas Jurkus
@@ -25,6 +27,7 @@ import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
         SharedPreferencesModule.class,
         AppModule.class,
         AnalyticsModule.class,
+        DataModule.class
 })
 public interface ApplicationComponent {
 
@@ -39,4 +42,6 @@ public interface ApplicationComponent {
     void inject(NewReportFragment fragment);
 
     void inject(PhotoInstructionsFragment fragment);
+
+    void inject(ReportTypeListFragment fragment);
 }
