@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import lt.vilnius.tvarkau.extensions.gone
-import lt.vilnius.tvarkau.extensions.visible
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_report_type_list.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
-import lt.vilnius.tvarkau.backend.ApiMethod
-import lt.vilnius.tvarkau.backend.ApiRequest
-import lt.vilnius.tvarkau.backend.GetProblemTypesParams
+import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
+import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
 import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter
 import rx.Subscription
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * @author Martynas Jurkus
@@ -26,6 +26,9 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
 
     private var subscription: Subscription? = null
     private var reportTypesListAdapter: ReportTypesListAdapter? = null
+
+    @Inject
+    lateinit var reportTypesInteractor: ReportTypesInteractor
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_report_type_list, container, false)
@@ -56,15 +59,9 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val request = ApiRequest<GetProblemTypesParams>(ApiMethod.GET_PROBLEM_TYPES, null)
-
-        subscription = legacyApiService.getProblemTypes(request)
-                .toSingle()
+        subscription = reportTypesInteractor.getReportTypes()
                 .doOnSubscribe { report_types_progress.visible() }
                 .doOnUnsubscribe { report_types_progress.gone() }
-                .map { it.result }
-                .doOnSuccess { if (it == null || it.isEmpty()) throw IllegalStateException("No report types to display") }
-                .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
                 .subscribe({
                     reportTypesListAdapter = ReportTypesListAdapter(this@ReportTypeListFragment, it, context)
@@ -74,6 +71,10 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
                     Toast.makeText(context, R.string.error_loading_report_types, Toast.LENGTH_SHORT).show()
                 })
                 .apply { subscription = this }
+    }
+
+    override fun onInject(component: ApplicationComponent) {
+        component.inject(this)
     }
 
     override fun onReportTypeSelected(reportType: String) {
