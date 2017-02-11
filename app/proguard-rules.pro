@@ -16,6 +16,11 @@
 #   public *;
 #}
 
+
+# Disable obfuscation
+-dontobfuscate
+-optimizations !code/allocation/variable
+
 # Icepick
 -dontwarn icepick.**
 -keep class **$$Icepick { *; }
