@@ -13,7 +13,7 @@ class ReportTypesInteractorImpl(
         val ioScheduler: Scheduler
 ) : ReportTypesInteractor {
 
-    private val entryCache = mutableListOf<String>()
+    private var entryCache = listOf<String>()
 
     override fun getReportTypes(): Single<List<String>> {
         return Single.concat(
@@ -25,7 +25,7 @@ class ReportTypesInteractorImpl(
                                 throw IllegalStateException("No report types to display")
                             }
                         }
-                        .doOnSuccess { entryCache.addAll(it) }
+                        .doOnSuccess { entryCache = it }
         )
                 .first { it.isNotEmpty() }
                 .toSingle()
