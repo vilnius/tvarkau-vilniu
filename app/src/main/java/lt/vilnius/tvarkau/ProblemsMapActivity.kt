@@ -11,8 +11,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.parceler.Parcels
 
-class ProblemsMapActivity : BaseActivity(),
-        ReportFilterFragment.FilterSubmitListener {
+class ProblemsMapActivity : BaseActivity() {
 
     private var infoWindowMarker: Marker? = null
 
@@ -55,10 +54,6 @@ class ProblemsMapActivity : BaseActivity(),
                 .replace(R.id.problems_map_frame, ReportFilterFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
-    }
-
-    override fun filterSubmitted() {
-        onBackPressed()
     }
 
     @Subscribe

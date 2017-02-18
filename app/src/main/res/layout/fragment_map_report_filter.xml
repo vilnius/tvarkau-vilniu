@@ -7,6 +7,8 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
+    <include layout="@layout/app_bar" />
+
     <TextView
         style="@style/ReportFilter.Title"
         android:layout_width="match_parent"

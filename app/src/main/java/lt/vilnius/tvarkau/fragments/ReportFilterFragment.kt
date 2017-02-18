@@ -2,7 +2,9 @@ package lt.vilnius.tvarkau.fragments
 
 import android.os.Bundle
 import android.view.*
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_map_report_filter.*
+import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_DONE
@@ -70,7 +72,26 @@ class ReportFilterFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.title = getString(R.string.report_filter_page_title)
+
+        with(activity as BaseActivity) {
+            setSupportActionBar(toolbar)
+            setTitle(R.string.report_filter_page_title)
+
+            toolbar.setNavigationIcon(R.drawable.ic_close)
+            toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_send -> {
+                        onSubmitFilter()
+                        activity.onBackPressed()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            toolbar.setNavigationOnClickListener {
+                activity.onBackPressed()
+            }
+        }
 
         val previouslySelectedStatus = reportStatusFilter.get()
         if (previouslySelectedStatus.isNullOrEmpty()) {
@@ -110,16 +131,6 @@ class ReportFilterFragment : BaseFragment() {
         inflater.inflate(R.menu.submit_filter, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_send -> {
-                onSubmitFilter()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun onSubmitFilter() {
         val selectedState: String? = listOf(
                 filter_report_status_new,
@@ -128,15 +139,9 @@ class ReportFilterFragment : BaseFragment() {
         ).find { it.isSelected }?.tag as? String
 
         reportStatusFilter.set(selectedState.nullToEmpty())
-
-        (activity as FilterSubmitListener).filterSubmitted()
     }
 
     companion object {
         fun newInstance() = ReportFilterFragment()
-    }
-
-    interface FilterSubmitListener {
-        fun filterSubmitted()
     }
 }

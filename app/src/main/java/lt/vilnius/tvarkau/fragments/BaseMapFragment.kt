@@ -6,27 +6,24 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.fragment_map_fragment.*
+import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.TvarkauApplication
-import lt.vilnius.tvarkau.analytics.Analytics
-import lt.vilnius.tvarkau.backend.LegacyApiService
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
-import lt.vilnius.tvarkau.dagger.module.IoScheduler
-import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
 import org.greenrobot.eventbus.EventBus
-import rx.Scheduler
-import javax.inject.Inject
 
-abstract class BaseMapFragment : SupportMapFragment(),
+abstract class BaseMapFragment : BaseFragment(),
         GoogleMap.OnMarkerClickListener,
         GoogleApiClient.ConnectionCallbacks {
 
@@ -43,20 +40,36 @@ abstract class BaseMapFragment : SupportMapFragment(),
 
     private lateinit var handler: Handler
 
-    @Inject
-    lateinit var legacyApiService: LegacyApiService
-    @Inject
-    lateinit var analytics: Analytics
-    @field:[Inject IoScheduler]
-    lateinit var ioScheduler: Scheduler
-    @field:[Inject UiScheduler]
-    lateinit var uiScheduler: Scheduler
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_map_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //workaround for support library issue
+        //https://code.google.com/p/android/issues/detail?id=196430
+        val mapState = savedInstanceState?.getBundle(KEY_MAP_SAVED_STATE)
+        map_container.onCreate(mapState)
+        map_container.onResume()
+
+        with(activity as BaseActivity) {
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                android.R.id.home -> {
+                    activity.onBackPressed()
+                    true
+                }
+                else -> onOptionsItemSelected(it)
+            }
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         handler = Handler()
-
-        onInject((activity.application as TvarkauApplication).component)
 
         if (googleApi == null) {
             googleApi = GoogleApiClient.Builder(context)
@@ -64,16 +77,11 @@ abstract class BaseMapFragment : SupportMapFragment(),
                     .addConnectionCallbacks(this)
                     .build()
         }
-    }
 
-    open protected fun onInject(component: ApplicationComponent) {
-        component.inject(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        analytics.trackCurrentFragment(activity, this)
+        map_container.getMapAsync {
+            googleMap = it
+            onMapLoaded()
+        }
     }
 
     override fun onStart() {
@@ -86,17 +94,15 @@ abstract class BaseMapFragment : SupportMapFragment(),
         googleApi?.disconnect()
     }
 
-    protected open fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        map.setOnMarkerClickListener(this)
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f))
+    open protected fun onMapLoaded() {
+        googleMap?.setOnMarkerClickListener(this)
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f))
 
         if (ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(activity,
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
-            map.isMyLocationEnabled = true
+            googleMap?.isMyLocationEnabled = true
         }
     }
 
@@ -187,6 +193,12 @@ abstract class BaseMapFragment : SupportMapFragment(),
         //don't care about that, can't do anything anyway
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        map_container?.onDestroy()
+        googleMap?.clear()
+    }
 
     override fun onDestroyView() {
         infoWindowAdapter?.clearMarkerImages()
@@ -196,10 +208,17 @@ abstract class BaseMapFragment : SupportMapFragment(),
         super.onDestroyView()
     }
 
-    companion object {
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        val mapState = Bundle()
+        map_container.onSaveInstanceState(mapState)
+        outState?.putBundle(KEY_MAP_SAVED_STATE, mapState)
+    }
 
+    companion object {
         protected val VILNIUS_LAT_LNG = LatLng(54.687157, 25.279652)
-        private val DEFAULT_ZOOM_LEVEL = 15f
-        private val CITY_BOUNDARY_DISTANCE = 15000f //15km
+        private const val DEFAULT_ZOOM_LEVEL = 15f
+        private const val CITY_BOUNDARY_DISTANCE = 15000f //15km
+        private const val KEY_MAP_SAVED_STATE = "map_save_state"
     }
 }

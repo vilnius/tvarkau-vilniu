@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.Marker
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.ProblemsMapActivity
@@ -28,7 +27,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class MultipleProblemsMapFragment : BaseMapFragment(),
-        OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {
 
@@ -57,8 +55,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity.setTitle(R.string.title_problems_map)
-
-        getMapAsync(this)
     }
 
     override fun onInject(component: ApplicationComponent) {
@@ -150,11 +146,11 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         marker.setIcon(getMarkerIcon(problem))
     }
 
-    override fun onMapReady(map: GoogleMap) {
-        super.onMapReady(map)
+    override fun onMapLoaded() {
+        super.onMapLoaded()
 
-        map.setOnInfoWindowClickListener(this)
-        map.setOnInfoWindowCloseListener(this)
+        googleMap?.setOnInfoWindowClickListener(this)
+        googleMap?.setOnInfoWindowCloseListener(this)
 
         initMapData()
     }
@@ -166,9 +162,9 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         }
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
+    override fun onSaveInstanceState(bundle: Bundle?) {
         super.onSaveInstanceState(bundle)
-        bundle.putBoolean(EXTRA_ZOOMED_TO_MY_LOCATION, zoomedToMyLocation)
+        bundle?.putBoolean(EXTRA_ZOOMED_TO_MY_LOCATION, zoomedToMyLocation)
     }
 
     override fun onDestroyView() {
