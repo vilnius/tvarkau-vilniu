@@ -9,13 +9,14 @@ import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_DONE
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_REGISTERED
+import lt.vilnius.tvarkau.events_listeners.RefreshMapEvent
 import lt.vilnius.tvarkau.extensions.emptyToNull
-import lt.vilnius.tvarkau.extensions.nullToEmpty
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.views.adapters.FilterReportTypesAdapter
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -40,6 +41,7 @@ class ReportFilterFragment : BaseFragment() {
 
     private val selectedReportType: String
         get() = reportTypeFilter.get().emptyToNull() ?: allReportTypesLabel
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_map_report_filter, container, false)
@@ -82,6 +84,7 @@ class ReportFilterFragment : BaseFragment() {
                 when (it.itemId) {
                     R.id.action_send -> {
                         onSubmitFilter()
+                        EventBus.getDefault().post(RefreshMapEvent())
                         activity.onBackPressed()
                         true
                     }
@@ -105,7 +108,6 @@ class ReportFilterFragment : BaseFragment() {
                 reportTypes,
                 selectedReportType,
                 {
-                    reportTypeFilter.set(it)
                     adapter.selected = it
                     adapter.notifyDataSetChanged()
                 }
@@ -136,9 +138,10 @@ class ReportFilterFragment : BaseFragment() {
                 filter_report_status_new,
                 filter_report_status_registered,
                 filter_report_status_completed
-        ).find { it.isSelected }?.tag as? String
+        ).find { it?.isSelected ?: false }?.tag as? String
 
-        reportStatusFilter.set(selectedState.nullToEmpty())
+        reportStatusFilter.set(selectedState.orEmpty())
+        reportTypeFilter.set(adapter.selected)
     }
 
     companion object {

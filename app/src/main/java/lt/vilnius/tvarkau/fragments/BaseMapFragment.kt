@@ -126,8 +126,9 @@ abstract class BaseMapFragment : BaseFragment(),
             markerOptions.position(problem.latLng)
             markerOptions.icon(getMarkerIcon(problem))
 
-            val marker = googleMap!!.addMarker(markerOptions)
-            marker.tag = problem
+            googleMap?.addMarker(markerOptions)?.apply {
+                tag = problem
+            }
         }
 
         setMarkerInfoWindowAdapter()
@@ -138,12 +139,13 @@ abstract class BaseMapFragment : BaseFragment(),
         markerOptions.position(problem.latLng)
         markerOptions.icon(getMarkerIcon(problem))
 
-        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.latLng, 12f))
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.latLng, 12f))
         setMarkerInfoWindowAdapter()
-        val marker = googleMap!!.addMarker(markerOptions)
-        marker.tag = problem
-        marker.setIcon(selectedMarker)
-        infoWindowAdapter?.showInfoWindow(marker)
+        googleMap?.addMarker(markerOptions)?.apply {
+            tag = problem
+            setIcon(selectedMarker)
+            infoWindowAdapter?.showInfoWindow(this)
+        }
     }
 
     fun getMarkerIcon(problem: Problem): BitmapDescriptor {
@@ -166,7 +168,8 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onConnected(bundle: Bundle?) {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
             return
         }
 
@@ -195,9 +198,7 @@ abstract class BaseMapFragment : BaseFragment(),
 
     override fun onDestroy() {
         super.onDestroy()
-
         map_container?.onDestroy()
-        googleMap?.clear()
     }
 
     override fun onDestroyView() {
@@ -208,11 +209,11 @@ abstract class BaseMapFragment : BaseFragment(),
         super.onDestroyView()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val mapState = Bundle()
         map_container.onSaveInstanceState(mapState)
-        outState?.putBundle(KEY_MAP_SAVED_STATE, mapState)
+        outState.putBundle(KEY_MAP_SAVED_STATE, mapState)
     }
 
     companion object {

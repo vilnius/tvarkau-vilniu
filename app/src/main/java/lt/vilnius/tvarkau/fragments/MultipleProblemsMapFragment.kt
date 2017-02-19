@@ -17,10 +17,15 @@ import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.events_listeners.RefreshMapEvent
 import lt.vilnius.tvarkau.extensions.emptyToNull
+import lt.vilnius.tvarkau.prefs.BooleanPreference
+import lt.vilnius.tvarkau.prefs.Preferences.FILTER_UPDATED
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.StringPreference
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import rx.Subscription
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,14 +39,17 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     lateinit var reportStatusFilter: StringPreference
     @field:[Inject Named(SELECTED_FILTER_REPORT_TYPE)]
     lateinit var reportTypeFilter: StringPreference
+    @field:[Inject Named(FILTER_UPDATED)]
+    lateinit var filterUpdated: BooleanPreference
 
     private var subscription: Subscription? = null
     private var zoomedToMyLocation = false
     private var progressDialog: ProgressDialog? = null
+    private var latestReports = emptyList<Problem>()
 
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
-
+        EventBus.getDefault().register(this)
         bundle?.let {
             zoomedToMyLocation = it.getBoolean(EXTRA_ZOOMED_TO_MY_LOCATION)
         }
@@ -76,11 +84,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         }
     }
 
-    private fun initMapData() {
-        addMultipleProblemsMarkers()
-    }
-
-    private fun addMultipleProblemsMarkers() {
+    private fun addMarkers() {
         val mappedStatus = reportStatusFilter.get().emptyToNull()
 
         val mappedType = when (reportTypeFilter.get()) {
@@ -110,6 +114,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
                 .doOnSubscribe { showProgress() }
                 .doOnUnsubscribe { hideProgress() }
                 .subscribe({
+                    latestReports = it
                     populateMarkers(it)
                 }, {
                     Toast.makeText(context, R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show()
@@ -122,6 +127,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
             progressDialog = ProgressDialog(context).apply {
                 setMessage(getString(R.string.multiple_reports_map_message_progress))
                 setProgressStyle(ProgressDialog.STYLE_SPINNER)
+                setCancelable(false)
             }
         }
 
@@ -152,7 +158,11 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         googleMap?.setOnInfoWindowClickListener(this)
         googleMap?.setOnInfoWindowCloseListener(this)
 
-        initMapData()
+        if (latestReports.isEmpty()) {
+            addMarkers()
+        } else {
+            populateMarkers(latestReports)
+        }
     }
 
     override fun onLocationInsideCity(location: Location) {
@@ -162,9 +172,14 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         }
     }
 
-    override fun onSaveInstanceState(bundle: Bundle?) {
-        super.onSaveInstanceState(bundle)
-        bundle?.putBoolean(EXTRA_ZOOMED_TO_MY_LOCATION, zoomedToMyLocation)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(EXTRA_ZOOMED_TO_MY_LOCATION, zoomedToMyLocation)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onDestroyView() {
@@ -172,6 +187,11 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         progressDialog?.dismiss()
         progressDialog = null
         super.onDestroyView()
+    }
+
+    @Subscribe
+    fun onRefreshMapEvent(event: RefreshMapEvent) {
+        latestReports = emptyList<Problem>()
     }
 
     companion object {

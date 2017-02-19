@@ -167,7 +167,7 @@
     <string name="report_filter_page_title">Filtras</string>
     <string name="report_filter_all_report_types">Visos</string>
     <string name="report_filter_statuses_title">Pranešimo tipas</string>
-    <string name="report_filter_report_types_title">Kartegorija</string>
+    <string name="report_filter_report_types_title">Kategorija</string>
     <string name="report_filter_status_new">Naujausi</string>
     <string name="report_filter_status_registered">Neatsakyti</string>
     <string name="report_filter_status_completed">Atlikti</string>

@@ -9,6 +9,7 @@ import lt.vilnius.tvarkau.prefs.BooleanPreference
 import lt.vilnius.tvarkau.prefs.BooleanPreferenceImpl
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
+import lt.vilnius.tvarkau.prefs.Preferences.FILTER_UPDATED
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
@@ -59,5 +60,14 @@ class SharedPreferencesModule {
             @Named(COMMON_PREFERENCES) preference: SharedPreferences
     ): StringPreference {
         return StringPreferenceImpl(preference, SELECTED_FILTER_REPORT_TYPE, "")
+    }
+
+    @Provides
+    @Singleton
+    @Named(FILTER_UPDATED)
+    fun provideFilterUpdated(
+            @Named(COMMON_PREFERENCES) preference: SharedPreferences
+    ): BooleanPreference {
+        return BooleanPreferenceImpl(preference, COMMON_PREFERENCES, false)
     }
 }
