@@ -2,6 +2,8 @@ package lt.vilnius.tvarkau;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.RefWatcher;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -15,9 +17,9 @@ import rx.schedulers.Schedulers;
 @Module
 public class AppModule {
 
-    Application application;
+    TvarkauApplication application;
 
-    public AppModule(Application application) {
+    public AppModule(TvarkauApplication application) {
         this.application = application;
     }
 
@@ -39,5 +41,11 @@ public class AppModule {
     @UiScheduler
     Scheduler provideUiScheduler() {
         return AndroidSchedulers.mainThread();
+    }
+
+    @Provides
+    @Singleton
+    RefWatcher providesRefWatcher() {
+        return application.getRefWatcher();
     }
 }

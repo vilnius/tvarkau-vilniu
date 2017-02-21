@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.facebook.stetho.Stetho;
 import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 import lt.vilnius.tvarkau.dagger.component.DaggerApplicationComponent;
@@ -15,9 +17,17 @@ public class TvarkauApplication extends Application {
 
     private ApplicationComponent component;
 
+    private RefWatcher refWatcher;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        refWatcher = LeakCanary.install(this);
+
         inject();
 
         if (BuildConfig.DEBUG) {
@@ -48,4 +58,7 @@ public class TvarkauApplication extends Application {
         return component;
     }
 
+    public RefWatcher getRefWatcher() {
+        return refWatcher;
+    }
 }
