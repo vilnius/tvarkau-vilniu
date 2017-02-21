@@ -8,7 +8,7 @@ import lt.vilnius.tvarkau.dagger.module.TestAppModule;
 /**
  * @author Martynas Jurkus
  */
-class TestTvarkauApplication extends TvarkauApplication {
+public class TestTvarkauApplication extends TvarkauApplication {
 
     public TestApplicationComponent testComponent;
 

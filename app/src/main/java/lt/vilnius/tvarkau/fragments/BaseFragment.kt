@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau.fragments
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.squareup.leakcanary.RefWatcher
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
@@ -25,6 +26,8 @@ abstract class BaseFragment : Fragment() {
     lateinit var myProblemsPreferences: SharedPreferences
     @Inject
     lateinit var analytics: Analytics
+    @Inject
+    lateinit var refWatcher: RefWatcher
     @field:[Inject IoScheduler]
     lateinit var ioScheduler: Scheduler
     @field:[Inject UiScheduler]
@@ -47,5 +50,6 @@ abstract class BaseFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        refWatcher.watch(this)
     }
 }
