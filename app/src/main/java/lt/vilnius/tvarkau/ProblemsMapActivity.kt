@@ -2,18 +2,12 @@ package lt.vilnius.tvarkau
 
 import android.os.Bundle
 import android.os.Parcelable
-import com.google.android.gms.maps.model.Marker
 import lt.vilnius.tvarkau.entity.Problem
-import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
 import lt.vilnius.tvarkau.fragments.*
 import lt.vilnius.tvarkau.utils.GlobalConsts
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import org.parceler.Parcels
 
 class ProblemsMapActivity : BaseActivity() {
-
-    private var infoWindowMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +34,6 @@ class ProblemsMapActivity : BaseActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        if (infoWindowMarker?.isInfoWindowShown ?: false) {
-            infoWindowMarker!!.hideInfoWindow()
-        } else {
-            super.onBackPressed()
-        }
-    }
-
     fun openFilters() {
         supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_from_top, 0, 0, R.anim.slide_out_to_top)
@@ -56,18 +42,12 @@ class ProblemsMapActivity : BaseActivity() {
                 .commit()
     }
 
-    @Subscribe
-    fun onEvent(event: MapInfoWindowShownEvent) {
-        infoWindowMarker = event.marker
-    }
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.problems_map_frame) as? BaseFragment
+        if (fragment?.onBackPressed() ?: false) {
+            return
+        }
 
-    public override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    public override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
+        super.onBackPressed()
     }
 }

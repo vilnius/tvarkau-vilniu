@@ -1,9 +1,9 @@
 package lt.vilnius.tvarkau.views.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,9 +50,9 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private Marker currentMarker;
     private int thumbWidth;
 
-    public MapsInfoWindowAdapter(Activity activity) {
-        context = activity;
-        view = activity.getLayoutInflater().inflate(R.layout.problem_map_info_window, null);
+    public MapsInfoWindowAdapter(Context context) {
+        this.context = context;
+        view = LayoutInflater.from(context).inflate(R.layout.problem_map_info_window, null);
         thumbWidth = context.getResources().getDimensionPixelSize(R.dimen.problem_map_info_thumb_width);
         ButterKnife.bind(this, view);
     }
@@ -100,6 +100,18 @@ public class MapsInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         currentMarker = marker;
         marker.showInfoWindow();
+    }
+
+    /**
+     * @return true if window was shown and was dismissed
+     */
+    public boolean dismissInfoWindow() {
+        if (currentMarker != null && currentMarker.isInfoWindowShown()) {
+            currentMarker.hideInfoWindow();
+            return true;
+        }
+
+        return false;
     }
 
     public void clearMarkerImages() {

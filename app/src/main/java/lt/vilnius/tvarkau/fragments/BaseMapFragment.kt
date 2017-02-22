@@ -13,15 +13,13 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
-import lt.vilnius.tvarkau.events_listeners.MapInfoWindowShownEvent
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
-import org.greenrobot.eventbus.EventBus
 
 abstract class BaseMapFragment : BaseFragment(),
         GoogleMap.OnMarkerClickListener,
@@ -38,6 +36,9 @@ abstract class BaseMapFragment : BaseFragment(),
     private var googleApi: GoogleApiClient? = null
     private var infoWindowAdapter: MapsInfoWindowAdapter? = null
 
+    private val mapView: MapView?
+        get() = view?.findViewById(R.id.map_container) as? MapView
+
     private lateinit var handler: Handler
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -49,20 +50,14 @@ abstract class BaseMapFragment : BaseFragment(),
         //workaround for support library issue
         //https://code.google.com/p/android/issues/detail?id=196430
         val mapState = savedInstanceState?.getBundle(KEY_MAP_SAVED_STATE)
-        map_container.onCreate(mapState)
+        mapView?.onCreate(mapState)
 
         with(activity as BaseActivity) {
             setSupportActionBar(toolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                android.R.id.home -> {
-                    activity.onBackPressed()
-                    true
-                }
-                else -> onOptionsItemSelected(it)
-            }
+        toolbar.setNavigationOnClickListener {
+            activity.onBackPressed()
         }
     }
 
@@ -77,7 +72,7 @@ abstract class BaseMapFragment : BaseFragment(),
                     .build()
         }
 
-        map_container.getMapAsync {
+        mapView?.getMapAsync {
             googleMap = it
             onMapLoaded()
         }
@@ -90,7 +85,7 @@ abstract class BaseMapFragment : BaseFragment(),
 
     override fun onPause() {
         super.onPause()
-        map_container?.onPause()
+        mapView?.onPause()
         googleApi?.disconnect()
     }
 
@@ -114,7 +109,7 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     private fun setMarkerInfoWindowAdapter() {
-        infoWindowAdapter = MapsInfoWindowAdapter(activity)
+        infoWindowAdapter = MapsInfoWindowAdapter(context)
         googleMap?.setInfoWindowAdapter(infoWindowAdapter)
     }
 
@@ -161,9 +156,7 @@ abstract class BaseMapFragment : BaseFragment(),
     override fun onMarkerClick(marker: Marker): Boolean {
         activity.title = (marker.tag as Problem).address
         marker.setIcon(selectedMarker)
-        EventBus.getDefault().post(MapInfoWindowShownEvent(marker))
         infoWindowAdapter?.showInfoWindow(marker)
-
         return false
     }
 
@@ -196,33 +189,43 @@ abstract class BaseMapFragment : BaseFragment(),
         //don't care about that, can't do anything anyway
     }
 
+    override fun onBackPressed(): Boolean {
+        val eventConsumed = infoWindowAdapter?.dismissInfoWindow() ?: false
+        if (eventConsumed) {
+            return true
+        }
+
+        return super.onBackPressed()
+    }
+
     override fun onLowMemory() {
         super.onLowMemory()
-        map_container?.onLowMemory()
+        mapView?.onLowMemory()
     }
 
     override fun onResume() {
         super.onResume()
-        map_container?.onResume()
+        mapView?.onResume()
     }
 
     override fun onDestroy() {
+        googleMap?.isMyLocationEnabled = false
+        googleMap?.clear()
+        mapView?.onDestroy()
         super.onDestroy()
-        map_container?.onDestroy()
     }
 
     override fun onDestroyView() {
         infoWindowAdapter?.clearMarkerImages()
-        googleMap?.clear()
+        googleMap?.setInfoWindowAdapter(null)
         googleMap?.setOnMarkerClickListener(null)
-        googleMap = null
         super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val mapState = Bundle()
-        map_container.onSaveInstanceState(mapState)
+        mapView?.onSaveInstanceState(mapState)
         outState.putBundle(KEY_MAP_SAVED_STATE, mapState)
     }
 

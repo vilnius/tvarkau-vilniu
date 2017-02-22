@@ -188,6 +188,8 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onDestroyView() {
+        googleMap?.setOnInfoWindowCloseListener(null)
+        googleMap?.setOnInfoWindowClickListener(null)
         subscription?.unsubscribe()
         progressDialog?.dismiss()
         progressDialog = null

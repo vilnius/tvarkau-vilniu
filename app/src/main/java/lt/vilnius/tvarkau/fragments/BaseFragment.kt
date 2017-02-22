@@ -52,4 +52,8 @@ abstract class BaseFragment : Fragment() {
         super.onDestroyView()
         refWatcher.watch(this)
     }
+
+    open fun onBackPressed(): Boolean {
+        return false
+    }
 }
