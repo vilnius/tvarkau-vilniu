@@ -50,7 +50,6 @@ abstract class BaseMapFragment : BaseFragment(),
         //https://code.google.com/p/android/issues/detail?id=196430
         val mapState = savedInstanceState?.getBundle(KEY_MAP_SAVED_STATE)
         map_container.onCreate(mapState)
-        map_container.onResume()
 
         with(activity as BaseActivity) {
             setSupportActionBar(toolbar)
@@ -91,6 +90,7 @@ abstract class BaseMapFragment : BaseFragment(),
 
     override fun onPause() {
         super.onPause()
+        map_container?.onPause()
         googleApi?.disconnect()
     }
 
@@ -196,6 +196,16 @@ abstract class BaseMapFragment : BaseFragment(),
         //don't care about that, can't do anything anyway
     }
 
+    override fun onLowMemory() {
+        super.onLowMemory()
+        map_container?.onLowMemory()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        map_container?.onResume()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         map_container?.onDestroy()
@@ -203,7 +213,7 @@ abstract class BaseMapFragment : BaseFragment(),
 
     override fun onDestroyView() {
         infoWindowAdapter?.clearMarkerImages()
-
+        googleMap?.clear()
         googleMap?.setOnMarkerClickListener(null)
         googleMap = null
         super.onDestroyView()

@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.fragments
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import android.view.Menu
@@ -49,7 +50,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
-        EventBus.getDefault().register(this)
         bundle?.let {
             zoomedToMyLocation = it.getBoolean(EXTRA_ZOOMED_TO_MY_LOCATION)
         }
@@ -63,6 +63,11 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity.setTitle(R.string.title_problems_map)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        EventBus.getDefault().register(this)
     }
 
     override fun onInject(component: ApplicationComponent) {
@@ -177,9 +182,9 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         outState.putBoolean(EXTRA_ZOOMED_TO_MY_LOCATION, zoomedToMyLocation)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDetach() {
         EventBus.getDefault().unregister(this)
+        super.onDetach()
     }
 
     override fun onDestroyView() {
