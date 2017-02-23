@@ -9,7 +9,6 @@ import dagger.Provides
 import lt.vilnius.tvarkau.prefs.BooleanPreference
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
-import lt.vilnius.tvarkau.prefs.Preferences.FILTER_UPDATED
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
@@ -49,9 +48,4 @@ class TestSharedPreferencesModule {
     @Singleton
     @Named(SELECTED_FILTER_REPORT_TYPE)
     fun provideReportTypeFilter(): StringPreference = mock()
-
-    @Provides
-    @Singleton
-    @Named(FILTER_UPDATED)
-    fun provideFilterUpdated(): BooleanPreference = mock()
 }
