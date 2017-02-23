@@ -15,6 +15,7 @@ import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.StringPreference
+import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.FilterReportTypesAdapter
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
@@ -142,6 +143,8 @@ class ReportFilterFragment : BaseFragment() {
 
         reportStatusFilter.set(selectedState.orEmpty())
         reportTypeFilter.set(adapter.selected)
+
+        RxBus.publish(RefreshMapEvent())
     }
 
     companion object {
