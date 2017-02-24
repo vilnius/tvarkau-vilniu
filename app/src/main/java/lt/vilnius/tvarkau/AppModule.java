@@ -10,6 +10,8 @@ import dagger.Module;
 import dagger.Provides;
 import lt.vilnius.tvarkau.dagger.module.IoScheduler;
 import lt.vilnius.tvarkau.dagger.module.UiScheduler;
+import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider;
+import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProviderImpl;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -17,9 +19,9 @@ import rx.schedulers.Schedulers;
 @Module
 public class AppModule {
 
-    TvarkauApplication application;
+    private TvarkauApplication application;
 
-    public AppModule(TvarkauApplication application) {
+    AppModule(TvarkauApplication application) {
         this.application = application;
     }
 
@@ -47,5 +49,11 @@ public class AppModule {
     @Singleton
     RefWatcher providesRefWatcher() {
         return application.getRefWatcher();
+    }
+
+    @Provides
+    @Singleton
+    ConnectivityProvider provideConnectivityProvider() {
+        return new ConnectivityProviderImpl(application);
     }
 }

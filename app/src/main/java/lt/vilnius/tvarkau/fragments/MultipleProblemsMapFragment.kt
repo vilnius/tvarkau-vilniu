@@ -3,6 +3,8 @@ package lt.vilnius.tvarkau.fragments
 import android.app.ProgressDialog
 import android.location.Location
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -10,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
+import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.ProblemsMapActivity
 import lt.vilnius.tvarkau.R
@@ -33,6 +36,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         MultipleReportsMapPresenterImpl(
                 interactor,
                 uiScheduler,
+                connectivityProvider,
                 this
         )
     }
@@ -82,6 +86,15 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun showError() {
         Toast.makeText(context, R.string.error_no_problems_in_list, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showNetworkError() {
+        Snackbar.make(report_map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
+                .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
+                .setAction(R.string.try_again) {
+                    presenter.onAttach()
+                }
+                .show()
     }
 
     override fun showProgress() {

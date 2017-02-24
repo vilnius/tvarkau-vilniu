@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau.fragments.presenters
 
-import android.app.Activity
+import android.content.Context
 import lt.vilnius.tvarkau.utils.NetworkUtils
 import rx.Single
 
@@ -8,12 +8,12 @@ import rx.Single
  * @author Martynas Jurkus
  */
 class ConnectivityProviderImpl(
-        private val activity: Activity
+        private val context: Context
 ) : ConnectivityProvider {
 
     override fun ensureConnected(): Single<Boolean> {
         return Single.defer {
-            val connected = NetworkUtils.isNetworkConnected(activity)
+            val connected = NetworkUtils.isNetworkConnected(context)
 
             if (connected) {
                 Single.just(true)

@@ -14,4 +14,6 @@ interface MultipleProblemsMapView {
     fun hideProgress()
 
     fun showError()
+
+    fun showNetworkError()
 }

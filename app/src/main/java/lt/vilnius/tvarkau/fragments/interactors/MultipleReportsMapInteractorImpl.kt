@@ -35,11 +35,6 @@ class MultipleReportsMapInteractorImpl(
                 newRequest()
         ).first { it.isNotEmpty() }
                 .toSingle()
-                .doOnSuccess { reports ->
-                    if (reports.isEmpty()) {
-                        throw IllegalStateException("Empty problem list returned")
-                    }
-                }
                 .subscribeOn(ioScheduler)
     }
 
@@ -58,11 +53,15 @@ class MultipleReportsMapInteractorImpl(
                 .setTypeFilter(mappedType)
                 .create()
 
-        val request = GetReportListRequest(params)
-
-        return api.getProblems(request)
+        return api.getProblems(GetReportListRequest(params))
                 .toSingle()
                 .map { it.result }
+                .doOnSuccess { reports ->
+                    if (reports.isEmpty()) {
+                        val msg = "Empty report list returned for status: $mappedStatus type: $mappedType"
+                        throw NoMapReportsError(msg)
+                    }
+                }
                 .doOnSuccess {
                     cachedReports.clear()
                     cachedReports.addAll(it)
@@ -72,4 +71,6 @@ class MultipleReportsMapInteractorImpl(
     companion object {
         private const val PROBLEM_COUNT_LIMIT_IN_MAP = 200
     }
+
+    inner class NoMapReportsError(message: String) : RuntimeException(message)
 }
