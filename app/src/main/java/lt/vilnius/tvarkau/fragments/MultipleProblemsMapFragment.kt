@@ -43,6 +43,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     private var zoomedToMyLocation = false
     private var progressDialog: ProgressDialog? = null
+    private var toast: Snackbar? = null
 
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
@@ -89,12 +90,12 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun showNetworkError() {
-        Snackbar.make(report_map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
+        toast = Snackbar.make(report_map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
                 .setAction(R.string.try_again) {
                     presenter.onAttach()
-                }
-                .show()
+                }.apply { show() }
+
     }
 
     override fun showProgress() {
@@ -147,6 +148,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onDestroyView() {
+        toast?.dismiss()
         presenter.onDetach()
         googleMap?.setOnInfoWindowCloseListener(null)
         googleMap?.setOnInfoWindowClickListener(null)
