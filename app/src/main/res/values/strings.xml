@@ -13,6 +13,8 @@
     <string name="open">Atidaryti</string>
     <string name="close">Uždaryti</string>
 
+    <string name="menu_action_filter">Filtras</string>
+    <string name="menu_action_submit_filter">Filtras</string>
     <string name="problem_search">Problemos paieška</string>
     <string name="problem_map">Pranešimų žemėlapis</string>
 
@@ -161,6 +163,16 @@
     <string name="photo_instructions_second_photo_hint">Nuotrauka, kurioje iš arti matomas automobilio numeris ir ar yra (nėra) palikta neįgaliųjų asmenų automobilių statymo kortelė</string>
     <string name="photo_instructions_don_show_again">Daugiau nerodyti</string>
     <string name="photo_instructions_button_ok">Gerai</string>
+
+    <string name="report_filter_page_title">Filtras</string>
+    <string name="report_filter_all_report_types">Visos</string>
+    <string name="report_filter_statuses_title">Pranešimo tipas</string>
+    <string name="report_filter_report_types_title">Kategorija</string>
+    <string name="report_filter_status_new">Naujausi</string>
+    <string name="report_filter_status_registered">Neatsakyti</string>
+    <string name="report_filter_status_completed">Atlikti</string>
+
+    <string name="multiple_reports_map_message_progress">Prašome palaukti</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>

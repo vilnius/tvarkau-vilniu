@@ -32,7 +32,7 @@ public class SharedPrefsManager {
 
 
     private SharedPrefsManager(Context context) {
-        sharedPreferences = context.getApplicationContext().getSharedPreferences(Preferences.PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getApplicationContext().getSharedPreferences(Preferences.COMMON_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     private static void initializeInstance(Context context) {

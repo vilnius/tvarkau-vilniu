@@ -1,10 +1,12 @@
 package lt.vilnius.tvarkau.dagger.module
 
 import android.app.Application
+import com.nhaarman.mockito_kotlin.mock
 import com.squareup.leakcanary.RefWatcher
 import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.TestTvarkauApplication
+import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import rx.Scheduler
 import rx.schedulers.Schedulers
 import javax.inject.Singleton
@@ -34,4 +36,8 @@ class TestAppModule(val application: TestTvarkauApplication) {
     internal fun providesRefWatcher(): RefWatcher {
         return application.refWatcher
     }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityProvider(): ConnectivityProvider = mock()
 }

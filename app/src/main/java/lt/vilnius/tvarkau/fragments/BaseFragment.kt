@@ -10,6 +10,7 @@ import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
+import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import lt.vilnius.tvarkau.prefs.Preferences
 import rx.Scheduler
 import javax.inject.Inject
@@ -32,6 +33,8 @@ abstract class BaseFragment : Fragment() {
     lateinit var ioScheduler: Scheduler
     @field:[Inject UiScheduler]
     lateinit var uiScheduler: Scheduler
+    @Inject
+    lateinit var connectivityProvider: ConnectivityProvider
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -51,5 +54,9 @@ abstract class BaseFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         refWatcher.watch(this)
+    }
+
+    open fun onBackPressed(): Boolean {
+        return false
     }
 }

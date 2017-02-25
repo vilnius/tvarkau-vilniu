@@ -19,7 +19,6 @@ import lt.vilnius.tvarkau.fragments.interactors.AllReportListInteractor
 import lt.vilnius.tvarkau.fragments.interactors.MyReportListInteractor
 import lt.vilnius.tvarkau.fragments.interactors.SharedPreferencesMyReportsInteractor
 import lt.vilnius.tvarkau.fragments.presenters.AllReportsListPresenterImpl
-import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProviderImpl
 import lt.vilnius.tvarkau.fragments.presenters.MyReportListPresenterImpl
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
@@ -50,7 +49,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
                     ),
                     uiScheduler,
                     this,
-                    ConnectivityProviderImpl(activity)
+                    connectivityProvider
             )
         } else {
             MyReportListPresenterImpl(
@@ -61,7 +60,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
                     ),
                     uiScheduler,
                     this,
-                    ConnectivityProviderImpl(activity)
+                    connectivityProvider
             )
         }
     }

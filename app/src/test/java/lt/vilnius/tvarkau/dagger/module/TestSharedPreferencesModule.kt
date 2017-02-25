@@ -10,6 +10,9 @@ import lt.vilnius.tvarkau.prefs.BooleanPreference
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
+import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
+import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
+import lt.vilnius.tvarkau.prefs.StringPreference
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -18,9 +21,9 @@ class TestSharedPreferencesModule {
 
     @Provides
     @Singleton
-    @Named(Preferences.PREFS_NAME)
+    @Named(Preferences.COMMON_PREFERENCES)
     fun providerApplicationPreferences(application: Application): SharedPreferences {
-        return application.getSharedPreferences(Preferences.PREFS_NAME, Context.MODE_PRIVATE)
+        return application.getSharedPreferences(Preferences.COMMON_PREFERENCES, Context.MODE_PRIVATE)
     }
 
     @Provides
@@ -34,4 +37,15 @@ class TestSharedPreferencesModule {
     @Singleton
     @Named(DISPLAY_PHOTO_INSTRUCTIONS)
     fun providePhotoInstructions(): BooleanPreference = mock()
+
+
+    @Provides
+    @Singleton
+    @Named(SELECTED_FILTER_REPORT_STATUS)
+    fun provideReportStatusFilter(): StringPreference = mock()
+
+    @Provides
+    @Singleton
+    @Named(SELECTED_FILTER_REPORT_TYPE)
+    fun provideReportTypeFilter(): StringPreference = mock()
 }

@@ -160,7 +160,7 @@ class NewReportFragment : BaseFragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                onGoBack()
                 return true
             }
             R.id.action_send -> {
@@ -393,7 +393,7 @@ class NewReportFragment : BaseFragment(),
                 || imageFiles.isNotEmpty()
     }
 
-    fun onBackPressed() {
+    private fun onGoBack() {
         if (report_problem_description.hasFocus()) {
             KeyboardUtils.closeSoftKeyboard(activity, report_problem_description)
         }
