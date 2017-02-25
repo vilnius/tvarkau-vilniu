@@ -208,17 +208,14 @@ abstract class BaseMapFragment : BaseFragment(),
         mapView?.onResume()
     }
 
-    override fun onDestroy() {
-        googleMap?.isMyLocationEnabled = false
-        googleMap?.clear()
-        mapView?.onDestroy()
-        super.onDestroy()
-    }
-
     override fun onDestroyView() {
         infoWindowAdapter?.clearMarkerImages()
         googleMap?.setInfoWindowAdapter(null)
         googleMap?.setOnMarkerClickListener(null)
+        googleMap?.isMyLocationEnabled = false
+        googleMap?.clear()
+        mapView?.onDestroy()
+        googleMap = null
         super.onDestroyView()
     }
 
