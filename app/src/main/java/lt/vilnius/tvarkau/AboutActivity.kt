@@ -37,6 +37,9 @@ class AboutActivity : BaseActivity() {
         meetup_page.setOnClickListener { onMeetupPageClick() }
         phone_select_view.setOnClickListener { onPhoneViewClick() }
         municipality_email.setOnClickListener { onMunicipalityEmailClick() }
+        privacy_policy.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GlobalConsts.PRIVACY_POLICY_PAGE)))
+        }
     }
 
     fun onRateAppClick() {

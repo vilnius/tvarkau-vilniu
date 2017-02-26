@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/app_bar" />
 
@@ -37,8 +37,8 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/tvarkau_logo"
@@ -55,14 +55,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/black_87"/>
+                    android:textColor="@color/black_87" />
 
                 <TextView
                     android:id="@+id/built_by"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
                     android:gravity="center_horizontal"
+                    android:paddingBottom="8dp"
                     android:text="@string/built_by"
                     android:textColor="@color/black_87" />
 
@@ -86,10 +86,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:textColorLink="@color/colorPrimary"
-                    android:text="@string/thanks_to_contributors"
                     android:lineSpacingExtra="8dp"
-                    android:paddingBottom="32dp"/>
+                    android:paddingBottom="32dp"
+                    android:text="@string/thanks_to_contributors"
+                    android:textColorLink="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/support_us"
@@ -152,8 +152,8 @@
                     android:id="@+id/municipality_contacts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
                     android:gravity="center_horizontal"
+                    android:paddingBottom="16dp"
                     android:text="@string/municipality_contacts"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/black_87" />
@@ -162,9 +162,9 @@
                     android:id="@+id/phone_select_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:orientation="horizontal"
-                    android:paddingBottom="16dp"
-                    android:gravity="center_horizontal">
+                    android:paddingBottom="16dp">
 
                     <ImageView
                         android:id="@+id/telephone_icon"
@@ -189,10 +189,17 @@
                     android:id="@+id/municipality_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
+                    android:paddingBottom="32dp"
                     android:text="@string/municipality_email"
                     android:textColor="@color/colorPrimary" />
 
+                <TextView
+                    android:id="@+id/privacy_policy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:text="@string/about_privacy_policy"
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
