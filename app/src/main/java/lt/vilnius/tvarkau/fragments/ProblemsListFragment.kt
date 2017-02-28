@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_list.*
 import kotlinx.android.synthetic.main.server_not_responding.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
+import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.interactors.AllReportListInteractor
@@ -22,13 +22,22 @@ import lt.vilnius.tvarkau.fragments.presenters.AllReportsListPresenterImpl
 import lt.vilnius.tvarkau.fragments.presenters.MyReportListPresenterImpl
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
+import lt.vilnius.tvarkau.prefs.Preferences
+import lt.vilnius.tvarkau.prefs.StringPreference
+import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter
 import lt.vilnius.tvarkau.widgets.EndlessScrollListener
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
+import rx.Subscription
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Named
 
 class ProblemsListFragment : BaseFragment(), ReportListView {
+
+    @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_STATUS)]
+    lateinit var reportStatus: StringPreference
+    @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_TYPE)]
+    lateinit var reportType: StringPreference
 
     private val problemList = ArrayList<Problem>()
     private val adapter by lazy { ProblemsListAdapter(activity, problemList) }
@@ -38,6 +47,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
 
     private var reloadingAllReports = false
     private var page = 0
+    private var subscription: Subscription? = null
     private lateinit var scrollListener: EndlessScrollListener
 
     private val presenter: ProblemListPresenter by lazy {
@@ -45,7 +55,10 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
             AllReportsListPresenterImpl(
                     AllReportListInteractor(
                             legacyApiService,
-                            ioScheduler
+                            ioScheduler,
+                            reportType,
+                            reportStatus,
+                            getString(R.string.report_filter_all_report_types)
                     ),
                     uiScheduler,
                     this,
@@ -71,8 +84,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        EventBus.getDefault().register(this)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -103,13 +115,35 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (isAllProblemList) {
+            inflater.inflate(R.menu.main_toolbar_menu, menu)
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val title = if (isAllProblemList) R.string.home_list_of_reports else R.string.home_my_problems
+        baseActivity?.setTitle(title)
+
+        RxBus.observable
+                .filter { it is RefreshReportFilterEvent || it is NewProblemAddedEvent }
+                .observeOn(ioScheduler)
+                .observeOn(uiScheduler)
+                .subscribe({
+                    reloadData()
+                }).apply { subscription = this }
+
         if (problemList.isEmpty()) {
             getReports()
         }
 
         presenter.onAttach()
+    }
+
+    override fun onInject(component: ApplicationComponent) {
+        component.inject(this)
     }
 
     override fun onReportsLoaded(reports: List<Problem>) {
@@ -157,6 +191,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
     }
 
     private fun reloadData() {
+        scrollListener.isLoading = false
         reloadingAllReports = true
         page = 0
         getReports()
@@ -181,20 +216,14 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
                 .show()
     }
 
-    @Subscribe
-    fun onNewProblemAddedEvent(event: NewProblemAddedEvent) {
-        scrollListener.isLoading = false
-        reloadData()
+    override fun onDestroy() {
+        super.onDestroy()
+        subscription?.unsubscribe()
     }
 
     override fun onDestroyView() {
         presenter.onDetach()
         super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
     companion object {

@@ -6,15 +6,16 @@ import android.os.Bundle
 import android.support.annotation.IntDef
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.view.ViewPager
-import android.view.Menu
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.problems_list_activity.*
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
+import lt.vilnius.tvarkau.fragments.BaseFragment
 import lt.vilnius.tvarkau.fragments.ProblemsListFragment
+import lt.vilnius.tvarkau.fragments.ReportFilterFragment
+import lt.vilnius.tvarkau.fragments.ReportFilterFragment.Companion.TARGET_LIST
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment
 import lt.vilnius.tvarkau.utils.GlobalConsts
-import lt.vilnius.tvarkau.views.adapters.ProblemsListViewPagerAdapter
 
 /**
  * An activity representing a list of Problems. This activity
@@ -34,16 +35,15 @@ class ProblemsListActivity : BaseActivity(), ProblemsListFragment.OnImportReport
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.problems_list_activity)
-
         setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         if (intent.extras != null) {
             initialPosition = intent.extras.getInt(EXTRA_INITIAL_POSITION, ALL_PROBLEMS)
         }
 
-        setTabs()
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        initFragment()
 
         fab_report_problem.setOnClickListener {
             val intent = Intent(this, ReportRegistrationActivity::class.java)
@@ -54,18 +54,15 @@ class ProblemsListActivity : BaseActivity(), ProblemsListFragment.OnImportReport
         }
     }
 
-    fun setTabs() {
-        if (problems_list_view_pager!!.adapter == null) {
-            problems_list_view_pager!!.adapter = ProblemsListViewPagerAdapter(this, supportFragmentManager)
-            problems_list_tab_layout!!.setupWithViewPager(problems_list_view_pager)
-            problems_list_view_pager!!.currentItem = initialPosition
-            problems_list_view_pager!!.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-
-                override fun onPageSelected(position: Int) {
-                    supportInvalidateOptionsMenu()
-                }
-            })
+    private fun initFragment() {
+        val fragment = when (initialPosition) {
+            MY_PROBLEMS -> ProblemsListFragment.myReportsListInstance()
+            else -> ProblemsListFragment.allReportsListInstance()
         }
+
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -81,24 +78,35 @@ class ProblemsListActivity : BaseActivity(), ProblemsListFragment.OnImportReport
 
                 return true
             }
+            R.id.action_filter -> {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_from_top, 0, 0, R.anim.slide_out_to_top)
+                        .replace(R.id.fragment_container, ReportFilterFragment.newInstance(TARGET_LIST))
+                        .addToBackStack(null)
+                        .commit()
+
+                fab_report_problem.hide()
+
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.main_toolbar_menu, menu)
-
-        if (problems_list_view_pager != null && problems_list_view_pager!!.currentItem == MY_PROBLEMS) {
-            menu.findItem(R.id.action_filter).isVisible = false
-        }
-        return true
     }
 
     override fun onImportReportClick() {
         val ft = supportFragmentManager.beginTransaction()
         val reportImportDialog = ReportImportDialogFragment.newInstance(false)
         reportImportDialog.show(ft, REPORT_IMPORT_DIALOG)
+    }
+
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as? BaseFragment
+        if (fragment?.onBackPressed() ?: false) {
+            return
+        }
+
+        fab_report_problem.show()
+        super.onBackPressed()
     }
 
     companion object {

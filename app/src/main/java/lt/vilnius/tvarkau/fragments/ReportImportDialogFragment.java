@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
 import org.threeten.bp.LocalDateTime;
 
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
 import lt.vilnius.tvarkau.fragments.interactors.MyReportsInteractor;
 import lt.vilnius.tvarkau.fragments.interactors.SharedPreferencesMyReportsInteractor;
 import lt.vilnius.tvarkau.prefs.Preferences;
+import lt.vilnius.tvarkau.rx.RxBus;
 import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
@@ -301,7 +301,7 @@ public class ReportImportDialogFragment extends DialogFragment {
                         if (isSettingsActivity) {
                             ((SettingsVilniusSignInListener) ReportImportDialogFragment.this.getActivity()).onVilniusSignIn();
                         } else {
-                            EventBus.getDefault().post(new NewProblemAddedEvent());
+                            RxBus.INSTANCE.publish(new NewProblemAddedEvent());
                             Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.report_import_done,
                                     Toast.LENGTH_SHORT).show();
                         }

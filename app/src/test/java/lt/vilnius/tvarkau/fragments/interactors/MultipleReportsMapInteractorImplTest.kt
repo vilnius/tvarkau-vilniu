@@ -3,7 +3,7 @@ package lt.vilnius.tvarkau.fragments.interactors
 import com.nhaarman.mockito_kotlin.*
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
-import lt.vilnius.tvarkau.events_listeners.RefreshMapEvent
+import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.wrapInResponse
@@ -77,7 +77,7 @@ class MultipleReportsMapInteractorImplTest {
     @Test
     fun mapRefresh_cacheCleared() {
         fixture.getReports().subscribe()
-        RxBus.publish(RefreshMapEvent())
+        RxBus.publish(RefreshReportFilterEvent())
         fixture.getReports().subscribe()
 
         verify(api, times(2)).getProblems(any())

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!-- TODO search functionality for future versions
-        <item-->
-        <!--android:id="@+id/action_search"-->
-        <!--android:icon="@android:drawable/ic_menu_search"-->
-        <!--android:title="@string/problem_search"-->
-        <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
-        <!--app:showAsAction="always" />-->
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_list_black_24dp"
+        android:title="@string/problem_search"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_map"
         android:icon="@drawable/ic_mapview_appbar"

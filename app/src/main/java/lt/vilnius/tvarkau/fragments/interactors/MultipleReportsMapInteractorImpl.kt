@@ -4,7 +4,7 @@ import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
 import lt.vilnius.tvarkau.entity.Problem
-import lt.vilnius.tvarkau.events_listeners.RefreshMapEvent
+import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.rx.RxBus
@@ -23,7 +23,7 @@ class MultipleReportsMapInteractorImpl(
 
     init {
         RxBus.observable
-                .filter { it is RefreshMapEvent }
+                .filter { it is RefreshReportFilterEvent }
                 .subscribe({
                     cachedReports.clear()
                 })

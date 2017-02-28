@@ -7,14 +7,12 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import lt.vilnius.tvarkau.ProblemDetailActivity
-import lt.vilnius.tvarkau.ProblemsMapActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem
@@ -60,6 +58,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity.setTitle(R.string.title_problems_map)
+        baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
     override fun onInject(component: ApplicationComponent) {
@@ -71,16 +70,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         inflater.inflate(R.menu.map_filter, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_action_filter -> {
-                (activity as ProblemsMapActivity).openFilters()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun addMarkers(reports: List<Problem>) {
         populateMarkers(reports)
     }
@@ -90,7 +79,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun showNetworkError() {
-        toast = Snackbar.make(report_map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
+        toast = Snackbar.make(map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
                 .setAction(R.string.try_again) {
                     presenter.onAttach()

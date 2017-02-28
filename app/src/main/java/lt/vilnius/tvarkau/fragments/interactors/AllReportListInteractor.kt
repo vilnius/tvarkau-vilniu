@@ -1,10 +1,11 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
-import lt.vilnius.tvarkau.backend.ApiMethod
-import lt.vilnius.tvarkau.backend.ApiRequest
 import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.extensions.emptyToNull
+import lt.vilnius.tvarkau.prefs.StringPreference
 import rx.Scheduler
 import rx.Single
 
@@ -13,19 +14,29 @@ import rx.Single
  */
 class AllReportListInteractor(
         private val legacyApiService: LegacyApiService,
-        private val ioScheduler: Scheduler
+        private val ioScheduler: Scheduler,
+        private val reportType: StringPreference,
+        private val reportStatus: StringPreference,
+        private val allReportTypes: String
 ) : ReportListInteractor {
 
     override fun getProblems(page: Int): Single<List<Problem>> {
 
+        val mappedStatus = reportStatus.get().emptyToNull()
+
+        val mappedType = when (reportType.get()) {
+            allReportTypes -> null
+            else -> reportType.get().emptyToNull()
+        }
+
         val params = GetProblemsParams.Builder()
                 .setStart(page * PROBLEM_COUNT_LIMIT_PER_PAGE)
                 .setLimit(PROBLEM_COUNT_LIMIT_PER_PAGE)
+                .setStatusFilter(mappedStatus)
+                .setTypeFilter(mappedType)
                 .create()
 
-        val request = ApiRequest(ApiMethod.GET_PROBLEMS, params)
-
-        return legacyApiService.getProblems(request)
+        return legacyApiService.getProblems(GetReportListRequest(params))
                 .subscribeOn(ioScheduler)
                 .map { it.result }
                 .toSingle()

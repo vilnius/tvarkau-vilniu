@@ -15,8 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.*
-import kotlinx.android.synthetic.main.app_bar.*
-import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
@@ -51,14 +49,6 @@ abstract class BaseMapFragment : BaseFragment(),
         //https://code.google.com/p/android/issues/detail?id=196430
         val mapState = savedInstanceState?.getBundle(KEY_MAP_SAVED_STATE)
         mapView?.onCreate(mapState)
-
-        with(activity as BaseActivity) {
-            setSupportActionBar(toolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        toolbar.setNavigationOnClickListener {
-            activity.onBackPressed()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

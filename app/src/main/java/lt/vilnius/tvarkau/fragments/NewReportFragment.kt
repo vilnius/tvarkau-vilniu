@@ -48,10 +48,10 @@ import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.prefs.BooleanPreference
 import lt.vilnius.tvarkau.prefs.Preferences
+import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.utils.*
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
-import org.greenrobot.eventbus.EventBus
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -298,7 +298,7 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun showSuccess() {
-        EventBus.getDefault().post(NewProblemAddedEvent())
+        RxBus.publish(NewProblemAddedEvent())
 
         activity.currentFocus?.run {
             KeyboardUtils.closeSoftKeyboard(activity, this)

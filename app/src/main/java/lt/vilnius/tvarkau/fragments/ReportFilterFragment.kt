@@ -2,22 +2,22 @@ package lt.vilnius.tvarkau.fragments
 
 import android.os.Bundle
 import android.view.*
-import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_map_report_filter.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_DONE
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_REGISTERED
-import lt.vilnius.tvarkau.events_listeners.RefreshMapEvent
+import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
+import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
+import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.FilterReportTypesAdapter
-import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,20 +29,23 @@ class ReportFilterFragment : BaseFragment() {
     @Inject
     lateinit var reportTypesInteractor: ReportTypesInteractor
     @field:[Inject Named(SELECTED_FILTER_REPORT_STATUS)]
-    lateinit var reportStatusFilter: StringPreference
+    lateinit var mapReportStatusFilter: StringPreference
     @field:[Inject Named(SELECTED_FILTER_REPORT_TYPE)]
-    lateinit var reportTypeFilter: StringPreference
+    lateinit var mapReportTypeFilter: StringPreference
+    @field:[Inject Named(LIST_SELECTED_FILTER_REPORT_STATUS)]
+    lateinit var listReportStatusFilter: StringPreference
+    @field:[Inject Named(LIST_SELECTED_FILTER_REPORT_TYPE)]
+    lateinit var listReportTypeFilter: StringPreference
 
     private lateinit var adapter: FilterReportTypesAdapter
 
     private val reportTypes = mutableListOf<String>()
 
+    private val isMapTarget: Boolean
+        get() = arguments.getInt(KEY_TARGET) == TARGET_MAP
+
     private val allReportTypesLabel: String
         get() = getString(R.string.report_filter_all_report_types)
-
-    private val selectedReportType: String
-        get() = reportTypeFilter.get().emptyToNull() ?: allReportTypesLabel
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_map_report_filter, container, false)
@@ -77,28 +80,13 @@ class ReportFilterFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         with(activity as BaseActivity) {
-            setSupportActionBar(toolbar)
             setTitle(R.string.report_filter_page_title)
 
-            toolbar.setNavigationIcon(R.drawable.ic_close)
-            toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.action_send -> {
-                        onSubmitFilter()
-                        EventBus.getDefault().post(RefreshMapEvent())
-                        activity.onBackPressed()
-                        true
-                    }
-                    else -> false
-                }
-            }
-            toolbar.setNavigationOnClickListener {
-                activity.onBackPressed()
-            }
+            supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
         }
 
-        val previouslySelectedStatus = reportStatusFilter.get()
-        if (previouslySelectedStatus.isNullOrEmpty()) {
+        val previouslySelectedStatus = getSelectedReportStatus()
+        if (previouslySelectedStatus.isEmpty()) {
             filter_report_status_new.isSelected = true
         } else {
             filter_report_status_registered.isSelected = previouslySelectedStatus == STATUS_REGISTERED
@@ -107,7 +95,7 @@ class ReportFilterFragment : BaseFragment() {
 
         adapter = FilterReportTypesAdapter(
                 reportTypes,
-                selectedReportType,
+                getSelectedReportType(),
                 {
                     adapter.selected = it
                     adapter.notifyDataSetChanged()
@@ -121,7 +109,7 @@ class ReportFilterFragment : BaseFragment() {
                     reportTypes.addAll(it)
                     adapter.notifyDataSetChanged()
                 }, {
-
+                    //TODO show error and go back
                 })
     }
 
@@ -134,6 +122,35 @@ class ReportFilterFragment : BaseFragment() {
         inflater.inflate(R.menu.submit_filter, menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_send -> {
+                onSubmitFilter()
+                activity.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun getSelectedReportType(): String {
+        val selected = if (isMapTarget) {
+            mapReportTypeFilter.get()
+        } else {
+            listReportTypeFilter.get()
+        }
+
+        return selected.emptyToNull() ?: allReportTypesLabel
+    }
+
+    private fun getSelectedReportStatus(): String {
+        return if (isMapTarget) {
+            mapReportStatusFilter.get()
+        } else {
+            listReportStatusFilter.get()
+        }
+    }
+
     private fun onSubmitFilter() {
         val selectedState: String? = listOf(
                 filter_report_status_new,
@@ -141,13 +158,28 @@ class ReportFilterFragment : BaseFragment() {
                 filter_report_status_completed
         ).find { it?.isSelected ?: false }?.tag as? String
 
-        reportStatusFilter.set(selectedState.orEmpty())
-        reportTypeFilter.set(adapter.selected)
+        if (isMapTarget) {
+            mapReportStatusFilter.set(selectedState.orEmpty())
+            mapReportTypeFilter.set(adapter.selected)
+        } else {
+            listReportStatusFilter.set(selectedState.orEmpty())
+            listReportTypeFilter.set(adapter.selected)
+        }
 
-        RxBus.publish(RefreshMapEvent())
+        RxBus.publish(RefreshReportFilterEvent())
     }
 
     companion object {
-        fun newInstance() = ReportFilterFragment()
+        const val TARGET_MAP = 1
+        const val TARGET_LIST = 2
+
+        private const val KEY_TARGET = "target"
+
+        fun newInstance(target: Int): ReportFilterFragment {
+            return ReportFilterFragment().apply {
+                arguments = Bundle()
+                arguments.putInt(KEY_TARGET, target)
+            }
+        }
     }
 }

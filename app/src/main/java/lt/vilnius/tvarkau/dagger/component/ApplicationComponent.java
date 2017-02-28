@@ -15,6 +15,7 @@ import lt.vilnius.tvarkau.fragments.BaseMapFragment;
 import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment;
 import lt.vilnius.tvarkau.fragments.NewReportFragment;
 import lt.vilnius.tvarkau.fragments.PhotoInstructionsFragment;
+import lt.vilnius.tvarkau.fragments.ProblemsListFragment;
 import lt.vilnius.tvarkau.fragments.ReportFilterFragment;
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment;
 import lt.vilnius.tvarkau.fragments.ReportTypeListFragment;
@@ -50,4 +51,6 @@ public interface ApplicationComponent {
     void inject(ReportTypeListFragment fragment);
 
     void inject(ReportFilterFragment fragment);
+
+    void inject(ProblemsListFragment fragment);
 }
