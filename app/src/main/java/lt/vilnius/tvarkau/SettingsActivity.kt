@@ -7,10 +7,10 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat.getColor
 import android.widget.CompoundButton
 import android.widget.Toast
+import kotlinx.android.synthetic.main.settings_activity.*
+import lt.vilnius.tvarkau.ProblemsListActivity.Companion.MY_PROBLEMS
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
-import kotlinx.android.synthetic.main.settings_activity.*
-import lt.vilnius.tvarkau.ProblemsListActivity.MY_PROBLEMS
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment
 import lt.vilnius.tvarkau.utils.SharedPrefsManager
 
