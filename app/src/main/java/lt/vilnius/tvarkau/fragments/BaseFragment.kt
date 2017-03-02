@@ -55,10 +55,9 @@ abstract class BaseFragment : Fragment() {
         analytics.trackCurrentFragment(activity, this)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //Something is wrong. Need to discuss this more...
-//        refWatcher.watch(this)
+    override fun onDestroy() {
+        super.onDestroy()
+        refWatcher.watch(this)
     }
 
     open fun onBackPressed(): Boolean {
