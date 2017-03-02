@@ -42,6 +42,9 @@
 
     <string name="choose_photos_title">Pasirinkite nuotraukas</string>
 
+    <string name="error_network_generic">Įvyko tinklo klaida, bandykite dar kartą</string>
+    <string name="error_retrieving_reports">Įvyko klaida siunčiant užregistruotus pranešimus</string>
+
     <string name="error_empty_field">Tuščias laukelis</string>
     <string name="error_email_incorrect">Blogas el. pašto adresas</string>
     <string name="error_phone_number_incorrect">Blogas telefono numeris</string>

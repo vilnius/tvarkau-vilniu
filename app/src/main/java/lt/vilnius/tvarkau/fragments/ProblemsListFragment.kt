@@ -126,6 +126,7 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
         super.onActivityCreated(savedInstanceState)
         val title = if (isAllProblemList) R.string.home_list_of_reports else R.string.home_my_problems
         baseActivity?.setTitle(title)
+        baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
 
         RxBus.observable
                 .filter { it is RefreshReportFilterEvent || it is NewProblemAddedEvent }
@@ -187,7 +188,13 @@ class ProblemsListFragment : BaseFragment(), ReportListView {
     }
 
     override fun showError(error: Throwable) {
-        //TODO show some other error - how?
+        Snackbar.make(activity.findViewById(R.id.coordinator_layout), R.string.error_retrieving_reports, Snackbar
+                .LENGTH_INDEFINITE)
+                .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
+                .setAction(R.string.try_again) {
+                    reloadData()
+                }
+                .show()
     }
 
     private fun reloadData() {

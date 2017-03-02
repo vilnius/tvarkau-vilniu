@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_map_report_filter.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
@@ -103,13 +104,15 @@ class ReportFilterFragment : BaseFragment() {
         )
         filter_report_types.adapter = adapter
 
-        reportTypesInteractor.getReportTypes()
+        connectivityProvider.ensureConnected()
+                .flatMap { reportTypesInteractor.getReportTypes() }
                 .observeOn(uiScheduler)
                 .subscribe({
                     reportTypes.addAll(it)
                     adapter.notifyDataSetChanged()
                 }, {
-                    //TODO show error and go back
+                    Toast.makeText(context, R.string.error_network_generic, Toast.LENGTH_SHORT).show()
+                    activity.onBackPressed()
                 })
     }
 
