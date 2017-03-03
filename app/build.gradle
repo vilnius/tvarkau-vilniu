@@ -59,7 +59,6 @@ android {
 
 repositories {
     maven { url "https://clojars.org/repo/" }
-    maven { url "http://repo.commonsware.com.s3.amazonaws.com" }
     maven { url "https://jitpack.io" }
     mavenCentral()
 }
