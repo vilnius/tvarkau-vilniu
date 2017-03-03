@@ -75,7 +75,6 @@ ext {
     daggerVersion = '2.9'
     javaxAnnotationVersion = '1.0'
     viewPagerIndicatorVersion = '2.4.1.1@aar'
-    tedPickerVersion = 'v1.0.10'
     eventBusVersion = '3.0.0'
     stethoVersion = '1.4.2'
     okhttpVersion = '3.6.0'
