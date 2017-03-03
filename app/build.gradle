@@ -21,6 +21,9 @@ android {
         targetSdkVersion 25
         versionCode versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionMicro
         versionName "$versionMajor.$versionMinor.$versionPatch.$versionMicro"
+
+        resConfigs "lt", "en"
+
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -59,7 +62,6 @@ android {
 
 repositories {
     maven { url "https://clojars.org/repo/" }
-    maven { url "http://repo.commonsware.com.s3.amazonaws.com" }
     maven { url "https://jitpack.io" }
     mavenCentral()
 }
@@ -70,13 +72,11 @@ ext {
     playServicesVersion = '10.0.1'
     butterKnifeVersion = '8.5.1'
     glideVersion = '3.7.0'
-    icepickVersion = '3.2.0'
     retrofitVersion = '2.1.0'
     gsonVersion = '2.8.0'
     daggerVersion = '2.9'
     javaxAnnotationVersion = '1.0'
     viewPagerIndicatorVersion = '2.4.1.1@aar'
-    tedPickerVersion = 'v1.0.10'
     eventBusVersion = '3.0.0'
     stethoVersion = '1.4.2'
     okhttpVersion = '3.6.0'
@@ -105,9 +105,6 @@ dependencies {
 
     compile "com.google.firebase:firebase-core:$playServicesVersion"
     compile "com.google.firebase:firebase-crash:$playServicesVersion"
-
-    compile "frankiesardo:icepick:$icepickVersion"
-    provided "frankiesardo:icepick-processor:$icepickVersion"
 
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
     kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
