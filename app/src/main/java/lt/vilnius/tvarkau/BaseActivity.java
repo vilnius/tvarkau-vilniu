@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import icepick.Icepick;
 import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
@@ -31,16 +30,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
 
         component = buildComponent((TvarkauApplication) getApplication());
         onInject(component);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 
     protected void onInject(ApplicationComponent component) {
