@@ -45,7 +45,8 @@
     <string name="error_network_generic">Įvyko tinklo klaida, bandykite dar kartą</string>
     <string name="error_retrieving_reports">Įvyko klaida siunčiant užregistruotus pranešimus</string>
 
-    <string name="empty_state_all_reports">Rezultatų nerasta.\nPabandykite kitus paieškos kriterijus.</string>
+    <string name="empty_state_all_reports_line_1">Rezultatų nerasta</string>
+    <string name="empty_state_all_reports_line_2">Pabandykite kitus paieškos kriterijus</string>
 
     <string name="error_empty_field">Tuščias laukelis</string>
     <string name="error_email_incorrect">Blogas el. pašto adresas</string>
