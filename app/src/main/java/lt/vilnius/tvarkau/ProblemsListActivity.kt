@@ -13,6 +13,7 @@ import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.fragments.*
 import lt.vilnius.tvarkau.fragments.ReportFilterFragment.Companion.TARGET_LIST
 import lt.vilnius.tvarkau.utils.GlobalConsts
+import timber.log.Timber
 
 /**
  * An activity representing a list of Problems. This activity
@@ -39,8 +40,9 @@ class ProblemsListActivity : BaseActivity(), BaseReportListFragment.OnImportRepo
             initialPosition = intent.extras.getInt(EXTRA_INITIAL_POSITION, ALL_PROBLEMS)
         }
 
-
-        initFragment()
+        if (savedInstanceState == null) {
+            initFragment()
+        }
 
         fab_report_problem.setOnClickListener {
             val intent = Intent(this, ReportRegistrationActivity::class.java)

@@ -47,7 +47,8 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
         super.onActivityCreated(savedInstanceState)
         RxBus.observable
                 .filter { it is RefreshReportFilterEvent || it is NewProblemAddedEvent }
-                .observeOn(ioScheduler)
+                .limit(1)
+                .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
                 .subscribe({
                     reloadData()
