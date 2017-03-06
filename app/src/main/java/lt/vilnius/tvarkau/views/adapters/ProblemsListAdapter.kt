@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import lt.vilnius.tvarkau.extensions.gone
-import lt.vilnius.tvarkau.extensions.visible
 import kotlinx.android.synthetic.main.problem_list_content.view.*
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.applyReportStatusLabel
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 
 class ProblemsListAdapter(
@@ -24,7 +24,8 @@ class ProblemsListAdapter(
 
     private val VIEW_ITEM = 1
     private val VIEW_PROGRESS = 0
-    private var showLoader = false
+
+    var showLoader = false
 
     init {
         showLoader = true
@@ -77,10 +78,6 @@ class ProblemsListAdapter(
 
     override fun getItemCount(): Int {
         return if (showLoader) values.size + 1 else values.size
-    }
-
-    fun hideLoader() {
-        showLoader = false
     }
 
     inner class DataViewHolder(view: View) : RecyclerView.ViewHolder(view)

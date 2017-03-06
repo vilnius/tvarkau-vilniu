@@ -8,9 +8,10 @@ import lt.vilnius.tvarkau.entity.Problem
 interface ReportListView {
     fun onReportsLoaded(reports: List<Problem>)
     fun hideLoader()
-    fun markLoading(isLoading: Boolean)
     fun showEmptyState()
     fun hideEmptyState()
     fun showNetworkError(lastPage: Int)
     fun showError(error: Throwable)
+    fun showProgress()
+    fun hideProgress()
 }

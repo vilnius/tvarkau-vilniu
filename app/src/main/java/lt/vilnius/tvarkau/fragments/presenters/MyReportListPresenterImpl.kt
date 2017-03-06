@@ -24,8 +24,8 @@ class MyReportListPresenterImpl(
         withConnectivityCheck()
                 .flatMap { interactor.getProblems(page) }
                 .observeOn(uiScheduler)
-                .doOnSubscribe { view.markLoading(isLoading = true) }
-                .doOnUnsubscribe { view.markLoading(isLoading = false) }
+                .doOnSubscribe { view.showProgress() }
+                .doOnUnsubscribe { view.hideProgress() }
                 .doOnUnsubscribe { view.hideLoader() }
                 .subscribe({
                     if (it.isEmpty()) {

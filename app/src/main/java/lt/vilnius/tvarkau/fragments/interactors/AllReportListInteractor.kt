@@ -38,7 +38,7 @@ class AllReportListInteractor(
 
         return legacyApiService.getProblems(GetReportListRequest(params))
                 .subscribeOn(ioScheduler)
-                .map { it.result }
+                .map { it.result ?: emptyList() }
                 .toSingle()
     }
 

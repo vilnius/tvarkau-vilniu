@@ -10,11 +10,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.problems_list_activity.*
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
-import lt.vilnius.tvarkau.fragments.BaseFragment
-import lt.vilnius.tvarkau.fragments.ProblemsListFragment
-import lt.vilnius.tvarkau.fragments.ReportFilterFragment
+import lt.vilnius.tvarkau.fragments.*
 import lt.vilnius.tvarkau.fragments.ReportFilterFragment.Companion.TARGET_LIST
-import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment
 import lt.vilnius.tvarkau.utils.GlobalConsts
 
 /**
@@ -25,7 +22,7 @@ import lt.vilnius.tvarkau.utils.GlobalConsts
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class ProblemsListActivity : BaseActivity(), ProblemsListFragment.OnImportReportClickListener {
+class ProblemsListActivity : BaseActivity(), BaseReportListFragment.OnImportReportClickListener {
 
     @IntDef(ALL_PROBLEMS.toLong(), MY_PROBLEMS.toLong())
     internal annotation class ProblemsTabsInitialPosition
@@ -56,8 +53,8 @@ class ProblemsListActivity : BaseActivity(), ProblemsListFragment.OnImportReport
 
     private fun initFragment() {
         val fragment = when (initialPosition) {
-            MY_PROBLEMS -> ProblemsListFragment.myReportsListInstance()
-            else -> ProblemsListFragment.allReportsListInstance()
+            MY_PROBLEMS -> MyReportsListFragment.newInstance()
+            else -> AllReportsListFragment.newInstance()
         }
 
         supportFragmentManager.beginTransaction()
