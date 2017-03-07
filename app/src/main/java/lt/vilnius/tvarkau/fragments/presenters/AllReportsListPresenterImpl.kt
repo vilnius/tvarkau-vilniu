@@ -24,10 +24,18 @@ class AllReportsListPresenterImpl(
         withConnectivityCheck()
                 .flatMap { interactor.getProblems(page) }
                 .observeOn(uiScheduler)
-                .doOnSubscribe { view.markLoading(isLoading = true) }
-                .doOnUnsubscribe { view.markLoading(isLoading = false) }
+                .doOnSubscribe { if (page == 0) view.showProgress() }
+                .doOnUnsubscribe { view.hideProgress() }
                 .subscribe({
-                    view.onReportsLoaded(it)
+                    if (it.isEmpty()) {
+                        view.hideLoader()
+                        if (page == 0) { //only show empty state if initial request returns empty list
+                            view.showEmptyState()
+                        }
+                    } else {
+                        view.hideEmptyState()
+                        view.onReportsLoaded(it)
+                    }
                 }, {
                     handleError(it, page)
                 }).apply { subscriptions += this }

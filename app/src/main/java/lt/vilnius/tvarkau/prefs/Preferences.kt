@@ -10,4 +10,6 @@ object Preferences {
     const val DISPLAY_PHOTO_INSTRUCTIONS = "display_photo_instructions"
     const val SELECTED_FILTER_REPORT_STATUS = "filter_report_status"
     const val SELECTED_FILTER_REPORT_TYPE = "filter_report_type"
+    const val LIST_SELECTED_FILTER_REPORT_STATUS = "list_filter_report_status"
+    const val LIST_SELECTED_FILTER_REPORT_TYPE = "list_filter_report_type"
 }

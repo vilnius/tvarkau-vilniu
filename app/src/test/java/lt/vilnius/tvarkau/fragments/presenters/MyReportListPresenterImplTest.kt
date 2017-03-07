@@ -36,8 +36,8 @@ class MyReportListPresenterImplTest {
 
         fixture.getReportsForPage(1)
 
-        verify(view).markLoading(true)
-        verify(view).markLoading(false)
+        verify(view).showProgress()
+        verify(view).hideProgress()
         verify(view).hideLoader()
         verify(view).onReportsLoaded(reports)
     }
@@ -69,8 +69,8 @@ class MyReportListPresenterImplTest {
 
         fixture.getReportsForPage(1)
 
-        verify(view).markLoading(true)
-        verify(view).markLoading(false)
+        verify(view).showProgress()
+        verify(view).hideProgress()
         verify(view).showError(exception)
     }
 }

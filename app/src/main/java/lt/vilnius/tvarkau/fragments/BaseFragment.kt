@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.squareup.leakcanary.RefWatcher
+import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
@@ -36,6 +37,9 @@ abstract class BaseFragment : Fragment() {
     @Inject
     lateinit var connectivityProvider: ConnectivityProvider
 
+    protected val baseActivity: BaseActivity?
+        get() = activity as BaseActivity?
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         onInject((activity.application as TvarkauApplication).component)
@@ -51,8 +55,8 @@ abstract class BaseFragment : Fragment() {
         analytics.trackCurrentFragment(activity, this)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         refWatcher.watch(this)
     }
 

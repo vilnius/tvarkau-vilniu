@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.home_list_of_problems)
     protected void onProblemsListClicked() {
-        Intent intent = ProblemsListActivity.getStartActivityIntent(this, ALL_PROBLEMS);
+        Intent intent = ProblemsListActivity.Companion.getStartActivityIntent(this, ALL_PROBLEMS);
 
         startActivity(intent);
     }
@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showMyProblemsList() {
-        Intent intent = ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS);
+        Intent intent = ProblemsListActivity.Companion.getStartActivityIntent(this, MY_PROBLEMS);
         startActivity(intent);
     }
 

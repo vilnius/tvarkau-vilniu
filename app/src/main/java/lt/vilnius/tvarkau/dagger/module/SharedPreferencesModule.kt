@@ -9,6 +9,8 @@ import lt.vilnius.tvarkau.prefs.BooleanPreference
 import lt.vilnius.tvarkau.prefs.BooleanPreferenceImpl
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
+import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
+import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
@@ -59,5 +61,23 @@ class SharedPreferencesModule {
             @Named(COMMON_PREFERENCES) preference: SharedPreferences
     ): StringPreference {
         return StringPreferenceImpl(preference, SELECTED_FILTER_REPORT_TYPE, "")
+    }
+
+    @Provides
+    @Singleton
+    @Named(LIST_SELECTED_FILTER_REPORT_STATUS)
+    fun provideReportListStatusFilter(
+            @Named(COMMON_PREFERENCES) preference: SharedPreferences
+    ): StringPreference {
+        return StringPreferenceImpl(preference, LIST_SELECTED_FILTER_REPORT_STATUS, "")
+    }
+
+    @Provides
+    @Singleton
+    @Named(LIST_SELECTED_FILTER_REPORT_TYPE)
+    fun provideReportListTypeFilter(
+            @Named(COMMON_PREFERENCES) preference: SharedPreferences
+    ): StringPreference {
+        return StringPreferenceImpl(preference, LIST_SELECTED_FILTER_REPORT_TYPE, "")
     }
 }

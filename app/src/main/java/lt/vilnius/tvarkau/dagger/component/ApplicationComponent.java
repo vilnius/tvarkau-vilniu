@@ -10,6 +10,7 @@ import lt.vilnius.tvarkau.dagger.module.AnalyticsModule;
 import lt.vilnius.tvarkau.dagger.module.DataModule;
 import lt.vilnius.tvarkau.dagger.module.LegacyApiModule;
 import lt.vilnius.tvarkau.dagger.module.SharedPreferencesModule;
+import lt.vilnius.tvarkau.fragments.AllReportsListFragment;
 import lt.vilnius.tvarkau.fragments.BaseFragment;
 import lt.vilnius.tvarkau.fragments.BaseMapFragment;
 import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment;
@@ -50,4 +51,6 @@ public interface ApplicationComponent {
     void inject(ReportTypeListFragment fragment);
 
     void inject(ReportFilterFragment fragment);
+
+    void inject(AllReportsListFragment fragment);
 }
