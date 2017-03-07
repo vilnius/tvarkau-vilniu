@@ -7,9 +7,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 def versionMajor = 3
-def versionMinor = 6
-def versionPatch = 3
-def versionMicro = 1
+def versionMinor = 7
+def versionPatch = 0
+def versionMicro = 0
 
 android {
     compileSdkVersion 25
