@@ -163,7 +163,7 @@
     <string name="add">Pridėti</string>
     <string name="personal_data_added">Jūsų duomenys pridėti</string>
     <string name="personal_data_sharing_enabled">Pridėjimas įjungtas</string>
-    <string name="report_description_timestamp_template" formatted="false">%s\nPažeidimo data ir laikas: %s \n Automobilio valst. nr: %s</string>
+    <string name="report_description_timestamp_template" formatted="false">%s\nPažeidimo data ir laikas: %s \nAutomobilio valst. nr: %s</string>
     <string name="photo_instructions_title">Padarykite mažiausiai dvi nuotraukas</string>
     <string name="photo_instructions_first_photo_hint">Nuotrauka, kurioje aiškiai matosi automobilis ir kelio ženklas ar kelio ženklinimas, draudžiantis stovėjimą</string>
     <string name="photo_instructions_second_photo_hint">Nuotrauka, kurioje iš arti matomas automobilio numeris ir ar yra (nėra) palikta neįgaliųjų asmenų automobilių statymo kortelė</string>
