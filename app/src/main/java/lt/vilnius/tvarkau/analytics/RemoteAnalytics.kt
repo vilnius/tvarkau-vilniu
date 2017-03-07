@@ -5,9 +5,10 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import lt.vilnius.tvarkau.entity.Problem
 
-class RemoteAnalytics(appContext: Context) : Analytics {
+class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI) : Analytics {
 
     private val analytics: FirebaseAnalytics by lazy {
         FirebaseAnalytics.getInstance(appContext)
@@ -20,7 +21,7 @@ class RemoteAnalytics(appContext: Context) : Analytics {
         Bundle().run {
             putString(PARAM_FRAGMENT_ACTIVITY, activity.javaClass.simpleName)
 
-            analytics.logEvent("open_$fragmentName", this)
+            logEvent("open_$fragmentName", this)
         }
 
         analytics.setCurrentScreen(activity, fragmentName, null)
@@ -32,7 +33,7 @@ class RemoteAnalytics(appContext: Context) : Analytics {
         putString(FirebaseAnalytics.Param.ITEM_CATEGORY, problem.getType())
         putString(PARAM_PROBLEM_STATUS, problem.status)
 
-        analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, this)
+        logEvent(FirebaseAnalytics.Event.VIEW_ITEM, this)
     }
 
     override fun trackReportRegistration(reportType: String, photoCount: Int) {
@@ -41,7 +42,7 @@ class RemoteAnalytics(appContext: Context) : Analytics {
             putInt(PARAM_PHOTO_COUNT, photoCount)
         }
 
-        analytics.logEvent(EVENT_NEW_REPORT, params)
+        logEvent(EVENT_NEW_REPORT, params)
     }
 
     override fun trackReportValidation(validationError: String) {
@@ -49,7 +50,7 @@ class RemoteAnalytics(appContext: Context) : Analytics {
             putString(PARAM_VALIDATION_MESSAGE, validationError)
         }
 
-        analytics.logEvent(EVENT_VALIDATION_ERROR, params)
+        logEvent(EVENT_VALIDATION_ERROR, params)
     }
 
     override fun trackPersonalDataSharingEnabled(enabled: Boolean) {
@@ -57,11 +58,17 @@ class RemoteAnalytics(appContext: Context) : Analytics {
             putBoolean(PARAM_ENABLED, enabled)
         }
 
-        analytics.logEvent(EVENT_SHARE_PERSONAL_DATA, params)
+        logEvent(EVENT_SHARE_PERSONAL_DATA, params)
     }
 
-    override fun trackLogIn() {
-        analytics.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
+    override fun trackLogIn() =
+        logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
+
+    private fun logEvent(name: String, bundle: Bundle) {
+        analytics.logEvent(name, bundle)
+
+        val properties = bundle.keySet().map { key -> key to bundle[key] }.toMap()
+        mixpanelAPI.trackMap(name, properties)
     }
 
     companion object {

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,6 +25,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     SharedPreferences myProblemsPreferences;
     @Inject
     Analytics analytics;
+    @Inject
+    MixpanelAPI mixpanelAPI;
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     protected ApplicationComponent component;
@@ -33,6 +37,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         component = buildComponent((TvarkauApplication) getApplication());
         onInject(component);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mixpanelAPI.flush();
+        super.onDestroy();
     }
 
     protected void onInject(ApplicationComponent component) {

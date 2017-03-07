@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.dagger.module
 
 import android.app.Application
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
@@ -12,6 +13,10 @@ import javax.inject.Singleton
  */
 @Module
 class TestAnalyticsModule {
+
+    @Provides
+    @Singleton
+    internal fun providesMixpanel(application: Application): MixpanelAPI = mock()
 
     @Provides
     @Singleton
