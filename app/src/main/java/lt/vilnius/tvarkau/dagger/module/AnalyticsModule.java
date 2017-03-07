@@ -8,18 +8,17 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.analytics.RemoteAnalytics;
 
 @Module
 public class AnalyticsModule {
 
-    private final String projectToken = "8f77b0f6ecba7677aec235170e8eee4f";
-
     @Provides
     @Singleton
-    MixpanelAPI providesMixPanel(Application application) {
-        return MixpanelAPI.getInstance(application, projectToken);
+    MixpanelAPI providesMixpanel(Application application) {
+        return MixpanelAPI.getInstance(application, application.getString(R.string.mixpanel_token));
     }
 
     @Provides
