@@ -161,13 +161,18 @@ class ReportFilterFragment : BaseFragment() {
                 filter_report_status_completed
         ).find { it?.isSelected ?: false }?.tag as? String
 
+        val targetName: String
         if (isMapTarget) {
             mapReportStatusFilter.set(selectedState.orEmpty())
             mapReportTypeFilter.set(adapter.selected)
+            targetName = "map"
         } else {
             listReportStatusFilter.set(selectedState.orEmpty())
             listReportTypeFilter.set(adapter.selected)
+            targetName = "list"
         }
+
+        analytics.trackApplyReportFilter(selectedState.orEmpty(), adapter.selected, targetName)
 
         RxBus.publish(RefreshReportFilterEvent())
     }

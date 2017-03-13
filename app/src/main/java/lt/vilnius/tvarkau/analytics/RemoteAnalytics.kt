@@ -9,6 +9,16 @@ import lt.vilnius.tvarkau.entity.Problem
 
 class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI) : Analytics {
 
+    override fun trackApplyReportFilter(status: String, category: String, target: String) {
+        val params = Bundle().apply {
+            putString(PARAM_PROBLEM_STATUS, status)
+            putString(PARAM_REPORT_CATEGORY, category)
+            putString(PARAM_REPORT_FILTER_TARGET, target)
+        }
+
+        logEvent(EVENT_APPLY_REPORT_FILTER, params)
+    }
+
     private val analytics: FirebaseAnalytics by lazy {
         FirebaseAnalytics.getInstance(appContext)
     }
@@ -79,9 +89,12 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         private const val PARAM_PHOTO_COUNT = "photo_count"
         private const val PARAM_VALIDATION_MESSAGE = "validation_message"
         private const val PARAM_ENABLED = "enabled"
+        private const val PARAM_REPORT_CATEGORY = "report_category"
+        private const val PARAM_REPORT_FILTER_TARGET = "report_filter_target"
 
         private const val EVENT_NEW_REPORT = "new_report"
         private const val EVENT_VALIDATION_ERROR = "validation_error"
         private const val EVENT_SHARE_PERSONAL_DATA = "personal_data"
+        private const val EVENT_APPLY_REPORT_FILTER = "apply_report_filter"
     }
 }

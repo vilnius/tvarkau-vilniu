@@ -21,4 +21,6 @@ interface Analytics {
     fun trackPersonalDataSharingEnabled(enabled: Boolean)
 
     fun trackLogIn()
+
+    fun trackApplyReportFilter(status: String, category: String, target: String)
 }
