@@ -52,7 +52,13 @@ abstract class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        analytics.trackCurrentFragment(activity, this)
+        analytics.trackOpenFragment(activity, javaClass::getSimpleName.name)
+    }
+
+    override fun onPause() {
+        analytics.trackCloseFragment(javaClass::getSimpleName.name)
+
+        super.onPause()
     }
 
     override fun onDestroy() {

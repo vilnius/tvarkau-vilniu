@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau.analytics
 
 import android.app.Activity
-import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.entity.Problem
 
 /**
@@ -9,7 +8,9 @@ import lt.vilnius.tvarkau.entity.Problem
  */
 interface Analytics {
 
-    fun trackCurrentFragment(activity: Activity, fragment: Fragment)
+    fun trackOpenFragment(activity: Activity, name: String)
+
+    fun trackCloseFragment(name: String)
 
     fun trackViewProblem(problem: Problem)
 

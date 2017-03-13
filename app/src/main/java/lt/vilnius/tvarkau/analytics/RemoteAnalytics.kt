@@ -3,7 +3,6 @@ package lt.vilnius.tvarkau.analytics
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import lt.vilnius.tvarkau.entity.Problem
@@ -14,18 +13,14 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         FirebaseAnalytics.getInstance(appContext)
     }
 
+    override fun trackOpenFragment(activity: Activity, name: String) {
+        val eventName = "open_$name"
 
-    override fun trackCurrentFragment(activity: Activity, fragment: Fragment) {
-        val fragmentName = fragment.javaClass.simpleName
-
-        Bundle().run {
-            putString(PARAM_FRAGMENT_ACTIVITY, activity.javaClass.simpleName)
-
-            logEvent("open_$fragmentName", this)
-        }
-
-        analytics.setCurrentScreen(activity, fragmentName, null)
+        timeEvent(eventName)
+        analytics.setCurrentScreen(activity, eventName, null)
     }
+
+    override fun trackCloseFragment(name: String) = finishTimeEvent("open_$name")
 
     override fun trackViewProblem(problem: Problem) = Bundle().run {
         putString(FirebaseAnalytics.Param.ITEM_ID, problem.problemId)
@@ -62,7 +57,7 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
     }
 
     override fun trackLogIn() =
-        logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
+            logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
 
     private fun logEvent(name: String, bundle: Bundle) {
         analytics.logEvent(name, bundle)
@@ -71,9 +66,16 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         mixpanelAPI.trackMap(name, properties)
     }
 
+    private fun timeEvent(name: String) {
+        mixpanelAPI.timeEvent(name)
+    }
+
+    private fun finishTimeEvent(name: String) {
+        mixpanelAPI.track(name)
+    }
+
     companion object {
         private const val PARAM_PROBLEM_STATUS = "problem_status"
-        private const val PARAM_FRAGMENT_ACTIVITY = "activity"
         private const val PARAM_PHOTO_COUNT = "photo_count"
         private const val PARAM_VALIDATION_MESSAGE = "validation_message"
         private const val PARAM_ENABLED = "enabled"
