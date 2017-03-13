@@ -30,6 +30,18 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         analytics.setCurrentScreen(activity, eventName, null)
     }
 
+    override fun identifyUser(name: String, email: String, phoneNumber: String) {
+        val a = mixpanelAPI.distinctId
+        mixpanelAPI.identify(mixpanelAPI.distinctId)
+        mixpanelAPI.people.identify(mixpanelAPI.distinctId)
+
+        mixpanelAPI.people.let { p ->
+            p.set(PARAM_USER_NAME, name)
+            p.set(PARAM_USER_EMAIL, email)
+            p.set(PARAM_USER_PHONE_NUMBER, phoneNumber)
+        }
+    }
+
     override fun trackCloseFragment(name: String) = finishTimeEvent("open_$name")
 
     override fun trackViewProblem(problem: Problem) = Bundle().run {
@@ -91,6 +103,10 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         private const val PARAM_ENABLED = "enabled"
         private const val PARAM_REPORT_CATEGORY = "report_category"
         private const val PARAM_REPORT_FILTER_TARGET = "report_filter_target"
+
+        private const val PARAM_USER_NAME = "\$name"
+        private const val PARAM_USER_EMAIL = "\$email"
+        private const val PARAM_USER_PHONE_NUMBER = "\$phone"
 
         private const val EVENT_NEW_REPORT = "new_report"
         private const val EVENT_VALIDATION_ERROR = "validation_error"

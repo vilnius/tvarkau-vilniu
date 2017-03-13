@@ -23,4 +23,6 @@ interface Analytics {
     fun trackLogIn()
 
     fun trackApplyReportFilter(status: String, category: String, target: String)
+
+    fun identifyUser(name: String, email: String, phoneNumber: String)
 }
