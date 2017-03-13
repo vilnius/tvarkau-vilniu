@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import lt.vilnius.tvarkau.entity.Problem
+import org.json.JSONObject
 
 class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI) : Analytics {
 
@@ -75,6 +76,7 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
             putBoolean(PARAM_ENABLED, enabled)
         }
 
+        setUserProperty(PROPERTY_SHARE_PERSONAL_DATA, enabled.toString())
         logEvent(EVENT_SHARE_PERSONAL_DATA, params)
     }
 
@@ -86,6 +88,12 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
 
         val properties = bundle.keySet().map { key -> key to bundle[key] }.toMap()
         mixpanelAPI.trackMap(name, properties)
+    }
+
+    private fun setUserProperty(name: String, value: String) {
+        val userProperties = listOf(name to value).toMap()
+
+        mixpanelAPI.registerSuperProperties(JSONObject(userProperties))
     }
 
     private fun timeEvent(name: String) {
@@ -112,5 +120,7 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         private const val EVENT_VALIDATION_ERROR = "validation_error"
         private const val EVENT_SHARE_PERSONAL_DATA = "personal_data"
         private const val EVENT_APPLY_REPORT_FILTER = "apply_report_filter"
+
+        private const val PROPERTY_SHARE_PERSONAL_DATA = "share_personal_data"
     }
 }
