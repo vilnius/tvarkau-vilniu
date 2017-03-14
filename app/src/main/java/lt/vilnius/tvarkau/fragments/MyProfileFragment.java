@@ -154,6 +154,7 @@ public class MyProfileFragment extends BaseFragment {
 
             prefsManager.changeUserAnonymityStatus(false);
 
+            analytics.identifyUser(name, email, phone);
             analytics.trackPersonalDataSharingEnabled(true);
 
             View view = getActivity().getCurrentFocus();

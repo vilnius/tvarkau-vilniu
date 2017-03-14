@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau.analytics
 
 import android.app.Activity
-import android.support.v4.app.Fragment
 import lt.vilnius.tvarkau.entity.Problem
 
 /**
@@ -9,7 +8,9 @@ import lt.vilnius.tvarkau.entity.Problem
  */
 interface Analytics {
 
-    fun trackCurrentFragment(activity: Activity, fragment: Fragment)
+    fun trackOpenFragment(activity: Activity, name: String)
+
+    fun trackCloseFragment(name: String)
 
     fun trackViewProblem(problem: Problem)
 
@@ -20,4 +21,8 @@ interface Analytics {
     fun trackPersonalDataSharingEnabled(enabled: Boolean)
 
     fun trackLogIn()
+
+    fun trackApplyReportFilter(status: String, category: String, target: String)
+
+    fun identifyUser(name: String, email: String, phoneNumber: String)
 }
