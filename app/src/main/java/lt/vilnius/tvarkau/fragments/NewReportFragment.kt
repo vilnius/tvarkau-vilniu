@@ -46,12 +46,13 @@ import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
-import lt.vilnius.tvarkau.prefs.BooleanPreference
+import lt.vilnius.tvarkau.prefs.LongPreference
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.utils.*
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
+import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -71,8 +72,8 @@ class NewReportFragment : BaseFragment(),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
         NewReportView {
 
-    @field:[Inject Named(Preferences.DISPLAY_PHOTO_INSTRUCTIONS)]
-    lateinit var displayPhotoInstructions: BooleanPreference
+    @field:[Inject Named(Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
+    lateinit var lastDisplayedPhotoInstructions: LongPreference
 
     var locationCords: LatLng? = null
     var imageFiles = ArrayList<File>()
@@ -102,7 +103,10 @@ class NewReportFragment : BaseFragment(),
         get() = reportType == PARKING_VIOLATIONS
 
     private val shouldDisplayPhotoInstructions: Boolean
-        get() = reportType == PARKING_VIOLATIONS && displayPhotoInstructions.get()
+        get() {
+            val delta = System.currentTimeMillis() - lastDisplayedPhotoInstructions.get()
+            return reportType == PARKING_VIOLATIONS && Duration.ofMillis(delta).toDays() > 1
+        }
 
     private lateinit var reportType: String
 

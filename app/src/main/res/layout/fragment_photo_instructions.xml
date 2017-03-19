@@ -51,17 +51,6 @@
             android:text="@string/photo_instructions_second_photo_hint"
             android:textColor="@color/black_87" />
 
-        <CheckBox
-            android:id="@+id/photo_instructions_dont_show"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/photo_instructions_don_show_again"
-            android:textColor="@color/black_87" />
-
-
         <Button
             android:id="@+id/photo_instructions_btn_ok"
             style="@style/ButtonPrimary"
@@ -69,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
+            android:layout_marginTop="16dp"
             android:minWidth="200dp"
             android:text="@string/photo_instructions_button_ok" />
     </LinearLayout>
