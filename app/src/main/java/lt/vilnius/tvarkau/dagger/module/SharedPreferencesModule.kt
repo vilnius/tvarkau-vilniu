@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
-import lt.vilnius.tvarkau.prefs.BooleanPreference
-import lt.vilnius.tvarkau.prefs.BooleanPreferenceImpl
+import lt.vilnius.tvarkau.prefs.LongPreference
+import lt.vilnius.tvarkau.prefs.LongPreferenceImpl
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
-import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
+import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
 import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
@@ -38,11 +38,11 @@ class SharedPreferencesModule {
 
     @Provides
     @Singleton
-    @Named(DISPLAY_PHOTO_INSTRUCTIONS)
+    @Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)
     fun providePhotoInstructions(
             @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): BooleanPreference {
-        return BooleanPreferenceImpl(preference, DISPLAY_PHOTO_INSTRUCTIONS, true)
+    ): LongPreference {
+        return LongPreferenceImpl(preference, LAST_DISPLAYED_PHOTO_INSTRUCTIONS, 0L)
     }
 
     @Provides

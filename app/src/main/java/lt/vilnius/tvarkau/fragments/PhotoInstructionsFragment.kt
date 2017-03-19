@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_photo_instructions.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
-import lt.vilnius.tvarkau.prefs.BooleanPreference
-import lt.vilnius.tvarkau.prefs.Preferences
+import lt.vilnius.tvarkau.prefs.LongPreference
+import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -17,8 +17,8 @@ import javax.inject.Named
  */
 class PhotoInstructionsFragment : BaseFragment() {
 
-    @field:[Inject Named(Preferences.DISPLAY_PHOTO_INSTRUCTIONS)]
-    lateinit var displayPhotoInstructions: BooleanPreference
+    @field:[Inject Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
+    lateinit var lastDisplayPhotoInstructions: LongPreference
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_photo_instructions, container, false)
@@ -26,13 +26,14 @@ class PhotoInstructionsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        photo_instructions_dont_show.setOnCheckedChangeListener { button, checked ->
-            displayPhotoInstructions.set(!checked)
-        }
-
         photo_instructions_btn_ok.setOnClickListener {
             activity.onBackPressed()
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lastDisplayPhotoInstructions.set(System.currentTimeMillis())
     }
 
     override fun onInject(component: ApplicationComponent) {

@@ -6,9 +6,9 @@ import android.content.SharedPreferences
 import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
-import lt.vilnius.tvarkau.prefs.BooleanPreference
+import lt.vilnius.tvarkau.prefs.LongPreference
 import lt.vilnius.tvarkau.prefs.Preferences
-import lt.vilnius.tvarkau.prefs.Preferences.DISPLAY_PHOTO_INSTRUCTIONS
+import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
 import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
@@ -37,8 +37,8 @@ class TestSharedPreferencesModule {
 
     @Provides
     @Singleton
-    @Named(DISPLAY_PHOTO_INSTRUCTIONS)
-    fun providePhotoInstructions(): BooleanPreference = mock()
+    @Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)
+    fun providePhotoInstructions(): LongPreference = mock()
 
 
     @Provides
