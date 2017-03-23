@@ -105,7 +105,7 @@ class NewReportFragment : BaseFragment(),
     private val shouldDisplayPhotoInstructions: Boolean
         get() {
             val delta = System.currentTimeMillis() - lastDisplayedPhotoInstructions.get()
-            return reportType == PARKING_VIOLATIONS && Duration.ofMillis(delta).toDays() > 1
+            return reportType == PARKING_VIOLATIONS && Duration.ofMillis(delta).toDays() >= 1
         }
 
     private lateinit var reportType: String
