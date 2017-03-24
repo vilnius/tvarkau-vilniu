@@ -59,7 +59,6 @@ import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.EasyImage
 import timber.log.Timber
 import java.io.File
-import java.io.IOException
 import java.util.*
 import java.util.Calendar.*
 import javax.inject.Inject
@@ -440,38 +439,51 @@ class NewReportFragment : BaseFragment(),
                     val geocoder = Geocoder(context)
                     val place = PlacePicker.getPlace(context, data)
 
-                    var addresses = listOf<Address>()
+                    val addresses = mutableListOf<Address>()
 
                     place.latLng?.let {
                         locationCords = it
 
                         try {
-                            addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-                        } catch (e: IOException) {
-                            Timber.e(e)
+                            geocoder.getFromLocation(it.latitude, it.longitude, 1)?.let {
+                                addresses.addAll(it)
+                            }
+                        } catch (e: Throwable) {
+                            Timber.e(GeocoderException(e))
                         }
                     }
 
                     if (addresses.isNotEmpty()) {
                         if (addresses.first().locality != null) {
-                            val address = addresses[0].getAddressLine(0)
+                            val address = addresses.first().getAddressLine(0)
                             report_problem_location_wrapper.error = null
                             report_problem_location.setText(address)
                         }
                     } else {
                         // Mostly when Geocoder throws IOException
                         // backup solution which in not 100% reliable
-                        val addressSlice = place.address.toString()
-                                .split(", ".toRegex())
-                                .dropLastWhile(String::isEmpty)
-                                .toTypedArray()
+                        val addressSlice = place.address
+                                ?.split(", ".toRegex())
+                                ?.dropLastWhile(String::isEmpty)
+                                ?.toTypedArray()
 
-                        val address = addressSlice[0]
-                        report_problem_location_wrapper.error = null
-                        report_problem_location.setText(address)
+                        val addressText = if (addressSlice == null || addressSlice.isEmpty()) {
+                            locationCords?.let {
+                                "${it.latitude}; ${it.longitude}"
+                            }
+                        } else {
+                            addressSlice[0]
+                        }
+
+                        if (addressText.isNullOrEmpty()) {
+                            report_problem_location_wrapper.error = getText(R.string.error_failed_to_determine_address)
+                            report_problem_location.text = null
+                        } else {
+                            report_problem_location_wrapper.error = null
+                            report_problem_location.setText(addressText)
+                        }
                     }
                 }
-
             }
         }
     }
@@ -622,4 +634,6 @@ class NewReportFragment : BaseFragment(),
             }
         }
     }
+
+    class GeocoderException(cause: Throwable) : RuntimeException(cause)
 }
