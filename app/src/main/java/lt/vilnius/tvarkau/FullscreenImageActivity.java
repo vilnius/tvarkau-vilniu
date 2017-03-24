@@ -1,17 +1,15 @@
 package lt.vilnius.tvarkau;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lt.vilnius.tvarkau.views.adapters.FullscreenImagesPagerAdapter;
+import lt.vilnius.tvarkau.views.adapters.HackyViewPager;
 
 public class FullscreenImageActivity extends BaseActivity {
 
@@ -19,7 +17,7 @@ public class FullscreenImageActivity extends BaseActivity {
     public final static String EXTRA_PHOTOS = "FullscreenImageActivity.photos";
 
     @BindView(R.id.problem_images_view_pager)
-    ViewPager problemImagesViewPager;
+    HackyViewPager problemImagesViewPager;
     @BindView(R.id.fullscreen_layout)
     RelativeLayout fullscreenLayout;
     @BindView(R.id.toolbar)
@@ -28,17 +26,13 @@ public class FullscreenImageActivity extends BaseActivity {
     private int initialImagePosition;
     private String[] photos;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
 
         setContentView(R.layout.activity_fullscreen);
 
