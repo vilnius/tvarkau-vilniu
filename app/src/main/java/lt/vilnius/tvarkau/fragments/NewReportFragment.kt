@@ -453,12 +453,11 @@ class NewReportFragment : BaseFragment(),
                         }
                     }
 
-                    if (addresses.isNotEmpty()) {
-                        if (addresses.first().locality != null) {
-                            val address = addresses.first().getAddressLine(0)
-                            report_problem_location_wrapper.error = null
-                            report_problem_location.setText(address)
-                        }
+                    val firstAddress = addresses.firstOrNull()
+                    if (firstAddress?.locality != null) {
+                        val address = firstAddress.getAddressLine(0)
+                        report_problem_location_wrapper.error = null
+                        report_problem_location.setText(address)
                     } else {
                         // Mostly when Geocoder throws IOException
                         // backup solution which in not 100% reliable
