@@ -8,8 +8,11 @@ import lt.vilnius.tvarkau.views.adapters.FullscreenImagesPagerAdapter
 
 class FullscreenImageActivity : BaseActivity() {
 
-    private var initialImagePosition: Int = 0
-    private lateinit var photos: Array<String>
+    private val initialImagePosition: Int
+        get() = intent.getIntExtra(EXTRA_IMAGE_POSITION, 0)
+
+    private val photos: Array<String>
+        get() = intent.getStringArrayExtra(EXTRA_PHOTOS) ?: emptyArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,14 +27,6 @@ class FullscreenImageActivity : BaseActivity() {
             setDisplayHomeAsUpEnabled(true)
             title = ""
             hide()
-        }
-
-        val extras = intent.extras
-        if (extras != null) {
-            initialImagePosition = extras.getInt(EXTRA_IMAGE_POSITION)
-            photos = extras.getStringArray(EXTRA_PHOTOS)
-        } else {
-            photos = emptyArray()
         }
 
         initializePager()
