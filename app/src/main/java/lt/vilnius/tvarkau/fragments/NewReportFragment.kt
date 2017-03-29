@@ -320,9 +320,9 @@ class NewReportFragment : BaseFragment(),
 
         problem_images_view_pager.adapter.notifyDataSetChanged()
 
-        if (imageFiles.size > 1) {
+        if (this.imageFiles.size > 1) {
             problem_images_view_pager_indicator.visible()
-            problem_images_view_pager.currentItem = imageFiles.size - 1
+            problem_images_view_pager.currentItem = this.imageFiles.lastIndex
         }
     }
 
