@@ -14,7 +14,7 @@
     <string name="close">Uždaryti</string>
 
     <string name="menu_action_filter">Filtras</string>
-    <string name="menu_action_submit_filter">Filtras</string>
+    <string name="menu_action_submit_filter">Filtruoti problemas</string>
     <string name="problem_search">Problemos paieška</string>
     <string name="problem_map">Pranešimų žemėlapis</string>
 
