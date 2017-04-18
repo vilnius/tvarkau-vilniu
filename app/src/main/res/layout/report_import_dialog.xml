@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:labelFor="@+id/vilnius_account_email"
+        android:contentDescription="@string/vilnius_account_hint_email"
         android:padding="3dp">
 
         <android.support.design.widget.TextInputEditText
@@ -26,6 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:labelFor="@+id/vilnius_account_password"
+        android:contentDescription="@string/vilnius_account_hint_password"
         android:padding="3dp">
 
         <android.support.design.widget.TextInputEditText
