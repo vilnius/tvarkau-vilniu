@@ -3,6 +3,7 @@ plugins {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -72,7 +73,7 @@ repositories {
 ext {
     junitVersion = '4.12'
     supportLibraryVersion = '25.1.1'
-    playServicesVersion = '10.0.1'
+    playServicesVersion = '10.2.6'
     butterKnifeVersion = '8.5.1'
     glideVersion = '3.7.0'
     retrofitVersion = '2.1.0'
@@ -108,6 +109,7 @@ dependencies {
 
     compile "com.google.firebase:firebase-core:$playServicesVersion"
     compile "com.google.firebase:firebase-crash:$playServicesVersion"
+    compile "com.google.firebase:firebase-perf:$playServicesVersion"
 
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
     kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
