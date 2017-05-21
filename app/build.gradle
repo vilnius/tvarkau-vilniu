@@ -9,7 +9,7 @@ apply plugin: 'kotlin-android-extensions'
 
 def versionMajor = 3
 def versionMinor = 7
-def versionPatch = 7
+def versionPatch = 8
 def versionMicro = 0
 
 android {
