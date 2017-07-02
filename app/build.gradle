@@ -134,7 +134,7 @@ dependencies {
     compile "com.facebook.stetho:stetho:$stethoVersion"
     compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
-    compile "com.mixpanel.android:mixpanel-android:4.9.8"
+    compile "com.mixpanel.android:mixpanel-android:5.1.4"
 
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
