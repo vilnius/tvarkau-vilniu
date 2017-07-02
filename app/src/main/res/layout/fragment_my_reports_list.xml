@@ -7,7 +7,6 @@
 
     <include layout="@layout/loading_indicator" />
 
-
     <LinearLayout
         android:id="@+id/my_problems_empty_view"
         android:layout_width="match_parent"
@@ -65,5 +64,7 @@
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
     </LinearLayout>
+
+    <include layout="@layout/fab_new_report" />
 
 </android.support.design.widget.CoordinatorLayout>

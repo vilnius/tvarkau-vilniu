@@ -11,6 +11,7 @@ import lt.vilnius.tvarkau.navigation.NavigationManager
 
 @Module
 class MainActivityModule(private val activity: AppCompatActivity) {
+
     @Provides
     fun provideActivity(): Activity {
         return activity
@@ -18,7 +19,7 @@ class MainActivityModule(private val activity: AppCompatActivity) {
 
     @Provides
     fun provideNavManager(): NavigationManager {
-        return NavigationManager(
+        return NavigationManager(activity,
                 FragmentTransactionExecutor(
                         activity.supportFragmentManager))
     }
