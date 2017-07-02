@@ -9,4 +9,7 @@
     <dimen name="problem_status_label_radius">3dp</dimen>
 
     <dimen name="problem_map_info_thumb_width">100dp</dimen>
+
+    <dimen name="bottom_navigation_height">56dp</dimen>
+
 </resources>

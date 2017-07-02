@@ -26,13 +26,7 @@ class MainActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
 
-        bottomNavigationController.onCreate()
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        bottomNavigationController.onStart()
+        bottomNavigationController.onCreate(savedInstanceState == null)
     }
 
     companion object {

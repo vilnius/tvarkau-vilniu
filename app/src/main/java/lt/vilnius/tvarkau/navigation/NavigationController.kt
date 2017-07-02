@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.navigation
 
 interface NavigationController {
-    fun onCreate()
-    fun onStart()
+    fun onCreate(initial: Boolean)
 }
