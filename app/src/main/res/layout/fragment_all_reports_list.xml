@@ -41,4 +41,14 @@
             android:text="@string/empty_state_all_reports_line_2"
             android:textColor="@color/black_38" />
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_report_problem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/title_new_problem"
+        app:srcCompat="@drawable/ic_pencil" />
+
 </android.support.design.widget.CoordinatorLayout>

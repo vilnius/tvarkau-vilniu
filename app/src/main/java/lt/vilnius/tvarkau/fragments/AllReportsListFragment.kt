@@ -28,6 +28,8 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
     lateinit var reportStatus: StringPreference
     @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_TYPE)]
     lateinit var reportType: StringPreference
+//    @Inject
+//    lateinit var navigationManager: NavigationManager
 
     private lateinit var scrollListener: EndlessScrollListener
 
@@ -75,6 +77,17 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.main_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_filter -> {
+                // TODO fix navigation manager dagger
+//                navigationManager.navigateToReportsFilter()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun getReports() {
