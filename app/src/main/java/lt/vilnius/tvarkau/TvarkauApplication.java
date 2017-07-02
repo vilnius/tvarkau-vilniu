@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
+import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -32,6 +33,7 @@ public class TvarkauApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());
+            FirebaseCrash.setCrashCollectionEnabled(false);
         } else {
             Timber.plant(new RemoteCrashReportingTree());
         }
