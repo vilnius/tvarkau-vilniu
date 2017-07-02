@@ -83,6 +83,11 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
         when (item.itemId) {
             R.id.action_filter -> {
                 // TODO fix navigation manager dagger
+                activity.supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_from_top, 0, 0, R.anim.slide_out_to_top)
+                        .replace(R.id.fragment_container, ReportFilterFragment.newInstance(ReportFilterFragment.TARGET_LIST))
+                        .addToBackStack(null)
+                        .commit()
 //                navigationManager.navigateToReportsFilter()
                 return true
             }

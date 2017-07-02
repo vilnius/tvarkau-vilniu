@@ -47,25 +47,14 @@
         </activity-alias>
 
         <activity
-            android:name=".ProblemsListActivity"
+            android:name=".ProblemDetailActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_problem_list"
+            android:label="@string/title_problem_detail"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
-        </activity>
-
-        <activity
-            android:name=".ProblemDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_problem_detail"
-            android:parentActivityName=".ProblemsListActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProblemsListActivity" />
         </activity>
 
         <activity

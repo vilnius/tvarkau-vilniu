@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat.getColor
 import android.widget.CompoundButton
 import android.widget.Toast
 import kotlinx.android.synthetic.main.settings_activity.*
-import lt.vilnius.tvarkau.ProblemsListActivity.Companion.MY_PROBLEMS
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment
@@ -96,9 +95,10 @@ class SettingsActivity : BaseActivity(),
     override fun onVilniusSignIn() {
         Snackbar.make(settings_layout, R.string.report_import_done, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.check_imported_reports) {
-                    ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS).run {
-                        startActivity(this)
-                    }
+                    // TODO navigate to where
+//                    ProblemsListActivity.getStartActivityIntent(this, MY_PROBLEMS).run {
+//                        startActivity(this)
+//                    }
                 }
                 .setActionTextColor(getColor(this, R.color.snackbar_action_text))
                 .show()

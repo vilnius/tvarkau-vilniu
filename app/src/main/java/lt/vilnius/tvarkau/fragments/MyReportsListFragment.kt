@@ -17,7 +17,7 @@ import lt.vilnius.tvarkau.fragments.views.ReportListView
 /**
  * @author Martynas Jurkus
  */
-class MyReportsListFragment : BaseReportListFragment(), ReportListView {
+class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseReportListFragment.OnImportReportClickListener {
 
     override val presenter: ProblemListPresenter by lazy {
         MyReportListPresenterImpl(
@@ -45,6 +45,12 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView {
         }
     }
 
+    override fun onImportReportClick() {
+        val ft = activity.supportFragmentManager.beginTransaction()
+        val reportImportDialog = ReportImportDialogFragment.newInstance(false)
+        reportImportDialog.show(ft, REPORT_IMPORT_DIALOG)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         baseActivity?.setTitle(R.string.home_my_problems)
@@ -59,6 +65,8 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView {
     }
 
     companion object {
+        private const val REPORT_IMPORT_DIALOG = "report_import_dialog"
+
         fun newInstance() = MyReportsListFragment()
     }
 }

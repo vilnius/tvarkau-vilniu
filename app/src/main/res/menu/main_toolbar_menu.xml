@@ -6,9 +6,4 @@
         android:icon="@drawable/ic_filter_list_black_24dp"
         android:title="@string/menu_action_filter"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_map"
-        android:icon="@drawable/ic_mapview_appbar"
-        android:title="@string/problem_map"
-        app:showAsAction="always" />
 </menu>
