@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.app.ProgressDialog
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -12,10 +11,13 @@ import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.fragment_map_fragment.*
+import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
 import lt.vilnius.tvarkau.fragments.presenters.MultipleReportsMapPresenter
 import lt.vilnius.tvarkau.fragments.presenters.MultipleReportsMapPresenterImpl
@@ -40,7 +42,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     private var zoomedToMyLocation = false
-    private var progressDialog: ProgressDialog? = null
     private var toast: Snackbar? = null
 
     override fun onCreate(bundle: Bundle?) {
@@ -88,19 +89,13 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun showProgress() {
-        if (progressDialog == null) {
-            progressDialog = ProgressDialog(context).apply {
-                setMessage(getString(R.string.multiple_reports_map_message_progress))
-                setProgressStyle(ProgressDialog.STYLE_SPINNER)
-                setCancelable(false)
-            }
-        }
-
-        progressDialog?.show()
+        loading_indicator.visible()
+        map_container.gone()
     }
 
     override fun hideProgress() {
-        progressDialog?.dismiss()
+        loading_indicator.gone()
+        map_container.visible()
     }
 
     override fun onInfoWindowClick(marker: Marker) {
@@ -141,8 +136,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         presenter.onDetach()
         googleMap?.setOnInfoWindowCloseListener(null)
         googleMap?.setOnInfoWindowClickListener(null)
-        progressDialog?.dismiss()
-        progressDialog = null
         super.onDestroyView()
     }
 

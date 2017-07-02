@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
@@ -8,10 +7,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
+import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
 import lt.vilnius.tvarkau.rx.RxBus
@@ -28,7 +30,6 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
     private var page = 0
     private var reloadingAllReports = false
     private var subscription: Subscription? = null
-    private var progressDialog: ProgressDialog? = null
 
     abstract val presenter: ProblemListPresenter
 
@@ -112,21 +113,15 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
     override fun showProgress() {
         if (!swipe_container.isRefreshing) {
-            if (progressDialog == null) {
-                progressDialog = ProgressDialog(context).apply {
-                    setMessage(getString(R.string.multiple_reports_map_message_progress))
-                    setProgressStyle(ProgressDialog.STYLE_SPINNER)
-                    setCancelable(false)
-                }
-            }
-
-            progressDialog?.show()
+            loading_indicator.visible()
+            swipe_container.gone()
         }
     }
 
     override fun hideProgress() {
         swipe_container.isRefreshing = false
-        progressDialog?.dismiss()
+        loading_indicator.gone()
+        swipe_container.visible()
     }
 
     override fun onDestroy() {

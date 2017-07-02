@@ -42,6 +42,10 @@
             android:textColor="@color/black_38" />
     </LinearLayout>
 
+    <include
+        layout="@layout/loading_indicator"
+        tools:visibility="gone" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_report_problem"
         android:layout_width="wrap_content"

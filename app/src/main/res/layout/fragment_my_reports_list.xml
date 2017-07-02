@@ -5,6 +5,9 @@
 
     <include layout="@layout/include_report_list_recycler_view" />
 
+    <include layout="@layout/loading_indicator" />
+
+
     <LinearLayout
         android:id="@+id/my_problems_empty_view"
         android:layout_width="match_parent"

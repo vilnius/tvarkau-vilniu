@@ -5,7 +5,9 @@
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:showIn="@layout/fragment_all_reports_list">
+    tools:showIn="@layout/fragment_all_reports_list"
+    android:visibility="gone"
+    tools:visibility="visible" >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/report_list"
