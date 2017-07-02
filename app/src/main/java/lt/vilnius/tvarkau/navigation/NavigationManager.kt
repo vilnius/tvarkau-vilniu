@@ -1,9 +1,6 @@
 package lt.vilnius.tvarkau.navigation
 
-import lt.vilnius.tvarkau.fragments.AllReportsListFragment
-import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment
-import lt.vilnius.tvarkau.fragments.MyReportsListFragment
-import lt.vilnius.tvarkau.fragments.ReportFilterFragment
+import lt.vilnius.tvarkau.fragments.*
 
 class NavigationManager(private val executor: FragmentTransactionExecutor) {
 
@@ -19,8 +16,7 @@ class NavigationManager(private val executor: FragmentTransactionExecutor) {
             NavigationManager.TabItem.REPORTS_LIST -> executor.replaceWithClearTop(AllReportsListFragment.newInstance())
             NavigationManager.TabItem.MY_REPORTS_LIST -> executor.replaceWithClearTop(MyReportsListFragment.newInstance())
             NavigationManager.TabItem.REPORTS_MAP -> executor.replaceWithClearTop(MultipleProblemsMapFragment.newInstance())
-        // TODO migrate settings to fragment
-            NavigationManager.TabItem.SETTINGS -> executor.replaceWithClearTop(AllReportsListFragment.newInstance())
+            NavigationManager.TabItem.SETTINGS -> executor.replaceWithClearTop(SettingsFragment.newInstance())
         }
     }
 

@@ -69,18 +69,6 @@
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_settings"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-
-        <activity
             android:name=".AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_about"
@@ -107,12 +95,12 @@
             android:name=".ProfileEditActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_edit_contacts"
-            android:parentActivityName=".SettingsActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SettingsActivity" />
+                android:value=".MainActivity" />
         </activity>
 
         <activity

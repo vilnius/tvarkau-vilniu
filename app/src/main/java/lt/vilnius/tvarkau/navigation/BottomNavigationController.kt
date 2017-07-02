@@ -18,7 +18,7 @@ class BottomNavigationController(private val activity: Activity, private val nav
     }
 
     override fun onStart() {
-        activity.bottom_navigation.selectedItemId = R.id.tab_list_of_problems
+//        activity.bottom_navigation.selectedItemId = R.id.tab_list_of_problems
     }
 
     private fun onTabSelected(@IdRes id: Int) {
@@ -26,7 +26,9 @@ class BottomNavigationController(private val activity: Activity, private val nav
             R.id.tab_list_of_problems -> navigationManager.navigateToMenuItem(NavigationManager.TabItem.REPORTS_LIST)
             R.id.tab_map_of_problems -> navigationManager.navigateToMenuItem(NavigationManager.TabItem.REPORTS_MAP)
             R.id.tab_my_problems -> navigationManager.navigateToMenuItem(NavigationManager.TabItem.MY_REPORTS_LIST)
-            R.id.tab_settings -> navigationManager.navigateToMenuItem(NavigationManager.TabItem.SETTINGS)
+            R.id.tab_settings ->  {
+                navigationManager.navigateToMenuItem(NavigationManager.TabItem.SETTINGS)
+            }
             else -> throw IllegalArgumentException("Tab doesn't exists")
         }
     }

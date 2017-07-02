@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences_screen_title">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="UserAnonymous"
+        android:summary="@string/setting_anonymous_explanation"
+        android:title="@string/setting_anonymous_title" />
+
+    <PreferenceScreen
+        android:key="preference_import_reports"
+        android:summary="@string/setting_import_reports_explanation"
+        android:title="@string/setting_import_reports" />
+
+    <PreferenceScreen
+        android:key="preference_about"
+        android:title="@string/setting_about">
+
+        <intent
+            android:targetClass="lt.vilnius.tvarkau.AboutActivity"
+            android:targetPackage="lt.vilnius.tvarkau" />
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

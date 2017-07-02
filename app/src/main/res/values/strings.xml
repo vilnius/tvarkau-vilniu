@@ -122,11 +122,13 @@
     <string name="transport_vehicle_report_type_contacts_needed">Transporto priemonių stovėjimo tvarkos pažeidimai (Būtina pridėti nuotraukas)</string>
     <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
     <string name="home_settings">Nustatymai</string>
-    <string name="setting_anonymous_title">Pridėti asmeninius duomenis</string>
-    <string name="setting_anonymous_explanation">Siųskite visų tipų pranešimus</string>
+    <string name="setting_anonymous_title">Pranešti anonomiškai</string>
+    <string name="setting_anonymous_explanation">Pridėkite asmeninius duomenis norėdami pranešinėti neanonimiškai</string>
     <string name="edit_personal_data">Redaguoti mano duomenis</string>
-    <string name="setting_import_reports">Importuoti pranešimus iš ankstesnės programėlės</string>
-    <string name="setting_import_reports_explanation">Prisijungti į vilnius.lt profilį</string>
+    <string name="setting_import_reports">Prisijungti į vilnius.lt profilį</string>
+    <string name="setting_import_reports_explanation">Importuoti pranešimus iš ankstesnės programėlės</string>
+    <string name="setting_about">Apie</string>
+    <string name="setting_about_summary">Versija %1$s</string>
     <string name="title_settings">Nustatymai</string>
     <string name="title_edit_contacts">Asmeninė informacija</string>
     <string name="error_profile_fill_name">Įveskite vardą ir pavardę</string>
@@ -183,6 +185,7 @@
     <string name="multiple_reports_map_message_progress">Prašome palaukti</string>
 
     <string name="about_privacy_policy">Privatumo politika</string>
+    <string name="preferences_screen_title">Nustatymai</string>
 
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>
