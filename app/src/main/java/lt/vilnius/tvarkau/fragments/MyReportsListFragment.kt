@@ -48,10 +48,7 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        my_problems_import.setOnClickListener {
-            val listener = activity as BaseReportListFragment.OnImportReportClickListener
-            listener.onImportReportClick()
-        }
+        my_problems_import.setOnClickListener { onImportReportClick() }
     }
 
     override fun onInject(component: ApplicationComponent) {
