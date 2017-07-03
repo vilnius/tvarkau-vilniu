@@ -33,7 +33,6 @@ public class TvarkauApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());
-            FirebaseCrash.setCrashCollectionEnabled(false);
         } else {
             Timber.plant(new RemoteCrashReportingTree());
         }
@@ -48,6 +47,7 @@ public class TvarkauApplication extends Application {
     protected void initLibraries() {
         Stetho.initializeWithDefaults(this);
         AndroidThreeTen.init(this);
+        FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
     }
 
     protected ApplicationComponent buildComponent() {
