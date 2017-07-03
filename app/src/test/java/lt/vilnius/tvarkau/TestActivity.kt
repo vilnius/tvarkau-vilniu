@@ -3,7 +3,7 @@ package lt.vilnius.tvarkau
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
 import lt.vilnius.tvarkau.dagger.component.TestApplicationComponent
 import org.robolectric.Robolectric
-import org.robolectric.util.ActivityController
+import org.robolectric.android.controller.ActivityController
 
 
 /**

@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
+import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -46,6 +47,7 @@ public class TvarkauApplication extends Application {
     protected void initLibraries() {
         Stetho.initializeWithDefaults(this);
         AndroidThreeTen.init(this);
+        FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
     }
 
     protected ApplicationComponent buildComponent() {
