@@ -59,6 +59,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         super.onActivityCreated(savedInstanceState)
 
         activity.setTitle(R.string.title_settings)
+
+        RxBus.observable
+                .filter { it is NewProblemAddedEvent }
+                .limit(1)
+                .subscribeOn(ioScheduler)
+                .observeOn(uiScheduler)
+                .subscribe({
+                    updateLastImportTime()
+                }).apply { subscription = this }
     }
 
     private fun showReportsImportDialog() {
@@ -88,10 +97,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    // TODO this should belong to ReportImportDialogFragment.SettingsVilniusSignInListener
-    fun onVilniusSignIn() {
-        Toast.makeText(context, R.string.report_import_done, Toast.LENGTH_SHORT).show()
-        updateLastImportTime()
+    override fun onDestroyView() {
+        subscription?.unsubscribe()
+
+        super.onDestroyView()
     }
 
     companion object {

@@ -84,33 +84,23 @@ public class ReportImportDialogFragment extends DialogFragment {
     @BindView(R.id.vilnius_account_login_error)
     TextView vilniusAccountLoginError;
 
-    private static final String IS_SETTINGS_ACTIVITY = "is_settings_activity";
     private Unbinder unbinder;
     private SharedPrefsManager prefsManager;
     private String password;
-    private boolean isSettingsActivity;
     private Subscription subscription;
     private MyReportsInteractor myReportsInteractor;
 
     public ReportImportDialogFragment() {
     }
 
-    public static ReportImportDialogFragment newInstance(boolean settingsActivity) {
-        ReportImportDialogFragment importDialogFragment = new ReportImportDialogFragment();
-
-        Bundle arguments = new Bundle();
-        arguments.putBoolean(IS_SETTINGS_ACTIVITY, settingsActivity);
-        importDialogFragment.setArguments(arguments);
-
-        return importDialogFragment;
+    public static ReportImportDialogFragment newInstance() {
+        return new ReportImportDialogFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefsManager = SharedPrefsManager.getInstance(getActivity());
-
-        isSettingsActivity = getArguments().getBoolean(IS_SETTINGS_ACTIVITY);
     }
 
     @Override
@@ -119,10 +109,6 @@ public class ReportImportDialogFragment extends DialogFragment {
         ((TvarkauApplication) getActivity().getApplication()).getComponent().inject(this);
 
         myReportsInteractor = new SharedPreferencesMyReportsInteractor(myProblemsPreferences);
-    }
-
-    public interface SettingsVilniusSignInListener {
-        void onVilniusSignIn();
     }
 
     @Override
@@ -298,13 +284,9 @@ public class ReportImportDialogFragment extends DialogFragment {
                             }
                         }
 
-                        if (isSettingsActivity) {
-                            ((SettingsVilniusSignInListener) ReportImportDialogFragment.this.getActivity()).onVilniusSignIn();
-                        } else {
-                            RxBus.INSTANCE.publish(new NewProblemAddedEvent());
-                            Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.report_import_done,
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        RxBus.INSTANCE.publish(new NewProblemAddedEvent());
+                        Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.report_import_done,
+                                Toast.LENGTH_SHORT).show();
 
                         if (vilniusAccountEmail.hasFocus()) {
                             KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountEmail);

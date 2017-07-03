@@ -57,7 +57,7 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
 
     override fun onImportReportClick() {
         val ft = activity.supportFragmentManager.beginTransaction()
-        val reportImportDialog = ReportImportDialogFragment.newInstance(false)
+        val reportImportDialog = ReportImportDialogFragment.newInstance()
         reportImportDialog.show(ft, REPORT_IMPORT_DIALOG)
     }
 
