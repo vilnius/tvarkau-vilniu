@@ -24,8 +24,10 @@ interface MainActivityComponent {
 
 
     companion object {
-        fun init(applicationComponent: ApplicationComponent,
-                 activity: AppCompatActivity): MainActivityComponent {
+        fun init(
+                applicationComponent: ApplicationComponent,
+                activity: AppCompatActivity
+        ): MainActivityComponent {
             return applicationComponent.mainActivityComponent(MainActivityModule(activity))
         }
     }

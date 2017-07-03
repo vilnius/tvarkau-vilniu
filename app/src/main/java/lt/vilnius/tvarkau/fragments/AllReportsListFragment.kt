@@ -51,8 +51,7 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
                 connectivityProvider
         )
     }
-
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
