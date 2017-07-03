@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Tvarkau Vilnių</string>
     <string name="title_problem_list">Pranešimų sąrašas</string>
+    <string name="title_my_problem_list">Mano pranešimai</string>
     <string name="title_problem_detail">Problemos informacija</string>
     <string name="title_problems_map">Pranešimų žemėlapis</string>
     <string name="title_my_profile">Mano profilis</string>
@@ -29,10 +30,13 @@
     <string name="sign_in_failed">Nepavyko prisijungti naudojant Google. Patikrinkite interneto ryšį, arba prisijunkite anonimiškai.</string>
 
     <string name="home_report_a_problem">Naujas pranešimas</string>
-    <string name="home_list_of_reports">Pranešimų sąrašas</string>
-    <string name="home_my_problems">Mano pranešimai</string>
-    <string name="home_map_of_problems">Žemėlapis</string>
-    <string name="home_about">Apie</string>
+
+    <!-- Bottom navigation tabs -->
+    <string name="tab_list_of_reports">Pranešimai</string>
+    <string name="tab_my_problems">Mano</string>
+    <string name="tab_map_of_reports">Žemėlapis</string>
+    <string name="tab_settings">Nustatymai</string>
+
     <string name="discard_changes_title">Sunaikinti jūsų pakeitimus?</string>
     <string name="discard_changes_positive">Sunaikinti</string>
     <string name="discard_changes_negative">Toliau redaguoti</string>

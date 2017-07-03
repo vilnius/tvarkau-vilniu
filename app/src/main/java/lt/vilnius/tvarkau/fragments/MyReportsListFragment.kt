@@ -66,7 +66,7 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        baseActivity?.setTitle(R.string.home_my_problems)
+        baseActivity?.setTitle(R.string.title_my_problem_list)
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 

@@ -3,18 +3,18 @@
     <item
         android:id="@+id/tab_list_of_problems"
         android:icon="@drawable/ic_list_of_reports"
-        android:title="@string/home_list_of_reports" />
+        android:title="@string/tab_list_of_reports" />
     <item
         android:id="@+id/tab_my_problems"
         android:icon="@drawable/ic_my_reports"
-        android:title="@string/home_my_problems" />
+        android:title="@string/tab_my_problems" />
     <item
         android:id="@+id/tab_map_of_problems"
         android:icon="@drawable/ic_mapview"
-        android:title="@string/home_map_of_problems" />
+        android:title="@string/tab_map_of_reports" />
 
     <item
         android:id="@+id/tab_settings"
         android:icon="@drawable/ic_settings"
-        android:title="@string/home_settings" />
+        android:title="@string/tab_settings" />
 </menu>

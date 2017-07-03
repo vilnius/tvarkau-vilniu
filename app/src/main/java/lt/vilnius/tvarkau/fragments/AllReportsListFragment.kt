@@ -71,7 +71,7 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        baseActivity?.setTitle(R.string.home_list_of_reports)
+        baseActivity?.setTitle(R.string.title_problem_list)
         baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
