@@ -4,10 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import dagger.Subcomponent
 import lt.vilnius.tvarkau.MainActivity
 import lt.vilnius.tvarkau.dagger.module.MainActivityModule
-import lt.vilnius.tvarkau.fragments.AllReportsListFragment
-import lt.vilnius.tvarkau.fragments.BaseMapFragment
-import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment
-import lt.vilnius.tvarkau.fragments.MyReportsListFragment
+import lt.vilnius.tvarkau.fragments.*
 
 
 @Subcomponent(modules = arrayOf(MainActivityModule::class))
@@ -23,6 +20,8 @@ interface MainActivityComponent {
 
     fun inject(fragment: MultipleProblemsMapFragment)
 
+    fun inject(settingsFragment: SettingsFragment)
+
 
     companion object {
         fun init(applicationComponent: ApplicationComponent,
@@ -30,4 +29,5 @@ interface MainActivityComponent {
             return applicationComponent.mainActivityComponent(MainActivityModule(activity))
         }
     }
+
 }
