@@ -14,10 +14,8 @@
     <string name="open">Atidaryti</string>
     <string name="close">Uždaryti</string>
 
-    <string name="menu_action_filter">Filtras</string>
-    <string name="menu_action_submit_filter">Filtruoti problemas</string>
-    <string name="problem_search">Problemos paieška</string>
-    <string name="problem_map">Pranešimų žemėlapis</string>
+    <string name="menu_action_filter">Pranešimų filtravimas</string>
+    <string name="menu_action_submit_filter">Filtruoti pranešimus</string>
 
     <string name="profile_hint_email">El.paštas</string>
     <string name="profile_hint_name">Vardas Pavardė</string>
@@ -178,7 +176,7 @@
     <string name="photo_instructions_don_show_again">Daugiau nerodyti</string>
     <string name="photo_instructions_button_ok">Gerai</string>
 
-    <string name="report_filter_page_title">Filtras</string>
+    <string name="report_filter_page_title">Pranešimų filtravimas</string>
     <string name="report_filter_all_report_types">Visos</string>
     <string name="report_filter_statuses_title">Pranešimo tipas</string>
     <string name="report_filter_report_types_title">Kategorija</string>
