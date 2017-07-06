@@ -1,5 +1,6 @@
 package lt.vilnius.tvarkau.navigation
 
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import lt.vilnius.tvarkau.R
@@ -38,12 +39,27 @@ class FragmentTransactionExecutor(private val fragmentManager: FragmentManager) 
         return onBackPressed?.onBackPressed() ?: false
     }
 
+    fun showDialog(fragment: DialogFragment) {
+        fragmentManager.findFragmentByTag(TAG_DIALOG)?.let {
+            fragmentManager.beginTransaction()
+                    .remove(it)
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss()
+        }
+
+        fragment.show(fragmentManager, TAG_DIALOG)
+    }
+
 
     private fun clearBackStackTop() {
         if (fragmentManager.backStackEntryCount > 0 && fragmentManager.getBackStackEntryAt(0) != null) {
             fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).id,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
+    }
+
+    companion object {
+        private const val TAG_DIALOG = "DIALOG"
     }
 
 }

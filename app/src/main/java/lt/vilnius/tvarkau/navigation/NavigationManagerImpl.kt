@@ -2,8 +2,11 @@ package lt.vilnius.tvarkau.navigation
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
+import lt.vilnius.tvarkau.ProblemDetailActivity
+import lt.vilnius.tvarkau.ProfileEditActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
+import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.fragments.*
 
 class NavigationManagerImpl(
@@ -25,8 +28,26 @@ class NavigationManagerImpl(
     }
 
     override fun navigateToNewReport() {
-        val intent = Intent(activity, ReportRegistrationActivity::class.java)
-        activity.startActivityForResult(intent, ActivityConstants.REQUEST_CODE_NEW_REPORT)
+        Intent(activity, ReportRegistrationActivity::class.java).let {
+            activity.startActivityForResult(it, ActivityConstants.REQUEST_CODE_NEW_REPORT)
+        }
+    }
+
+    override fun navigateToProfileEditActivity() {
+        Intent(activity, ProfileEditActivity::class.java).let {
+            activity.startActivityForResult(it, ActivityConstants.REQUEST_EDIT_PROFILE)
+        }
+    }
+
+    override fun navigateToProblemDetailActivity(problem: Problem) {
+        ProblemDetailActivity.getStartActivityIntent(activity, problem.id).let {
+            activity.startActivity(it)
+        }
+    }
+
+
+    override fun showReportsImportDialog() {
+        executor.showDialog(ReportImportDialogFragment.newInstance())
     }
 
     override fun onBackPressed(): Boolean {

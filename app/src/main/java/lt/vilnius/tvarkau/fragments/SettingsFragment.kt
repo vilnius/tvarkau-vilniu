@@ -8,13 +8,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
-import lt.vilnius.tvarkau.ProfileEditActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
+import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.utils.DeviceUtils
@@ -29,6 +30,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     lateinit var ioScheduler: Scheduler
     @field:[Inject UiScheduler]
     lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var navigationManager: NavigationManager
 
     private lateinit var prefsManager: SharedPrefsManager
     private lateinit var preferenceAbout: Preference
@@ -62,14 +66,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceAbout.summary = getString(R.string.setting_about_summary, DeviceUtils.appVersion)
 
         preferenceImportReports.setOnPreferenceClickListener {
-            showReportsImportDialog()
+            navigationManager.showReportsImportDialog()
             true
         }
 
         preferenceUserPersonalData.setOnPreferenceChangeListener { _, newValue ->
             return@setOnPreferenceChangeListener when (newValue) {
                 false -> {
-                    startProfileEditActivity()
+                    navigationManager.navigateToProfileEditActivity()
                     false
                 }
                 else -> true
@@ -93,12 +97,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }).apply { subscription = this }
     }
 
-    private fun showReportsImportDialog() {
-        val ft = childFragmentManager.beginTransaction()
-        val reportImportDialog = ReportImportDialogFragment.newInstance()
-        reportImportDialog.show(ft, REPORT_IMPORT_DIALOG)
-    }
-
     private fun updateLastImportTime() {
         if (prefsManager.userLastReportImport != null) {
             preferenceImportReports.summary =
@@ -106,14 +104,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun startProfileEditActivity() {
-        Intent(context, ProfileEditActivity::class.java).run {
-            startActivityForResult(this, REQUEST_EDIT_PROFILE)
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_EDIT_PROFILE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == ActivityConstants.REQUEST_EDIT_PROFILE && resultCode == Activity.RESULT_OK) {
             createPreferences()
             Toast.makeText(context, R.string.personal_data_saved, Toast.LENGTH_SHORT).show()
 
@@ -127,8 +119,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     companion object {
-        private const val REQUEST_EDIT_PROFILE = 1
-        private const val REPORT_IMPORT_DIALOG = "report_import_dialog"
 
         private const val KEY_PREFERENCE_ABOUT = "preference_about"
         private const val KEY_PREFERENCE_IMPORT_REPORTS = "preference_import_reports"

@@ -1,5 +1,7 @@
 package lt.vilnius.tvarkau.navigation
 
+import lt.vilnius.tvarkau.entity.Problem
+
 
 interface NavigationManager {
 
@@ -18,4 +20,9 @@ interface NavigationManager {
 
     fun onBackPressed(): Boolean
 
+    fun showReportsImportDialog()
+
+    fun navigateToProfileEditActivity()
+
+    fun navigateToProblemDetailActivity(problem: Problem)
 }

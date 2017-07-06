@@ -46,13 +46,10 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
 
     override fun onInject(component: ActivityComponent) {
         component.inject(this)
-//        ActivityComponent.init(component, activity as AppCompatActivity).inject(this)
     }
 
     override fun onImportReportClick() {
-        val ft = activity.supportFragmentManager.beginTransaction()
-        val reportImportDialog = ReportImportDialogFragment.newInstance()
-        reportImportDialog.show(ft, REPORT_IMPORT_DIALOG)
+        navigationManager.showReportsImportDialog()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,8 +67,6 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
     }
 
     companion object {
-        private const val REPORT_IMPORT_DIALOG = "report_import_dialog"
-
         fun newInstance() = MyReportsListFragment()
     }
 }

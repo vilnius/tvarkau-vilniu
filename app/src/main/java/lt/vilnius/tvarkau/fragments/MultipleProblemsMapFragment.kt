@@ -13,7 +13,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import kotlinx.android.synthetic.main.loading_indicator.*
-import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
@@ -65,8 +64,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun onInject(component: ActivityComponent) {
         component.inject(this)
-
-//        ActivityComponent.init(component, activity as AppCompatActivity).inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -112,9 +109,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        val problemId = (marker.tag as Problem).id
-        val intent = ProblemDetailActivity.getStartActivityIntent(activity, problemId)
-        startActivity(intent)
+        navigationManager.navigateToProblemDetailActivity(marker.tag as Problem)
     }
 
     override fun onInfoWindowClose(marker: Marker) {
