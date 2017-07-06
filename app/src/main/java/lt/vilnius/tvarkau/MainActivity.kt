@@ -28,8 +28,5 @@ class MainActivity : BaseActivity() {
         bottomNavigationController.onCreate(savedInstanceState == null)
     }
 
-    companion object {
-        const val MAP_PERMISSION_REQUEST_CODE = 11
-        val MAP_PERMISSIONS = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
-    }
+
 }
