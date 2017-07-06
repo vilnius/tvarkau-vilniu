@@ -15,6 +15,6 @@ import javax.inject.Singleton
         DataModule::class))
 interface ApplicationComponent {
 
-    fun mainActivityComponent(activityModule: ActivityModule): ActivityComponent
+    fun activityComponent(activityModule: ActivityModule): ActivityComponent
 
 }

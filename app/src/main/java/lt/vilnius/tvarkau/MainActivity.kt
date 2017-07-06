@@ -3,19 +3,17 @@ package lt.vilnius.tvarkau
 import android.os.Bundle
 import kotlinx.android.synthetic.main.app_bar.*
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
+import lt.vilnius.tvarkau.dagger.component.MainActivityComponent
 import lt.vilnius.tvarkau.navigation.BottomNavigationController
 import javax.inject.Inject
 
-
-/**
- * An activity representing a main activity home screen
- */
 class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var bottomNavigationController: BottomNavigationController
 
     override fun onInject(component: ActivityComponent) {
+        MainActivityComponent.init(component, this).inject(this)
         component.inject(this)
     }
 
@@ -27,6 +25,5 @@ class MainActivity : BaseActivity() {
 
         bottomNavigationController.onCreate(savedInstanceState == null)
     }
-
 
 }

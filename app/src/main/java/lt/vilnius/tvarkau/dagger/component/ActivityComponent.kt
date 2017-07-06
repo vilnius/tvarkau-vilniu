@@ -3,15 +3,16 @@ package lt.vilnius.tvarkau.dagger.component
 import android.support.v7.app.AppCompatActivity
 import dagger.Subcomponent
 import lt.vilnius.tvarkau.BaseActivity
-import lt.vilnius.tvarkau.MainActivity
 import lt.vilnius.tvarkau.dagger.module.ActivityModule
+import lt.vilnius.tvarkau.dagger.module.MainActivityModule
 import lt.vilnius.tvarkau.fragments.*
 
 
 @Subcomponent(modules = arrayOf(ActivityModule::class))
 interface ActivityComponent {
 
-    fun inject(mainActivity: MainActivity)
+    fun mainActivityComponent(mainActivityModule: MainActivityModule): MainActivityComponent
+
 
     fun inject(allReportsListFragment: AllReportsListFragment)
 
@@ -43,7 +44,7 @@ interface ActivityComponent {
                 applicationComponent: ApplicationComponent,
                 activity: AppCompatActivity
         ): ActivityComponent {
-            return applicationComponent.mainActivityComponent(ActivityModule(activity))
+            return applicationComponent.activityComponent(ActivityModule(activity))
         }
     }
 
