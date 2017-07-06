@@ -3,6 +3,7 @@ package lt.vilnius.tvarkau.navigation
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.interfaces.OnBackPressed
 
 class FragmentTransactionExecutor(private val fragmentManager: FragmentManager) {
 
@@ -29,6 +30,12 @@ class FragmentTransactionExecutor(private val fragmentManager: FragmentManager) 
                     if (addToBackStack) addToBackStack(null)
                 }
                 .commitAllowingStateLoss()
+    }
+
+    fun onBackPressed(): Boolean {
+        val onBackPressed = fragmentManager.findFragmentById(R.id.container) as? OnBackPressed
+
+        return onBackPressed?.onBackPressed() ?: false
     }
 
 

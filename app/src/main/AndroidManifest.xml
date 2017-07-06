@@ -58,7 +58,7 @@
         </activity>
 
         <activity
-            android:name=".ProblemsMapActivity"
+            android:name=".ReportMapActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_problems_map"
             android:parentActivityName=".MainActivity"

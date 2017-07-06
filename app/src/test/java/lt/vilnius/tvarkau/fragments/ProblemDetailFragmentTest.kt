@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.loading.*
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.server_not_responding.*
-import lt.vilnius.tvarkau.ProblemsMapActivity
+import lt.vilnius.tvarkau.ReportMapActivity
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.base.BaseRobolectricTest
 import lt.vilnius.tvarkau.entity.Problem
@@ -62,7 +62,7 @@ class ProblemDetailFragmentTest : BaseRobolectricTest() {
         val shadowActivity = Shadows.shadowOf(activity)
         val intent = shadowActivity.peekNextStartedActivity()
 
-        assertThat(intent).hasComponent(ComponentName(activity, ProblemsMapActivity::class.java))
+        assertThat(intent).hasComponent(ComponentName(activity, ReportMapActivity::class.java))
     }
 
     private fun grantPermissions(vararg permissionNames: String) {

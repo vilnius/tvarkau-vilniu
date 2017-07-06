@@ -9,7 +9,7 @@
     <include layout="@layout/app_bar" />
 
     <FrameLayout
-        android:id="@+id/problems_map_frame"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_anchor="@id/app_bar"

@@ -1,14 +1,12 @@
 package lt.vilnius.tvarkau.fragments
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.*
 import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.fragment_all_reports_list.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
-import lt.vilnius.tvarkau.dagger.component.MainActivityComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
@@ -16,7 +14,6 @@ import lt.vilnius.tvarkau.fragments.interactors.AllReportListInteractor
 import lt.vilnius.tvarkau.fragments.presenters.AllReportsListPresenterImpl
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
-import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.widgets.EndlessScrollListener
@@ -32,8 +29,6 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
     lateinit var reportStatus: StringPreference
     @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_TYPE)]
     lateinit var reportType: StringPreference
-    @Inject
-    lateinit var navigationManager: NavigationManager
 
     private lateinit var scrollListener: EndlessScrollListener
 
@@ -75,8 +70,8 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 
-    override fun onInject(component: ApplicationComponent) {
-        MainActivityComponent.init(component, activity as AppCompatActivity).inject(this)
+    override fun onInject(component: ActivityComponent) {
+        component.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {

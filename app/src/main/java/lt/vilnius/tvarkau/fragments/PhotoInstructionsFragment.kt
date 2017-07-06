@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_photo_instructions.*
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.prefs.LongPreference
 import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class PhotoInstructionsFragment : BaseFragment() {
         lastDisplayPhotoInstructions.set(System.currentTimeMillis())
     }
 
-    override fun onInject(component: ApplicationComponent) {
+    override fun onInject(component: ActivityComponent) {
         component.inject(this)
     }
 

@@ -11,7 +11,7 @@ import android.widget.Toast
 import lt.vilnius.tvarkau.ProfileEditActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
-import lt.vilnius.tvarkau.dagger.component.MainActivityComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
@@ -39,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        MainActivityComponent.init((activity.application as TvarkauApplication).component, activity as AppCompatActivity).inject(this)
+        ActivityComponent.init((activity.application as TvarkauApplication).component, activity as AppCompatActivity).inject(this)
 
         // TODO Do we really need to use our shared prefs manager ???
         // Can we override preferenceManager from PreferenceFragmentCompat

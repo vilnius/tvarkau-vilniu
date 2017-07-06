@@ -6,7 +6,6 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,19 +17,12 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.fab_new_report.*
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
-import lt.vilnius.tvarkau.dagger.component.MainActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
-import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
-import javax.inject.Inject
 
 abstract class BaseMapFragment : BaseFragment(),
         GoogleMap.OnMarkerClickListener,
         GoogleApiClient.ConnectionCallbacks {
-
-    @Inject
-    lateinit var navigationManager: NavigationManager
 
     protected var googleMap: GoogleMap? = null
 
@@ -77,11 +69,6 @@ abstract class BaseMapFragment : BaseFragment(),
         }
 
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
-    }
-
-    override fun onInject(component: ApplicationComponent) {
-        MainActivityComponent.init(component, activity as AppCompatActivity).inject(this)
-
     }
 
     override fun onStart() {

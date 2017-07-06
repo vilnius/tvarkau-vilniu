@@ -169,7 +169,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     }
 
     private fun startProblemActivity(problem: Problem) {
-        val intent = Intent(activity, ProblemsMapActivity::class.java)
+        val intent = Intent(activity, ReportMapActivity::class.java)
 
         val data = Bundle()
         data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT)

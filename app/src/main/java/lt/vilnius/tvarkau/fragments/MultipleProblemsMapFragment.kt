@@ -4,7 +4,6 @@ import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,8 +15,7 @@ import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
-import lt.vilnius.tvarkau.dagger.component.MainActivityComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
@@ -65,8 +63,10 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
         baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
-    override fun onInject(component: ApplicationComponent) {
-        MainActivityComponent.init(component, activity as AppCompatActivity).inject(this)
+    override fun onInject(component: ActivityComponent) {
+        component.inject(this)
+
+//        ActivityComponent.init(component, activity as AppCompatActivity).inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {

@@ -1,7 +1,7 @@
 package lt.vilnius.tvarkau
 
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
-import lt.vilnius.tvarkau.dagger.component.TestApplicationComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
+import lt.vilnius.tvarkau.dagger.component.TestActivityComponent
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
 
@@ -17,12 +17,12 @@ class TestActivity : BaseActivity() {
         }
     }
 
-    override fun buildComponent(application: TvarkauApplication): ApplicationComponent {
+    override fun buildComponent(application: TvarkauApplication): ActivityComponent {
         // create mock component for check injects
-        return (application as TestTvarkauApplication).testComponent
+        return TestActivityComponent.init((application as TestTvarkauApplication).testComponent, this)
     }
 
-    fun getTestComponent(): TestApplicationComponent {
-        return component as TestApplicationComponent
+    fun getTestComponent(): TestActivityComponent {
+        return component as TestActivityComponent
     }
 }

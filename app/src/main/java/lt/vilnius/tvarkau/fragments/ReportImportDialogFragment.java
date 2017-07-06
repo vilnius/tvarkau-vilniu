@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemsParams;
 import lt.vilnius.tvarkau.backend.GetVilniusSignParams;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
@@ -106,7 +108,7 @@ public class ReportImportDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((TvarkauApplication) getActivity().getApplication()).getComponent().inject(this);
+        ActivityComponent.Companion.init(((TvarkauApplication) getActivity().getApplication()).getComponent(), (AppCompatActivity)  getActivity()).inject(this);
 
         myReportsInteractor = new SharedPreferencesMyReportsInteractor(myProblemsPreferences);
     }
