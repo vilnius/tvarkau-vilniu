@@ -9,6 +9,8 @@
         <item name="android:spinnerStyle">@style/Widget.AppCompat.Spinner.Underlined</item>
         <item name="android:windowSoftInputMode">stateHidden</item>
         <item name="android:datePickerStyle">@style/MyDatePicker</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -23,22 +25,6 @@
     <style name="FullscreenAppBar" parent="AppTheme.AppBarOverlay">
         <item name="android:background">@drawable/gradient_toolbar</item>
         <item name="colorPrimary">@android:color/transparent</item>
-    </style>
-
-    <style name="HomeScreenButtonStyle" parent="AppTheme">
-        <item name="android:typeface">sans</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:textColor">@color/home_button_text_color</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:clipToPadding">false</item>
-        <item name="layout_columnWeight">1</item>
-        <item name="layout_rowWeight">1</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="ReportStatusLabel">

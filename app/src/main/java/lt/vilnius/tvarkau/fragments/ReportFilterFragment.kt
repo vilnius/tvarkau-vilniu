@@ -6,7 +6,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_map_report_filter.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_DONE
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_REGISTERED
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
@@ -116,7 +116,7 @@ class ReportFilterFragment : BaseFragment() {
                 })
     }
 
-    override fun onInject(component: ApplicationComponent) {
+    override fun onInject(component: ActivityComponent) {
         component.inject(this)
     }
 

@@ -14,7 +14,10 @@ import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
 import kotlinx.android.synthetic.main.problem_photo_gallery.*
 import kotlinx.android.synthetic.main.server_not_responding.*
-import lt.vilnius.tvarkau.*
+import lt.vilnius.tvarkau.FullscreenImageActivity
+import lt.vilnius.tvarkau.ProblemDetailActivity
+import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.ReportMapActivity
 import lt.vilnius.tvarkau.backend.GetProblemParams
 import lt.vilnius.tvarkau.backend.requests.GetReportRequest
 import lt.vilnius.tvarkau.decorators.TextViewDecorator
@@ -55,10 +58,10 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
         super.onViewCreated(view, savedInstanceState)
 
         problem_address.setOnClickListener {
-            if (PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
+            if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
                 startProblemActivity(problem)
             } else {
-                requestPermissions(MainActivity.MAP_PERMISSIONS, MainActivity.MAP_PERMISSION_REQUEST_CODE)
+                requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE)
             }
         }
     }
@@ -160,8 +163,8 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == MainActivity.MAP_PERMISSION_REQUEST_CODE
-                && PermissionUtils.isAllPermissionsGranted(activity, MainActivity.MAP_PERMISSIONS)) {
+        if (requestCode == MAP_PERMISSION_REQUEST_CODE
+                && PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
             startProblemActivity(problem)
         } else {
             Toast.makeText(activity, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
@@ -169,7 +172,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     }
 
     private fun startProblemActivity(problem: Problem) {
-        val intent = Intent(activity, ProblemsMapActivity::class.java)
+        val intent = Intent(activity, ReportMapActivity::class.java)
 
         val data = Bundle()
         data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT)
@@ -198,6 +201,9 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     }
 
     companion object {
+
+        const val MAP_PERMISSION_REQUEST_CODE = 11
+        val MAP_PERMISSIONS = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
         /**
          * The fragment argument representing the item ID that this fragment

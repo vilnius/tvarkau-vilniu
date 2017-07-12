@@ -41,4 +41,11 @@
             android:text="@string/empty_state_all_reports_line_2"
             android:textColor="@color/black_38" />
     </LinearLayout>
+
+    <include
+        layout="@layout/loading_indicator"
+        tools:visibility="gone" />
+
+    <include layout="@layout/fab_new_report" />
+
 </android.support.design.widget.CoordinatorLayout>

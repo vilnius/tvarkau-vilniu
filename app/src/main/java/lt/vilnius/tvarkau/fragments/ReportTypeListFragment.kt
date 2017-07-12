@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.fragment_report_type_list.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
@@ -73,7 +73,7 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
                 .apply { subscription = this }
     }
 
-    override fun onInject(component: ApplicationComponent) {
+    override fun onInject(component: ActivityComponent) {
         component.inject(this)
     }
 

@@ -12,7 +12,8 @@ import javax.inject.Named;
 
 import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent;
+import lt.vilnius.tvarkau.navigation.NavigationManager;
 
 import static lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES;
 
@@ -27,9 +28,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     Analytics analytics;
     @Inject
     MixpanelAPI mixpanelAPI;
+    @Inject
+    NavigationManager navigationManager;
+
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    protected ApplicationComponent component;
+    protected ActivityComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +49,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    protected void onInject(ApplicationComponent component) {
+    protected void onInject(ActivityComponent component) {
         component.inject(this);
     }
 
-    protected ApplicationComponent buildComponent(TvarkauApplication application) {
-        return application.getComponent();
+    protected ActivityComponent buildComponent(TvarkauApplication application) {
+        return ActivityComponent.Companion.init(application.getComponent(), this);
     }
 }

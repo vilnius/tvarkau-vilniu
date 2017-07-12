@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.fab_new_report.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
@@ -66,6 +67,8 @@ abstract class BaseMapFragment : BaseFragment(),
             googleMap = it
             onMapLoaded()
         }
+
+        fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 
     override fun onStart() {

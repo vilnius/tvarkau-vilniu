@@ -2,10 +2,11 @@ package lt.vilnius.tvarkau.fragments
 
 import android.os.Bundle
 import android.view.*
+import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.fragment_all_reports_list.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
@@ -45,7 +46,7 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
                 connectivityProvider
         )
     }
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -64,17 +65,28 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        baseActivity?.setTitle(R.string.home_list_of_reports)
+        baseActivity?.setTitle(R.string.title_problem_list)
         baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+        fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 
-    override fun onInject(component: ApplicationComponent) {
+    override fun onInject(component: ActivityComponent) {
         component.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.main_toolbar_menu, menu)
+        inflater.inflate(R.menu.report_filter, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_action_filter -> {
+                navigationManager.navigateToReportsListFilter()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun getReports() {

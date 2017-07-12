@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.image_picker_dialog.view.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
-import lt.vilnius.tvarkau.dagger.component.ApplicationComponent
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.extensions.gone
@@ -186,7 +186,7 @@ class NewReportFragment : BaseFragment(),
         EasyImage.configuration(context).setAllowMultiplePickInGallery(true)
     }
 
-    override fun onInject(component: ApplicationComponent) {
+    override fun onInject(component: ActivityComponent) {
         component.inject(this)
     }
 

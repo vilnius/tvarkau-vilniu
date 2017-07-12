@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import lt.vilnius.tvarkau.backend.ApiResponse;
 import lt.vilnius.tvarkau.backend.GetProblemsParams;
 import lt.vilnius.tvarkau.backend.GetVilniusSignParams;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
@@ -84,45 +86,31 @@ public class ReportImportDialogFragment extends DialogFragment {
     @BindView(R.id.vilnius_account_login_error)
     TextView vilniusAccountLoginError;
 
-    private static final String IS_SETTINGS_ACTIVITY = "is_settings_activity";
     private Unbinder unbinder;
     private SharedPrefsManager prefsManager;
     private String password;
-    private boolean isSettingsActivity;
     private Subscription subscription;
     private MyReportsInteractor myReportsInteractor;
 
     public ReportImportDialogFragment() {
     }
 
-    public static ReportImportDialogFragment newInstance(boolean settingsActivity) {
-        ReportImportDialogFragment importDialogFragment = new ReportImportDialogFragment();
-
-        Bundle arguments = new Bundle();
-        arguments.putBoolean(IS_SETTINGS_ACTIVITY, settingsActivity);
-        importDialogFragment.setArguments(arguments);
-
-        return importDialogFragment;
+    public static ReportImportDialogFragment newInstance() {
+        return new ReportImportDialogFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefsManager = SharedPrefsManager.getInstance(getActivity());
-
-        isSettingsActivity = getArguments().getBoolean(IS_SETTINGS_ACTIVITY);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((TvarkauApplication) getActivity().getApplication()).getComponent().inject(this);
+        ActivityComponent.Companion.init(((TvarkauApplication) getActivity().getApplication()).getComponent(), (AppCompatActivity)  getActivity()).inject(this);
 
         myReportsInteractor = new SharedPreferencesMyReportsInteractor(myProblemsPreferences);
-    }
-
-    public interface SettingsVilniusSignInListener {
-        void onVilniusSignIn();
     }
 
     @Override
@@ -298,13 +286,9 @@ public class ReportImportDialogFragment extends DialogFragment {
                             }
                         }
 
-                        if (isSettingsActivity) {
-                            ((SettingsVilniusSignInListener) ReportImportDialogFragment.this.getActivity()).onVilniusSignIn();
-                        } else {
-                            RxBus.INSTANCE.publish(new NewProblemAddedEvent());
-                            Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.report_import_done,
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        RxBus.INSTANCE.publish(new NewProblemAddedEvent());
+                        Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.report_import_done,
+                                Toast.LENGTH_SHORT).show();
 
                         if (vilniusAccountEmail.hasFocus()) {
                             KeyboardUtils.closeSoftKeyboard(ReportImportDialogFragment.this.getActivity(), vilniusAccountEmail);

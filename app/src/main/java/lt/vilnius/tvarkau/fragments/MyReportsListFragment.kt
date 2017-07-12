@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.fragment_my_reports_list.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.interactors.MyReportListInteractor
@@ -17,7 +19,7 @@ import lt.vilnius.tvarkau.fragments.views.ReportListView
 /**
  * @author Martynas Jurkus
  */
-class MyReportsListFragment : BaseReportListFragment(), ReportListView {
+class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseReportListFragment.OnImportReportClickListener {
 
     override val presenter: ProblemListPresenter by lazy {
         MyReportListPresenterImpl(
@@ -39,15 +41,21 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        my_problems_import.setOnClickListener {
-            val listener = activity as BaseReportListFragment.OnImportReportClickListener
-            listener.onImportReportClick()
-        }
+        my_problems_import.setOnClickListener { onImportReportClick() }
+    }
+
+    override fun onInject(component: ActivityComponent) {
+        component.inject(this)
+    }
+
+    override fun onImportReportClick() {
+        navigationManager.showReportsImportDialog()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        baseActivity?.setTitle(R.string.home_my_problems)
+        baseActivity?.setTitle(R.string.title_my_problem_list)
+        fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 
     override fun showEmptyState() {
