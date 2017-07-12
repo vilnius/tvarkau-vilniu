@@ -23,8 +23,12 @@ class NavigationManagerImpl(
         }
     }
 
-    override fun navigateToReportsFilter() {
+    override fun navigateToReportsListFilter() {
         executor.replaceWithVerticalAnimation(ReportFilterFragment.newInstance(ReportFilterFragment.TARGET_LIST), true)
+    }
+
+    override fun navigateToReportsMapFilter() {
+        executor.replaceWithVerticalAnimation(ReportFilterFragment.newInstance(ReportFilterFragment.TARGET_MAP), true)
     }
 
     override fun navigateToNewReport() {

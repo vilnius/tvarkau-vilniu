@@ -82,7 +82,7 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_action_filter -> {
-                navigationManager.navigateToReportsFilter()
+                navigationManager.navigateToReportsListFilter()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

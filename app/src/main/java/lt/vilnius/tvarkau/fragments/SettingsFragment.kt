@@ -45,7 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         ActivityComponent.init((activity.application as TvarkauApplication).component, activity as AppCompatActivity).inject(this)
 
-        // TODO Do we really need to use our shared prefs manager ???
+        // Do we really need to use our shared prefs manager ???
         // Can we override preferenceManager from PreferenceFragmentCompat
         prefsManager = SharedPrefsManager.getInstance(context)
 

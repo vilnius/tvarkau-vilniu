@@ -14,7 +14,9 @@ interface NavigationManager {
 
     fun navigateToMenuItem(menuItem: TabItem)
 
-    fun navigateToReportsFilter()
+    fun navigateToReportsListFilter()
+
+    fun navigateToReportsMapFilter()
 
     fun navigateToNewReport()
 
@@ -25,4 +27,5 @@ interface NavigationManager {
     fun navigateToProfileEditActivity()
 
     fun navigateToProblemDetailActivity(problem: Problem)
+
 }
