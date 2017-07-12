@@ -68,10 +68,9 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class NewReportFragment : BaseFragment({
-    navigationMode = NavigationMode.BACK
-    trackingScreenName = ActivityConstants.SCREEN_NEW_REPORT
-}),
+@Screen(navigationMode = NavigationMode.BACK,
+        trackingScreenName = ActivityConstants.SCREEN_NEW_REPORT)
+class NewReportFragment : BaseFragment(),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
         NewReportView {
 

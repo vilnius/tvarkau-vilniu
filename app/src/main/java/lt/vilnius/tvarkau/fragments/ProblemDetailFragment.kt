@@ -42,11 +42,10 @@ import timber.log.Timber
  * in two-pane mode (on tablets) or a [ProblemDetailActivity]
  * on handsets.
  */
-class ProblemDetailFragment : BaseFragment({
-    titleRes = R.string.problem_description_title
-    navigationMode = NavigationMode.BACK
-    trackingScreenName = ActivityConstants.SCREEN_REPORT_DETAILS
-}), ProblemImagesPagerAdapter.ProblemImageClickedListener {
+@Screen(titleRes = R.string.problem_description_title,
+        navigationMode = NavigationMode.BACK,
+        trackingScreenName = ActivityConstants.SCREEN_REPORT_DETAILS)
+class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemImageClickedListener {
 
     private val issueId: String
         get() = arguments.getString(ARG_ITEM_ID)

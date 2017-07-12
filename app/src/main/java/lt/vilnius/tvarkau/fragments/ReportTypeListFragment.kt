@@ -23,11 +23,10 @@ import javax.inject.Inject
 /**
  * @author Martynas Jurkus
  */
-class ReportTypeListFragment : BaseFragment({
-    titleRes = R.string.title_choose_problem_type
-    navigationMode = NavigationMode.BACK
-    trackingScreenName = ActivityConstants.SCREEN_REPORT_TYPE_LIST
-}), ReportTypesListAdapter.ReportTypeSelectedListener {
+@Screen(titleRes = R.string.title_choose_problem_type,
+        navigationMode = NavigationMode.BACK,
+        trackingScreenName = ActivityConstants.SCREEN_REPORT_TYPE_LIST)
+class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportTypeSelectedListener {
 
     private var subscription: Subscription? = null
     private var reportTypesListAdapter: ReportTypesListAdapter? = null

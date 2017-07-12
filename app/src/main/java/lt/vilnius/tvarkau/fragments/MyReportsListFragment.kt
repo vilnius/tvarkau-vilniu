@@ -20,10 +20,9 @@ import lt.vilnius.tvarkau.fragments.views.ReportListView
 /**
  * @author Martynas Jurkus
  */
-class MyReportsListFragment : BaseReportListFragment({
-    titleRes = R.string.title_my_problem_list
-    trackingScreenName = ActivityConstants.SCREEN_MY_REPORTS_LIST
-}), ReportListView, BaseReportListFragment.OnImportReportClickListener {
+@Screen(titleRes = R.string.title_my_problem_list,
+        trackingScreenName = ActivityConstants.SCREEN_MY_REPORTS_LIST)
+class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseReportListFragment.OnImportReportClickListener {
 
     override val presenter: ProblemListPresenter by lazy {
         MyReportListPresenterImpl(

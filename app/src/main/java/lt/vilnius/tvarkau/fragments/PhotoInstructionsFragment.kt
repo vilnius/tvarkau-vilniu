@@ -16,10 +16,9 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class PhotoInstructionsFragment : BaseFragment({
-    navigationMode = NavigationMode.CLOSE
-    trackingScreenName = ActivityConstants.SCREEN_PHOTO_INSTRUCTIONS
-}) {
+@Screen(navigationMode = NavigationMode.CLOSE,
+        trackingScreenName = ActivityConstants.SCREEN_PHOTO_INSTRUCTIONS)
+class PhotoInstructionsFragment : BaseFragment() {
 
     @field:[Inject Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
     lateinit var lastDisplayPhotoInstructions: LongPreference

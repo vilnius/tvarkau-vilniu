@@ -18,8 +18,6 @@ import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.activity.ActivityConstants;
 import lt.vilnius.tvarkau.entity.Profile;
@@ -30,27 +28,9 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import static android.app.Activity.RESULT_OK;
 
 
+@Screen(navigationMode = NavigationMode.BACK,
+        trackingScreenName = ActivityConstants.SCREEN_MY_PROFILE)
 public class MyProfileFragment extends BaseFragment {
-
-    public MyProfileFragment() {
-        super(new Function1<Builder, Unit>() {
-            @Override
-            public Unit invoke(Builder builder) {
-                builder.navigationMode(new Function1<Builder, NavigationMode>() {
-                    @Override
-                    public NavigationMode invoke(Builder builder) {
-                        return NavigationMode.BACK;
-                    }
-                }).trackingScreenName(new Function1<Builder, String>() {
-                    @Override
-                    public String invoke(Builder builder) {
-                        return ActivityConstants.SCREEN_MY_PROFILE;
-                    }
-                });
-                return null;
-            }
-        });
-    }
 
     private SharedPrefsManager prefsManager;
 

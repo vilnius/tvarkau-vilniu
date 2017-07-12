@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -55,5 +56,24 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected ActivityComponent buildComponent(TvarkauApplication application) {
         return ActivityComponent.Companion.init(application.getComponent(), this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (navigationManager.onBackPressed()) {
+            return;
+        }
+
+        super.onBackPressed();
     }
 }

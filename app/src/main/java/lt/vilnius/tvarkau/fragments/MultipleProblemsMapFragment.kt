@@ -25,11 +25,9 @@ import lt.vilnius.tvarkau.fragments.presenters.MultipleReportsMapPresenterImpl
 import lt.vilnius.tvarkau.fragments.views.MultipleProblemsMapView
 import javax.inject.Inject
 
-class MultipleProblemsMapFragment : BaseMapFragment({
-    titleRes = R.string.title_problems_map
-    trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_MAP
-
-}),
+@Screen(titleRes = R.string.title_problems_map,
+        trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_MAP)
+class MultipleProblemsMapFragment : BaseMapFragment(),
         MultipleProblemsMapView,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {

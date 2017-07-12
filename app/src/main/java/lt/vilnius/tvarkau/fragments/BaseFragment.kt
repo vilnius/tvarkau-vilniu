@@ -13,6 +13,7 @@ import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.dagger.module.IoScheduler
 import lt.vilnius.tvarkau.dagger.module.UiScheduler
+import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import lt.vilnius.tvarkau.interfaces.OnBackPressed
 import lt.vilnius.tvarkau.navigation.NavigationManager
@@ -24,34 +25,11 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-abstract class BaseFragment @JvmOverloads constructor(
-        init: Builder.() -> Unit = {}
-) : Fragment(), OnBackPressed {
 
-    var builder = Builder(init)
 
-    enum class NavigationMode {
-        DEFAULT,
-        CLOSE,
-        BACK,
-    }
+abstract class BaseFragment : Fragment(), OnBackPressed {
 
-    class Builder private constructor() {
-
-        constructor(init: Builder.() -> Unit) : this() {
-            init()
-        }
-
-        var titleRes: Int? = null
-        var navigationMode: NavigationMode = BaseFragment.NavigationMode.DEFAULT
-        var trackingScreenName: String? = null
-
-        fun titleRes(init: Builder.() -> Int) = apply { titleRes = init() }
-
-        fun navigationMode(init: Builder.() -> NavigationMode) = apply { navigationMode = init() }
-
-        fun trackingScreenName(init: Builder.() -> String) = apply { trackingScreenName = init() }
-    }
+    protected var screen: Screen? = null
 
     @Inject
     lateinit var legacyApiService: LegacyApiService
@@ -74,6 +52,12 @@ abstract class BaseFragment @JvmOverloads constructor(
     protected val baseActivity: BaseActivity?
         get() = activity as BaseActivity?
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        screen = this::class.java.annotations.find { it is Screen } as Screen?
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -87,36 +71,42 @@ abstract class BaseFragment @JvmOverloads constructor(
     override fun onResume() {
         super.onResume()
 
-        builder.trackingScreenName?.let { analytics.trackOpenFragment(activity, it) }
+        screen?.run {
+            if (titleRes != 0) {
+                activity.setTitle(titleRes)
+            }
 
-        builder.titleRes?.let(activity::setTitle)
+            trackingScreenName.emptyToNull()?.let {
+                analytics.trackOpenFragment(activity, it)
+            }
 
-        (activity as AppCompatActivity).let { act ->
-            when (builder.navigationMode) {
-                BaseFragment.NavigationMode.DEFAULT ->
-                    act.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                BaseFragment.NavigationMode.CLOSE -> {
-                    act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                    (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
-                }
-                BaseFragment.NavigationMode.BACK -> {
-                    act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                    (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+            (activity as AppCompatActivity).let { act ->
+                when (navigationMode) {
+                    NavigationMode.DEFAULT ->
+                        act.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                    NavigationMode.CLOSE -> {
+                        act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
+                    }
+                    NavigationMode.BACK -> {
+                        act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+                    }
                 }
             }
         }
     }
 
     override fun onPause() {
-        builder.trackingScreenName?.let { analytics.trackCloseFragment(it) }
+        screen?.trackingScreenName?.emptyToNull()?.let(analytics::trackCloseFragment)
 
         super.onPause()
     }
+
+    override fun onBackPressed(): Boolean = false
 
     override fun onDestroy() {
         super.onDestroy()
         refWatcher.watch(this)
     }
-
-    override fun onBackPressed(): Boolean = navigationManager.onBackPressed()
 }

@@ -24,10 +24,9 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class AllReportsListFragment : BaseReportListFragment({
-    titleRes = R.string.title_problem_list
-    trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST
-}), ReportListView {
+@Screen(titleRes = R.string.title_problem_list,
+        trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST)
+class AllReportsListFragment : BaseReportListFragment(), ReportListView {
 
     @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_STATUS)]
     lateinit var reportStatus: StringPreference

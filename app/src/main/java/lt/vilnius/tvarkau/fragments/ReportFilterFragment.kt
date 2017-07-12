@@ -25,11 +25,10 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class ReportFilterFragment : BaseFragment({
-    titleRes = R.string.report_filter_page_title
-    navigationMode = NavigationMode.CLOSE
-    trackingScreenName = ActivityConstants.SCREEN_REPORT_FILTER
-}) {
+@Screen(titleRes = R.string.report_filter_page_title,
+        navigationMode = NavigationMode.CLOSE,
+        trackingScreenName = ActivityConstants.SCREEN_REPORT_FILTER)
+class ReportFilterFragment : BaseFragment() {
 
     @Inject
     lateinit var reportTypesInteractor: ReportTypesInteractor
