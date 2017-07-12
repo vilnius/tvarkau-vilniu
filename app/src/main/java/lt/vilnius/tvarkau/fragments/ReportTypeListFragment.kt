@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_report_type_list.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.extensions.gone
@@ -22,7 +23,11 @@ import javax.inject.Inject
 /**
  * @author Martynas Jurkus
  */
-class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportTypeSelectedListener {
+class ReportTypeListFragment : BaseFragment({
+    titleRes = R.string.title_choose_problem_type
+    navigationMode = NavigationMode.BACK
+    trackingScreenName = ActivityConstants.SCREEN_REPORT_TYPE_LIST
+}), ReportTypesListAdapter.ReportTypeSelectedListener {
 
     private var subscription: Subscription? = null
     private var reportTypesListAdapter: ReportTypesListAdapter? = null
@@ -37,14 +42,7 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(activity as BaseActivity) {
-            setSupportActionBar(toolbar)
-
-            supportActionBar?.let {
-                it.setDisplayHomeAsUpEnabled(true)
-                it.setTitle(R.string.title_choose_problem_type)
-            }
-        }
+        (activity as BaseActivity).setSupportActionBar(toolbar)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 android.R.id.home -> {

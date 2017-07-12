@@ -20,7 +20,7 @@ import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
 
-abstract class BaseMapFragment : BaseFragment(),
+abstract class BaseMapFragment(init: Builder.() -> Unit) : BaseFragment(init),
         GoogleMap.OnMarkerClickListener,
         GoogleApiClient.ConnectionCallbacks {
 

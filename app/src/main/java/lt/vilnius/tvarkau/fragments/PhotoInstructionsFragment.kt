@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_photo_instructions.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.prefs.LongPreference
 import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
@@ -15,7 +16,10 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class PhotoInstructionsFragment : BaseFragment() {
+class PhotoInstructionsFragment : BaseFragment({
+    navigationMode = NavigationMode.CLOSE
+    trackingScreenName = ActivityConstants.SCREEN_PHOTO_INSTRUCTIONS
+}) {
 
     @field:[Inject Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
     lateinit var lastDisplayPhotoInstructions: LongPreference

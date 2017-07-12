@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_new_report.*
 import kotlinx.android.synthetic.main.image_picker_dialog.view.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Profile
@@ -67,7 +68,10 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class NewReportFragment : BaseFragment(),
+class NewReportFragment : BaseFragment({
+    navigationMode = NavigationMode.BACK
+    trackingScreenName = ActivityConstants.SCREEN_NEW_REPORT
+}),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
         NewReportView {
 
@@ -132,11 +136,7 @@ class NewReportFragment : BaseFragment(),
         with(activity as AppCompatActivity) {
             setSupportActionBar(toolbar)
 
-            supportActionBar?.let {
-                it.setDisplayHomeAsUpEnabled(true)
-                it.setHomeAsUpIndicator(R.drawable.ic_close)
-                it.title = reportType
-            }
+            supportActionBar?.title = reportType
         }
 
         problem_images_view_pager.adapter = NewProblemPhotosPagerAdapter(imageFiles, this)

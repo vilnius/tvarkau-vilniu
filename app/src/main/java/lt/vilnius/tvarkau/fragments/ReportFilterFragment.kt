@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_map_report_filter.*
-import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_DONE
 import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_REGISTERED
@@ -25,7 +25,11 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
-class ReportFilterFragment : BaseFragment() {
+class ReportFilterFragment : BaseFragment({
+    titleRes = R.string.report_filter_page_title
+    navigationMode = NavigationMode.CLOSE
+    trackingScreenName = ActivityConstants.SCREEN_REPORT_FILTER
+}) {
 
     @Inject
     lateinit var reportTypesInteractor: ReportTypesInteractor
@@ -79,12 +83,6 @@ class ReportFilterFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        with(activity as BaseActivity) {
-            setTitle(R.string.report_filter_page_title)
-
-            supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
-        }
 
         val previouslySelectedStatus = getSelectedReportStatus()
         if (previouslySelectedStatus.isEmpty()) {

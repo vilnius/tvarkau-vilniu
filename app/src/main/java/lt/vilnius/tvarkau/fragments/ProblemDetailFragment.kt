@@ -18,6 +18,7 @@ import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.ReportMapActivity
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.backend.GetProblemParams
 import lt.vilnius.tvarkau.backend.requests.GetReportRequest
 import lt.vilnius.tvarkau.decorators.TextViewDecorator
@@ -41,7 +42,11 @@ import timber.log.Timber
  * in two-pane mode (on tablets) or a [ProblemDetailActivity]
  * on handsets.
  */
-class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemImageClickedListener {
+class ProblemDetailFragment : BaseFragment({
+    titleRes = R.string.problem_description_title
+    navigationMode = NavigationMode.BACK
+    trackingScreenName = ActivityConstants.SCREEN_REPORT_DETAILS
+}), ProblemImagesPagerAdapter.ProblemImageClickedListener {
 
     private val issueId: String
         get() = arguments.getString(ARG_ITEM_ID)

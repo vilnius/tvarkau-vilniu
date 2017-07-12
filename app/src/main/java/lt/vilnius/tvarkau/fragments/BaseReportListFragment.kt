@@ -23,7 +23,7 @@ import rx.Subscription
 /**
  * @author Martynas Jurkus
  */
-abstract class BaseReportListFragment : BaseFragment(), ReportListView {
+abstract class BaseReportListFragment(init: Builder.() -> Unit) : BaseFragment(init), ReportListView {
 
     protected val adapter by lazy { ProblemsListAdapter(activity, problemList) }
     private val problemList = ArrayList<Problem>()
