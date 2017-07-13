@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.fragment_my_reports_list.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
@@ -19,6 +20,8 @@ import lt.vilnius.tvarkau.fragments.views.ReportListView
 /**
  * @author Martynas Jurkus
  */
+@Screen(titleRes = R.string.title_my_problem_list,
+        trackingScreenName = ActivityConstants.SCREEN_MY_REPORTS_LIST)
 class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseReportListFragment.OnImportReportClickListener {
 
     override val presenter: ProblemListPresenter by lazy {
@@ -54,7 +57,6 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        baseActivity?.setTitle(R.string.title_my_problem_list)
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 

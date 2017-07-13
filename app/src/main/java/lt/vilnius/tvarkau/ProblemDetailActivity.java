@@ -33,12 +33,6 @@ public class ProblemDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
@@ -52,9 +46,6 @@ public class ProblemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             String problemId = getIntent().getStringExtra(ProblemDetailFragment.ARG_ITEM_ID);
-            if (actionBar != null) {
-                actionBar.setTitle(R.string.problem_description_title);
-            }
             ProblemDetailFragment fragment = ProblemDetailFragment.Companion.getInstance(problemId);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.problem_detail_container, fragment)

@@ -6,6 +6,7 @@ import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.fragment_all_reports_list.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.gone
@@ -23,6 +24,8 @@ import javax.inject.Named
 /**
  * @author Martynas Jurkus
  */
+@Screen(titleRes = R.string.title_problem_list,
+        trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST)
 class AllReportsListFragment : BaseReportListFragment(), ReportListView {
 
     @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_STATUS)]
@@ -46,7 +49,7 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
                 connectivityProvider
         )
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -65,8 +68,6 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        baseActivity?.setTitle(R.string.title_problem_list)
-        baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
     }
 

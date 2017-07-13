@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.gone
@@ -24,6 +25,8 @@ import lt.vilnius.tvarkau.fragments.presenters.MultipleReportsMapPresenterImpl
 import lt.vilnius.tvarkau.fragments.views.MultipleProblemsMapView
 import javax.inject.Inject
 
+@Screen(titleRes = R.string.title_problems_map,
+        trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_MAP)
 class MultipleProblemsMapFragment : BaseMapFragment(),
         MultipleProblemsMapView,
         GoogleMap.OnInfoWindowClickListener,
@@ -54,12 +57,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        activity.setTitle(R.string.title_problems_map)
-        baseActivity?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
     override fun onInject(component: ActivityComponent) {

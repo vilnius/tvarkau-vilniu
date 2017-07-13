@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
+import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.entity.Problem
 import org.parceler.Parcels
 
+@Screen(navigationMode = NavigationMode.BACK,
+        trackingScreenName = ActivityConstants.SCREEN_REPORT_MAP)
 class SingleProblemMapFragment : BaseMapFragment(),
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnInfoWindowCloseListener {

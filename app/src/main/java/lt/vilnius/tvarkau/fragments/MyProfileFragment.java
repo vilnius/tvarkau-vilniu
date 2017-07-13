@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import lt.vilnius.tvarkau.R;
+import lt.vilnius.tvarkau.activity.ActivityConstants;
 import lt.vilnius.tvarkau.entity.Profile;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.PersonalCodeValidator;
@@ -27,6 +28,8 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager;
 import static android.app.Activity.RESULT_OK;
 
 
+@Screen(navigationMode = NavigationMode.BACK,
+        trackingScreenName = ActivityConstants.SCREEN_MY_PROFILE)
 public class MyProfileFragment extends BaseFragment {
 
     private SharedPrefsManager prefsManager;
@@ -61,9 +64,6 @@ public class MyProfileFragment extends BaseFragment {
     private String phone;
     private String name;
     private String personalCode;
-
-    public MyProfileFragment() {
-    }
 
     public static MyProfileFragment getInstance() {
         return new MyProfileFragment();
