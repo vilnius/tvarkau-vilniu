@@ -187,6 +187,9 @@
     <string name="about_privacy_policy">Privatumo politika</string>
     <string name="preferences_screen_title">Nustatymai</string>
 
+    <string name="dialog_google_play_error_title">Google Play paslaugų klaida</string>
+    <string name="dialog_google_play_error_description">Norėdami pilnavertiškai naudotis programėle įdiekite Google Play paslaugas.</string>
+
     <string-array name="problems_list_tab_titles">
         <item>Visi pranešimai</item>
         <item>Mano pranešimai</item>

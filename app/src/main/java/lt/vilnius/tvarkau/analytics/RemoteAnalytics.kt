@@ -92,6 +92,12 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         mixpanelAPI.track(name)
     }
 
+    override fun trackGooglePlayServicesError(resultCode: Int) {
+        val params = Bundle().apply {
+            putInt(PARAM_GOOGLE_PLAY_SERVICES_RESULT_CODE, resultCode)
+        }
+        logEvent(EVENT_ERROR_GOOGLE_PLAY_SERVICES, params)
+    }
     companion object {
         private const val PARAM_PROBLEM_STATUS = "problem_status"
         private const val PARAM_PHOTO_COUNT = "photo_count"
@@ -99,11 +105,13 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         private const val PARAM_ENABLED = "enabled"
         private const val PARAM_REPORT_CATEGORY = "report_category"
         private const val PARAM_REPORT_FILTER_TARGET = "report_filter_target"
+        private const val PARAM_GOOGLE_PLAY_SERVICES_RESULT_CODE = "result_code"
 
         private const val EVENT_NEW_REPORT = "new_report"
         private const val EVENT_VALIDATION_ERROR = "validation_error"
         private const val EVENT_SHARE_PERSONAL_DATA = "personal_data"
         private const val EVENT_APPLY_REPORT_FILTER = "apply_report_filter"
+        private const val EVENT_ERROR_GOOGLE_PLAY_SERVICES = "error_google_play_services"
 
         private const val PROPERTY_SHARE_PERSONAL_DATA = "share_personal_data"
     }

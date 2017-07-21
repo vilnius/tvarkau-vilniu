@@ -22,6 +22,8 @@ interface Analytics {
 
     fun trackLogIn()
 
+    fun trackGooglePlayServicesError(resultCode: Int)
+
     fun trackApplyReportFilter(status: String, category: String, target: String)
 
 }
