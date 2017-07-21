@@ -322,7 +322,7 @@ class NewReportFragment : BaseFragment(),
         if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
             openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
         } else {
-            requestPermissions(TAKE_PHOTO_PERMISSIONS, TAKE_PHOTO_PERMISSIONS_REQUEST_CODE)
+            requestPermissions(TAKE_PHOTO_PERMISSIONS, ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS)
         }
     }
 
@@ -368,12 +368,12 @@ class NewReportFragment : BaseFragment(),
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            TAKE_PHOTO_PERMISSIONS_REQUEST_CODE -> if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS -> if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
                 openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
             } else {
                 Toast.makeText(context, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
             }
-            MAP_PERMISSION_REQUEST_CODE -> if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_MAP_PERMISSION -> if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
                 showPlacePicker(view!!)
             } else {
                 Toast.makeText(context, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
@@ -427,7 +427,7 @@ class NewReportFragment : BaseFragment(),
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_PLACE_PICKER -> {
+                ActivityConstants.REQUEST_CODE_PLACE_PICKER -> {
                     val geocoder = Geocoder(context)
                     val place = PlacePicker.getPlace(context, data)
 
@@ -491,7 +491,7 @@ class NewReportFragment : BaseFragment(),
         if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
             showPlacePicker(view)
         } else {
-            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE)
+            requestPermissions(MAP_PERMISSIONS, ActivityConstants.REQUEST_CODE_MAP_PERMISSION)
         }
     }
 
@@ -592,10 +592,6 @@ class NewReportFragment : BaseFragment(),
     }
 
     companion object {
-
-        const val TAKE_PHOTO_PERMISSIONS_REQUEST_CODE = 10
-        const val MAP_PERMISSION_REQUEST_CODE = 20
-        const val REQUEST_PLACE_PICKER = 11
 
         val TAKE_PHOTO_PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
         val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
