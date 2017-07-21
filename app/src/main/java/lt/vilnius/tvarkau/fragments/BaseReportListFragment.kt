@@ -29,6 +29,7 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
     private val problemList = ArrayList<Problem>()
     private var page = 0
     private var reloadingAllReports = false
+    private var reloadReports = false
     private var subscription: Subscription? = null
 
     abstract val presenter: ProblemListPresenter
@@ -52,14 +53,24 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
                 .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
                 .subscribe({
-                    reloadData()
+                    reloadReports = true
                 }).apply { subscription = this }
+
 
         if (problemList.isEmpty()) {
             getReports()
         }
 
         presenter.onAttach()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (reloadReports) {
+            reloadReports = false
+            reloadData()
+        }
     }
 
     open fun reloadData() {
