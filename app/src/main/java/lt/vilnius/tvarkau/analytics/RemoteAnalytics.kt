@@ -98,6 +98,13 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
         }
         logEvent(EVENT_ERROR_GOOGLE_PLAY_SERVICES, params)
     }
+
+    override fun flush() {
+        mixpanelAPI.flush()
+    }
+
+
+
     companion object {
         private const val PARAM_PROBLEM_STATUS = "problem_status"
         private const val PARAM_PHOTO_COUNT = "photo_count"

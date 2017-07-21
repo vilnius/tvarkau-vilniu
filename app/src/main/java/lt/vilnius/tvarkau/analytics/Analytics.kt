@@ -26,4 +26,6 @@ interface Analytics {
 
     fun trackApplyReportFilter(status: String, category: String, target: String)
 
+    fun flush()
+
 }

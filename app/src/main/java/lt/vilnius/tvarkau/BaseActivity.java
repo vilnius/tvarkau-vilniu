@@ -6,8 +6,6 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -28,8 +26,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Inject
     Analytics analytics;
     @Inject
-    MixpanelAPI mixpanelAPI;
-    @Inject
     NavigationManager navigationManager;
 
 
@@ -46,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mixpanelAPI.flush();
+        analytics.flush();
         super.onDestroy();
     }
 
