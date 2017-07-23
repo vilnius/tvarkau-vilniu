@@ -1,19 +1,13 @@
 package lt.vilnius.tvarkau.fragments
 
 import android.Manifest
-import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.ProgressDialog
-import android.app.TimePickerDialog
+import android.app.*
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
-import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
@@ -23,8 +17,6 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.app_bar.*
@@ -32,8 +24,7 @@ import kotlinx.android.synthetic.main.fragment_new_report.*
 import kotlinx.android.synthetic.main.image_picker_dialog.view.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.activity.ActivityConstants
-import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
+import lt.vilnius.tvarkau.activity.*
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
@@ -76,6 +67,8 @@ class NewReportFragment : BaseFragment(),
 
     @field:[Inject Named(Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
     lateinit var lastDisplayedPhotoInstructions: LongPreference
+
+    private var googlePlayServicesResolutionDialog: Dialog? = null
 
     var locationCords: LatLng? = null
     var imageFiles = ArrayList<File>()
@@ -329,7 +322,7 @@ class NewReportFragment : BaseFragment(),
         if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
             openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
         } else {
-            requestPermissions(TAKE_PHOTO_PERMISSIONS, TAKE_PHOTO_PERMISSIONS_REQUEST_CODE)
+            requestPermissions(TAKE_PHOTO_PERMISSIONS, ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS)
         }
     }
 
@@ -375,12 +368,12 @@ class NewReportFragment : BaseFragment(),
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            TAKE_PHOTO_PERMISSIONS_REQUEST_CODE -> if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS -> if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
                 openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
             } else {
                 Toast.makeText(context, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
             }
-            MAP_PERMISSION_REQUEST_CODE -> if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_MAP_PERMISSION -> if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
                 showPlacePicker(view!!)
             } else {
                 Toast.makeText(context, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
@@ -434,7 +427,7 @@ class NewReportFragment : BaseFragment(),
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_PLACE_PICKER -> {
+                ActivityConstants.REQUEST_CODE_PLACE_PICKER -> {
                     val geocoder = Geocoder(context)
                     val place = PlacePicker.getPlace(context, data)
 
@@ -498,34 +491,24 @@ class NewReportFragment : BaseFragment(),
         if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
             showPlacePicker(view)
         } else {
-            requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE)
+            requestPermissions(MAP_PERMISSIONS, ActivityConstants.REQUEST_CODE_MAP_PERMISSION)
         }
     }
 
+
     private fun showPlacePicker(view: View) {
-        val builder = PlacePicker.IntentBuilder()
-        try {
-            val intent = builder.build(activity)
+        val googlePlayServicesAvailability = activity.googlePlayServicesAvailability()
+
+        if (googlePlayServicesAvailability.available()) {
+            val intent = PlacePicker.IntentBuilder().build(activity)
             val bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.width, view.height).toBundle()
-            startActivityForResult(intent, REQUEST_PLACE_PICKER, bundle)
-        } catch (e: GooglePlayServicesRepairableException) {
-            Timber.e(e)
-            Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.open) {
-                        val intent = Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.gms"))
-                        startActivity(intent)
-                    }
-                    .setActionTextColor(getColor(context, R.color.snackbar_action_text))
-                    .show()
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            Timber.e(e)
-            Snackbar.make(view, R.string.check_google_play_services, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.open) {
-                        val intent = Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.gms"))
-                        startActivity(intent)
-                    }.setActionTextColor(getColor(context, R.color.snackbar_action_text)).show()
+            startActivityForResult(intent, ActivityConstants.REQUEST_CODE_PLACE_PICKER, bundle)
+        } else {
+            analytics.trackGooglePlayServicesError(googlePlayServicesAvailability.resultCode())
+
+            googlePlayServicesResolutionDialog?.dismiss()
+            googlePlayServicesResolutionDialog = googlePlayServicesAvailability.resolutionDialog(activity)
+            googlePlayServicesResolutionDialog?.show()
         }
     }
 
@@ -609,10 +592,6 @@ class NewReportFragment : BaseFragment(),
     }
 
     companion object {
-
-        const val TAKE_PHOTO_PERMISSIONS_REQUEST_CODE = 10
-        const val MAP_PERMISSION_REQUEST_CODE = 20
-        const val REQUEST_PLACE_PICKER = 11
 
         val TAKE_PHOTO_PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
         val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
