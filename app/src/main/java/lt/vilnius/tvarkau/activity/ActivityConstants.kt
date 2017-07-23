@@ -1,8 +1,14 @@
 package lt.vilnius.tvarkau.activity
 
 object ActivityConstants {
+
     const val REQUEST_CODE_NEW_REPORT = 12
     const val REQUEST_EDIT_PROFILE = 13
+    const val REQUEST_PLAY_SERVICES_RESTORE = 14
+    const val REQUEST_CODE_TAKE_PHOTO_PERMISSIONS = 15
+    const val REQUEST_CODE_MAP_PERMISSION = 16
+    const val REQUEST_CODE_PLACE_PICKER = 17
+
 
     const val SCREEN_ALL_REPORTS_LIST = "All reports list"
     const val SCREEN_MY_REPORTS_LIST = "My reports list"
