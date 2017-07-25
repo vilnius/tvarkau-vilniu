@@ -19,6 +19,7 @@ import lt.vilnius.tvarkau.fragments.views.ReportListView
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter
 import rx.Subscription
+import timber.log.Timber
 
 /**
  * @author Martynas Jurkus
@@ -54,7 +55,7 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
                 .observeOn(uiScheduler)
                 .subscribe({
                     reloadReports = true
-                }).apply { subscription = this }
+                }, Timber::w).apply { subscription = this }
 
 
         if (problemList.isEmpty()) {
