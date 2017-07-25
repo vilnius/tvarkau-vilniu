@@ -19,6 +19,7 @@ import lt.vilnius.tvarkau.fragments.views.ReportListView
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter
 import rx.Subscription
+import timber.log.Timber
 
 /**
  * @author Martynas Jurkus
@@ -29,6 +30,7 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
     private val problemList = ArrayList<Problem>()
     private var page = 0
     private var reloadingAllReports = false
+    private var reloadReports = false
     private var subscription: Subscription? = null
 
     abstract val presenter: ProblemListPresenter
@@ -52,14 +54,24 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
                 .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
                 .subscribe({
-                    reloadData()
-                }).apply { subscription = this }
+                    reloadReports = true
+                }, Timber::w).apply { subscription = this }
+
 
         if (problemList.isEmpty()) {
             getReports()
         }
 
         presenter.onAttach()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (reloadReports) {
+            reloadReports = false
+            reloadData()
+        }
     }
 
     open fun reloadData() {
