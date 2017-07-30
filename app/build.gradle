@@ -14,13 +14,13 @@ def versionPatch = 1
 def versionMicro = 0
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
         applicationId "lt.vilnius.tvarkau"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionMicro
         versionName "$versionMajor.$versionMinor.$versionPatch.$versionMicro"
 
@@ -73,7 +73,7 @@ repositories {
 
 ext {
     junitVersion = '4.12'
-    supportLibraryVersion = '25.4.0'
+    supportLibraryVersion = '26.0.0'
     playServicesVersion = '11.0.2'
     butterKnifeVersion = '8.6.0'
     glideVersion = '3.8.0'

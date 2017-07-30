@@ -36,7 +36,7 @@ abstract class BaseMapFragment : BaseFragment(),
     private var infoWindowAdapter: MapsInfoWindowAdapter? = null
 
     private val mapView: MapView?
-        get() = view?.findViewById(R.id.map_container) as? MapView
+        get() = view?.findViewById<MapView>(R.id.map_container)
 
     private lateinit var handler: Handler
 
