@@ -281,10 +281,8 @@ class NewReportFragment : BaseFragment(),
         report_problem_submitter_email_wrapper.isErrorEnabled = false
         report_problem_licence_plate_number_wrapper.isErrorEnabled = false
 
-        view?.findViewById(error.viewId)?.let {
-            if (it is TextInputLayout) {
+        view?.findViewById<TextInputLayout>(error.viewId)?.let {
                 it.error = error.message
-            }
         } ?: Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
     }
 

@@ -8,8 +8,8 @@ android:
   components:
     - platform-tools
     - tools
-    - android-25
-    - build-tools-25.0.3
+    - android-26
+    - build-tools-26.0.1
     - extra-android-support
     - extra
   licenses:
