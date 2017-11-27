@@ -15,7 +15,6 @@ def versionMicro = 0
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
 
     defaultConfig {
         applicationId "lt.vilnius.tvarkau"
@@ -57,6 +56,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
         unitTests.all {
             maxHeapSize '2048m'
             minHeapSize '1600m'
@@ -90,97 +90,96 @@ ext {
     parcelerVersion = '1.1.9'
     threeTenVersion = '1.0.5'
     photoView = '1.3.1'
-    robolectricVersion = '3.3.2'
+    robolectricVersion = '3.5.1'
     kotlinMockitoVersion = '1.5.0'
     leakCanaryVersion = '1.5.1'
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile "com.android.support:support-fragment:$supportLibraryVersion"
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
-    compile "com.android.support:design:$supportLibraryVersion"
-    compile "com.android.support:preference-v14:$supportLibraryVersion"
+    implementation "com.android.support:support-fragment:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    implementation "com.android.support:gridlayout-v7:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:preference-v14:$supportLibraryVersion"
 
-    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
-    compile "com.google.android.gms:play-services-location:$playServicesVersion"
-    compile "com.google.android.gms:play-services-places:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-places:$playServicesVersion"
 
-    compile "com.google.firebase:firebase-core:$playServicesVersion"
-    compile "com.google.firebase:firebase-crash:$playServicesVersion"
-    compile "com.google.firebase:firebase-perf:$playServicesVersion"
+    implementation "com.google.firebase:firebase-core:$playServicesVersion"
+    implementation "com.google.firebase:firebase-crash:$playServicesVersion"
+    implementation "com.google.firebase:firebase-perf:$playServicesVersion"
 
-    compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
-    compile "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
 
-    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
 
-    compile "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
-    compile "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    provided "javax.annotation:jsr250-api:$javaxAnnotationVersion"
+    compileOnly "javax.annotation:jsr250-api:$javaxAnnotationVersion"
 
-    compile "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
-    
-    compile "org.greenrobot:eventbus:$eventBusVersion"
+    implementation "fr.avianey.com.viewpagerindicator:library:$viewPagerIndicatorVersion"
 
-    compile "com.facebook.stetho:stetho:$stethoVersion"
-    compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+    implementation "org.greenrobot:eventbus:$eventBusVersion"
 
-    compile "com.mixpanel.android:mixpanel-android:5.1.4"
+    implementation "com.facebook.stetho:stetho:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
-    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.mixpanel.android:mixpanel-android:5.1.4"
 
-    compile "io.reactivex:rxandroid:$rxAndroidVersion"
-    compile "io.reactivex:rxjava:$rxJavaVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
-    compile "org.parceler:parceler-api:$parcelerVersion"
+    implementation "io.reactivex:rxandroid:$rxAndroidVersion"
+    implementation "io.reactivex:rxjava:$rxJavaVersion"
+
+    implementation "org.parceler:parceler-api:$parcelerVersion"
     kapt "org.parceler:parceler:$parcelerVersion"
 
-    compile "com.jakewharton.threetenabp:threetenabp:$threeTenVersion"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threeTenVersion"
 
-    compile "com.github.chrisbanes:PhotoView:$photoView"
+    implementation "com.github.chrisbanes:PhotoView:$photoView"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile 'com.jakewharton.timber:timber:4.5.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation 'com.jakewharton.timber:timber:4.5.1'
 
-    compile 'com.github.jkwiecien:EasyImage:2.0.2'
+    implementation 'com.github.jkwiecien:EasyImage:2.0.2'
 
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testDebugImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.robolectric:robolectric:$robolectricVersion"
-    testCompile "org.robolectric:shadows-support-v4:$robolectricVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
-    testCompile "com.google.dagger:dagger:$daggerVersion"
-    testCompile("com.nhaarman:mockito-kotlin:$kotlinMockitoVersion") {
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testImplementation "com.google.dagger:dagger:$daggerVersion"
+    testImplementation("com.nhaarman:mockito-kotlin:$kotlinMockitoVersion") {
         exclude module: 'kotlin-stdlib'
     }
-    testCompile 'org.easytesting:fest-util:1.2.5'
-    testCompile 'org.easytesting:fest-reflect:1.4.1'
-    testCompile("com.squareup.assertj:assertj-android:1.1.1") {
+    testImplementation 'org.easytesting:fest-util:1.2.5'
+    testImplementation 'org.easytesting:fest-reflect:1.4.1'
+    testImplementation("com.squareup.assertj:assertj-android:1.1.1") {
         exclude group: 'com.android.support'
     }
 
     // https://github.com/robolectric/robolectric/issues/1932#issuecomment-219796474
-    testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+    testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
 }
 
-task versionName() << {
+task versionName() {
     description "Prints version name"
 
     println android.defaultConfig.versionName
