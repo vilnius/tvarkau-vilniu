@@ -23,11 +23,7 @@ public class TvarkauApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        refWatcher = LeakCanary.install(this);
+        refWatcher = setupLeakCanary();
 
         inject();
 
@@ -42,6 +38,13 @@ public class TvarkauApplication extends Application {
 
     private void inject() {
         component = buildComponent();
+    }
+
+    protected RefWatcher setupLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return RefWatcher.DISABLED;
+        }
+        return LeakCanary.install(this);
     }
 
     protected void initLibraries() {

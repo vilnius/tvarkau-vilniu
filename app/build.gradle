@@ -56,6 +56,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
         unitTests.all {
             maxHeapSize '2048m'
             minHeapSize '1600m'
@@ -89,7 +90,7 @@ ext {
     parcelerVersion = '1.1.9'
     threeTenVersion = '1.0.5'
     photoView = '1.3.1'
-    robolectricVersion = '3.3.2'
+    robolectricVersion = '3.5.1'
     kotlinMockitoVersion = '1.5.0'
     leakCanaryVersion = '1.5.1'
 }
@@ -157,13 +158,12 @@ dependencies {
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testDebugImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    testImplementation "org.robolectric:shadows-support-v4:$robolectricVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testImplementation "com.google.dagger:dagger:$daggerVersion"
     testImplementation("com.nhaarman:mockito-kotlin:$kotlinMockitoVersion") {
