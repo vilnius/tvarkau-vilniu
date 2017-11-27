@@ -15,7 +15,6 @@ def versionMicro = 0
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
 
     defaultConfig {
         applicationId "lt.vilnius.tvarkau"
