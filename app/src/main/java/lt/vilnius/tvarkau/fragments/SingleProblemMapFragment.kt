@@ -1,12 +1,10 @@
 package lt.vilnius.tvarkau.fragments
 
 import android.os.Bundle
-import android.os.Parcelable
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.entity.Problem
-import org.parceler.Parcels
 
 @Screen(navigationMode = NavigationMode.BACK,
         trackingScreenName = ActivityConstants.SCREEN_REPORT_MAP)
@@ -15,7 +13,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
         GoogleMap.OnInfoWindowCloseListener {
 
     val problem: Problem
-        get() = Parcels.unwrap<Problem>(arguments.getParcelable<Parcelable>(null))
+        get() = arguments!!.getParcelable(null)
 
     private fun initMapData() {
         placeAndShowMarker(problem)
@@ -23,13 +21,13 @@ class SingleProblemMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        activity.onBackPressed()
+        activity!!.onBackPressed()
     }
 
     override fun onInfoWindowClose(marker: Marker) {
         val problem = marker.tag as Problem
 
-        activity.title = problem.address
+        activity!!.title = problem.address
         marker.setIcon(getMarkerIcon(problem))
     }
 
@@ -43,7 +41,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
     }
 
     private fun setMapTitle(address: String?) {
-        activity.title = address
+        activity!!.title = address
     }
 
     companion object {
@@ -51,7 +49,7 @@ class SingleProblemMapFragment : BaseMapFragment(),
         fun getInstance(problem: Problem): SingleProblemMapFragment {
             return SingleProblemMapFragment().apply {
                 arguments = Bundle()
-                arguments.putParcelable(null, Parcels.wrap(problem))
+                arguments!!.putParcelable(null, problem)
             }
         }
     }

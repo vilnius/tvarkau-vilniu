@@ -38,14 +38,14 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
         return inflater.inflate(R.layout.fragment_report_type_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as BaseActivity).setSupportActionBar(toolbar)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 android.R.id.home -> {
-                    activity.onBackPressed()
+                    activity!!.onBackPressed()
                     true
                 }
                 else -> false
@@ -75,7 +75,7 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
     }
 
     override fun onReportTypeSelected(reportType: String) {
-        (activity as ReportRegistrationActivity).onTypeSelected(reportType)
+        (activity!! as ReportRegistrationActivity).onTypeSelected(reportType)
     }
 
     override fun onDestroyView() {

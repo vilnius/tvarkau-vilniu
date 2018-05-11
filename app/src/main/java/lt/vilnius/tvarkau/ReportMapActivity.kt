@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau
 
 import android.os.Bundle
-import android.os.Parcelable
 import kotlinx.android.synthetic.main.app_bar.*
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.fragments.BaseFragment
@@ -9,7 +8,6 @@ import lt.vilnius.tvarkau.fragments.BaseMapFragment
 import lt.vilnius.tvarkau.fragments.ProblemDetailFragment
 import lt.vilnius.tvarkau.fragments.SingleProblemMapFragment
 import lt.vilnius.tvarkau.utils.GlobalConsts
-import org.parceler.Parcels
 
 class ReportMapActivity : BaseActivity() {
 
@@ -27,7 +25,7 @@ class ReportMapActivity : BaseActivity() {
 
             when (fragmentTag) {
                 GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT -> {
-                    val problem = Parcels.unwrap<Problem>(data.getParcelable<Parcelable>(ProblemDetailFragment.KEY_PROBLEM))
+                    val problem = data.getParcelable<Problem>(ProblemDetailFragment.KEY_PROBLEM)
                     fragment = SingleProblemMapFragment.getInstance(problem)
                 }
                 else -> throw IllegalArgumentException("Please pass problem")

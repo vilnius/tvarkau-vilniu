@@ -59,7 +59,7 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
         return inflater.inflate(R.layout.fragment_all_reports_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         scrollListener = EndlessScrollListener({ getReports() })
@@ -81,12 +81,12 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.menu_action_filter -> {
                 navigationManager.navigateToReportsListFilter()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

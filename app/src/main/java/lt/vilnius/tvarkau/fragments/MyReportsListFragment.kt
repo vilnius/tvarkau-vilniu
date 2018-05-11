@@ -41,7 +41,7 @@ class MyReportsListFragment : BaseReportListFragment(), ReportListView, BaseRepo
         return inflater.inflate(R.layout.fragment_my_reports_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         my_problems_import.setOnClickListener { onImportReportClick() }

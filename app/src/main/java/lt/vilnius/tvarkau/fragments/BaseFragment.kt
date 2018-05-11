@@ -50,7 +50,7 @@ abstract class BaseFragment : Fragment(), OnBackPressed {
 
 
     protected val baseActivity: BaseActivity?
-        get() = activity as BaseActivity?
+        get() = activity!! as BaseActivity?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +61,7 @@ abstract class BaseFragment : Fragment(), OnBackPressed {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        onInject(ActivityComponent.init((activity.application as TvarkauApplication).component, activity as AppCompatActivity))
+        onInject(ActivityComponent.init((activity!!.application as TvarkauApplication).component, activity!! as AppCompatActivity))
     }
 
     protected open fun onInject(component: ActivityComponent) {
@@ -73,24 +73,24 @@ abstract class BaseFragment : Fragment(), OnBackPressed {
 
         screen?.run {
             if (titleRes != 0) {
-                activity.setTitle(titleRes)
+                activity!!.setTitle(titleRes)
             }
 
             trackingScreenName.emptyToNull()?.let {
-                analytics.trackOpenFragment(activity, it)
+                analytics.trackOpenFragment(activity!!, it)
             }
 
-            (activity as AppCompatActivity).let { act ->
+            (activity!! as AppCompatActivity).let { act ->
                 when (navigationMode) {
                     NavigationMode.DEFAULT ->
                         act.supportActionBar?.setDisplayHomeAsUpEnabled(false)
                     NavigationMode.CLOSE -> {
                         act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
+                        (activity!! as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
                     }
                     NavigationMode.BACK -> {
                         act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+                        (activity!! as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
                     }
                 }
             }

@@ -46,7 +46,7 @@ class ReportFilterFragment : BaseFragment() {
     private val reportTypes = mutableListOf<String>()
 
     private val isMapTarget: Boolean
-        get() = arguments.getInt(KEY_TARGET) == TARGET_MAP
+        get() = arguments!!.getInt(KEY_TARGET) == TARGET_MAP
 
     private val allReportTypesLabel: String
         get() = getString(R.string.report_filter_all_report_types)
@@ -55,7 +55,7 @@ class ReportFilterFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_map_report_filter, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         reportTypes += allReportTypesLabel
@@ -109,7 +109,7 @@ class ReportFilterFragment : BaseFragment() {
                     adapter.notifyDataSetChanged()
                 }, {
                     Toast.makeText(context, R.string.error_network_generic, Toast.LENGTH_SHORT).show()
-                    activity.onBackPressed()
+                    activity!!.onBackPressed()
                 })
     }
 
@@ -126,7 +126,7 @@ class ReportFilterFragment : BaseFragment() {
         return when (item.itemId) {
             R.id.action_send -> {
                 onSubmitFilter()
-                activity.onBackPressed()
+                activity!!.onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -183,7 +183,7 @@ class ReportFilterFragment : BaseFragment() {
         fun newInstance(target: Int): ReportFilterFragment {
             return ReportFilterFragment().apply {
                 arguments = Bundle()
-                arguments.putInt(KEY_TARGET, target)
+                arguments!!.putInt(KEY_TARGET, target)
             }
         }
     }

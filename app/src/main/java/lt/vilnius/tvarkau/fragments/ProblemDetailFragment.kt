@@ -32,7 +32,6 @@ import lt.vilnius.tvarkau.utils.GlobalConsts
 import lt.vilnius.tvarkau.utils.NetworkUtils
 import lt.vilnius.tvarkau.utils.PermissionUtils
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter
-import org.parceler.Parcels
 import rx.Subscription
 import timber.log.Timber
 
@@ -48,7 +47,7 @@ import timber.log.Timber
 class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemImageClickedListener {
 
     private val issueId: String
-        get() = arguments.getString(ARG_ITEM_ID)
+        get() = arguments!!.getString(ARG_ITEM_ID)
 
     private lateinit var problem: Problem
 
@@ -58,11 +57,11 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
         return inflater.inflate(R.layout.problem_detail, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         problem_address.setOnClickListener {
-            if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
+            if (PermissionUtils.isAllPermissionsGranted(activity!!, MAP_PERMISSIONS)) {
                 startProblemActivity(problem)
             } else {
                 requestPermissions(MAP_PERMISSIONS, MAP_PERMISSION_REQUEST_CODE)
@@ -77,7 +76,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     }
 
     private fun getData() {
-        if (NetworkUtils.isNetworkConnected(activity)) {
+        if (NetworkUtils.isNetworkConnected(activity!!)) {
             val params = GetProblemParams(issueId)
 
             subscription = legacyApiService.getProblem(GetReportRequest(params))
@@ -149,9 +148,9 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
 
     private fun showNoConnectionSnackbar() {
         if (activity != null) {
-            Snackbar.make(activity.findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
+            Snackbar.make(activity!!.findViewById(R.id.problem_detail_coordinator_layout), R.string.no_connection, Snackbar
                     .LENGTH_INDEFINITE)
-                    .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
+                    .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
                     .setAction(R.string.try_again) { v -> getData() }
                     .show()
         } else {
@@ -168,19 +167,19 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == MAP_PERMISSION_REQUEST_CODE
-                && PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
+                && PermissionUtils.isAllPermissionsGranted(activity!!, MAP_PERMISSIONS)) {
             startProblemActivity(problem)
         } else {
-            Toast.makeText(activity, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity!!, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun startProblemActivity(problem: Problem) {
-        val intent = Intent(activity, ReportMapActivity::class.java)
+        val intent = Intent(activity!!, ReportMapActivity::class.java)
 
         val data = Bundle()
         data.putString(GlobalConsts.KEY_MAP_FRAGMENT, GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT)
-        data.putParcelable(KEY_PROBLEM, Parcels.wrap<Problem>(problem))
+        data.putParcelable(KEY_PROBLEM, problem)
 
         intent.putExtras(data)
 
@@ -196,7 +195,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
         intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, photos.toTypedArray())
         intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position)
 
-        context.startActivity(intent)
+        context!!.startActivity(intent)
     }
 
     override fun onDestroyView() {
@@ -219,7 +218,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
         fun getInstance(problemId: String): ProblemDetailFragment {
             return ProblemDetailFragment().apply {
                 arguments = Bundle()
-                arguments.putString(ARG_ITEM_ID, problemId)
+                arguments!!.putString(ARG_ITEM_ID, problemId)
             }
         }
     }

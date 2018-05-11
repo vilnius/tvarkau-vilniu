@@ -26,7 +26,7 @@ import timber.log.Timber
  */
 abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
-    protected val adapter by lazy { ProblemsListAdapter(activity, problemList) }
+    protected val adapter by lazy { ProblemsListAdapter(activity!!, problemList) }
     private val problemList = ArrayList<Problem>()
     private var page = 0
     private var reloadingAllReports = false
@@ -35,13 +35,13 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
     abstract val presenter: ProblemListPresenter
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         swipe_container.setOnRefreshListener { reloadData() }
         swipe_container.setColorSchemeResources(R.color.colorAccent)
 
-        val linearLayoutManager = LinearLayoutManager(activity)
+        val linearLayoutManager = LinearLayoutManager(activity!!)
         report_list.layoutManager = linearLayoutManager
         report_list.adapter = adapter
     }
@@ -87,9 +87,9 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
     }
 
     private fun showNoConnectionSnackbar(lastPage: Int) {
-        Snackbar.make(activity.findViewById(R.id.coordinator_layout), R.string.no_connection, Snackbar
+        Snackbar.make(activity!!.findViewById(R.id.coordinator_layout), R.string.no_connection, Snackbar
                 .LENGTH_INDEFINITE)
-                .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
+                .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
                 .setAction(R.string.try_again) {
                     page = lastPage
                     getReports()
