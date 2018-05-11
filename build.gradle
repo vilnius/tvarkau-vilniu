@@ -2,12 +2,16 @@ buildscript {
     repositories {
         jcenter()
         google()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${Versions.build_tools}"
         classpath "com.google.gms:google-services:${Versions.google_services}"
         classpath "com.google.firebase:firebase-plugins:${Versions.firebase_plugins}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+        classpath "io.fabric.tools:gradle:${Versions.fabric}"
     }
 }
 
