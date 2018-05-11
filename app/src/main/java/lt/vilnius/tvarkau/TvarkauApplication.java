@@ -2,12 +2,13 @@ package lt.vilnius.tvarkau;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
-import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import io.fabric.sdk.android.Fabric;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 import lt.vilnius.tvarkau.dagger.component.DaggerApplicationComponent;
 import lt.vilnius.tvarkau.utils.RemoteCrashReportingTree;
@@ -48,9 +49,11 @@ public class TvarkauApplication extends Application {
     }
 
     protected void initLibraries() {
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
         Stetho.initializeWithDefaults(this);
         AndroidThreeTen.init(this);
-        FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
     }
 
     protected ApplicationComponent buildComponent() {

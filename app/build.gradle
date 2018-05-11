@@ -3,6 +3,7 @@ plugins {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -76,7 +77,6 @@ dependencies {
     implementation Libs.places
 
     implementation Libs.firebase_core
-    implementation Libs.firebase_crash
     implementation Libs.firebase_perf
 
     implementation Libs.butterknife
@@ -116,6 +116,8 @@ dependencies {
     implementation Libs.timber
 
     implementation Libs.easy_image
+
+    implementation Libs.crashlytics
 
     debugImplementation Libs.leak_canary
     releaseImplementation Libs.leak_canary_no_op

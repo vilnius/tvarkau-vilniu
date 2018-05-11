@@ -1,5 +1,6 @@
 object Versions {
     const val kotlin = "1.2.41"
+    const val fabric = "1.25.1"
     const val build_tools = "3.1.2"
     const val rx_java_2 = "2.1.10"
     const val robolectric = "3.7.1"
@@ -29,6 +30,7 @@ object Versions {
     const val firebase = "15.0.2"
     const val firebase_perf = "15.2.0"
     const val firebase_plugins = "1.1.1"
+    const val crashlytics = "2.9.2"
 
     const val junit = "4.12"
     const val assertj_core = "3.9.1"
@@ -85,12 +87,13 @@ object Libs {
     const val places = "com.google.android.gms:play-services-places:${Versions.play_services}"
 
     const val firebase_core = "com.google.firebase:firebase-core:${Versions.firebase}"
-    const val firebase_crash = "com.google.firebase:firebase-crash:${Versions.firebase}"
     const val firebase_perf = "com.google.firebase:firebase-perf:${Versions.firebase_perf}"
 
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
     const val retrofit_adapter_rx = "com.squareup.retrofit2:adapter-rxjava:${Versions.retrofit}"
+
+    const val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
 
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:${Versions.leak_canary}"
     const val leak_canary_no_op = "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leak_canary}"
