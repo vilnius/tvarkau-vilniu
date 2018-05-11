@@ -47,14 +47,14 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     private var zoomedToMyLocation = false
     private var toast: Snackbar? = null
 
-    override fun onCreate(bundle: Bundle?) {
-        super.onCreate(bundle)
-        bundle?.let {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
             zoomedToMyLocation = it.getBoolean(EXTRA_ZOOMED_TO_MY_LOCATION)
         }
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
@@ -69,12 +69,12 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.menu_action_filter -> {
                 navigationManager.navigateToReportsMapFilter()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -88,7 +88,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun showNetworkError() {
         toast = Snackbar.make(map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
-                .setActionTextColor(ContextCompat.getColor(context, R.color.snackbar_action_text))
+                .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
                 .setAction(R.string.try_again) {
                     presenter.onAttach()
                 }.apply { show() }
@@ -111,7 +111,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun onInfoWindowClose(marker: Marker) {
         val problem = marker.tag as Problem
-        activity.setTitle(R.string.title_problems_map)
+        activity!!.setTitle(R.string.title_problems_map)
         marker.setIcon(getMarkerIcon(problem))
     }
 

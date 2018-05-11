@@ -43,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        ActivityComponent.init((activity.application as TvarkauApplication).component, activity as AppCompatActivity).inject(this)
+        ActivityComponent.init((activity!!.application as TvarkauApplication).component, activity!! as AppCompatActivity).inject(this)
 
         // Do we really need to use our shared prefs manager ???
         // Can we override preferenceManager from PreferenceFragmentCompat
@@ -85,7 +85,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        activity.setTitle(R.string.title_settings)
+        activity!!.setTitle(R.string.title_settings)
 
         RxBus.observable
                 .filter { it is NewProblemAddedEvent }

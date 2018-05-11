@@ -1,11 +1,12 @@
 package lt.vilnius.tvarkau.entity
 
+import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
-import org.parceler.Parcel
+import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDateTime
 
-@Parcel
+@Parcelize
 data class Problem(
         @SerializedName("docNo")
         val id: String? = null,
@@ -25,7 +26,7 @@ data class Problem(
         private val lng: Double = 0.toDouble(),
         @SerializedName("y")
         private val lat: Double = 0.toDouble()
-) : Comparable<Problem> {
+) : Comparable<Problem>, Parcelable {
     fun getType(): String? {
         return typeName ?: type
     }

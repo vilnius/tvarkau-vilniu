@@ -44,7 +44,7 @@ abstract class BaseMapFragment : BaseFragment(),
         return inflater.inflate(R.layout.fragment_map_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //workaround for support library issue
         //https://code.google.com/p/android/issues/detail?id=196430
@@ -57,7 +57,7 @@ abstract class BaseMapFragment : BaseFragment(),
         handler = Handler()
 
         if (googleApi == null) {
-            googleApi = GoogleApiClient.Builder(context)
+            googleApi = GoogleApiClient.Builder(context!!)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
                     .build()
@@ -86,9 +86,9 @@ abstract class BaseMapFragment : BaseFragment(),
         googleMap?.setOnMarkerClickListener(this)
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f))
 
-        if (ActivityCompat.checkSelfPermission(activity,
+        if (ActivityCompat.checkSelfPermission(activity!!,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity,
+                ActivityCompat.checkSelfPermission(activity!!,
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
             googleMap?.isMyLocationEnabled = true
         }
@@ -147,15 +147,15 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        activity.title = (marker.tag as Problem).address
+        activity!!.title = (marker.tag as Problem).address
         marker.setIcon(selectedMarker)
         infoWindowAdapter?.showInfoWindow(marker)
         return false
     }
 
     override fun onConnected(bundle: Bundle?) {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
             return
         }
 

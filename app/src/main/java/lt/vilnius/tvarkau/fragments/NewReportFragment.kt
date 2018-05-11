@@ -78,13 +78,13 @@ class NewReportFragment : BaseFragment(),
                 NewReportInteractorImpl(
                         legacyApiService,
                         SharedPreferencesMyReportsInteractor(myProblemsPreferences),
-                        ReportPhotoProviderImpl(context),
+                        ReportPhotoProviderImpl(context!!),
                         ioScheduler,
                         getString(R.string.report_description_timestamp_template),
                         analytics
                 ),
                 PersonalDataInteractorImpl(
-                        SharedPrefsManager.getInstance(context)
+                        SharedPrefsManager.getInstance(context!!)
                 ),
                 this,
                 uiScheduler,
@@ -114,18 +114,18 @@ class NewReportFragment : BaseFragment(),
 
         }
 
-        reportType = arguments.getString(KEY_REPORT_TYPE)
+        reportType = arguments!!.getString(KEY_REPORT_TYPE)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_new_report, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        with(activity as AppCompatActivity) {
+        with(activity!! as AppCompatActivity) {
             setSupportActionBar(toolbar)
 
             supportActionBar?.title = reportType
@@ -159,8 +159,8 @@ class NewReportFragment : BaseFragment(),
                 return true
             }
             R.id.action_send -> {
-                activity.currentFocus?.let {
-                    KeyboardUtils.closeSoftKeyboard(activity, it)
+                activity!!.currentFocus?.let {
+                    KeyboardUtils.closeSoftKeyboard(activity!!, it)
                 }
 
                 presenter.submitProblem(createValidator())
@@ -175,7 +175,7 @@ class NewReportFragment : BaseFragment(),
         presenter.onAttach()
         presenter.initWithReportType(reportType)
 
-        EasyImage.configuration(context).setAllowMultiplePickInGallery(true)
+        EasyImage.configuration(context!!).setAllowMultiplePickInGallery(true)
     }
 
     override fun onInject(component: ActivityComponent) {
@@ -186,7 +186,7 @@ class NewReportFragment : BaseFragment(),
         new_report_date_time_container.visible()
         new_report_licence_plate_container.visible()
 
-        val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_autorenew)
+        val drawable = AppCompatResources.getDrawable(context!!, R.drawable.ic_autorenew)
         report_problem_date_time.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
         report_problem_date_time.setOnTouchListener { view, event ->
             val DRAWABLE_RIGHT = 2
@@ -282,23 +282,23 @@ class NewReportFragment : BaseFragment(),
         report_problem_licence_plate_number_wrapper.isErrorEnabled = false
 
         view?.findViewById<TextInputLayout>(error.viewId)?.let {
-                it.error = error.message
-        } ?: Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+            it.error = error.message
+        } ?: Toast.makeText(context!!, error.message, Toast.LENGTH_SHORT).show()
     }
 
     override fun showError(error: Throwable) {
-        Toast.makeText(context, R.string.error_submitting_problem, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context!!, R.string.error_submitting_problem, Toast.LENGTH_SHORT).show()
     }
 
     override fun showSuccess() {
         RxBus.publish(NewProblemAddedEvent())
 
-        activity.currentFocus?.run {
-            KeyboardUtils.closeSoftKeyboard(activity, this)
+        activity!!.currentFocus?.run {
+            KeyboardUtils.closeSoftKeyboard(activity!!, this)
         }
 
-        Toast.makeText(context, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show()
-        (activity as ReportRegistrationActivity).onReportSubmitted()
+        Toast.makeText(context!!, R.string.problem_successfully_sent, Toast.LENGTH_SHORT).show()
+        (activity!! as ReportRegistrationActivity).onReportSubmitted()
     }
 
     override fun fillReportDateTime(dateTime: String) {
@@ -308,7 +308,7 @@ class NewReportFragment : BaseFragment(),
     override fun displayImages(imageFiles: List<File>) {
         this.imageFiles.addAll(imageFiles)
 
-        problem_images_view_pager.adapter.notifyDataSetChanged()
+        problem_images_view_pager.adapter!!.notifyDataSetChanged()
 
         if (this.imageFiles.size > 1) {
             problem_images_view_pager_indicator.visible()
@@ -317,7 +317,7 @@ class NewReportFragment : BaseFragment(),
     }
 
     fun onTakePhotoClicked() {
-        if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
+        if (PermissionUtils.isAllPermissionsGranted(activity!!, TAKE_PHOTO_PERMISSIONS)) {
             openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
         } else {
             requestPermissions(TAKE_PHOTO_PERMISSIONS, ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS)
@@ -325,21 +325,21 @@ class NewReportFragment : BaseFragment(),
     }
 
     private fun openPhotoSelectorDialog(displayPhotoInstructions: Boolean) {
-        activity.currentFocus?.let { KeyboardUtils.closeSoftKeyboard(activity, it) }
+        activity!!.currentFocus?.let { KeyboardUtils.closeSoftKeyboard(activity!!, it) }
 
         if (displayPhotoInstructions) {
-            arguments.putBoolean(KEY_TAKE_PHOTO, true)
-            (activity as ReportRegistrationActivity).displayPhotoInstructions()
+            arguments!!.putBoolean(KEY_TAKE_PHOTO, true)
+            (activity!! as ReportRegistrationActivity).displayPhotoInstructions()
             return
         }
 
-        val imagePickerDialogBuilder = AlertDialog.Builder(context, R.style.MyDialogTheme)
+        val imagePickerDialogBuilder = AlertDialog.Builder(context!!, R.style.MyDialogTheme)
 
-        val view = LayoutInflater.from(context).inflate(R.layout.image_picker_dialog, null)
+        val view = LayoutInflater.from(context!!).inflate(R.layout.image_picker_dialog, null)
         val cameraButton = view.camera_button
         val galleryButton = view.gallery_button
 
-        if (!EasyImage.canDeviceHandleGallery(context)) {
+        if (!EasyImage.canDeviceHandleGallery(context!!)) {
             galleryButton.gone()
         }
 
@@ -366,15 +366,15 @@ class NewReportFragment : BaseFragment(),
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS -> if (PermissionUtils.isAllPermissionsGranted(activity, TAKE_PHOTO_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS -> if (PermissionUtils.isAllPermissionsGranted(activity!!, TAKE_PHOTO_PERMISSIONS)) {
                 openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
             } else {
-                Toast.makeText(context, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context!!, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
             }
-            ActivityConstants.REQUEST_CODE_MAP_PERMISSION -> if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_MAP_PERMISSION -> if (PermissionUtils.isAllPermissionsGranted(activity!!, MAP_PERMISSIONS)) {
                 showPlacePicker(view!!)
             } else {
-                Toast.makeText(context, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context!!, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
@@ -388,26 +388,25 @@ class NewReportFragment : BaseFragment(),
 
     private fun onGoBack() {
         if (report_problem_description.hasFocus()) {
-            KeyboardUtils.closeSoftKeyboard(activity, report_problem_description)
+            KeyboardUtils.closeSoftKeyboard(activity!!, report_problem_description)
         }
         if (isEditedByUser()) {
-            AlertDialog.Builder(context, R.style.MyDialogTheme)
+            AlertDialog.Builder(context!!, R.style.MyDialogTheme)
                     .setMessage(getString(R.string.discard_changes_title))
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.discard_changes_positive) {
-                        dialog, whichButton ->
-                        activity.onBackPressed()
+                    .setPositiveButton(R.string.discard_changes_positive) { dialog, whichButton ->
+                        activity!!.onBackPressed()
                     }
                     .setNegativeButton(R.string.discard_changes_negative, null).show()
         } else {
-            activity.onBackPressed()
+            activity!!.onBackPressed()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        EasyImage.handleActivityResult(requestCode, resultCode, data, activity, object : DefaultCallback() {
+        EasyImage.handleActivityResult(requestCode, resultCode, data, activity!!, object : DefaultCallback() {
             override fun onImagePickerError(e: Exception?, source: EasyImage.ImageSource?, type: Int) {
-                Toast.makeText(activity, R.string.photo_capture_error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity!!, R.string.photo_capture_error, Toast.LENGTH_SHORT).show()
                 Timber.w(e, "Unable to take a picture")
             }
 
@@ -417,7 +416,7 @@ class NewReportFragment : BaseFragment(),
 
             override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
                 if (source == EasyImage.ImageSource.CAMERA) {
-                    val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context)
+                    val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context!!)
                     photoFile?.delete()
                 }
             }
@@ -426,8 +425,8 @@ class NewReportFragment : BaseFragment(),
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 ActivityConstants.REQUEST_CODE_PLACE_PICKER -> {
-                    val geocoder = Geocoder(context)
-                    val place = PlacePicker.getPlace(context, data)
+                    val geocoder = Geocoder(context!!)
+                    val place = PlacePicker.getPlace(context!!, data)
 
                     val addresses = mutableListOf<Address>()
 
@@ -477,16 +476,14 @@ class NewReportFragment : BaseFragment(),
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.let {
-            it.putParcelable(SAVE_LOCATION, locationCords)
-            it.putSerializable(SAVE_PHOTOS, imageFiles)
-        }
+        outState.putParcelable(SAVE_LOCATION, locationCords)
+        outState.putSerializable(SAVE_PHOTOS, imageFiles)
     }
 
     private fun onProblemLocationClicked(view: View) {
-        if (PermissionUtils.isAllPermissionsGranted(activity, MAP_PERMISSIONS)) {
+        if (PermissionUtils.isAllPermissionsGranted(activity!!, MAP_PERMISSIONS)) {
             showPlacePicker(view)
         } else {
             requestPermissions(MAP_PERMISSIONS, ActivityConstants.REQUEST_CODE_MAP_PERMISSION)
@@ -495,17 +492,17 @@ class NewReportFragment : BaseFragment(),
 
 
     private fun showPlacePicker(view: View) {
-        val googlePlayServicesAvailability = activity.googlePlayServicesAvailability()
+        val googlePlayServicesAvailability = activity!!.googlePlayServicesAvailability()
 
         if (googlePlayServicesAvailability.available()) {
-            val intent = PlacePicker.IntentBuilder().build(activity)
+            val intent = PlacePicker.IntentBuilder().build(activity!!)
             val bundle = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.width, view.height).toBundle()
             startActivityForResult(intent, ActivityConstants.REQUEST_CODE_PLACE_PICKER, bundle)
         } else {
             analytics.trackGooglePlayServicesError(googlePlayServicesAvailability.resultCode())
 
             googlePlayServicesResolutionDialog?.dismiss()
-            googlePlayServicesResolutionDialog = googlePlayServicesAvailability.resolutionDialog(activity)
+            googlePlayServicesResolutionDialog = googlePlayServicesAvailability.resolutionDialog(activity!!)
             googlePlayServicesResolutionDialog?.show()
         }
     }
@@ -519,13 +516,13 @@ class NewReportFragment : BaseFragment(),
         val day = calendar.get(DAY_OF_MONTH)
 
         val dialogDatePicker = DatePickerDialog(
-                activity,
+                activity!!,
                 { datePicker: DatePicker, year: Int, month: Int, day: Int ->
                     calendar.set(YEAR, year)
                     calendar.set(MONTH, month)
                     calendar.set(DAY_OF_MONTH, day)
 
-                    TimePickerDialog(activity, { timePicker: TimePicker, hour: Int, minutes: Int ->
+                    TimePickerDialog(activity!!, { timePicker: TimePicker, hour: Int, minutes: Int ->
                         calendar.set(HOUR_OF_DAY, hour)
                         calendar.set(MINUTE, minutes)
 
@@ -547,7 +544,7 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun onPhotoClicked(position: Int, photos: List<String>) {
-        val intent = Intent(activity, FullscreenImageActivity::class.java)
+        val intent = Intent(activity!!, FullscreenImageActivity::class.java)
         intent.putExtra(FullscreenImageActivity.EXTRA_PHOTOS, photos.toTypedArray())
         intent.putExtra(FullscreenImageActivity.EXTRA_IMAGE_POSITION, position)
 
@@ -556,7 +553,7 @@ class NewReportFragment : BaseFragment(),
 
     override fun showProgress() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialog(context).apply {
+            progressDialog = ProgressDialog(context!!).apply {
                 setMessage(getString(R.string.sending_problem))
                 setProgressStyle(ProgressDialog.STYLE_SPINNER)
                 setCancelable(false)
@@ -572,14 +569,14 @@ class NewReportFragment : BaseFragment(),
 
     override fun onResume() {
         super.onResume()
-        if (arguments.containsKey(KEY_TAKE_PHOTO)) {
-            arguments.remove(KEY_TAKE_PHOTO)
+        if (arguments!!.containsKey(KEY_TAKE_PHOTO)) {
+            arguments!!.remove(KEY_TAKE_PHOTO)
             openPhotoSelectorDialog(displayPhotoInstructions = false)
         }
     }
 
     override fun onDestroy() {
-        EasyImage.clearConfiguration(context)
+        EasyImage.clearConfiguration(context!!)
         super.onDestroy()
     }
 
@@ -605,7 +602,7 @@ class NewReportFragment : BaseFragment(),
         fun newInstance(problemType: String): NewReportFragment {
             return NewReportFragment().apply {
                 arguments = Bundle()
-                arguments.putString(KEY_REPORT_TYPE, problemType)
+                arguments!!.putString(KEY_REPORT_TYPE, problemType)
             }
         }
     }

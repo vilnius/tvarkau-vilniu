@@ -27,10 +27,10 @@ class PhotoInstructionsFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_photo_instructions, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         photo_instructions_btn_ok.setOnClickListener {
-            activity.onBackPressed()
+            activity!!.onBackPressed()
         }
     }
 
