@@ -12,4 +12,5 @@ object Preferences {
     const val LIST_SELECTED_FILTER_REPORT_STATUS = "list_filter_report_status"
     const val LIST_SELECTED_FILTER_REPORT_TYPE = "list_filter_report_type"
     const val LAST_DISPLAYED_PHOTO_INSTRUCTIONS = "last_displayed_photo_instructions"
+    const val API_TOKEN = "api_token"
 }

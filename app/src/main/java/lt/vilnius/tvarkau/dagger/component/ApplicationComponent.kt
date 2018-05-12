@@ -6,13 +6,17 @@ import lt.vilnius.tvarkau.dagger.module.*
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(
-        LegacyApiModule::class,
-        APIModule::class,
-        SharedPreferencesModule::class,
-        AppModule::class,
-        AnalyticsModule::class,
-        DataModule::class))
+@Component(modules = [
+    LegacyApiModule::class,
+    APIModule::class,
+    SharedPreferencesModule::class,
+    AppModule::class,
+    AnalyticsModule::class,
+    DataModule::class,
+    TokenModule::class,
+    RestAdapterModule::class,
+    SerializationModule::class
+])
 interface ApplicationComponent {
 
     fun activityComponent(activityModule: ActivityModule): ActivityComponent

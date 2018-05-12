@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.2.41"
+    const val kotlin = "1.2.31"
     const val fabric = "1.25.1"
     const val build_tools = "3.1.2"
     const val rx_java_2 = "2.1.10"
@@ -23,6 +23,7 @@ object Versions {
     const val view_page_indicator = "2.4.1.1@aar"
     const val javax_annotation = "1.0"
     const val easy_image = "2.0.4"
+    const val oauth = "2.4.2"
 
     const val support = "27.1.1"
     const val google_services = "3.3.1"
@@ -54,7 +55,6 @@ object Versions {
 
 object Libs {
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
-    const val rx_java_2 = "io.reactivex.rxjava2:rxjava:${Versions.rx_java_2}"
     const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
     const val dagger_compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
@@ -77,6 +77,7 @@ object Libs {
 
     const val rx_android = "io.reactivex:rxandroid:${Versions.rxandroid}"
     const val rx_java = "io.reactivex:rxjava:${Versions.rxjava}"
+    const val rx_java_2 = "io.reactivex.rxjava2:rxjava:${Versions.rx_java_2}"
 
     const val three_ten = "com.jakewharton.threetenabp:threetenabp:${Versions.three_ten}"
 
@@ -102,6 +103,8 @@ object Libs {
     const val butterknife_compiler = "com.jakewharton:butterknife-compiler:${Versions.butterknife}"
 
     const val easy_image = "com.github.jkwiecien:EasyImage:${Versions.easy_image}"
+
+    const val oauth = "ca.mimic:oauth2library:${Versions.oauth}"
 }
 
 object SupportLibraries {

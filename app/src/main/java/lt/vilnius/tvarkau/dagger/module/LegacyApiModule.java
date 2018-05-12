@@ -1,9 +1,7 @@
 package lt.vilnius.tvarkau.dagger.module;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -52,43 +50,39 @@ public class LegacyApiModule {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             builder
-                .addNetworkInterceptor(interceptor)
-                .addNetworkInterceptor(new StethoInterceptor());
+                    .addNetworkInterceptor(interceptor)
+                    .addNetworkInterceptor(new StethoInterceptor());
         }
 
         return builder
-            .authenticator(new TokenAuthenticator())
-            .addInterceptor(new TokenInterceptor())
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .addNetworkInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request.Builder requestBuilder = chain.request().newBuilder();
-                    requestBuilder.header("Content-Type", "application/json");
-                    return chain.proceed(requestBuilder.build());
-                }
-            })
-            .build();
+                .authenticator(new TokenAuthenticator())
+                .addInterceptor(new TokenInterceptor())
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .addNetworkInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request.Builder requestBuilder = chain.request().newBuilder();
+                        requestBuilder.header("Content-Type", "application/json");
+                        return chain.proceed(requestBuilder.build());
+                    }
+                })
+                .build();
     }
 
     @Provides
     @Singleton
-    public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-
-        Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
-            .serializeNulls()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
-
+    public Retrofit provideRetrofit(
+            Gson gson,
+            OkHttpClient okHttpClient
+    ) {
         return new Retrofit.Builder()
-            .baseUrl(API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .client(okHttpClient)
-            .build();
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(okHttpClient)
+                .build();
     }
 
     @Provides
@@ -103,7 +97,7 @@ public class LegacyApiModule {
 
         @Override
         public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
+                throws JsonParseException {
             return LocalDateTime.parse(json.getAsString(), formatter);
         }
 

@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
-import lt.vilnius.tvarkau.prefs.LongPreference
-import lt.vilnius.tvarkau.prefs.LongPreferenceImpl
+import lt.vilnius.tvarkau.auth.ApiToken
+import lt.vilnius.tvarkau.data.GsonSerializer
+import lt.vilnius.tvarkau.prefs.*
+import lt.vilnius.tvarkau.prefs.Preferences.API_TOKEN
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
 import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
@@ -14,8 +16,6 @@ import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
 import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
-import lt.vilnius.tvarkau.prefs.StringPreference
-import lt.vilnius.tvarkau.prefs.StringPreferenceImpl
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -79,5 +79,21 @@ class SharedPreferencesModule {
             @Named(COMMON_PREFERENCES) preference: SharedPreferences
     ): StringPreference {
         return StringPreferenceImpl(preference, LIST_SELECTED_FILTER_REPORT_TYPE, "")
+    }
+
+    @Provides
+    @Singleton
+    @Named(API_TOKEN)
+    fun provideApiToken(
+            @Named(COMMON_PREFERENCES) preference: SharedPreferences,
+            gsonSerializer: GsonSerializer
+    ): ObjectPreference<ApiToken> {
+        return ObjectPreferenceImpl<ApiToken>(
+                prefs = preference,
+                key = API_TOKEN,
+                default = ApiToken(),
+                gsonSerializer = gsonSerializer,
+                clazz = ApiToken::class.java
+        )
     }
 }
