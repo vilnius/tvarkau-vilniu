@@ -15,11 +15,7 @@ import lt.vilnius.tvarkau.fragments.interactors.AllReportListInteractor
 import lt.vilnius.tvarkau.fragments.presenters.AllReportsListPresenterImpl
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
-import lt.vilnius.tvarkau.prefs.Preferences
-import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.widgets.EndlessScrollListener
-import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * @author Martynas Jurkus
@@ -28,11 +24,6 @@ import javax.inject.Named
         trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST)
 class AllReportsListFragment : BaseReportListFragment(), ReportListView {
 
-    @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_STATUS)]
-    lateinit var reportStatus: StringPreference
-    @field:[Inject Named(Preferences.LIST_SELECTED_FILTER_REPORT_TYPE)]
-    lateinit var reportType: StringPreference
-
     private lateinit var scrollListener: EndlessScrollListener
 
     override val presenter: ProblemListPresenter by lazy {
@@ -40,8 +31,8 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
                 AllReportListInteractor(
                         legacyApiService,
                         ioScheduler,
-                        reportType,
-                        reportStatus,
+                        appPreferences.reportTypeSelectedListFilter,
+                        appPreferences.reportStatusSelectedListFilter,
                         getString(R.string.report_filter_all_report_types)
                 ),
                 uiScheduler,

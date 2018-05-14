@@ -12,15 +12,9 @@ import lt.vilnius.tvarkau.entity.Problem.Companion.STATUS_REGISTERED
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
-import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
-import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
-import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
-import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
-import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.FilterReportTypesAdapter
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * @author Martynas Jurkus
@@ -32,14 +26,6 @@ class ReportFilterFragment : BaseFragment() {
 
     @Inject
     lateinit var reportTypesInteractor: ReportTypesInteractor
-    @field:[Inject Named(SELECTED_FILTER_REPORT_STATUS)]
-    lateinit var mapReportStatusFilter: StringPreference
-    @field:[Inject Named(SELECTED_FILTER_REPORT_TYPE)]
-    lateinit var mapReportTypeFilter: StringPreference
-    @field:[Inject Named(LIST_SELECTED_FILTER_REPORT_STATUS)]
-    lateinit var listReportStatusFilter: StringPreference
-    @field:[Inject Named(LIST_SELECTED_FILTER_REPORT_TYPE)]
-    lateinit var listReportTypeFilter: StringPreference
 
     private lateinit var adapter: FilterReportTypesAdapter
 
@@ -135,9 +121,9 @@ class ReportFilterFragment : BaseFragment() {
 
     private fun getSelectedReportType(): String {
         val selected = if (isMapTarget) {
-            mapReportTypeFilter.get()
+            appPreferences.reportTypeSelectedFilter.get()
         } else {
-            listReportTypeFilter.get()
+            appPreferences.reportTypeSelectedListFilter.get()
         }
 
         return selected.emptyToNull() ?: allReportTypesLabel
@@ -145,9 +131,9 @@ class ReportFilterFragment : BaseFragment() {
 
     private fun getSelectedReportStatus(): String {
         return if (isMapTarget) {
-            mapReportStatusFilter.get()
+            appPreferences.reportStatusSelectedListFilter.get()
         } else {
-            listReportStatusFilter.get()
+            appPreferences.reportStatusSelectedListFilter.get()
         }
     }
 
@@ -158,15 +144,14 @@ class ReportFilterFragment : BaseFragment() {
                 filter_report_status_completed
         ).find { it?.isSelected ?: false }?.tag as? String
 
-        val targetName: String
-        if (isMapTarget) {
-            mapReportStatusFilter.set(selectedState.orEmpty())
-            mapReportTypeFilter.set(adapter.selected)
-            targetName = "map"
+        val targetName = if (isMapTarget) {
+            appPreferences.reportStatusSelectedListFilter.set(selectedState.orEmpty())
+            appPreferences.reportTypeSelectedFilter.set(adapter.selected)
+            "map"
         } else {
-            listReportStatusFilter.set(selectedState.orEmpty())
-            listReportTypeFilter.set(adapter.selected)
-            targetName = "list"
+            appPreferences.reportStatusSelectedListFilter.set(selectedState.orEmpty())
+            appPreferences.reportTypeSelectedListFilter.set(adapter.selected)
+            "list"
         }
 
         analytics.trackApplyReportFilter(selectedState.orEmpty(), adapter.selected, targetName)

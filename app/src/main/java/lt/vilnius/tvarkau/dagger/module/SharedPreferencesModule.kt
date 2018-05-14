@@ -7,15 +7,12 @@ import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.data.GsonSerializer
+import lt.vilnius.tvarkau.prefs.AppPreferences
+import lt.vilnius.tvarkau.prefs.AppPreferencesImpl
 import lt.vilnius.tvarkau.prefs.*
 import lt.vilnius.tvarkau.prefs.Preferences.API_TOKEN
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
-import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
-import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_STATUS
-import lt.vilnius.tvarkau.prefs.Preferences.LIST_SELECTED_FILTER_REPORT_TYPE
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
-import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_STATUS
-import lt.vilnius.tvarkau.prefs.Preferences.SELECTED_FILTER_REPORT_TYPE
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -38,47 +35,10 @@ class SharedPreferencesModule {
 
     @Provides
     @Singleton
-    @Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)
-    fun providePhotoInstructions(
+    fun provideAppPreferences(
             @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): LongPreference {
-        return LongPreferenceImpl(preference, LAST_DISPLAYED_PHOTO_INSTRUCTIONS, 0L)
-    }
-
-    @Provides
-    @Singleton
-    @Named(SELECTED_FILTER_REPORT_STATUS)
-    fun provideReportStatusFilter(
-            @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): StringPreference {
-        return StringPreferenceImpl(preference, SELECTED_FILTER_REPORT_STATUS, "")
-    }
-
-    @Provides
-    @Singleton
-    @Named(SELECTED_FILTER_REPORT_TYPE)
-    fun provideReportTypeFilter(
-            @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): StringPreference {
-        return StringPreferenceImpl(preference, SELECTED_FILTER_REPORT_TYPE, "")
-    }
-
-    @Provides
-    @Singleton
-    @Named(LIST_SELECTED_FILTER_REPORT_STATUS)
-    fun provideReportListStatusFilter(
-            @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): StringPreference {
-        return StringPreferenceImpl(preference, LIST_SELECTED_FILTER_REPORT_STATUS, "")
-    }
-
-    @Provides
-    @Singleton
-    @Named(LIST_SELECTED_FILTER_REPORT_TYPE)
-    fun provideReportListTypeFilter(
-            @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): StringPreference {
-        return StringPreferenceImpl(preference, LIST_SELECTED_FILTER_REPORT_TYPE, "")
+    ): AppPreferences {
+        return AppPreferencesImpl(preference)
     }
 
     @Provides
