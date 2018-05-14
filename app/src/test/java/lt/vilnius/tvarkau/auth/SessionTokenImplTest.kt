@@ -6,6 +6,7 @@ import ca.mimic.oauth2library.OAuthResponseCallback
 import com.google.gson.GsonBuilder
 import com.nhaarman.mockito_kotlin.*
 import lt.vilnius.tvarkau.data.GsonSerializerImpl
+import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.ObjectPreference
 import org.junit.Test
 
@@ -18,7 +19,10 @@ class SessionTokenImplTest {
     }
     private val gson = GsonBuilder().create()
     private val gsonSerializer = GsonSerializerImpl(gson)
-    private val fixture = SessionTokenImpl(tokenPref, guestOAuth, gsonSerializer)
+    private val appPreferences = mock<AppPreferences> {
+        on { apiToken } doReturn tokenPref
+    }
+    private val fixture = SessionTokenImpl(appPreferences, guestOAuth, gsonSerializer)
 
     @Test
     fun retrievePublicTokenSuccess_saveToken() {

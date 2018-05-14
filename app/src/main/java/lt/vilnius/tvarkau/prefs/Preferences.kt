@@ -7,5 +7,4 @@ object Preferences {
 
     const val COMMON_PREFERENCES = "TVARKAU-VILNIU_PREFS"
     const val MY_PROBLEMS_PREFERENCES = "my_problem_preferences"
-    const val API_TOKEN = "api_token"
 }

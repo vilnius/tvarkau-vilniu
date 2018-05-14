@@ -1,19 +1,15 @@
 package lt.vilnius.tvarkau.api
 
-import lt.vilnius.tvarkau.auth.ApiToken
-import lt.vilnius.tvarkau.prefs.ObjectPreference
-import lt.vilnius.tvarkau.prefs.Preferences
+import lt.vilnius.tvarkau.prefs.AppPreferences
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class ApiHeadersInterceptor @Inject constructor(
-        @Named(Preferences.API_TOKEN)
-        private val apiToken: ObjectPreference<ApiToken>
+        private val appPreferences: AppPreferences
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -27,13 +23,13 @@ class ApiHeadersInterceptor @Inject constructor(
     private fun appendToken(chain: Interceptor.Chain, requestBuilder: Request.Builder) {
         val containsTokenHeader = chain.request().headers().names().contains(HTTP_HEADER_OAUTH)
 
-        if (apiToken.isSet() && !containsTokenHeader) {
+        if (appPreferences.apiToken.isSet() && !containsTokenHeader) {
             applyToken(requestBuilder)
         }
     }
 
     private fun applyToken(requestBuilder: Request.Builder) {
-        val tokenValue = apiToken.get()
+        val tokenValue = appPreferences.apiToken.get()
         requestBuilder.addHeader(HTTP_HEADER_OAUTH, formatTokenForHeader(tokenValue.accessToken))
     }
 

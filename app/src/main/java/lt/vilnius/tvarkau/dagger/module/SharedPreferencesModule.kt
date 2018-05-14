@@ -5,12 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
-import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.data.GsonSerializer
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.AppPreferencesImpl
-import lt.vilnius.tvarkau.prefs.*
-import lt.vilnius.tvarkau.prefs.Preferences.API_TOKEN
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
 import javax.inject.Named
@@ -36,24 +33,9 @@ class SharedPreferencesModule {
     @Provides
     @Singleton
     fun provideAppPreferences(
-            @Named(COMMON_PREFERENCES) preference: SharedPreferences
-    ): AppPreferences {
-        return AppPreferencesImpl(preference)
-    }
-
-    @Provides
-    @Singleton
-    @Named(API_TOKEN)
-    fun provideApiToken(
             @Named(COMMON_PREFERENCES) preference: SharedPreferences,
             gsonSerializer: GsonSerializer
-    ): ObjectPreference<ApiToken> {
-        return ObjectPreferenceImpl<ApiToken>(
-                prefs = preference,
-                key = API_TOKEN,
-                default = ApiToken(),
-                gsonSerializer = gsonSerializer,
-                clazz = ApiToken::class.java
-        )
+    ): AppPreferences {
+        return AppPreferencesImpl(preference, gsonSerializer)
     }
 }

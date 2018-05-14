@@ -1,11 +1,24 @@
 package lt.vilnius.tvarkau.prefs
 
 import android.content.SharedPreferences
+import lt.vilnius.tvarkau.auth.ApiToken
+import lt.vilnius.tvarkau.data.GsonSerializer
 
 
 class AppPreferencesImpl(
-        private val preferences: SharedPreferences
+        private val preferences: SharedPreferences,
+        private val gsonSerializer: GsonSerializer
 ) : AppPreferences {
+
+    override val apiToken by lazy {
+        ObjectPreferenceImpl(
+                prefs = preferences,
+                key = API_TOKEN,
+                default = ApiToken(),
+                gsonSerializer = gsonSerializer,
+                clazz = ApiToken::class.java
+        )
+    }
 
     override val photoInstructionsLastSeen by lazy {
         LongPreferenceImpl(preferences, LAST_DISPLAYED_PHOTO_INSTRUCTIONS, 0L)
@@ -27,8 +40,7 @@ class AppPreferencesImpl(
     }
 
     companion object {
-        const val COMMON_PREFERENCES = "TVARKAU-VILNIU_PREFS"
-        const val MY_PROBLEMS_PREFERENCES = "my_problem_preferences"
+        const val API_TOKEN = "api_token"
         const val SELECTED_FILTER_REPORT_STATUS = "filter_report_status"
         const val SELECTED_FILTER_REPORT_TYPE = "filter_report_type"
         const val LIST_SELECTED_FILTER_REPORT_STATUS = "list_filter_report_status"
