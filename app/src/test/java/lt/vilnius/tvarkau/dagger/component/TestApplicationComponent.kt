@@ -7,7 +7,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     TestLegacyApiModule::class,
-    APIModule::class,
     TestSharedPreferencesModule::class,
     TestAppModule::class,
     TestAnalyticsModule::class,
