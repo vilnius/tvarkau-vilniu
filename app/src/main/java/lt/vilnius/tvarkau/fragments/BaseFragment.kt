@@ -17,6 +17,7 @@ import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import lt.vilnius.tvarkau.interfaces.OnBackPressed
 import lt.vilnius.tvarkau.navigation.NavigationManager
+import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.Preferences
 import rx.Scheduler
 import javax.inject.Inject
@@ -35,6 +36,8 @@ abstract class BaseFragment : Fragment(), OnBackPressed {
     lateinit var legacyApiService: LegacyApiService
     @field:[Inject Named(Preferences.MY_PROBLEMS_PREFERENCES)]
     lateinit var myProblemsPreferences: SharedPreferences
+    @Inject
+    lateinit var appPreferences: AppPreferences
     @Inject
     lateinit var analytics: Analytics
     @Inject

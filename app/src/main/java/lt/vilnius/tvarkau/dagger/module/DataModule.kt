@@ -9,10 +9,8 @@ import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractorImpl
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractorImpl
-import lt.vilnius.tvarkau.prefs.Preferences
-import lt.vilnius.tvarkau.prefs.StringPreference
+import lt.vilnius.tvarkau.prefs.AppPreferences
 import rx.Scheduler
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -36,14 +34,13 @@ class DataModule {
             api: LegacyApiService,
             context: Application,
             @IoScheduler ioScheduler: Scheduler,
-            @Named(Preferences.SELECTED_FILTER_REPORT_TYPE) reportType: StringPreference,
-            @Named(Preferences.SELECTED_FILTER_REPORT_STATUS) reportStatus: StringPreference
+            appPreferences: AppPreferences
     ): MultipleReportsMapInteractor {
         return MultipleReportsMapInteractorImpl(
                 api,
                 ioScheduler,
-                reportType,
-                reportStatus,
+                appPreferences.reportTypeSelectedFilter,
+                appPreferences.reportStatusSelectedFilter,
                 context.getString(R.string.report_filter_all_report_types)
         )
     }

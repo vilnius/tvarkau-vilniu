@@ -38,8 +38,6 @@ import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
-import lt.vilnius.tvarkau.prefs.LongPreference
-import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.utils.*
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
@@ -53,8 +51,6 @@ import timber.log.Timber
 import java.io.File
 import java.util.*
 import java.util.Calendar.*
-import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * @author Martynas Jurkus
@@ -64,9 +60,6 @@ import javax.inject.Named
 class NewReportFragment : BaseFragment(),
         NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
         NewReportView {
-
-    @field:[Inject Named(Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
-    lateinit var lastDisplayedPhotoInstructions: LongPreference
 
     private var googlePlayServicesResolutionDialog: Dialog? = null
 
@@ -99,7 +92,7 @@ class NewReportFragment : BaseFragment(),
 
     private val shouldDisplayPhotoInstructions: Boolean
         get() {
-            val delta = System.currentTimeMillis() - lastDisplayedPhotoInstructions.get()
+            val delta = System.currentTimeMillis() - appPreferences.photoInstructionsLastSeen.get()
             return reportType == PARKING_VIOLATIONS && Duration.ofMillis(delta).toDays() >= 1
         }
 
