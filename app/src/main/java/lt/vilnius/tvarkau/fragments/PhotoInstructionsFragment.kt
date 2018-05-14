@@ -8,10 +8,6 @@ import kotlinx.android.synthetic.main.fragment_photo_instructions.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
-import lt.vilnius.tvarkau.prefs.LongPreference
-import lt.vilnius.tvarkau.prefs.Preferences.LAST_DISPLAYED_PHOTO_INSTRUCTIONS
-import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * @author Martynas Jurkus
@@ -19,9 +15,6 @@ import javax.inject.Named
 @Screen(navigationMode = NavigationMode.CLOSE,
         trackingScreenName = ActivityConstants.SCREEN_PHOTO_INSTRUCTIONS)
 class PhotoInstructionsFragment : BaseFragment() {
-
-    @field:[Inject Named(LAST_DISPLAYED_PHOTO_INSTRUCTIONS)]
-    lateinit var lastDisplayPhotoInstructions: LongPreference
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_photo_instructions, container, false)
@@ -36,7 +29,7 @@ class PhotoInstructionsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        lastDisplayPhotoInstructions.set(System.currentTimeMillis())
+        appPreferences.photoInstructionsLastSeen.set(System.currentTimeMillis())
     }
 
     override fun onInject(component: ActivityComponent) {
