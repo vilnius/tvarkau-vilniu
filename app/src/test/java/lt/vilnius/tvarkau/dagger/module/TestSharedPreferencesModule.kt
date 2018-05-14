@@ -6,11 +6,9 @@ import android.content.SharedPreferences
 import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
-import lt.vilnius.tvarkau.prefs.AppPreferences
-import lt.vilnius.tvarkau.prefs.LongPreference
-import lt.vilnius.tvarkau.prefs.Preferences
+import lt.vilnius.tvarkau.auth.ApiToken
+import lt.vilnius.tvarkau.prefs.*
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
-import lt.vilnius.tvarkau.prefs.StringPreference
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -37,6 +35,7 @@ class TestSharedPreferencesModule {
             @Named(Preferences.COMMON_PREFERENCES) preference: SharedPreferences
     ): AppPreferences {
         return object : AppPreferences {
+            override val apiToken: ObjectPreference<ApiToken> = mock()
             override val photoInstructionsLastSeen: LongPreference = mock()
             override val reportStatusSelectedFilter: StringPreference = mock()
             override val reportTypeSelectedFilter: StringPreference = mock()

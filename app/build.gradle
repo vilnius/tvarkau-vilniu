@@ -108,6 +108,7 @@ dependencies {
 
     implementation Libs.rx_android
     implementation Libs.rx_java
+    implementation Libs.rx_java_2
 
     implementation Libs.three_ten
     implementation Libs.photo_view
@@ -119,10 +120,11 @@ dependencies {
 
     implementation Libs.crashlytics
 
+    api Libs.oauth
+
     debugImplementation Libs.leak_canary
     releaseImplementation Libs.leak_canary_no_op
     testDebugImplementation Libs.leak_canary_no_op
-
 
     kaptTest Libs.dagger_compiler
     testImplementation TestLibraries.junit

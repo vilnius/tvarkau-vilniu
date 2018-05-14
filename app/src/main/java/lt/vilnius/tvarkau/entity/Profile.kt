@@ -15,6 +15,7 @@ data class Profile(
         var personalCode: String? = null
 ) {
 
+    @Deprecated("Use GsonSerializer")
     fun createJsonData(): String {
         val gson = Gson()
         return gson.toJson(this)

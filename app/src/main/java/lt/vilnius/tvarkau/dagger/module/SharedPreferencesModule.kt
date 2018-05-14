@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
+import lt.vilnius.tvarkau.data.GsonSerializer
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.AppPreferencesImpl
 import lt.vilnius.tvarkau.prefs.Preferences.COMMON_PREFERENCES
@@ -32,8 +33,9 @@ class SharedPreferencesModule {
     @Provides
     @Singleton
     fun provideAppPreferences(
-            @Named(COMMON_PREFERENCES) preference: SharedPreferences
+            @Named(COMMON_PREFERENCES) preference: SharedPreferences,
+            gsonSerializer: GsonSerializer
     ): AppPreferences {
-        return AppPreferencesImpl(preference)
+        return AppPreferencesImpl(preference, gsonSerializer)
     }
 }

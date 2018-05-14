@@ -5,6 +5,9 @@ import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
+import okhttp3.Cache
+import okhttp3.OkHttpClient
+import java.io.File
 import javax.inject.Singleton
 
 /**
@@ -20,4 +23,13 @@ class TestDataModule {
     @Provides
     @Singleton
     fun provideMultipleReportsMapInteractor(): MultipleReportsMapInteractor = mock()
+
+    @Provides
+    @Singleton
+    @RawOkHttpClient
+    fun provideRawOkHttpClient(): OkHttpClient = mock()
+
+    @Provides
+    @Singleton
+    fun provideCache(): Cache = Cache(File("/"), 1000)
 }
