@@ -11,7 +11,9 @@ import javax.inject.Singleton
     TestAppModule::class,
     TestAnalyticsModule::class,
     TestDataModule::class,
-    TestTokenModule::class])
+    TestTokenModule::class,
+    TestApiModule::class
+])
 interface TestApplicationComponent : ApplicationComponent {
 
     fun activityComponent(testActivityModule: TestActivityModule): TestActivityComponent
