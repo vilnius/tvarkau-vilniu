@@ -23,8 +23,6 @@ import dagger.Module;
 import dagger.Provides;
 import lt.vilnius.tvarkau.BuildConfig;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
-import lt.vilnius.tvarkau.network.TokenAuthenticator;
-import lt.vilnius.tvarkau.network.TokenInterceptor;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -55,8 +53,6 @@ public class LegacyApiModule {
         }
 
         return builder
-                .authenticator(new TokenAuthenticator())
-                .addInterceptor(new TokenInterceptor())
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)

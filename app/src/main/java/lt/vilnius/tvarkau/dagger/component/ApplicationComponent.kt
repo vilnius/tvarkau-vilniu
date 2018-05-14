@@ -8,7 +8,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     LegacyApiModule::class,
-    APIModule::class,
     SharedPreferencesModule::class,
     AppModule::class,
     AnalyticsModule::class,
