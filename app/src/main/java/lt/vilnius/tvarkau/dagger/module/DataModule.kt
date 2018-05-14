@@ -52,7 +52,7 @@ class DataModule {
     @Singleton
     @RawOkHttpClient
     fun provideRawHttpClient(
-            cache: okhttp3.Cache,
+            cache: Cache,
             headersInterceptor: ApiHeadersInterceptor
     ): OkHttpClient {
         return okhttp3.OkHttpClient.Builder()

@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class ApiHeadersInterceptor @Inject constructor(
         @Named(Preferences.API_TOKEN)
-        val apiToken: ObjectPreference<ApiToken>
+        private val apiToken: ObjectPreference<ApiToken>
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -32,10 +32,9 @@ class ApiHeadersInterceptor @Inject constructor(
         }
     }
 
-    public fun applyToken(requestBuilder: Request.Builder) {
+    private fun applyToken(requestBuilder: Request.Builder) {
         val tokenValue = apiToken.get()
         requestBuilder.addHeader(HTTP_HEADER_OAUTH, formatTokenForHeader(tokenValue.accessToken))
-        println("header: " + formatTokenForHeader(tokenValue.accessToken))
     }
 
     private fun formatTokenForHeader(token: String) = "Bearer $token"

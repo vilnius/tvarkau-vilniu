@@ -43,7 +43,6 @@ class SessionTokenImplTest {
             success: Boolean,
             token: String = "someOtherToken"
     ) {
-        val gson = GsonBuilder().create()
         mockOAuthResponse {
             on { isSuccessful } doReturn success
             on { accessToken } doReturn token
