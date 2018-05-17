@@ -4,10 +4,14 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.nhaarman.mockito_kotlin.mock
+import com.vinted.preferx.LongPreference
+import com.vinted.preferx.ObjectPreference
+import com.vinted.preferx.StringPreference
 import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.auth.ApiToken
-import lt.vilnius.tvarkau.prefs.*
+import lt.vilnius.tvarkau.prefs.AppPreferences
+import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
 import javax.inject.Named
 import javax.inject.Singleton

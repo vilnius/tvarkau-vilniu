@@ -1,11 +1,11 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
+import com.vinted.preferx.StringPreference
 import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.emptyToNull
-import lt.vilnius.tvarkau.prefs.StringPreference
 import rx.Scheduler
 import rx.Single
 

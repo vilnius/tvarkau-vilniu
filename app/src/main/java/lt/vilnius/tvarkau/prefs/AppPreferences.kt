@@ -1,5 +1,8 @@
 package lt.vilnius.tvarkau.prefs
 
+import com.vinted.preferx.LongPreference
+import com.vinted.preferx.ObjectPreference
+import com.vinted.preferx.StringPreference
 import lt.vilnius.tvarkau.auth.ApiToken
 
 

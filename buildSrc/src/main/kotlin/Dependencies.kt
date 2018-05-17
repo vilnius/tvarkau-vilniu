@@ -24,6 +24,7 @@ object Versions {
     const val javax_annotation = "1.0"
     const val easy_image = "2.0.4"
     const val oauth = "2.4.2"
+    const val preferx = "1.1.0"
 
     const val support = "27.1.1"
     const val google_services = "3.3.1"
@@ -105,6 +106,8 @@ object Libs {
     const val easy_image = "com.github.jkwiecien:EasyImage:${Versions.easy_image}"
 
     const val oauth = "ca.mimic:oauth2library:${Versions.oauth}"
+
+    const val preferx = "com.vinted:preferx:${Versions.preferx}"
 }
 
 object SupportLibraries {

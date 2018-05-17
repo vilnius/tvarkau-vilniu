@@ -1,10 +1,10 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
 import com.nhaarman.mockito_kotlin.*
+import com.vinted.preferx.StringPreference
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
-import lt.vilnius.tvarkau.prefs.StringPreference
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.wrapInResponse
 import org.junit.Before
@@ -31,7 +31,7 @@ class MultipleReportsMapInteractorImplTest {
                     allReportsTitle
             )
 
-    val reports = listOf(Problem(id = "1"), Problem(id = "2"))
+    private val reports = listOf(Problem(id = "1"), Problem(id = "2"))
 
     @Before
     fun setUp() {
