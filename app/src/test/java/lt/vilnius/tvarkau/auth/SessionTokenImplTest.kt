@@ -5,9 +5,9 @@ import ca.mimic.oauth2library.OAuthResponse
 import ca.mimic.oauth2library.OAuthResponseCallback
 import com.google.gson.GsonBuilder
 import com.nhaarman.mockito_kotlin.*
+import com.vinted.preferx.ObjectPreference
 import lt.vilnius.tvarkau.data.GsonSerializerImpl
 import lt.vilnius.tvarkau.prefs.AppPreferences
-import lt.vilnius.tvarkau.prefs.ObjectPreference
 import org.junit.Test
 
 class SessionTokenImplTest {
@@ -31,7 +31,7 @@ class SessionTokenImplTest {
         val result = fixture.refreshGuestToken().test()
 
         result.assertComplete()
-        verify(tokenPref).set(argThat { accessToken == "token" })
+        verify(tokenPref).set(argThat { accessToken == "token" }, eq(false))
     }
 
     @Test

@@ -1,8 +1,13 @@
 package lt.vilnius.tvarkau.prefs
 
 import android.content.SharedPreferences
+import com.vinted.preferx.PreferxSerializer
+import com.vinted.preferx.longPreference
+import com.vinted.preferx.objectPreference
+import com.vinted.preferx.stringPreference
 import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.data.GsonSerializer
+import java.lang.reflect.Type
 
 
 class AppPreferencesImpl(
@@ -10,33 +15,42 @@ class AppPreferencesImpl(
         private val gsonSerializer: GsonSerializer
 ) : AppPreferences {
 
+    private val serializer = object : PreferxSerializer {
+        override fun fromString(string: String, type: Type): Any {
+            return gsonSerializer.fromJsonType(string, type)
+        }
+
+        override fun toString(value: Any): String {
+            return gsonSerializer.toJson(value)
+        }
+    }
+
     override val apiToken by lazy {
-        ObjectPreferenceImpl(
-                prefs = preferences,
-                key = API_TOKEN,
-                default = ApiToken(),
-                gsonSerializer = gsonSerializer,
+        preferences.objectPreference(
+                name = API_TOKEN,
+                defaultValue = ApiToken(),
+                serializer = serializer,
                 clazz = ApiToken::class.java
         )
     }
 
     override val photoInstructionsLastSeen by lazy {
-        LongPreferenceImpl(preferences, LAST_DISPLAYED_PHOTO_INSTRUCTIONS, 0L)
+        preferences.longPreference(LAST_DISPLAYED_PHOTO_INSTRUCTIONS, 0L)
     }
     override val reportStatusSelectedFilter by lazy {
-        StringPreferenceImpl(preferences, SELECTED_FILTER_REPORT_STATUS, "")
+        preferences.stringPreference(SELECTED_FILTER_REPORT_STATUS, "")
     }
 
     override val reportTypeSelectedFilter by lazy {
-        StringPreferenceImpl(preferences, SELECTED_FILTER_REPORT_TYPE, "")
+        preferences.stringPreference(SELECTED_FILTER_REPORT_TYPE, "")
     }
 
     override val reportStatusSelectedListFilter by lazy {
-        StringPreferenceImpl(preferences, LIST_SELECTED_FILTER_REPORT_STATUS, "")
+        preferences.stringPreference(LIST_SELECTED_FILTER_REPORT_STATUS, "")
     }
 
     override val reportTypeSelectedListFilter by lazy {
-        StringPreferenceImpl(preferences, LIST_SELECTED_FILTER_REPORT_TYPE, "")
+        preferences.stringPreference(LIST_SELECTED_FILTER_REPORT_TYPE, "")
     }
 
     companion object {

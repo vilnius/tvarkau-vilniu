@@ -120,6 +120,8 @@ dependencies {
 
     implementation Libs.crashlytics
 
+    implementation Libs.preferx
+
     api Libs.oauth
 
     debugImplementation Libs.leak_canary
