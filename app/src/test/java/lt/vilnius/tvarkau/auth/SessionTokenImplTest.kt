@@ -63,7 +63,7 @@ class SessionTokenImplTest {
         val result = fixture.refreshCurrentToken(currentToken).test()
 
         result.assertComplete()
-        verify(tokenPref).set(argThat { accessToken == "newToken" })
+        verify(tokenPref).set(argThat { accessToken == "newToken" }, any())
     }
 
     @Test
@@ -83,7 +83,7 @@ class SessionTokenImplTest {
         val result = fixture.refreshCurrentToken(currentToken).test().await()
 
         result.assertError(Throwable::class.java)
-        verify(tokenPref, never()).set(any())
+        verify(tokenPref, never()).set(any(), any())
     }
 
     private fun mockOAuthResponse(
