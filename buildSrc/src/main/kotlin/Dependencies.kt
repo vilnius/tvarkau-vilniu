@@ -3,6 +3,7 @@ object Versions {
     const val fabric = "1.25.1"
     const val build_tools = "3.1.2"
     const val rx_java_2 = "2.1.10"
+    const val rx_android_2 = "2.0.2"
     const val robolectric = "3.7.1"
     const val dagger = "2.16"
     const val lifecycle = "1.1.1"
@@ -79,6 +80,7 @@ object Libs {
     const val rx_android = "io.reactivex:rxandroid:${Versions.rxandroid}"
     const val rx_java = "io.reactivex:rxjava:${Versions.rxjava}"
     const val rx_java_2 = "io.reactivex.rxjava2:rxjava:${Versions.rx_java_2}"
+    const val rx_android_2 = "io.reactivex.rxjava2:rxandroid:${Versions.rx_android_2}"
 
     const val three_ten = "com.jakewharton.threetenabp:threetenabp:${Versions.three_ten}"
 
@@ -94,6 +96,8 @@ object Libs {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
     const val retrofit_adapter_rx = "com.squareup.retrofit2:adapter-rxjava:${Versions.retrofit}"
+    const val retrofit_adapter_rx2 = "com.squareup.retrofit2:adapter-rxjava2:${Versions.retrofit}"
+
 
     const val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
 
@@ -128,4 +132,5 @@ object TestLibraries {
     const val kotlin_test = "org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}"
     const val fest_util = "org.easytesting:fest-util:${Versions.fest_util}"
     const val fest_reflect = "org.easytesting:fest-reflect:${Versions.fest_reflect}"
+    const val okhttp_mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
 }

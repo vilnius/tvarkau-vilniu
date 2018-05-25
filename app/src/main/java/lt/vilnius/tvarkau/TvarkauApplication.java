@@ -11,6 +11,7 @@ import com.squareup.leakcanary.RefWatcher;
 import io.fabric.sdk.android.Fabric;
 import lt.vilnius.tvarkau.dagger.component.ApplicationComponent;
 import lt.vilnius.tvarkau.dagger.component.DaggerApplicationComponent;
+import lt.vilnius.tvarkau.dagger.module.AppModule;
 import lt.vilnius.tvarkau.utils.RemoteCrashReportingTree;
 import timber.log.Timber;
 import timber.log.Timber.DebugTree;

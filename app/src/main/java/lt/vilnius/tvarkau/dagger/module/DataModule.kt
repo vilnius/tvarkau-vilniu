@@ -1,11 +1,15 @@
 package lt.vilnius.tvarkau.dagger.module
 
 import android.app.Application
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Module
 import dagger.Provides
+import lt.vilnius.tvarkau.BuildConfig
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.api.ApiHeadersInterceptor
+import lt.vilnius.tvarkau.auth.OauthTokenRefresher
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.dagger.Api
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractorImpl
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
@@ -13,6 +17,8 @@ import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractorImpl
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import rx.Scheduler
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -61,6 +67,24 @@ class DataModule {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.MINUTES)
                 .addNetworkInterceptor(headersInterceptor)
+                .build()
+    }
+
+    @Provides
+    @Singleton
+    @Api
+    internal fun provideOkHttpClient(
+            @RawOkHttpClient rawOkHttpClient: OkHttpClient,
+            oauthTokenRefresher: OauthTokenRefresher
+    ): OkHttpClient {
+        return rawOkHttpClient.newBuilder()
+                .addInterceptor(oauthTokenRefresher)
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        addNetworkInterceptor(HttpLoggingInterceptor().setLevel(BODY))
+                        addNetworkInterceptor(StethoInterceptor())
+                    }
+                }
                 .build()
     }
 
