@@ -1,9 +1,9 @@
 package lt.vilnius.tvarkau.fragments.presenters
 
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import lt.vilnius.tvarkau.fragments.interactors.ReportListInteractor
 import lt.vilnius.tvarkau.fragments.views.ReportListView
-import rx.Scheduler
-import rx.Subscription
 
 /**
  * @author Martynas Jurkus
@@ -15,7 +15,7 @@ class AllReportsListPresenterImpl(
         connectivityProvider: ConnectivityProvider
 ) : BaseReportListPresenter(connectivityProvider, view) {
 
-    private val subscriptions = mutableListOf<Subscription>()
+    private val disposable = CompositeDisposable()
 
     override fun onAttach() {
     }
@@ -25,7 +25,7 @@ class AllReportsListPresenterImpl(
                 .flatMap { interactor.getProblems(page) }
                 .observeOn(uiScheduler)
                 .doOnSubscribe { if (page == 0) view.showProgress() }
-                .doOnUnsubscribe { view.hideProgress() }
+                .doFinally { view.hideProgress() }
                 .subscribe({
                     if (it.isEmpty()) {
                         view.hideLoader()
@@ -38,10 +38,10 @@ class AllReportsListPresenterImpl(
                     }
                 }, {
                     handleError(it, page)
-                }).apply { subscriptions += this }
+                }).apply { disposable.add(this) }
     }
 
     override fun onDetach() {
-        subscriptions.forEach(Subscription::unsubscribe)
+        disposable.clear()
     }
 }

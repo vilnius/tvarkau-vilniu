@@ -1,9 +1,9 @@
 package lt.vilnius.tvarkau.mvp.interactors
 
+import io.reactivex.Scheduler
+import io.reactivex.Single
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.backend.requests.GetReportTypesRequest
-import rx.Scheduler
-import rx.Single
 
 /**
  * @author Martynas Jurkus
@@ -27,8 +27,8 @@ class ReportTypesInteractorImpl(
                         }
                         .doOnSuccess { entryCache = it }
         )
-                .first { it.isNotEmpty() }
-                .toSingle()
+                .filter { it.isNotEmpty() }
+                .firstOrError()
                 .subscribeOn(ioScheduler)
     }
 }

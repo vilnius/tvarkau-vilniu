@@ -1,8 +1,8 @@
 package lt.vilnius.tvarkau.fragments.presenters
 
+import io.reactivex.Single
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProviderImpl.NetworkConnectivityError
 import lt.vilnius.tvarkau.fragments.views.ReportListView
-import rx.Single
 import timber.log.Timber
 
 /**

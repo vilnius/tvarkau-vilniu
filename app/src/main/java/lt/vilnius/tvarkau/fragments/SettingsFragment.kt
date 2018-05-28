@@ -8,20 +8,20 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
+import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.activity.ActivityConstants
+import lt.vilnius.tvarkau.dagger.IoScheduler
+import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
-import lt.vilnius.tvarkau.dagger.module.IoScheduler
-import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.utils.DeviceUtils
 import lt.vilnius.tvarkau.utils.SharedPrefsManager
-import rx.Scheduler
-import rx.Subscription
 import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -39,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var preferenceImportReports: Preference
     private lateinit var preferenceUserPersonalData: Preference
 
-    private var subscription: Subscription? = null
+    private var disposable: Disposable? = null
 
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -89,12 +89,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         RxBus.observable
                 .filter { it is NewProblemAddedEvent }
-                .limit(1)
+                .take(1)
                 .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
                 .subscribe({
                     updateLastImportTime()
-                }).apply { subscription = this }
+                }).apply { disposable = this }
     }
 
     private fun updateLastImportTime() {
@@ -113,7 +113,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onDestroyView() {
-        subscription?.unsubscribe()
+        disposable?.dispose()
 
         super.onDestroyView()
     }

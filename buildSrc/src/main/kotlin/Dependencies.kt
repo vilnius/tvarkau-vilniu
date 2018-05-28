@@ -14,8 +14,6 @@ object Versions {
     const val timber = "4.7.0"
     const val stetho = "1.5.0"
     const val okhttp = "3.10.0"
-    const val rxjava = "1.3.8"
-    const val rxandroid = "1.2.1"
     const val mixpanel = "5.1.4"
     const val three_ten = "1.1.0"
     const val photo_view = "1.3.1"
@@ -77,8 +75,6 @@ object Libs {
     const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
     const val okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}"
 
-    const val rx_android = "io.reactivex:rxandroid:${Versions.rxandroid}"
-    const val rx_java = "io.reactivex:rxjava:${Versions.rxjava}"
     const val rx_java_2 = "io.reactivex.rxjava2:rxjava:${Versions.rx_java_2}"
     const val rx_android_2 = "io.reactivex.rxjava2:rxandroid:${Versions.rx_android_2}"
 
@@ -95,7 +91,6 @@ object Libs {
 
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
-    const val retrofit_adapter_rx = "com.squareup.retrofit2:adapter-rxjava:${Versions.retrofit}"
     const val retrofit_adapter_rx2 = "com.squareup.retrofit2:adapter-rxjava2:${Versions.retrofit}"
 
 

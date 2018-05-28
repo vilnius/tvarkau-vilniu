@@ -5,10 +5,12 @@ import com.nhaarman.mockito_kotlin.mock
 import com.squareup.leakcanary.RefWatcher
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.TestTvarkauApplication
+import lt.vilnius.tvarkau.dagger.IoScheduler
+import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
-import rx.Scheduler
-import rx.schedulers.Schedulers
 import javax.inject.Singleton
 
 /**
@@ -24,12 +26,12 @@ class TestAppModule(val application: TestTvarkauApplication) {
     @Provides
     @Singleton
     @IoScheduler
-    fun provideIoScheduler(): Scheduler = Schedulers.immediate()
+    fun provideIoScheduler(): Scheduler = Schedulers.trampoline()
 
     @Provides
     @Singleton
     @UiScheduler
-    fun provideUiScheduler(): Scheduler = Schedulers.immediate()
+    fun provideUiScheduler(): Scheduler = Schedulers.trampoline()
 
     @Provides
     @Singleton

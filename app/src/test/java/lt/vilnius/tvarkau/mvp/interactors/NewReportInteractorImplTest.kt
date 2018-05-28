@@ -1,6 +1,8 @@
 package lt.vilnius.tvarkau.mvp.interactors
 
 import com.nhaarman.mockito_kotlin.*
+import io.reactivex.Single.just
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.ApiRequest
@@ -11,8 +13,6 @@ import lt.vilnius.tvarkau.base.BaseRobolectricTest
 import lt.vilnius.tvarkau.fragments.interactors.MyReportsInteractor
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import org.junit.Test
-import rx.Observable.just
-import rx.schedulers.Schedulers
 import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -23,23 +23,25 @@ import kotlin.test.assertTrue
  */
 class NewReportInteractorImplTest : BaseRobolectricTest() {
 
-    val api = mock<LegacyApiService>()
-    val photoProvider = mock<ReportPhotoProvider>()
-    val analytics = mock<Analytics>()
-    val myReportsInteractor = mock<MyReportsInteractor>()
+    private val api = mock<LegacyApiService>()
+    private val photoProvider = mock<ReportPhotoProvider> {
+        on { convert(any()) } doReturn "Base64EncodedString"
+    }
+    private val analytics = mock<Analytics>()
+    private val myReportsInteractor = mock<MyReportsInteractor>()
 
-    val fixture: NewReportInteractor by lazy {
+    private val fixture: NewReportInteractor by lazy {
         NewReportInteractorImpl(
                 api,
                 myReportsInteractor,
                 photoProvider,
-                Schedulers.immediate(),
+                Schedulers.trampoline(),
                 activity.getString(R.string.report_description_timestamp_template),
                 analytics
         )
     }
 
-    val successResponse: ApiResponse<Int>
+    private val successResponse: ApiResponse<Int>
         get() {
             return ApiResponse<Int>().apply {
                 result = 1

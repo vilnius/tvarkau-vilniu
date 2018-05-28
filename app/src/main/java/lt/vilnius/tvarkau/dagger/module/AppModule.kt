@@ -4,14 +4,13 @@ import android.app.Application
 import com.squareup.leakcanary.RefWatcher
 import dagger.Module
 import dagger.Provides
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.TvarkauApplication
-import lt.vilnius.tvarkau.dagger.IoScheduler2
-import lt.vilnius.tvarkau.dagger.UiScheduler2
+import lt.vilnius.tvarkau.dagger.IoScheduler
+import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProviderImpl
-import rx.Scheduler
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Singleton
 
 @Module
@@ -28,29 +27,15 @@ class AppModule(
     @Provides
     @Singleton
     @IoScheduler
-    fun provideIoScheduler(): Scheduler {
+    fun provideIoScheduler(): io.reactivex.Scheduler {
         return Schedulers.io()
     }
 
     @Provides
     @Singleton
     @UiScheduler
-    fun provideUiScheduler(): Scheduler {
+    fun provideUiScheduler(): io.reactivex.Scheduler {
         return AndroidSchedulers.mainThread()
-    }
-
-    @Provides
-    @Singleton
-    @IoScheduler2
-    fun provideIoScheduler2(): io.reactivex.Scheduler {
-        return io.reactivex.schedulers.Schedulers.io()
-    }
-
-    @Provides
-    @Singleton
-    @UiScheduler2
-    fun provideUiScheduler2(): io.reactivex.Scheduler {
-        return io.reactivex.android.schedulers.AndroidSchedulers.mainThread()
     }
 
     @Provides

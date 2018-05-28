@@ -1,9 +1,9 @@
 package lt.vilnius.tvarkau.fragments.presenters
 
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
 import lt.vilnius.tvarkau.fragments.views.MultipleProblemsMapView
-import rx.Scheduler
-import rx.Subscription
 import timber.log.Timber
 
 class MultipleReportsMapPresenterImpl(
@@ -13,19 +13,19 @@ class MultipleReportsMapPresenterImpl(
         private val view: MultipleProblemsMapView
 ) : MultipleReportsMapPresenter {
 
-    private val subscriptions = mutableListOf<Subscription>()
+    private val disposable = CompositeDisposable()
 
     override fun onAttach() {
         connectivityProvider.ensureConnected()
                 .flatMap { interactor.getReports() }
                 .observeOn(uiScheduler)
                 .doOnSubscribe { view.showProgress() }
-                .doOnUnsubscribe { view.hideProgress() }
+                .doFinally { view.hideProgress() }
                 .subscribe({
                     view.addMarkers(it)
                 }, {
                     handleErrors(it)
-                }).apply { subscriptions += this }
+                }).apply { disposable.add(this) }
     }
 
     private fun handleErrors(throwable: Throwable) {
@@ -38,6 +38,6 @@ class MultipleReportsMapPresenterImpl(
     }
 
     override fun onDetach() {
-        subscriptions.forEach(Subscription::unsubscribe)
+        disposable.clear()
     }
 }

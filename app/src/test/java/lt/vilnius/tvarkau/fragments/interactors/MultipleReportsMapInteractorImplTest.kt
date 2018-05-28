@@ -2,6 +2,8 @@ package lt.vilnius.tvarkau.fragments.interactors
 
 import com.nhaarman.mockito_kotlin.*
 import com.vinted.preferx.StringPreference
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
@@ -9,8 +11,6 @@ import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.wrapInResponse
 import org.junit.Before
 import org.junit.Test
-import rx.Observable
-import rx.schedulers.Schedulers
 
 /**
  * @author Martynas Jurkus
@@ -25,7 +25,7 @@ class MultipleReportsMapInteractorImplTest {
     private val fixture: MultipleReportsMapInteractor =
             MultipleReportsMapInteractorImpl(
                     api,
-                    Schedulers.immediate(),
+                    Schedulers.trampoline(),
                     reportType,
                     reportStatus,
                     allReportsTitle
@@ -53,7 +53,7 @@ class MultipleReportsMapInteractorImplTest {
     fun cacheHit_noApiRequest() {
         whenever(api.getProblems(any()))
                 .thenReturn(reports.wrapInResponse)
-                .thenReturn(Observable.error(IllegalStateException("Unexpected API call")))
+                .thenReturn(Single.error(IllegalStateException("Unexpected API call")))
 
         fixture.getReports().subscribe()
 

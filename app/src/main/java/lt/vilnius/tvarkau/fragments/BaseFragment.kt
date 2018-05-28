@@ -5,21 +5,21 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.squareup.leakcanary.RefWatcher
+import io.reactivex.Scheduler
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.backend.LegacyApiService
+import lt.vilnius.tvarkau.dagger.IoScheduler
+import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
-import lt.vilnius.tvarkau.dagger.module.IoScheduler
-import lt.vilnius.tvarkau.dagger.module.UiScheduler
 import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import lt.vilnius.tvarkau.interfaces.OnBackPressed
 import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.Preferences
-import rx.Scheduler
 import javax.inject.Inject
 import javax.inject.Named
 

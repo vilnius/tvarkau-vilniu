@@ -1,15 +1,14 @@
 package lt.vilnius.tvarkau.fragments.presenters
 
 import com.nhaarman.mockito_kotlin.*
+import io.reactivex.Single
+import io.reactivex.Single.just
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.fragments.interactors.ReportListInteractor
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProviderImpl.NetworkConnectivityError
 import lt.vilnius.tvarkau.fragments.views.ReportListView
 import org.junit.Test
-import rx.Single
-import rx.Single.error
-import rx.Single.just
-import rx.schedulers.Schedulers
 
 /**
  * @author Martynas Jurkus
@@ -24,7 +23,7 @@ class AllReportsListPresenterImplTest {
 
     val fixture = AllReportsListPresenterImpl(
             interactor,
-            Schedulers.immediate(),
+            Schedulers.trampoline(),
             view,
             connectivityProvider
     )
@@ -54,7 +53,7 @@ class AllReportsListPresenterImplTest {
 
     @Test
     fun loadReports_noNetwork_showNetworkError() {
-        whenever(connectivityProvider.ensureConnected()).thenReturn(error(NetworkConnectivityError()))
+        whenever(connectivityProvider.ensureConnected()).thenReturn(Single.error(NetworkConnectivityError()))
 
         fixture.getReportsForPage(0)
 

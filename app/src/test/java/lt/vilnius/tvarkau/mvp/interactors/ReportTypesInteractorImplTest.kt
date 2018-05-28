@@ -4,11 +4,11 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.backend.LegacyApiService
-import lt.vilnius.tvarkau.wrapInSingleResponse
+import lt.vilnius.tvarkau.wrapInResponse
 import org.junit.Test
-import rx.Single
-import rx.schedulers.Schedulers
 
 /**
  * @author Martynas Jurkus
@@ -18,7 +18,7 @@ class ReportTypesInteractorImplTest {
     val api = mock<LegacyApiService>()
     val fixture: ReportTypesInteractor = ReportTypesInteractorImpl(
             api,
-            Schedulers.immediate()
+            Schedulers.trampoline()
     )
 
     @Test
@@ -26,7 +26,7 @@ class ReportTypesInteractorImplTest {
         val values = listOf("Type 1", "Type 2")
 
         whenever(api.getProblemTypes(any()))
-                .thenReturn(values.wrapInSingleResponse)
+                .thenReturn(values.wrapInResponse)
 
         fixture.getReportTypes()
                 .test()
@@ -40,7 +40,7 @@ class ReportTypesInteractorImplTest {
         val values = listOf("Type 1", "Type 2")
 
         whenever(api.getProblemTypes(any()))
-                .thenReturn(values.wrapInSingleResponse)
+                .thenReturn(values.wrapInResponse)
                 .thenReturn(Single.error(IllegalStateException("Unexpected API call")))
 
         fixture.getReportTypes().subscribe()
@@ -54,7 +54,7 @@ class ReportTypesInteractorImplTest {
     @Test
     fun emptyCache_emptyApiResult_errorProduced() {
         whenever(api.getProblemTypes(any()))
-                .thenReturn(listOf<String>().wrapInSingleResponse)
+                .thenReturn(listOf<String>().wrapInResponse)
 
         fixture.getReportTypes()
                 .test()

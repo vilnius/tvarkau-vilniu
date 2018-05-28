@@ -86,7 +86,6 @@ dependencies {
 
     implementation Libs.retrofit
     implementation Libs.retrofit_converter_gson
-    implementation Libs.retrofit_adapter_rx
     implementation Libs.retrofit_adapter_rx2
 
     implementation Libs.gson
@@ -107,8 +106,6 @@ dependencies {
     implementation Libs.okhttp
     implementation Libs.okhttp_logging_interceptor
 
-    implementation Libs.rx_android
-    implementation Libs.rx_java
     implementation Libs.rx_java_2
     implementation Libs.rx_android_2
 

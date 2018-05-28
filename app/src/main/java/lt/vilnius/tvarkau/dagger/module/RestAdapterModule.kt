@@ -9,7 +9,7 @@ import io.reactivex.Scheduler
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.api.ApiEndpoint
 import lt.vilnius.tvarkau.dagger.Api
-import lt.vilnius.tvarkau.dagger.IoScheduler2
+import lt.vilnius.tvarkau.dagger.IoScheduler
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -82,7 +82,7 @@ class RestAdapterModule {
     @Singleton
     fun provideApi2Retrofit(
             @Api endpoint: ApiEndpoint,
-            @IoScheduler2 ioScheduler: Scheduler,
+            @IoScheduler ioScheduler: Scheduler,
             @Api client: OkHttpClient,
             gson: Gson
     ): Retrofit {

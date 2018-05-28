@@ -1,15 +1,15 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
 import com.nhaarman.mockito_kotlin.*
+import io.reactivex.Single
+import io.reactivex.Single.just
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.backend.ApiResponse
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.wrapInResponse
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
-import rx.Observable
-import rx.Single.just
-import rx.schedulers.Schedulers
 import kotlin.test.assertEquals
 
 /**
@@ -17,13 +17,13 @@ import kotlin.test.assertEquals
  */
 class MyReportListInteractorTest {
 
-    val api = mock<LegacyApiService>()
-    val idProvider = mock<MyReportsInteractor>()
+    private val api = mock<LegacyApiService>()
+    private val idProvider = mock<MyReportsInteractor>()
 
-    val fixture: ReportListInteractor = MyReportListInteractor(
+    private val fixture = MyReportListInteractor(
             api,
             idProvider,
-            Schedulers.immediate()
+            Schedulers.trampoline()
     )
 
     @Test
@@ -64,7 +64,7 @@ class MyReportListInteractorTest {
         whenever(idProvider.getReportIds()).thenReturn(just(problemsIds))
         whenever(api.getProblem(any()))
                 .thenReturn(problems[0].wrapInResponse)
-                .thenReturn(Observable.error(RuntimeException("some api error occurred")))
+                .thenReturn(Single.error(RuntimeException("some api error occurred")))
 
         fixture.getProblems(1)
                 .test()
@@ -82,7 +82,7 @@ class MyReportListInteractorTest {
         whenever(idProvider.getReportIds()).thenReturn(just(problemsIds))
         whenever(api.getProblem(any()))
                 .thenReturn(problems[0].wrapInResponse)
-                .thenReturn(Observable.just(ApiResponse<Problem>()))
+                .thenReturn(Single.just(ApiResponse<Problem>()))
                 .thenReturn(problems[1].wrapInResponse)
 
         fixture.getProblems(1)
@@ -119,7 +119,8 @@ class MyReportListInteractorTest {
 
         val sorted = fixture.getProblems(1)
                 .test()
-                .onNextEvents.first()
+                .values()
+                .first()
 
         assertEquals(sorted[0], problems[1])
     }

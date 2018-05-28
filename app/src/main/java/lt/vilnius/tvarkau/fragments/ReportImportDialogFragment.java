@@ -31,6 +31,10 @@ import javax.inject.Named;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import lt.vilnius.tvarkau.R;
 import lt.vilnius.tvarkau.TvarkauApplication;
 import lt.vilnius.tvarkau.analytics.Analytics;
@@ -52,10 +56,6 @@ import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class ReportImportDialogFragment extends DialogFragment {
@@ -89,7 +89,7 @@ public class ReportImportDialogFragment extends DialogFragment {
     private Unbinder unbinder;
     private SharedPrefsManager prefsManager;
     private String password;
-    private Subscription subscription;
+    private Disposable disposable;
     private MyReportsInteractor myReportsInteractor;
 
     public ReportImportDialogFragment() {
@@ -108,7 +108,7 @@ public class ReportImportDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ActivityComponent.Companion.init(((TvarkauApplication) getActivity().getApplication()).getComponent(), (AppCompatActivity)  getActivity()).inject(this);
+        ActivityComponent.Companion.init(((TvarkauApplication) getActivity().getApplication()).getComponent(), (AppCompatActivity) getActivity()).inject(this);
 
         myReportsInteractor = new SharedPreferencesMyReportsInteractor(myProblemsPreferences);
     }
@@ -187,9 +187,9 @@ public class ReportImportDialogFragment extends DialogFragment {
 
                         ApiRequest<GetVilniusSignParams> request = new ApiRequest<>(ApiMethod.LOGIN, params);
 
-                        Action1<ApiResponse<LoginResponse>> onSuccess = new Action1<ApiResponse<LoginResponse>>() {
+                        Consumer<ApiResponse<LoginResponse>> onSuccess = new Consumer<ApiResponse<LoginResponse>>() {
                             @Override
-                            public void call(ApiResponse<LoginResponse> apiResponse) {
+                            public void accept(ApiResponse<LoginResponse> apiResponse) {
                                 vilniusAccountLoginError.setVisibility(View.GONE);
                                 if (apiResponse.getResult() != null) {
                                     analytics.trackLogIn();
@@ -207,16 +207,16 @@ public class ReportImportDialogFragment extends DialogFragment {
                             }
                         };
 
-                        Action1<Throwable> onError = new Action1<Throwable>() {
+                        Consumer<Throwable> onError = new Consumer<Throwable>() {
                             @Override
-                            public void call(Throwable throwable) {
+                            public void accept(Throwable throwable) {
                                 Timber.e(throwable);
                                 vilniusAccountLoginError.setVisibility(View.VISIBLE);
                                 vilniusAccountLoginError.setText(R.string.error_on_vilnius_sign);
                             }
                         };
 
-                        subscription = legacyApiService.loginToVilniusAccount(request)
+                        disposable = legacyApiService.loginToVilniusAccount(request)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
@@ -262,9 +262,9 @@ public class ReportImportDialogFragment extends DialogFragment {
 
         ApiRequest<GetProblemsParams> request = new ApiRequest<>(ApiMethod.GET_PROBLEMS, params);
 
-        Action1<ApiResponse<List<Problem>>> onSuccess = new Action1<ApiResponse<List<Problem>>>() {
+        Consumer<ApiResponse<List<Problem>>> onSuccess = new Consumer<ApiResponse<List<Problem>>>() {
             @Override
-            public void call(ApiResponse<List<Problem>> apiResponse) {
+            public void accept(ApiResponse<List<Problem>> apiResponse) {
                 if (apiResponse.getResult() != null) {
                     if (apiResponse.getResult().size() > 0) {
                         List<Problem> vilniusAccountReports = new ArrayList<>();
@@ -312,9 +312,9 @@ public class ReportImportDialogFragment extends DialogFragment {
             }
         };
 
-        Action1<Throwable> onError = new Action1<Throwable>() {
+        Consumer<Throwable> onError = new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 Toast.makeText(ReportImportDialogFragment.this.getContext(), R.string.error_loading_reports_from_vilnius_account,
                         Toast.LENGTH_SHORT).show();
                 throwable.printStackTrace();
@@ -333,8 +333,8 @@ public class ReportImportDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroyView() {
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (disposable != null) {
+            disposable.dispose();
         }
         super.onDestroyView();
         unbinder.unbind();
