@@ -31,7 +31,7 @@ object Versions {
     const val firebase = "16.0.0"
     const val firebase_perf = "16.0.0"
     const val firebase_plugins = "1.1.1"
-    const val crashlytics = "2.9.2"
+    const val crashlytics = "2.9.3"
 
     const val junit = "4.12"
     const val assertj_core = "3.9.1"
