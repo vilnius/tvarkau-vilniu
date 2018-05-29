@@ -26,10 +26,10 @@ object Versions {
     const val preferx = "1.1.0"
 
     const val support = "27.1.1"
-    const val google_services = "3.3.1"
+    const val google_services = "4.0.1"
     const val play_services = "15.0.1"
-    const val firebase = "15.0.2"
-    const val firebase_perf = "15.2.0"
+    const val firebase = "16.0.0"
+    const val firebase_perf = "16.0.0"
     const val firebase_plugins = "1.1.1"
     const val crashlytics = "2.9.2"
 
