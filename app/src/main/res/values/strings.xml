@@ -124,7 +124,7 @@
     <string name="transport_vehicle_report_type_contacts_needed">Transporto priemonių stovėjimo tvarkos pažeidimai (Būtina pridėti nuotraukas)</string>
     <string name="error_loading_report_types">Atsiprašome, nepavyko užkrauti problemos tipų sąrašo. Bandykite dar sykį.</string>
     <string name="home_settings">Nustatymai</string>
-    <string name="setting_anonymous_title">Pranešti anonomiškai</string>
+    <string name="setting_anonymous_title">Pranešti anonimiškai</string>
     <string name="setting_anonymous_explanation">Pridėkite asmeninius duomenis norėdami pranešinėti neanonimiškai</string>
     <string name="edit_personal_data">Redaguoti mano duomenis</string>
     <string name="setting_import_reports">Prisijungti į vilnius.lt profilį</string>
