@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
 import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.R
@@ -18,7 +19,6 @@ import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
 import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter
-import rx.Subscription
 import timber.log.Timber
 
 /**
@@ -31,7 +31,7 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
     private var page = 0
     private var reloadingAllReports = false
     private var reloadReports = false
-    private var subscription: Subscription? = null
+    private var disposable: Disposable? = null
 
     abstract val presenter: ProblemListPresenter
 
@@ -50,12 +50,12 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
         super.onActivityCreated(savedInstanceState)
         RxBus.observable
                 .filter { it is RefreshReportFilterEvent || it is NewProblemAddedEvent }
-                .limit(1)
+                .take(1)
                 .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
                 .subscribe({
                     reloadReports = true
-                }, Timber::w).apply { subscription = this }
+                }, Timber::w).apply { disposable = this }
 
 
         if (problemList.isEmpty()) {
@@ -138,7 +138,7 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.unsubscribe()
+        disposable?.dispose()
     }
 
     override fun onDestroyView() {

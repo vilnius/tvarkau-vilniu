@@ -1,6 +1,8 @@
 package lt.vilnius.tvarkau.mvp.presenters
 
 import com.nhaarman.mockito_kotlin.*
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.fragments.NewReportFragment
 import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractor
@@ -8,8 +10,6 @@ import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
 import org.junit.Test
-import rx.Single
-import rx.schedulers.Schedulers
 
 /**
  * @author Martynas Jurkus
@@ -26,7 +26,7 @@ class NewReportPresenterImplTest {
                 interactor,
                 personalDataInteractor,
                 view,
-                Schedulers.immediate(),
+                Schedulers.trampoline(),
                 analytics
         )
     }

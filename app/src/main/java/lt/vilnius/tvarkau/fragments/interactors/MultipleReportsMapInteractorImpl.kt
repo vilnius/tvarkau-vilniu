@@ -1,6 +1,8 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
 import com.vinted.preferx.StringPreference
+import io.reactivex.Scheduler
+import io.reactivex.Single
 import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
@@ -8,8 +10,6 @@ import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.rx.RxBus
-import rx.Scheduler
-import rx.Single
 
 class MultipleReportsMapInteractorImpl(
         private val api: LegacyApiService,
@@ -33,8 +33,9 @@ class MultipleReportsMapInteractorImpl(
         return Single.concat(
                 Single.just(cachedReports),
                 newRequest()
-        ).first { it.isNotEmpty() }
-                .toSingle()
+        )
+                .filter { it.isNotEmpty() }
+                .firstOrError()
                 .subscribeOn(ioScheduler)
     }
 
@@ -54,7 +55,6 @@ class MultipleReportsMapInteractorImpl(
                 .create()
 
         return api.getProblems(GetReportListRequest(params))
-                .toSingle()
                 .map { it.result }
                 .doOnSuccess { reports ->
                     if (reports.isEmpty()) {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_report_type_list.*
 import lt.vilnius.tvarkau.BaseActivity
@@ -16,7 +17,6 @@ import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
 import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter
-import rx.Subscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ import javax.inject.Inject
         trackingScreenName = ActivityConstants.SCREEN_REPORT_TYPE_LIST)
 class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportTypeSelectedListener {
 
-    private var subscription: Subscription? = null
+    private var disposable: Disposable? = null
     private var reportTypesListAdapter: ReportTypesListAdapter? = null
 
     @Inject
@@ -56,9 +56,9 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        subscription = reportTypesInteractor.getReportTypes()
+        disposable = reportTypesInteractor.getReportTypes()
                 .doOnSubscribe { report_types_progress.visible() }
-                .doOnUnsubscribe { report_types_progress.gone() }
+                .doFinally { report_types_progress.gone() }
                 .observeOn(uiScheduler)
                 .subscribe({
                     reportTypesListAdapter = ReportTypesListAdapter(this@ReportTypeListFragment, it, context)
@@ -67,7 +67,7 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
                     Timber.e(it)
                     Toast.makeText(context, R.string.error_loading_report_types, Toast.LENGTH_SHORT).show()
                 })
-                .apply { subscription = this }
+                .apply { disposable = this }
     }
 
     override fun onInject(component: ActivityComponent) {
@@ -79,7 +79,7 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
     }
 
     override fun onDestroyView() {
-        subscription?.unsubscribe()
+        disposable?.dispose()
         reportTypesListAdapter?.setReportTypeSelectedListener(null)
         super.onDestroyView()
     }

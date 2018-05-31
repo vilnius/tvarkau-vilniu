@@ -1,7 +1,7 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
 import android.content.SharedPreferences
-import rx.Single
+import io.reactivex.Single
 
 /**
  * @author Martynas Jurkus

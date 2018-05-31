@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
-import rx.Single
+import io.reactivex.Single
 
 /**
  * @author Martynas Jurkus
