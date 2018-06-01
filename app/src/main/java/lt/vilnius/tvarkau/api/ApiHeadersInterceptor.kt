@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ApiHeadersInterceptor @Inject constructor(
-        private val appPreferences: AppPreferences
+    private val appPreferences: AppPreferences
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -31,11 +31,13 @@ class ApiHeadersInterceptor @Inject constructor(
     fun applyToken(requestBuilder: Request.Builder) {
         val tokenValue = appPreferences.apiToken.get()
         requestBuilder.addHeader(HTTP_HEADER_OAUTH, formatTokenForHeader(tokenValue.accessToken))
+        requestBuilder.addHeader(HTTP_HEADER_CITY, "1") //TODO let user choose the city
     }
 
     private fun formatTokenForHeader(token: String) = "Bearer $token"
 
     companion object {
         const val HTTP_HEADER_OAUTH = "Authorization"
+        const val HTTP_HEADER_CITY = "X-City-ID"
     }
 }

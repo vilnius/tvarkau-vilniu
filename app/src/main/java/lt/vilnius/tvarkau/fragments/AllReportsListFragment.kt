@@ -1,44 +1,44 @@
 package lt.vilnius.tvarkau.fragments
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.paging.PagedList
 import android.os.Bundle
+import android.os.Parcelable
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.view.*
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fab_new_report.*
-import kotlinx.android.synthetic.main.fragment_all_reports_list.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
+import kotlinx.android.synthetic.main.loading_indicator.*
+import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.observe
 import lt.vilnius.tvarkau.extensions.visible
-import lt.vilnius.tvarkau.fragments.interactors.AllReportListInteractor
-import lt.vilnius.tvarkau.fragments.presenters.AllReportsListPresenterImpl
-import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
-import lt.vilnius.tvarkau.fragments.views.ReportListView
-import lt.vilnius.tvarkau.widgets.EndlessScrollListener
+import lt.vilnius.tvarkau.extensions.withViewModel
+import lt.vilnius.tvarkau.repository.NetworkState
+import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
+import lt.vilnius.tvarkau.views.adapters.ReportListAdapter
+import javax.inject.Inject
 
-/**
- * @author Martynas Jurkus
- */
-@Screen(titleRes = R.string.title_problem_list,
-        trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST)
-class AllReportsListFragment : BaseReportListFragment(), ReportListView {
+@Screen(
+    titleRes = R.string.title_problem_list,
+    trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST
+)
+class AllReportsListFragment : BaseFragment() {
 
-    private lateinit var scrollListener: EndlessScrollListener
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override val presenter: ProblemListPresenter by lazy {
-        AllReportsListPresenterImpl(
-                AllReportListInteractor(
-                        legacyApiService,
-                        ioScheduler,
-                        appPreferences.reportTypeSelectedListFilter,
-                        appPreferences.reportStatusSelectedListFilter,
-                        getString(R.string.report_filter_all_report_types)
-                ),
-                uiScheduler,
-                this,
-                connectivityProvider
-        )
+    private lateinit var viewModel: ReportListViewModel
+    private var lastState: Parcelable? = null
+
+    val adapter = ReportListAdapter(ReportDiffUtilCallback()) { view, reportId ->
+        onReportClicked(reportId, view)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,20 +46,43 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_all_reports_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        scrollListener = EndlessScrollListener({ getReports() })
-        report_list.addOnScrollListener(scrollListener)
+        swipe_container.visible()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         fab_report.setOnClickListener { navigationManager.navigateToNewReport() }
+
+        viewModel = withViewModel(viewModelFactory) {
+            observe(reports, ::showReports)
+            observe(networkState, ::updateNetworkState)
+            observe(refreshState) {
+                swipe_container.isRefreshing = it == NetworkState.LOADING
+            }
+        }
+
+        swipe_container.setOnRefreshListener {
+            viewModel.refresh()
+        }
+
+        report_list.adapter = adapter
+        lastState = savedInstanceState?.getParcelable(STATE_LINEAR_LAYOUT)
+        viewModel.getReports(savedInstanceState?.getInt(STATE_LAST_LOAD_KEY))
+    }
+
+    private fun updateNetworkState(networkState: NetworkState?) {
+        //TOOD show network state in UI
     }
 
     override fun onInject(component: ActivityComponent) {
@@ -81,41 +104,46 @@ class AllReportsListFragment : BaseReportListFragment(), ReportListView {
         }
     }
 
-    override fun getReports() {
-        if (scrollListener.isLoading) return
-        scrollListener.isLoading = true
-        super.getReports()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val lastKey = adapter.currentList?.lastKey as Int
+
+        outState.putInt(STATE_LAST_LOAD_KEY, lastKey)
+        outState.putParcelable(STATE_LINEAR_LAYOUT, report_list.layoutManager.onSaveInstanceState())
     }
 
-    override fun reloadData() {
-        super.reloadData()
-        scrollListener.isLoading = false
+    private fun showReports(pagedList: PagedList<ReportEntity>?) {
+        loading_indicator.gone()
+        adapter.submitList(pagedList)
+
+        lastState?.let {
+            report_list.layoutManager.onRestoreInstanceState(lastState)
+            lastState = null
+        }
     }
 
-    override fun onReportsLoaded(reports: List<Problem>) {
-        super.onReportsLoaded(reports)
-        swipe_container.isRefreshing = false
+    private fun onReportClicked(reportId: Int, view: View) {
+        val intent = ProblemDetailActivity.getStartActivityIntent(activity, reportId.toString())
+        val bundle = ActivityOptionsCompat.makeScaleUpAnimation(
+            view,
+            0,
+            0,
+            view.width,
+            view.height
+        ).toBundle()
+
+        ActivityCompat.startActivity(context!!, intent, bundle)
     }
 
-    override fun showProgress() {
-        super.showProgress()
-        scrollListener.isLoading = true
-    }
-
-    override fun hideProgress() {
-        super.hideProgress()
-        scrollListener.isLoading = false
-    }
-
-    override fun showEmptyState() {
-        all_reports_empty_state.visible()
-    }
-
-    override fun hideEmptyState() {
-        all_reports_empty_state.gone()
+    fun showError(error: String) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
+        private const val STATE_LINEAR_LAYOUT = "linear_layout_state"
+        private const val STATE_LAST_LOAD_KEY = "last_key"
+
         fun newInstance() = AllReportsListFragment()
     }
 }

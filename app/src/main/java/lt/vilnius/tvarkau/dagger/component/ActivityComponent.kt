@@ -8,7 +8,9 @@ import lt.vilnius.tvarkau.dagger.module.MainActivityModule
 import lt.vilnius.tvarkau.fragments.*
 
 
-@Subcomponent(modules = arrayOf(ActivityModule::class))
+@Subcomponent(modules = [
+    ActivityModule::class
+])
 interface ActivityComponent {
 
     fun mainActivityComponent(mainActivityModule: MainActivityModule): MainActivityComponent

@@ -5,18 +5,18 @@
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:showIn="@layout/fragment_all_reports_list"
+    android:animateLayoutChanges="true"
     android:visibility="gone"
-    tools:visibility="visible" >
+    tools:showIn="@layout/fragment_all_reports_list"
+    tools:visibility="visible">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/report_list"
-        android:name="lt.vilnius.tvarkau.ProblemListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
-        android:scrollbars="vertical"
-        app:layoutManager="LinearLayoutManager"
+        android:scrollbars="none"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:context=".ProblemsListActivity"
         tools:listitem="@layout/problem_list_content" />
 </android.support.v4.widget.SwipeRefreshLayout>

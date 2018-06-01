@@ -21,8 +21,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import lt.vilnius.tvarkau.BuildConfig;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
+import lt.vilnius.tvarkau.dagger.IoScheduler;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -71,12 +73,13 @@ public class LegacyApiModule {
     @Singleton
     public Retrofit provideRetrofit(
             Gson gson,
-            OkHttpClient okHttpClient
+            OkHttpClient okHttpClient,
+            @IoScheduler Scheduler ioScheduler
     ) {
         return new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(ioScheduler))
                 .client(okHttpClient)
                 .build();
     }
