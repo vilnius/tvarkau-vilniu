@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.mvp.presenters
 
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.fragments.NewReportFragment
@@ -51,6 +52,7 @@ class NewReportPresenterImpl(
 
     override fun submitProblem(validator: FieldAwareValidator<NewReportData>) {
         validator.toSingle()
+                .subscribeOn(Schedulers.io())
                 .flatMap { interactor.submitReport(it) }
                 .doOnSuccess { updatePersonalData(validator.get()) }
                 .observeOn(uiScheduler)
