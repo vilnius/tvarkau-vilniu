@@ -81,12 +81,12 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
 
             disposable = legacyApiService.getProblem(GetReportRequest(params))
                     .map { it.result!! }
+                    .subscribeOn(ioScheduler)
+                    .observeOn(uiScheduler)
                     .doOnSuccess { problem = it }
                     .doOnSuccess { analytics.trackViewProblem(it) }
                     .doOnSubscribe { showLoading() }
                     .doFinally { hideLoading() }
-                    .subscribeOn(ioScheduler)
-                    .observeOn(uiScheduler)
                     .subscribe({ problem ->
                         no_internet_view.gone()
                         server_not_responding_view.gone()
