@@ -57,9 +57,9 @@ class ReportTypeListFragment : BaseFragment(), ReportTypesListAdapter.ReportType
         super.onActivityCreated(savedInstanceState)
 
         subscription = reportTypesInteractor.getReportTypes()
+                .observeOn(uiScheduler)
                 .doOnSubscribe { report_types_progress.visible() }
                 .doOnUnsubscribe { report_types_progress.gone() }
-                .observeOn(uiScheduler)
                 .subscribe({
                     reportTypesListAdapter = ReportTypesListAdapter(this@ReportTypeListFragment, it, context)
                     report_types_recycler_view.adapter = reportTypesListAdapter
