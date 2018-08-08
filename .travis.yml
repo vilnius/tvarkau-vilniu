@@ -36,7 +36,5 @@ install:
 env:
   - ANDROID_HOME=$HOME/android-sdk
 
-  global:
-    - GRADLE_OPTS="-Xmx4g"
-
-script: ./gradlew --no-daemon -PdisablePreDex testDebug
+script:
+  - ./gradlew --no-daemon -PdisablePreDex testDebug
