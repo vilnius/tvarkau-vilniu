@@ -22,6 +22,7 @@ class NewReportPresenterImpl(
         private val personalDataInteractor: PersonalDataInteractor,
         private val view: NewReportView,
         private val uiScheduler: Scheduler,
+        private val ioScheduler: Scheduler,
         private val analytics: Analytics
 ) : NewReportPresenter {
 
@@ -51,6 +52,7 @@ class NewReportPresenterImpl(
 
     override fun submitProblem(validator: FieldAwareValidator<NewReportData>) {
         validator.toSingle()
+                .subscribeOn(ioScheduler)
                 .flatMap { interactor.submitReport(it) }
                 .doOnSuccess { updatePersonalData(validator.get()) }
                 .observeOn(uiScheduler)

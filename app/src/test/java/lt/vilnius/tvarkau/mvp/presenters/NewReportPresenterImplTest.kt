@@ -23,11 +23,12 @@ class NewReportPresenterImplTest {
 
     val fixture: NewReportPresenter by lazy {
         NewReportPresenterImpl(
-                interactor,
-                personalDataInteractor,
-                view,
-                Schedulers.immediate(),
-                analytics
+                interactor = interactor,
+                personalDataInteractor = personalDataInteractor,
+                view = view,
+                uiScheduler = Schedulers.immediate(),
+                ioScheduler = Schedulers.immediate(),
+                analytics = analytics
         )
     }
 

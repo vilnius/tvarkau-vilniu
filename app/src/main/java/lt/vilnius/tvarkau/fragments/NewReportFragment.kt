@@ -68,7 +68,7 @@ class NewReportFragment : BaseFragment(),
 
     private val presenter: NewReportPresenter by lazy {
         NewReportPresenterImpl(
-                NewReportInteractorImpl(
+                interactor = NewReportInteractorImpl(
                         legacyApiService,
                         SharedPreferencesMyReportsInteractor(myProblemsPreferences),
                         ReportPhotoProviderImpl(context!!),
@@ -76,12 +76,13 @@ class NewReportFragment : BaseFragment(),
                         getString(R.string.report_description_timestamp_template),
                         analytics
                 ),
-                PersonalDataInteractorImpl(
+                personalDataInteractor = PersonalDataInteractorImpl(
                         SharedPrefsManager.getInstance(context!!)
                 ),
-                this,
-                uiScheduler,
-                analytics
+                view = this,
+                uiScheduler = uiScheduler,
+                ioScheduler = ioScheduler,
+                analytics =  analytics
         )
     }
 
