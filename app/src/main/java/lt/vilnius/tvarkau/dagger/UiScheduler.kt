@@ -1,4 +1,4 @@
-package lt.vilnius.tvarkau.dagger.module
+package lt.vilnius.tvarkau.dagger
 
 /**
  * @author Martynas Jurkus
@@ -9,4 +9,4 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 
 @Qualifier
 @Retention(RUNTIME)
-annotation class IoScheduler
+annotation class UiScheduler

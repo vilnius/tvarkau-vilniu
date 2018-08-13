@@ -1,8 +1,8 @@
 package lt.vilnius.tvarkau.fragments.presenters
 
 import android.content.Context
+import io.reactivex.Single
 import lt.vilnius.tvarkau.utils.NetworkUtils
-import rx.Single
 
 /**
  * @author Martynas Jurkus

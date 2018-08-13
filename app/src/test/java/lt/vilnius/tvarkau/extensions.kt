@@ -1,21 +1,15 @@
 package lt.vilnius.tvarkau
 
+import io.reactivex.Single
 import lt.vilnius.tvarkau.backend.ApiResponse
-import rx.Observable
-import rx.Single
 
 /**
  * @author Martynas Jurkus
  */
 
-val <T> T.wrapInResponse: Observable<ApiResponse<T>>
+val <T> T.wrapInResponse: Single<ApiResponse<T>>
     get() {
         val response = ApiResponse<T>()
         response.result = this
-        return Observable.just(response)
-    }
-
-val <T> T.wrapInSingleResponse: Single<ApiResponse<T>>
-    get() {
-        return this.wrapInResponse.toSingle()
+        return Single.just(response)
     }

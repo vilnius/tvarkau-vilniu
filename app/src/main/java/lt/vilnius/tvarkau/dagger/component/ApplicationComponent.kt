@@ -1,7 +1,6 @@
 package lt.vilnius.tvarkau.dagger.component
 
 import dagger.Component
-import lt.vilnius.tvarkau.AppModule
 import lt.vilnius.tvarkau.dagger.module.*
 import javax.inject.Singleton
 
@@ -14,7 +13,8 @@ import javax.inject.Singleton
     DataModule::class,
     TokenModule::class,
     RestAdapterModule::class,
-    SerializationModule::class
+    SerializationModule::class,
+    ApiModule::class
 ])
 interface ApplicationComponent {
 

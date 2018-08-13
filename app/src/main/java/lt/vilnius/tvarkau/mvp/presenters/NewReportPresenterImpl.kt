@@ -1,5 +1,8 @@
 package lt.vilnius.tvarkau.mvp.presenters
 
+import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.analytics.Analytics
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.fragments.NewReportFragment
@@ -9,8 +12,6 @@ import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
 import lt.vilnius.tvarkau.utils.FormatUtils
 import lt.vilnius.tvarkau.utils.ImageUtils
-import rx.Scheduler
-import rx.Subscription
 import java.io.File
 import java.util.*
 
@@ -25,14 +26,14 @@ class NewReportPresenterImpl(
         private val analytics: Analytics
 ) : NewReportPresenter {
 
-    private var subscription: Subscription? = null
+    private var disposable: Disposable? = null
     private lateinit var reportType: String
 
     override fun onAttach() {
     }
 
     override fun onDetach() {
-        subscription?.unsubscribe()
+        disposable?.dispose()
     }
 
     override fun initWithReportType(reportType: String) {
@@ -51,17 +52,18 @@ class NewReportPresenterImpl(
 
     override fun submitProblem(validator: FieldAwareValidator<NewReportData>) {
         validator.toSingle()
+                .subscribeOn(Schedulers.io())
                 .flatMap { interactor.submitReport(it) }
                 .doOnSuccess { updatePersonalData(validator.get()) }
                 .observeOn(uiScheduler)
                 .doOnSubscribe { view.showProgress() }
-                .doOnUnsubscribe { view.hideProgress() }
+                .doFinally { view.hideProgress() }
                 .subscribe({
                     handleSuccess()
                 }, {
                     handleError(it)
                 })
-                .apply { subscription = this }
+                .apply { disposable = this }
     }
 
     override fun onImagesPicked(imageFiles: List<File>) {

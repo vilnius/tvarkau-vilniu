@@ -1,7 +1,7 @@
 package lt.vilnius.tvarkau.mvp.interactors
 
+import io.reactivex.Single
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
-import rx.Single
 
 /**
  * @author Martynas Jurkus

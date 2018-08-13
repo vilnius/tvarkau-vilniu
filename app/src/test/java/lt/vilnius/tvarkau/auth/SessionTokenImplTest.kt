@@ -1,6 +1,7 @@
 package lt.vilnius.tvarkau.auth
 
 import ca.mimic.oauth2library.OAuth2Client
+import ca.mimic.oauth2library.OAuthError
 import ca.mimic.oauth2library.OAuthResponse
 import ca.mimic.oauth2library.OAuthResponseCallback
 import com.google.gson.GsonBuilder
@@ -17,12 +18,21 @@ class SessionTokenImplTest {
     private val guestOAuth = mock<OAuth2Client.Builder> {
         on { build() } doReturn oAuthClient
     }
+    private val refreshTokenOauth = mock<OAuth2Client.Builder> {
+        on { build() } doReturn oAuthClient
+    }
     private val gson = GsonBuilder().create()
     private val gsonSerializer = GsonSerializerImpl(gson)
     private val appPreferences = mock<AppPreferences> {
         on { apiToken } doReturn tokenPref
     }
-    private val fixture = SessionTokenImpl(appPreferences, guestOAuth, gsonSerializer)
+
+    private val fixture = SessionTokenImpl(
+            appPreferences,
+            guestOAuth,
+            refreshTokenOauth,
+            gsonSerializer
+    )
 
     @Test
     fun retrievePublicTokenSuccess_saveToken() {
@@ -41,6 +51,39 @@ class SessionTokenImplTest {
         val result = fixture.refreshGuestToken().test()
 
         result.assertError { true }
+    }
+
+    @Test
+    fun refreshCurrentToken_success() {
+        whenever(refreshTokenOauth.parameters(any())).thenReturn(refreshTokenOauth)
+        val currentToken = ApiToken(accessToken = "currentToken")
+
+        mockOAuthResponse(true, "newToken")
+
+        val result = fixture.refreshCurrentToken(currentToken).test()
+
+        result.assertComplete()
+        verify(tokenPref).set(argThat { accessToken == "newToken" }, any())
+    }
+
+    @Test
+    fun refreshCurrentToken_commonError() {
+        whenever(refreshTokenOauth.parameters(any())).thenReturn(refreshTokenOauth)
+        val currentToken = ApiToken(accessToken = "currentToken")
+
+        val oAuthError: OAuthError = mock {
+            on { error } doReturn "random"
+        }
+
+        mockOAuthResponse {
+            on { isSuccessful } doReturn false
+            on { this.oAuthError } doReturn oAuthError
+        }
+
+        val result = fixture.refreshCurrentToken(currentToken).test().await()
+
+        result.assertError(Throwable::class.java)
+        verify(tokenPref, never()).set(any(), any())
     }
 
     private fun mockOAuthResponse(

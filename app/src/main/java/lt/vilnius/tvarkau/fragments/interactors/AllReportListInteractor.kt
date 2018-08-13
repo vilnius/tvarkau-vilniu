@@ -1,13 +1,13 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
 import com.vinted.preferx.StringPreference
+import io.reactivex.Scheduler
+import io.reactivex.Single
 import lt.vilnius.tvarkau.backend.GetProblemsParams
 import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.extensions.emptyToNull
-import rx.Scheduler
-import rx.Single
 
 /**
  * @author Martynas Jurkus
@@ -39,7 +39,6 @@ class AllReportListInteractor(
         return legacyApiService.getProblems(GetReportListRequest(params))
                 .subscribeOn(ioScheduler)
                 .map { it.result ?: emptyList() }
-                .toSingle()
     }
 
     companion object {

@@ -1,8 +1,8 @@
 package lt.vilnius.tvarkau.utils
 
-import rx.Single
-import rx.Single.defer
-import rx.Single.just
+import io.reactivex.Single
+import io.reactivex.Single.defer
+import io.reactivex.Single.just
 
 /**
  * @author Martynas Jurkus
@@ -24,13 +24,11 @@ class FieldAwareValidator<T> private constructor(
      * Will throw [ValidationException] if form data is not valid
      */
     fun get(): T {
-        val result = if (exception == null) {
+        return if (exception == null) {
             obj
         } else {
             throw exception
         }
-
-        return result
     }
 
     fun toSingle(): Single<T> {

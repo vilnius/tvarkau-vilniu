@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.loading.*
 import kotlinx.android.synthetic.main.no_internet.*
 import kotlinx.android.synthetic.main.problem_detail.*
@@ -32,7 +33,6 @@ import lt.vilnius.tvarkau.utils.GlobalConsts
 import lt.vilnius.tvarkau.utils.NetworkUtils
 import lt.vilnius.tvarkau.utils.PermissionUtils
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter
-import rx.Subscription
 import timber.log.Timber
 
 /**
@@ -51,7 +51,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
 
     private lateinit var problem: Problem
 
-    private var subscription: Subscription? = null
+    private var disposable: Disposable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.problem_detail, container, false)
@@ -79,14 +79,14 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
         if (NetworkUtils.isNetworkConnected(activity!!)) {
             val params = GetProblemParams(issueId)
 
-            subscription = legacyApiService.getProblem(GetReportRequest(params))
+            disposable = legacyApiService.getProblem(GetReportRequest(params))
                     .map { it.result!! }
-                    .doOnNext { problem = it }
-                    .doOnNext { analytics.trackViewProblem(it) }
-                    .doOnSubscribe { showLoading() }
-                    .doOnUnsubscribe { hideLoading() }
                     .subscribeOn(ioScheduler)
                     .observeOn(uiScheduler)
+                    .doOnSuccess { problem = it }
+                    .doOnSuccess { analytics.trackViewProblem(it) }
+                    .doOnSubscribe { showLoading() }
+                    .doFinally { hideLoading() }
                     .subscribe({ problem ->
                         no_internet_view.gone()
                         server_not_responding_view.gone()
@@ -120,7 +120,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
                         showNoConnectionSnackbar()
 
                         Toast.makeText(context, R.string.error_no_problem, Toast.LENGTH_SHORT).show()
-                    }).apply { subscription = this }
+                    }).apply { disposable = this }
         } else {
             problem_detail_scroll_view.gone()
             server_not_responding_view.gone()
@@ -199,7 +199,7 @@ class ProblemDetailFragment : BaseFragment(), ProblemImagesPagerAdapter.ProblemI
     }
 
     override fun onDestroyView() {
-        subscription?.unsubscribe()
+        disposable?.dispose()
         super.onDestroyView()
     }
 

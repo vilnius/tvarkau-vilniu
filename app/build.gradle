@@ -86,7 +86,7 @@ dependencies {
 
     implementation Libs.retrofit
     implementation Libs.retrofit_converter_gson
-    implementation Libs.retrofit_adapter_rx
+    implementation Libs.retrofit_adapter_rx2
 
     implementation Libs.gson
 
@@ -106,9 +106,8 @@ dependencies {
     implementation Libs.okhttp
     implementation Libs.okhttp_logging_interceptor
 
-    implementation Libs.rx_android
-    implementation Libs.rx_java
     implementation Libs.rx_java_2
+    implementation Libs.rx_android_2
 
     implementation Libs.three_ten
     implementation Libs.photo_view
@@ -136,6 +135,7 @@ dependencies {
     testImplementation TestLibraries.fest_util
     testImplementation TestLibraries.fest_reflect
     testImplementation TestLibraries.assertj_android
+    testImplementation TestLibraries.okhttp_mockwebserver
 }
 
 task versionName() {

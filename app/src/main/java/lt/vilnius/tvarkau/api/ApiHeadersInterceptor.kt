@@ -28,7 +28,7 @@ class ApiHeadersInterceptor @Inject constructor(
         }
     }
 
-    private fun applyToken(requestBuilder: Request.Builder) {
+    fun applyToken(requestBuilder: Request.Builder) {
         val tokenValue = appPreferences.apiToken.get()
         requestBuilder.addHeader(HTTP_HEADER_OAUTH, formatTokenForHeader(tokenValue.accessToken))
     }
