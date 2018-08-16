@@ -55,9 +55,7 @@ class RestAdapterModule {
                 "",
                 endpoint.url + OAUTH_TOKEN_ENDPOINT
         )
-                .grantType("password")
-                .username("guest")
-                .password("guest")
+                .grantType("client_credentials")
                 .scope("user")
                 .okHttpClient(client)
     }
