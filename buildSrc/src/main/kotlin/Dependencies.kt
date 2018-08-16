@@ -47,7 +47,7 @@ object Versions {
 
     private const val major = 4
     private const val minor = 1
-    private const val patch = 0
+    private const val patch = 1
     private const val micro = 0
 
     const val versionCode: Int = major * 1000000 + minor * 10000 + patch * 100 + micro
