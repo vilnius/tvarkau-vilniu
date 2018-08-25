@@ -22,6 +22,12 @@ android {
         resConfigs "lt", "en"
 
         vectorDrawables.useSupportLibrary = true
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -108,6 +114,7 @@ dependencies {
 
     implementation Libs.rx_java_2
     implementation Libs.rx_android_2
+    implementation Libs.rx_kotlin_2
 
     implementation Libs.three_ten
     implementation Libs.photo_view
@@ -120,6 +127,17 @@ dependencies {
     implementation Libs.crashlytics
 
     implementation Libs.preferx
+
+    implementation Libs.lifecycle_extensions
+    implementation Libs.lifecycle_reactive_streams
+    kapt Libs.lifecycle_compiler
+
+    implementation Libs.room_rx2
+    implementation Libs.room_runtime
+    kapt Libs.room_compiler
+
+    implementation Libs.paging
+    implementation Libs.paging_rx2
 
     api Libs.oauth
 

@@ -1,12 +1,15 @@
 object Versions {
-    const val kotlin = "1.2.31"
+    const val kotlin = "1.2.60"
     const val fabric = "1.25.1"
     const val build_tools = "3.1.2"
     const val rx_java_2 = "2.1.10"
     const val rx_android_2 = "2.0.2"
+    const val rx_kotlin = "2.2.0"
     const val robolectric = "3.7.1"
     const val dagger = "2.16"
     const val lifecycle = "1.1.1"
+    const val room = "1.1.1"
+    const val paging = "1.0.1"
     const val retrofit = "2.3.0"
     const val leak_canary = "1.5.4"
     const val butterknife = "8.8.1"
@@ -77,6 +80,7 @@ object Libs {
 
     const val rx_java_2 = "io.reactivex.rxjava2:rxjava:${Versions.rx_java_2}"
     const val rx_android_2 = "io.reactivex.rxjava2:rxandroid:${Versions.rx_android_2}"
+    const val rx_kotlin_2 = "io.reactivex.rxjava2:rxkotlin:${Versions.rx_kotlin}"
 
     const val three_ten = "com.jakewharton.threetenabp:threetenabp:${Versions.three_ten}"
 
@@ -93,7 +97,6 @@ object Libs {
     const val retrofit_converter_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
     const val retrofit_adapter_rx2 = "com.squareup.retrofit2:adapter-rxjava2:${Versions.retrofit}"
 
-
     const val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
 
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:${Versions.leak_canary}"
@@ -107,6 +110,17 @@ object Libs {
     const val oauth = "ca.mimic:oauth2library:${Versions.oauth}"
 
     const val preferx = "com.vinted:preferx:${Versions.preferx}"
+
+    const val lifecycle_extensions = "android.arch.lifecycle:extensions:${Versions.lifecycle}"
+    const val lifecycle_compiler = "android.arch.lifecycle:compiler:${Versions.lifecycle}"
+    const val lifecycle_reactive_streams = "android.arch.lifecycle:reactivestreams:${Versions.lifecycle}"
+
+    const val room_rx2 = "android.arch.persistence.room:rxjava2:${Versions.room}"
+    const val room_runtime = "android.arch.persistence.room:runtime:${Versions.room}"
+    const val room_compiler = "android.arch.persistence.room:compiler:${Versions.room}"
+
+    const val paging = "android.arch.paging:runtime:${Versions.paging}"
+    const val paging_rx2 = "android.arch.paging:rxjava2:${Versions.paging}"
 }
 
 object SupportLibraries {

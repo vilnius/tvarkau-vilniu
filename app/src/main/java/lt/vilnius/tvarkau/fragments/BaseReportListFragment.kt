@@ -18,7 +18,6 @@ import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.presenters.ProblemListPresenter
 import lt.vilnius.tvarkau.fragments.views.ReportListView
 import lt.vilnius.tvarkau.rx.RxBus
-import lt.vilnius.tvarkau.views.adapters.ProblemsListAdapter
 import timber.log.Timber
 
 /**
@@ -26,7 +25,7 @@ import timber.log.Timber
  */
 abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
-    protected val adapter by lazy { ProblemsListAdapter(activity!!, problemList) }
+//    protected val adapter by lazy { ProblemsListAdapter(activity!!, problemList) }
     private val problemList = ArrayList<Problem>()
     private var page = 0
     private var reloadingAllReports = false
@@ -43,19 +42,19 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
         val linearLayoutManager = LinearLayoutManager(activity!!)
         report_list.layoutManager = linearLayoutManager
-        report_list.adapter = adapter
+//        report_list.adapter = adapter
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         RxBus.observable
-                .filter { it is RefreshReportFilterEvent || it is NewProblemAddedEvent }
-                .take(1)
-                .subscribeOn(ioScheduler)
-                .observeOn(uiScheduler)
-                .subscribe({
-                    reloadReports = true
-                }, Timber::w).apply { disposable = this }
+            .filter { it is RefreshReportFilterEvent || it is NewProblemAddedEvent }
+            .take(1)
+            .subscribeOn(ioScheduler)
+            .observeOn(uiScheduler)
+            .subscribe({
+                reloadReports = true
+            }, Timber::w).apply { disposable = this }
 
 
         if (problemList.isEmpty()) {
@@ -76,7 +75,7 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
 
     open fun reloadData() {
         reloadingAllReports = true
-        adapter.showLoader = true
+//        adapter.showLoader = true
         page = 0
         getReports()
     }
@@ -87,14 +86,16 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
     }
 
     private fun showNoConnectionSnackbar(lastPage: Int) {
-        Snackbar.make(activity!!.findViewById(R.id.coordinator_layout), R.string.no_connection, Snackbar
-                .LENGTH_INDEFINITE)
-                .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
-                .setAction(R.string.try_again) {
-                    page = lastPage
-                    getReports()
-                }
-                .show()
+        Snackbar.make(
+            activity!!.findViewById(R.id.coordinator_layout), R.string.no_connection, Snackbar
+                .LENGTH_INDEFINITE
+        )
+            .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
+            .setAction(R.string.try_again) {
+                page = lastPage
+                getReports()
+            }
+            .show()
     }
 
     override fun onReportsLoaded(reports: List<Problem>) {
@@ -102,16 +103,16 @@ abstract class BaseReportListFragment : BaseFragment(), ReportListView {
             reloadingAllReports = false
             problemList.clear()
             problemList.addAll(reports)
-            adapter.notifyDataSetChanged()
+//            adapter.notifyDataSetChanged()
         } else {
             problemList.addAll(reports)
-            adapter.notifyItemRangeInserted(problemList.size - 1, reports.size)
+//            adapter.notifyItemRangeInserted(problemList.size - 1, reports.size)
         }
     }
 
     override fun hideLoader() {
-        adapter.showLoader = false
-        adapter.notifyDataSetChanged()
+//        adapter.showLoader = false
+//        adapter.notifyDataSetChanged()
     }
 
     override fun showNetworkError(lastPage: Int) {

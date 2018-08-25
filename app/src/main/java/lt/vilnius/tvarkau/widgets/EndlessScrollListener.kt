@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView
  * @author Martynas Jurkus
  */
 class EndlessScrollListener(
-        val load: () -> Unit,
-        val loadItemPerPage: Int = 20
+        val loadItemPerPage: Int = 20,
+        val load: () -> Unit
 ) : RecyclerView.OnScrollListener() {
 
     var isLoading = false
