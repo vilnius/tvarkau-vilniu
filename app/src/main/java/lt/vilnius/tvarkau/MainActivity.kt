@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau
 
 import android.app.Dialog
 import android.os.Bundle
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.app_bar.*
 import lt.vilnius.tvarkau.activity.available
 import lt.vilnius.tvarkau.activity.googlePlayServicesAvailability
@@ -40,24 +41,39 @@ class MainActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
 
-        bottomNavigationController.onCreate(savedInstanceState == null)
-
-        //TODO remove after first real implementation of new API
         if (appPreferences.apiToken.isSet()) {
-            fetchCities()
+            initialize(savedInstanceState)
         } else {
-            sessionToken.refreshGuestToken().subscribe { fetchCities() }
+            sessionToken.refreshGuestToken()
+                .subscribeBy(
+                    onComplete = { initialize(savedInstanceState) },
+                    onError = { Timber.e(it) }
+                )
         }
     }
 
-    private fun fetchCities() {
-        api.getCities().map { it.cities }.subscribe { cities, error ->
-            if (error != null) {
-                Timber.e(error)
-            } else {
-                cities.forEach { Timber.d(it.toString()) }
-            }
+    private fun initialize(savedInstanceState: Bundle?) {
+        if (appPreferences.selectedCity.isSet()) {
+            initNavigation(savedInstanceState)
+        } else {
+            api.getCities()
+                .map { it.cities }
+                .subscribeBy(
+                    onSuccess = {
+                        appPreferences.selectedCity.set(it.first(), commit = true)
+                        initNavigation(savedInstanceState)
+                    },
+                    onError = {
+                        Timber.e(it)
+
+                        //TODO do a better error handling. No network, network errors might lead to empty screen here
+                    }
+                )
         }
+    }
+
+    private fun initNavigation(savedInstanceState: Bundle?) {
+        bottomNavigationController.onCreate(savedInstanceState == null)
     }
 
     override fun onStart() {

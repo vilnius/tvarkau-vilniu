@@ -31,7 +31,7 @@ class ApiHeadersInterceptor @Inject constructor(
     fun applyToken(requestBuilder: Request.Builder) {
         val tokenValue = appPreferences.apiToken.get()
         requestBuilder.addHeader(HTTP_HEADER_OAUTH, formatTokenForHeader(tokenValue.accessToken))
-        requestBuilder.addHeader(HTTP_HEADER_CITY, "1") //TODO let user choose the city
+        requestBuilder.addHeader(HTTP_HEADER_CITY, appPreferences.selectedCity.get().id.toString())
     }
 
     private fun formatTokenForHeader(token: String) = "Bearer $token"

@@ -10,6 +10,7 @@ import com.vinted.preferx.StringPreference
 import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.auth.ApiToken
+import lt.vilnius.tvarkau.entity.City
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
@@ -36,7 +37,7 @@ class TestSharedPreferencesModule {
     @Provides
     @Singleton
     fun provideAppPreferences(
-            @Named(Preferences.COMMON_PREFERENCES) preference: SharedPreferences
+        @Named(Preferences.COMMON_PREFERENCES) preference: SharedPreferences
     ): AppPreferences {
         return object : AppPreferences {
             override val apiToken: ObjectPreference<ApiToken> = mock()
@@ -45,6 +46,7 @@ class TestSharedPreferencesModule {
             override val reportTypeSelectedFilter: StringPreference = mock()
             override val reportStatusSelectedListFilter: StringPreference = mock()
             override val reportTypeSelectedListFilter: StringPreference = mock()
+            override val selectedCity: ObjectPreference<City> = mock()
         }
     }
 }
