@@ -4,6 +4,7 @@ import com.vinted.preferx.LongPreference
 import com.vinted.preferx.ObjectPreference
 import com.vinted.preferx.StringPreference
 import lt.vilnius.tvarkau.auth.ApiToken
+import lt.vilnius.tvarkau.entity.City
 
 
 interface AppPreferences {
@@ -19,4 +20,6 @@ interface AppPreferences {
     val reportStatusSelectedListFilter: StringPreference
 
     val reportTypeSelectedListFilter: StringPreference
+
+    val selectedCity: ObjectPreference<City>
 }
