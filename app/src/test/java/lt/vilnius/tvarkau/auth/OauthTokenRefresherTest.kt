@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.api.ApiHeadersInterceptor
 import lt.vilnius.tvarkau.api.ApiHeadersInterceptor.Companion.HTTP_HEADER_OAUTH
+import lt.vilnius.tvarkau.entity.City
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -39,10 +40,14 @@ class OauthTokenRefresherTest {
         setDispatcher(dispatcher)
     }
 
+    private val cityPreference = mock<ObjectPreference<City>> {
+        onGeneric { get() } doReturn City.NOT_SELECTED
+    }
     private val apiTokenPref = ApiTokenPref(oldToken)
 
     private val appPreferences: AppPreferences = mock {
         on { apiToken } doReturn apiTokenPref
+        on { selectedCity } doReturn cityPreference
     }
 
     private val sessionToken: SessionToken = mock {
@@ -58,9 +63,9 @@ class OauthTokenRefresherTest {
     val fixture = OauthTokenRefresher(appPreferences, sessionToken, apiHeadersInterceptor)
 
     private val client = OkHttpClient.Builder()
-            .addInterceptor(apiHeadersInterceptor)
-            .addInterceptor(fixture)
-            .build()
+        .addInterceptor(apiHeadersInterceptor)
+        .addInterceptor(fixture)
+        .build()
 
     private val ioScheduler = Schedulers.io()
 
@@ -97,9 +102,9 @@ class OauthTokenRefresherTest {
                 client.newCall(request).execute()
             }.subscribeOn(ioScheduler)
         }, true, 50, 50)
-                .timeout(10000, TimeUnit.MILLISECONDS)
-                .filter { it.code() == 500 }
-                .test().await().assertValueCount(50)
+            .timeout(10000, TimeUnit.MILLISECONDS)
+            .filter { it.code() == 500 }
+            .test().await().assertValueCount(50)
     }
 
     @Test
@@ -109,16 +114,16 @@ class OauthTokenRefresherTest {
 
         //add noise before and in the middle.
         Flowable.range(1, 50)
-                .delay {
-                    Flowable.just(0).delay(it / 30L, TimeUnit.SECONDS)
-                }
-                .flatMap({
-                    Flowable.fromCallable {
-                        val request = Request.Builder().url(webServer.url("/")).build()
-                        client.newCall(request).execute()
-                    }.subscribeOn(ioScheduler)
-                }, true, 50, 50)
-                .test()
+            .delay {
+                Flowable.just(0).delay(it / 30L, TimeUnit.SECONDS)
+            }
+            .flatMap({
+                Flowable.fromCallable {
+                    val request = Request.Builder().url(webServer.url("/")).build()
+                    client.newCall(request).execute()
+                }.subscribeOn(ioScheduler)
+            }, true, 50, 50)
+            .test()
 
         //server is revived
         whenever(sessionToken.refreshCurrentToken(any())).doAnswer {
@@ -152,6 +157,6 @@ class OauthTokenRefresherTest {
         override fun isSet() = true
 
         override val onChangeObservable: Observable<ApiToken>
-            get() = TODO("not implemented")
+            get() = throw RuntimeException("Not implemented")
     }
 }
