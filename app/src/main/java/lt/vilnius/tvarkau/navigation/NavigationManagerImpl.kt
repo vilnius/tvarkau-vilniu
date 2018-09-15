@@ -2,11 +2,11 @@ package lt.vilnius.tvarkau.navigation
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
-import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.ProfileEditActivity
+import lt.vilnius.tvarkau.ReportDetailsActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.fragments.*
 
 class NavigationManagerImpl(
@@ -43,8 +43,8 @@ class NavigationManagerImpl(
         }
     }
 
-    override fun navigateToProblemDetailActivity(problem: Problem) {
-        ProblemDetailActivity.getStartActivityIntent(activity, problem.id).let {
+    override fun navigateToProblemDetailActivity(reportEntity: ReportEntity) {
+        ReportDetailsActivity.getStartActivityIntent(activity, reportEntity.id).let {
             activity.startActivity(it)
         }
     }

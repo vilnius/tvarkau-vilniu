@@ -12,3 +12,5 @@ class ReportsResponse(val reports: List<Report>)
 class ReportTypeResponse(val reportTypes: List<ReportType>)
 
 class ReportStatusesResponse(val reportStatuses: List<ReportStatus>)
+
+class ReportResponse(val report: Report)

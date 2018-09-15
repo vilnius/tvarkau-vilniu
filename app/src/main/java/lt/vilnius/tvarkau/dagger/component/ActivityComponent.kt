@@ -8,13 +8,14 @@ import lt.vilnius.tvarkau.dagger.module.MainActivityModule
 import lt.vilnius.tvarkau.fragments.*
 
 
-@Subcomponent(modules = [
-    ActivityModule::class
-])
+@Subcomponent(
+    modules = [
+        ActivityModule::class
+    ]
+)
 interface ActivityComponent {
 
     fun mainActivityComponent(mainActivityModule: MainActivityModule): MainActivityComponent
-
 
     fun inject(allReportsListFragment: AllReportsListFragment)
 
@@ -40,11 +41,12 @@ interface ActivityComponent {
 
     fun inject(fragment: ReportFilterFragment)
 
+    fun inject(fragment: ReportDetailsFragment)
 
     companion object {
         fun init(
-                applicationComponent: ApplicationComponent,
-                activity: AppCompatActivity
+            applicationComponent: ApplicationComponent,
+            activity: AppCompatActivity
         ): ActivityComponent {
             return applicationComponent.activityComponent(ActivityModule(activity))
         }

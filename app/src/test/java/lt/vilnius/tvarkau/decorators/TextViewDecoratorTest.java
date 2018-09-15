@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-import lt.vilnius.tvarkau.decorators.TextViewDecorator.ProblemIssueIdSpan;
+import lt.vilnius.tvarkau.decorators.TextViewDecorator.ReportReferenceNumberSpan;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,7 +32,7 @@ public class TextViewDecoratorTest {
         new TextViewDecorator(textView).decorateProblemIdSpans(text);
         Spannable spannable = (Spannable) textView.getText();
 
-        ProblemIssueIdSpan[] spans = spannable.getSpans(0, text.length(), ProblemIssueIdSpan.class);
+        ReportReferenceNumberSpan[] spans = spannable.getSpans(0, text.length(), ReportReferenceNumberSpan.class);
 
         assertEquals(2, spans.length);
     }
@@ -42,7 +42,7 @@ public class TextViewDecoratorTest {
         new TextViewDecorator(textView).decorateProblemIdSpans(text);
         Spannable spannable = (Spannable) textView.getText();
 
-        ProblemIssueIdSpan[] spans = spannable.getSpans(0, text.length(), ProblemIssueIdSpan.class);
+        ReportReferenceNumberSpan[] spans = spannable.getSpans(0, text.length(), ReportReferenceNumberSpan.class);
 
         assertEquals(9, spannable.getSpanStart(spans[0]));
         assertEquals(33, spannable.getSpanEnd(spans[0]));

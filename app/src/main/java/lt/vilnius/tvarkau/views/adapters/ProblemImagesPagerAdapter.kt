@@ -12,13 +12,16 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.problem_images_view_pager_item.view.*
 import kotlinx.android.synthetic.main.problem_images_view_pager_map.view.*
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 
 
-class ProblemImagesPagerAdapter(private val problem: Problem,
-                                private val listener: ProblemImageClickedListener) : PagerAdapter() {
+class ProblemImagesPagerAdapter(
+    private val reportEntity: ReportEntity,
+    private val onImageClicked: (position: Int, photos: List<String>) -> Unit = { _: Int, _: List<String> -> },
+    private val onMapClicked: () -> Unit = {}
+) : PagerAdapter() {
 
-    override fun getCount(): Int = problem.photos.orEmpty().count() + 1
+    override fun getCount(): Int = reportEntity.photos.count() + 1
 
     override fun isViewFromObject(view: View, any: Any): Boolean = view === any
 
@@ -27,12 +30,15 @@ class ProblemImagesPagerAdapter(private val problem: Problem,
 
         val itemView: View
 
-        if (position == count - 1) {
-            itemView = instantiateProblemMap(
-                    layoutInflater.inflate(R.layout.problem_images_view_pager_map, container, false))
+        itemView = if (position == count - 1) {
+            instantiateProblemMap(
+                layoutInflater.inflate(R.layout.problem_images_view_pager_map, container, false)
+            )
         } else {
-            itemView = instantiateProblemPhoto(position,
-                    layoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false))
+            instantiateProblemPhoto(
+                position,
+                layoutInflater.inflate(R.layout.problem_images_view_pager_item, container, false)
+            )
         }
 
         container.addView(itemView)
@@ -40,17 +46,17 @@ class ProblemImagesPagerAdapter(private val problem: Problem,
         return itemView
     }
 
-    fun instantiateProblemMap(mapView: View): View {
+    private fun instantiateProblemMap(mapView: View): View {
         mapView.problem_map_view.onCreate(null)
-        mapView.problem_map_view.getMapAsync {
-            with(it) {
-                setOnMapClickListener { listener.onMapClicked() }
-                moveCamera(CameraUpdateFactory.newLatLng(problem.latLng))
+        mapView.problem_map_view.getMapAsync { googleMap ->
+            with(googleMap) {
+                setOnMapClickListener { onMapClicked() }
+                moveCamera(CameraUpdateFactory.newLatLng(reportEntity.latLng))
                 uiSettings.isMapToolbarEnabled = false
 
                 val marker = MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_selected))
-                        .position(problem.latLng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_selected))
+                    .position(reportEntity.latLng)
 
                 addMarker(marker)
             }
@@ -60,27 +66,19 @@ class ProblemImagesPagerAdapter(private val problem: Problem,
     }
 
 
-    fun instantiateProblemPhoto(position: Int, photoView: View): View {
-        val photo = problem.photos!![position]
+    private fun instantiateProblemPhoto(position: Int, photoView: View): View {
+        val photo = reportEntity.photos[position]
 
         Glide.with(photoView.context).load(photo).into(photoView.problem_image_view)
 
         photoView.problem_image_view.setOnClickListener {
-            listener.onPhotoClicked(position, problem.photos.orEmpty())
+            onImageClicked(position, reportEntity.photos)
         }
 
         return photoView
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, any: Any) =
-            container.removeView(any as View)
-
-
-    interface ProblemImageClickedListener {
-
-        fun onPhotoClicked(position: Int, photos: List<String>)
-
-        fun onMapClicked()
-    }
+        container.removeView(any as View)
 }
 

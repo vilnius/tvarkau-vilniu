@@ -40,6 +40,7 @@ object Versions {
     const val assertj_core = "3.9.1"
     const val assertj_android = "1.1.1"
     const val mockito_kotlin = "1.5.0"
+    const val mockito = "2.17.0"
     const val fest_util = "1.2.5"
     const val fest_reflect = "1.4.1"
 
@@ -135,6 +136,7 @@ object TestLibraries {
     const val junit = "junit:junit:${Versions.junit}"
     const val assertj_core = "org.assertj:assertj-core:${Versions.assertj_core}"
     const val assertj_android = "com.squareup.assertj:assertj-android:${Versions.assertj_android}"
+    const val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito}"
     const val mockito_kotlin = "com.nhaarman:mockito-kotlin:${Versions.mockito_kotlin}"
     const val lifecycle_testing = "android.arch.core:core-testing:${Versions.lifecycle}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"

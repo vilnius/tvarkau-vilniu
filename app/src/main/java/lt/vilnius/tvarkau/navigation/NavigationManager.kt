@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau.navigation
 
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 
 
 interface NavigationManager {
@@ -26,6 +26,6 @@ interface NavigationManager {
 
     fun navigateToProfileEditActivity()
 
-    fun navigateToProblemDetailActivity(problem: Problem)
+    fun navigateToProblemDetailActivity(reportEntity: ReportEntity)
 
 }

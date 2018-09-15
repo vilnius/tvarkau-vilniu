@@ -15,7 +15,7 @@ class TextUtilTest {
     @Test
     fun findSingleProblemId() {
         val single = "We have a huge problem here E50-7476/16(3.2.47E-SM4)."
-        val problemIdOccurrences = TextUtils.findReportIdOccurrences(single)
+        val problemIdOccurrences = TextUtils.findReportREferenceNumberOccurrences(single)
 
         assertEquals(1, problemIdOccurrences.size.toLong())
         assertEquals("E50-7476/16(3.2.47E-SM4)", problemIdOccurrences[0])
@@ -25,7 +25,7 @@ class TextUtilTest {
     fun findMultipleProblemIds() {
         val multiple = "We have tow huge problems this one E50-7476/16(3.2.47E-SM4) and " +
                 "this one A51-111/16(3.2.47E-SM4)."
-        val problemIdOccurrences = TextUtils.findReportIdOccurrences(multiple)
+        val problemIdOccurrences = TextUtils.findReportREferenceNumberOccurrences(multiple)
 
         assertEquals(2, problemIdOccurrences.size.toLong())
         assertEquals("E50-7476/16(3.2.47E-SM4)", problemIdOccurrences[0])
@@ -35,7 +35,7 @@ class TextUtilTest {
     @Test
     fun skipMalformedProblemIds() {
         val single = "Malformed E507476/16(3.2.47E-SM4) and  E50-7476/16(3.2.47E-SM4."
-        val problemIdOccurrences = TextUtils.findReportIdOccurrences(single)
+        val problemIdOccurrences = TextUtils.findReportREferenceNumberOccurrences(single)
 
         assertTrue(problemIdOccurrences.isEmpty())
     }
@@ -43,7 +43,7 @@ class TextUtilTest {
     @Test
     fun includeLowerCaseProblemIds() {
         val single = "We have a huge problem here e50-7476/16(3.2.47E-SM4)."
-        val problemIdOccurrences = TextUtils.findReportIdOccurrences(single)
+        val problemIdOccurrences = TextUtils.findReportREferenceNumberOccurrences(single)
 
         assertEquals(1, problemIdOccurrences.size)
     }
@@ -51,7 +51,7 @@ class TextUtilTest {
     @Test
     fun checkNonGreedy() {
         val text = "Two sameE50-7476/16(3.2.47E-SM4) ids zzzE50-7476/16(3.2.47E-SM4))))"
-        val occurrences = TextUtils.findReportIdOccurrences(text)
+        val occurrences = TextUtils.findReportREferenceNumberOccurrences(text)
 
         assertEquals(2, occurrences.size)
         assertEquals("E50-7476/16(3.2.47E-SM4)", occurrences[0])
