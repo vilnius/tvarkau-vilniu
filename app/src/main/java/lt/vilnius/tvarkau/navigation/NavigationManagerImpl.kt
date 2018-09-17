@@ -43,7 +43,7 @@ class NavigationManagerImpl(
         }
     }
 
-    override fun navigateToProblemDetailActivity(reportEntity: ReportEntity) {
+    override fun navigateToReportDetailsActivity(reportEntity: ReportEntity) {
         ReportDetailsActivity.getStartActivityIntent(activity, reportEntity.id).let {
             activity.startActivity(it)
         }

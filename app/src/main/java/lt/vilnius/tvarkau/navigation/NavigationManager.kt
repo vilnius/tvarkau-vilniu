@@ -26,6 +26,6 @@ interface NavigationManager {
 
     fun navigateToProfileEditActivity()
 
-    fun navigateToProblemDetailActivity(reportEntity: ReportEntity)
+    fun navigateToReportDetailsActivity(reportEntity: ReportEntity)
 
 }

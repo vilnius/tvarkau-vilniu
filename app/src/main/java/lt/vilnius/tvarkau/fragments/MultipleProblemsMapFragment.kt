@@ -109,7 +109,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        navigationManager.navigateToProblemDetailActivity(marker.tag as ReportEntity)
+        navigationManager.navigateToReportDetailsActivity(marker.tag as ReportEntity)
     }
 
     override fun onInfoWindowClose(marker: Marker) {

@@ -4,18 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.view.View
+import kotlinx.android.synthetic.main.app_bar.*
 import lt.vilnius.tvarkau.fragments.ReportDetailsFragment
 
 class ReportDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_problem_detail)
-
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        setContentView(R.layout.activity_report_details)
         setSupportActionBar(toolbar)
 
         if (savedInstanceState == null) {
@@ -39,9 +36,9 @@ class ReportDetailsActivity : AppCompatActivity() {
 
     companion object {
 
-        fun getStartActivityIntent(context: Context, problemId: Int): Intent {
+        fun getStartActivityIntent(context: Context, reportId: Int): Intent {
             val intent = Intent(context, ReportDetailsActivity::class.java)
-            intent.putExtra(ReportDetailsFragment.ARG_REPORT_ID, problemId)
+            intent.putExtra(ReportDetailsFragment.ARG_REPORT_ID, reportId)
 
             return intent
         }

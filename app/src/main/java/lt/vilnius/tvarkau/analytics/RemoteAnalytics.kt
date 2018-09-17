@@ -36,7 +36,7 @@ class RemoteAnalytics(
 
     override fun trackCloseFragment(name: String) = finishTimeEvent("open_$name")
 
-    override fun trackViewProblem(reportEntity: ReportEntity) = Bundle().run {
+    override fun trackViewReport(reportEntity: ReportEntity) = Bundle().run {
         putString(FirebaseAnalytics.Param.ITEM_ID, reportEntity.refNo)
         putString(FirebaseAnalytics.Param.ITEM_NAME, reportEntity.id.toString())
         putString(FirebaseAnalytics.Param.ITEM_CATEGORY, reportEntity.reportType.title)

@@ -9,7 +9,7 @@ interface Analytics {
 
     fun trackCloseFragment(name: String)
 
-    fun trackViewProblem(reportEntity: ReportEntity)
+    fun trackViewReport(reportEntity: ReportEntity)
 
     fun trackReportRegistration(reportType: String, photoCount: Int)
 

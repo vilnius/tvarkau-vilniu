@@ -84,7 +84,7 @@ class ReportDetailsFragment : BaseFragment() {
     private fun showReport(reportEntity: ReportEntity) {
         hideLoading()
 
-        analytics.trackViewProblem(reportEntity)
+        analytics.trackViewReport(reportEntity)
 
         no_internet_view.gone()
         server_not_responding_view.gone()
