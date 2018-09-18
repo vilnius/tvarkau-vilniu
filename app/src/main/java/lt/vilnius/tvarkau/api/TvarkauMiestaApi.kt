@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.api
 
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TvarkauMiestaApi {
@@ -22,4 +23,7 @@ interface TvarkauMiestaApi {
 
     @GET("report_statuses")
     fun getReportStatuses(): Single<ReportStatusesResponse>
+
+    @GET("/reports/{report_id}")
+    fun getReport(@Path("report_id") reportId: String): Single<ReportResponse>
 }

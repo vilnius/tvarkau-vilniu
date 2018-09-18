@@ -5,10 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 import org.json.JSONObject
 
-class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI) : Analytics {
+class RemoteAnalytics(
+    appContext: Context,
+    private val mixpanelAPI: MixpanelAPI
+) : Analytics {
 
     override fun trackApplyReportFilter(status: String, category: String, target: String) {
         val params = Bundle().apply {
@@ -33,11 +36,11 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
 
     override fun trackCloseFragment(name: String) = finishTimeEvent("open_$name")
 
-    override fun trackViewProblem(problem: Problem) = Bundle().run {
-        putString(FirebaseAnalytics.Param.ITEM_ID, problem.problemId)
-        putString(FirebaseAnalytics.Param.ITEM_NAME, problem.id)
-        putString(FirebaseAnalytics.Param.ITEM_CATEGORY, problem.getType())
-        putString(PARAM_PROBLEM_STATUS, problem.status)
+    override fun trackViewReport(reportEntity: ReportEntity) = Bundle().run {
+        putString(FirebaseAnalytics.Param.ITEM_ID, reportEntity.refNo)
+        putString(FirebaseAnalytics.Param.ITEM_NAME, reportEntity.id.toString())
+        putString(FirebaseAnalytics.Param.ITEM_CATEGORY, reportEntity.reportType.title)
+        putString(PARAM_PROBLEM_STATUS, reportEntity.reportStatus.title)
 
         logEvent(FirebaseAnalytics.Event.VIEW_ITEM, this)
     }
@@ -69,7 +72,7 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
     }
 
     override fun trackLogIn() =
-            logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
+        logEvent(FirebaseAnalytics.Event.LOGIN, Bundle.EMPTY)
 
     private fun logEvent(name: String, bundle: Bundle) {
         analytics.logEvent(name, bundle)
@@ -102,7 +105,6 @@ class RemoteAnalytics(appContext: Context, private val mixpanelAPI: MixpanelAPI)
     override fun flush() {
         mixpanelAPI.flush()
     }
-
 
 
     companion object {

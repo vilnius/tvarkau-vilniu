@@ -2,10 +2,10 @@ package lt.vilnius.tvarkau
 
 import android.os.Bundle
 import kotlinx.android.synthetic.main.app_bar.*
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.fragments.BaseFragment
 import lt.vilnius.tvarkau.fragments.BaseMapFragment
-import lt.vilnius.tvarkau.fragments.ProblemDetailFragment
+import lt.vilnius.tvarkau.fragments.ReportDetailsFragment
 import lt.vilnius.tvarkau.fragments.SingleProblemMapFragment
 import lt.vilnius.tvarkau.utils.GlobalConsts
 
@@ -25,22 +25,22 @@ class ReportMapActivity : BaseActivity() {
 
             when (fragmentTag) {
                 GlobalConsts.TAG_SINGLE_PROBLEM_MAP_FRAGMENT -> {
-                    val problem = data.getParcelable<Problem>(ProblemDetailFragment.KEY_PROBLEM)
-                    fragment = SingleProblemMapFragment.getInstance(problem)
+                    val reportEntity = data.getParcelable<ReportEntity>(ReportDetailsFragment.KEY_PROBLEM)
+                    fragment = SingleProblemMapFragment.getInstance(reportEntity)
                 }
                 else -> throw IllegalArgumentException("Please pass problem")
             }
 
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .commit()
+                .replace(R.id.container, fragment)
+                .commit()
         }
     }
 
 
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.container) as? BaseFragment
-        if (fragment?.onBackPressed() ?: false) {
+        if (fragment?.onBackPressed() == true) {
             return
         }
 

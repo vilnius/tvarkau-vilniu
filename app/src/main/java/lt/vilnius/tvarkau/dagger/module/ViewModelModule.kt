@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import lt.vilnius.tvarkau.viewmodel.ReportDetailsViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
 import lt.vilnius.tvarkau.viewmodel.ViewModelFactory
 import lt.vilnius.tvarkau.viewmodel.ViewModelKey
@@ -20,4 +21,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReportListViewModel::class)
     internal abstract fun postListViewModel(viewModel: ReportListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReportDetailsViewModel::class)
+    internal abstract fun reportDetailsViewModel(viewModel: ReportDetailsViewModel): ViewModel
 }

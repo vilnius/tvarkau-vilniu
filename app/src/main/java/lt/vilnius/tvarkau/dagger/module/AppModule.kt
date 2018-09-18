@@ -4,10 +4,12 @@ import android.app.Application
 import com.squareup.leakcanary.RefWatcher
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.TvarkauApplication
+import lt.vilnius.tvarkau.dagger.DbScheduler
 import lt.vilnius.tvarkau.dagger.IoScheduler
 import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
@@ -17,7 +19,7 @@ import javax.inject.Singleton
 
 @Module
 class AppModule(
-        private val application: TvarkauApplication
+    private val application: TvarkauApplication
 ) {
 
     @Provides
@@ -29,15 +31,22 @@ class AppModule(
     @Provides
     @Singleton
     @IoScheduler
-    fun provideIoScheduler(): io.reactivex.Scheduler {
+    fun provideIoScheduler(): Scheduler {
         return Schedulers.io()
     }
 
     @Provides
     @Singleton
     @UiScheduler
-    fun provideUiScheduler(): io.reactivex.Scheduler {
+    fun provideUiScheduler(): Scheduler {
         return AndroidSchedulers.mainThread()
+    }
+
+    @Provides
+    @Singleton
+    @DbScheduler
+    fun provideDbScheduler(): Scheduler {
+        return Schedulers.single()
     }
 
     @Provides

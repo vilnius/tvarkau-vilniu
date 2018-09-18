@@ -50,7 +50,7 @@
         </activity-alias>
 
         <activity
-            android:name=".ProblemDetailActivity"
+            android:name=".ReportDetailsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_problem_detail"
             android:parentActivityName=".MainActivity"
@@ -87,11 +87,11 @@
         <activity
             android:name=".FullscreenImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".ProblemDetailActivity"
+            android:parentActivityName=".ReportDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProblemDetailActivity" />
+                android:value=".ReportDetailsActivity" />
         </activity>
 
         <activity

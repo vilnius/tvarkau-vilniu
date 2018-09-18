@@ -7,9 +7,11 @@ import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import lt.vilnius.tvarkau.api.ReportsResponse
 import lt.vilnius.tvarkau.api.TvarkauMiestaApi
+import lt.vilnius.tvarkau.dagger.DbScheduler
 import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.entity.Report
 import lt.vilnius.tvarkau.entity.ReportEntity
@@ -22,7 +24,9 @@ class ReportsRepository @Inject constructor(
     private val reportStatusRepository: ReportStatusRepository,
     private val api: TvarkauMiestaApi,
     @UiScheduler
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    @DbScheduler
+    private val dbScheduler: Scheduler
 ) {
 
     private val boundaryCallback by lazy {
@@ -47,6 +51,12 @@ class ReportsRepository @Inject constructor(
             )
 
         return networkState
+    }
+
+    fun getReportById(reportId: Int): Single<ReportEntity> {
+        return reportsDao.getById(reportId)
+            .map { mapReportEntity(it) }
+            .subscribeOn(dbScheduler)
     }
 
     fun reports(initialLoadKey: Int?): Listing<ReportEntity> {

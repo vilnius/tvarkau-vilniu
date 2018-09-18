@@ -17,6 +17,7 @@ import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
@@ -25,22 +26,24 @@ import lt.vilnius.tvarkau.fragments.presenters.MultipleReportsMapPresenterImpl
 import lt.vilnius.tvarkau.fragments.views.MultipleProblemsMapView
 import javax.inject.Inject
 
-@Screen(titleRes = R.string.title_problems_map,
-        trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_MAP)
+@Screen(
+    titleRes = R.string.title_problems_map,
+    trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_MAP
+)
 class MultipleProblemsMapFragment : BaseMapFragment(),
-        MultipleProblemsMapView,
-        GoogleMap.OnInfoWindowClickListener,
-        GoogleMap.OnInfoWindowCloseListener {
+    MultipleProblemsMapView,
+    GoogleMap.OnInfoWindowClickListener,
+    GoogleMap.OnInfoWindowCloseListener {
 
     @Inject
     internal lateinit var interactor: MultipleReportsMapInteractor
 
     private val presenter: MultipleReportsMapPresenter by lazy {
         MultipleReportsMapPresenterImpl(
-                interactor,
-                uiScheduler,
-                connectivityProvider,
-                this
+            interactor,
+            uiScheduler,
+            connectivityProvider,
+            this
         )
     }
 
@@ -88,10 +91,10 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
 
     override fun showNetworkError() {
         toast = Snackbar.make(map_container, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
-                .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
-                .setAction(R.string.try_again) {
-                    presenter.onAttach()
-                }.apply { show() }
+            .setActionTextColor(ContextCompat.getColor(context!!, R.color.snackbar_action_text))
+            .setAction(R.string.try_again) {
+                presenter.onAttach()
+            }.apply { show() }
 
     }
 
@@ -106,7 +109,7 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        navigationManager.navigateToProblemDetailActivity(marker.tag as Problem)
+        navigationManager.navigateToReportDetailsActivity(marker.tag as ReportEntity)
     }
 
     override fun onInfoWindowClose(marker: Marker) {

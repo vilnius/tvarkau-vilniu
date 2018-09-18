@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="lt.vilnius.tvarkau.ProblemDetailActivity"
+    tools:context="lt.vilnius.tvarkau.ReportDetailsActivity"
     tools:ignore="MergeRootFrame">
 
     <include layout="@layout/app_bar" />

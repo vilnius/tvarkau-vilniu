@@ -8,14 +8,12 @@ import dagger.Provides
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import lt.vilnius.tvarkau.TestTvarkauApplication
+import lt.vilnius.tvarkau.dagger.DbScheduler
 import lt.vilnius.tvarkau.dagger.IoScheduler
 import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import javax.inject.Singleton
 
-/**
- * @author Martynas Jurkus
- */
 @Module
 class TestAppModule(val application: TestTvarkauApplication) {
 
@@ -32,6 +30,13 @@ class TestAppModule(val application: TestTvarkauApplication) {
     @Singleton
     @UiScheduler
     fun provideUiScheduler(): Scheduler = Schedulers.trampoline()
+
+    @Provides
+    @Singleton
+    @DbScheduler
+    fun provideDbScheduler(): Scheduler {
+        return Schedulers.trampoline()
+    }
 
     @Provides
     @Singleton

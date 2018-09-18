@@ -1,18 +1,15 @@
 package lt.vilnius.tvarkau.analytics
 
 import android.app.Activity
-import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 
-/**
- * @author Martynas Jurkus
- */
 interface Analytics {
 
     fun trackOpenFragment(activity: Activity, name: String)
 
     fun trackCloseFragment(name: String)
 
-    fun trackViewProblem(problem: Problem)
+    fun trackViewReport(reportEntity: ReportEntity)
 
     fun trackReportRegistration(reportType: String, photoCount: Int)
 

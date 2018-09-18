@@ -5,15 +5,18 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.entity.ReportEntity
 
-@Screen(navigationMode = NavigationMode.BACK,
-        trackingScreenName = ActivityConstants.SCREEN_REPORT_MAP)
+@Screen(
+    navigationMode = NavigationMode.BACK,
+    trackingScreenName = ActivityConstants.SCREEN_REPORT_MAP
+)
 class SingleProblemMapFragment : BaseMapFragment(),
-        GoogleMap.OnInfoWindowClickListener,
-        GoogleMap.OnInfoWindowCloseListener {
+    GoogleMap.OnInfoWindowClickListener,
+    GoogleMap.OnInfoWindowCloseListener {
 
     val problem: Problem
-        get() = arguments!!.getParcelable(null)
+        get() = arguments!!.getParcelable(ARG_REPORT)
 
     private fun initMapData() {
         placeAndShowMarker(problem)
@@ -45,11 +48,13 @@ class SingleProblemMapFragment : BaseMapFragment(),
     }
 
     companion object {
+        private const val ARG_REPORT = "report"
 
-        fun getInstance(problem: Problem): SingleProblemMapFragment {
+        fun getInstance(reportEntity: ReportEntity): SingleProblemMapFragment {
             return SingleProblemMapFragment().apply {
-                arguments = Bundle()
-                arguments!!.putParcelable(null, problem)
+                arguments = Bundle().apply {
+                    putParcelable(ARG_REPORT, reportEntity)
+                }
             }
         }
     }

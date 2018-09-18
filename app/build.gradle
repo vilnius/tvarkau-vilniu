@@ -150,10 +150,12 @@ dependencies {
     testImplementation TestLibraries.robolectric
     testImplementation TestLibraries.kotlin_test
     testImplementation TestLibraries.mockito_kotlin
+    testImplementation TestLibraries.mockito_inline
     testImplementation TestLibraries.fest_util
     testImplementation TestLibraries.fest_reflect
     testImplementation TestLibraries.assertj_android
     testImplementation TestLibraries.okhttp_mockwebserver
+    testImplementation TestLibraries.lifecycle_testing
 }
 
 task versionName() {

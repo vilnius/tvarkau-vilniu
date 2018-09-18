@@ -11,8 +11,8 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
 import kotlinx.android.synthetic.main.loading_indicator.*
-import lt.vilnius.tvarkau.ProblemDetailActivity
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.ReportDetailsActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.ReportEntity
@@ -124,7 +124,7 @@ class AllReportsListFragment : BaseFragment() {
     }
 
     private fun onReportClicked(reportId: Int, view: View) {
-        val intent = ProblemDetailActivity.getStartActivityIntent(activity, reportId.toString())
+        val intent = ReportDetailsActivity.getStartActivityIntent(activity!!, reportId)
         val bundle = ActivityOptionsCompat.makeScaleUpAnimation(
             view,
             0,
