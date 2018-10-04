@@ -1,18 +1,18 @@
 package lt.vilnius.tvarkau;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import lt.vilnius.tvarkau.analytics.Analytics;
 import lt.vilnius.tvarkau.backend.LegacyApiService;
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent;
 import lt.vilnius.tvarkau.navigation.NavigationManager;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES;
 
@@ -27,6 +27,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     Analytics analytics;
     @Inject
     NavigationManager navigationManager;
+    @Inject
+    protected ViewModelProvider.Factory viewModelFactory;
 
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

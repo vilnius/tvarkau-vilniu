@@ -14,13 +14,18 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".TvarkauApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDdwFCwNh1c5bTI_sreT4BKI3oXpEjwQSM" />
@@ -29,25 +34,20 @@
             android:value="false" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-
-        <!--
-             This strangely named alias is here for backwards compatibility.
-             Renaming activity with LAUNCHER category means that shortcuts created by users
-             on their phones with previous version of the app will disappear or stop working.
-        -->
-        <activity-alias
-            android:name="apps.factory.emiestas.MainActivity"
-            android:label="@string/app_name"
-            android:targetActivity=".MainActivity">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ReportDetailsActivity"
@@ -59,7 +59,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".ReportMapActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -70,7 +69,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".AboutActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -83,7 +81,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".FullscreenImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -93,7 +90,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ReportDetailsActivity" />
         </activity>
-
         <activity
             android:name=".ProfileEditActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -105,7 +101,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".activity.ReportRegistrationActivity"
             android:label="@string/title_choose_problem_type"
@@ -125,4 +120,5 @@
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

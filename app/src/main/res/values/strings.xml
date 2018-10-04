@@ -200,4 +200,10 @@
         <item>Susisiekti esant poreikiui</item>
     </string-array>
 
+    <string name="prompt_email">El. paštas</string>
+    <string name="prompt_password">Slaptažodis</string>
+    <string name="action_sign_in">Prisijungti</string>
+    <string name="action_skip_sign_in">Ne dabar</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
 </resources>
