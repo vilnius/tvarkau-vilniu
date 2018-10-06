@@ -5,7 +5,15 @@ import ca.mimic.oauth2library.OAuthError
 import ca.mimic.oauth2library.OAuthResponse
 import ca.mimic.oauth2library.OAuthResponseCallback
 import com.google.gson.GsonBuilder
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.KStubbing
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argThat
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.vinted.preferx.ObjectPreference
 import lt.vilnius.tvarkau.data.GsonSerializerImpl
 import lt.vilnius.tvarkau.prefs.AppPreferences
@@ -21,6 +29,9 @@ class SessionTokenImplTest {
     private val refreshTokenOauth = mock<OAuth2Client.Builder> {
         on { build() } doReturn oAuthClient
     }
+    private val thirdPartyToken = mock<OAuth2Client.Builder> {
+        on { build() } doReturn oAuthClient
+    }
     private val gson = GsonBuilder().create()
     private val gsonSerializer = GsonSerializerImpl(gson)
     private val appPreferences = mock<AppPreferences> {
@@ -28,10 +39,11 @@ class SessionTokenImplTest {
     }
 
     private val fixture = SessionTokenImpl(
-            appPreferences,
-            guestOAuth,
-            refreshTokenOauth,
-            gsonSerializer
+        appPreferences = appPreferences,
+        guestOAuth = guestOAuth,
+        refreshOAuthToken = refreshTokenOauth,
+        thirdPartyToken = thirdPartyToken,
+        gsonSerializer = gsonSerializer
     )
 
     @Test
@@ -87,8 +99,8 @@ class SessionTokenImplTest {
     }
 
     private fun mockOAuthResponse(
-            success: Boolean,
-            token: String = "someOtherToken"
+        success: Boolean,
+        token: String = "someOtherToken"
     ) {
         mockOAuthResponse {
             on { isSuccessful } doReturn success
