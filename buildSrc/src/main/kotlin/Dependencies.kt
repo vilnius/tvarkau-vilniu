@@ -90,6 +90,7 @@ object Libs {
     const val maps = "com.google.android.gms:play-services-maps:${Versions.play_services}"
     const val location = "com.google.android.gms:play-services-location:${Versions.play_services}"
     const val places = "com.google.android.gms:play-services-places:${Versions.play_services}"
+    const val google_auth = "com.google.android.gms:play-services-auth:${Versions.play_services}"
 
     const val firebase_core = "com.google.firebase:firebase-core:${Versions.firebase}"
     const val firebase_perf = "com.google.firebase:firebase-perf:${Versions.firebase_perf}"

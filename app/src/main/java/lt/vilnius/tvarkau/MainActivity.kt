@@ -9,7 +9,6 @@ import lt.vilnius.tvarkau.activity.googlePlayServicesAvailability
 import lt.vilnius.tvarkau.activity.resolutionDialog
 import lt.vilnius.tvarkau.activity.resultCode
 import lt.vilnius.tvarkau.api.TvarkauMiestaApi
-import lt.vilnius.tvarkau.auth.SessionToken
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.dagger.component.MainActivityComponent
 import lt.vilnius.tvarkau.navigation.BottomNavigationController
@@ -23,8 +22,6 @@ class MainActivity : BaseActivity() {
     lateinit var bottomNavigationController: BottomNavigationController
     @Inject
     lateinit var api: TvarkauMiestaApi
-    @Inject
-    lateinit var sessionToken: SessionToken
     @Inject
     lateinit var appPreferences: AppPreferences
 
@@ -40,16 +37,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
-
-        if (appPreferences.apiToken.isSet()) {
-            initialize(savedInstanceState)
-        } else {
-            sessionToken.refreshGuestToken()
-                .subscribeBy(
-                    onComplete = { initialize(savedInstanceState) },
-                    onError = { Timber.e(it) }
-                )
-        }
+        initialize(savedInstanceState)
     }
 
     private fun initialize(savedInstanceState: Bundle?) {

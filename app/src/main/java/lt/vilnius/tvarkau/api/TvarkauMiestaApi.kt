@@ -7,6 +7,9 @@ import retrofit2.http.Query
 
 interface TvarkauMiestaApi {
 
+    @GET("me")
+    fun getCurrentUser(): Single<UserResponse>
+
     @GET("cities")
     fun getCities(): Single<CitiesResponse>
 

@@ -6,26 +6,45 @@ import io.reactivex.Completable
 import io.reactivex.CompletableEmitter
 import lt.vilnius.tvarkau.dagger.module.GuestToken
 import lt.vilnius.tvarkau.dagger.module.RefreshToken
+import lt.vilnius.tvarkau.dagger.module.ThirdPartyToken
 import lt.vilnius.tvarkau.data.GsonSerializer
+import lt.vilnius.tvarkau.entity.SocialNetworkUser
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import timber.log.Timber
 import javax.inject.Inject
 
 class SessionTokenImpl @Inject constructor(
-        private val appPreferences: AppPreferences,
-        @GuestToken
-        private val guestOAuth: OAuth2Client.Builder,
-        @RefreshToken
-        private val refreshOAuthToken: OAuth2Client.Builder,
-        private val gsonSerializer: GsonSerializer
+    private val appPreferences: AppPreferences,
+    @GuestToken
+    private val guestOAuth: OAuth2Client.Builder,
+    @RefreshToken
+    private val refreshOAuthToken: OAuth2Client.Builder,
+    @ThirdPartyToken
+    private val thirdPartyToken: OAuth2Client.Builder,
+    private val gsonSerializer: GsonSerializer
 ) : SessionToken {
+
+    override fun refreshSocialLoginToken(socialNetworkUser: SocialNetworkUser): Completable {
+        val params = mapOf(
+            "provider" to socialNetworkUser.provider,
+            "assertion" to socialNetworkUser.token
+        )
+
+        return Completable.create { emitter ->
+            thirdPartyToken.parameters(params)
+                .build()
+                .requestAccessToken {
+                    handleAccessToken(it, emitter)
+                }
+        }
+    }
 
     override fun refreshGuestToken(): Completable {
         return Completable.create { emitter ->
             guestOAuth.build()
-                    .requestAccessToken {
-                        handleAccessToken(it, emitter)
-                    }
+                .requestAccessToken {
+                    handleAccessToken(it, emitter)
+                }
         }
     }
 
@@ -46,14 +65,14 @@ class SessionTokenImpl @Inject constructor(
     override fun refreshCurrentToken(token: ApiToken): Completable {
         return Completable.create { emitter ->
             refreshOAuthToken
-                    .parameters(mapOf("refresh_token" to token.refreshToken))
-                    .build()
-                    .requestAccessToken {
-                        if (!it.isSuccessful && it.oAuthError.error == "invalid_grant") {
-                            Timber.w("LOGOUT USER!!!")
-                        }
-                        handleAccessToken(it, emitter)
+                .parameters(mapOf("refresh_token" to token.refreshToken))
+                .build()
+                .requestAccessToken {
+                    if (!it.isSuccessful && it.oAuthError.error == "invalid_grant") {
+                        Timber.w("LOGOUT USER!!!")
                     }
+                    handleAccessToken(it, emitter)
+                }
         }
     }
 }

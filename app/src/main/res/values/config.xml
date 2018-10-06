@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mixpanel_token" translatable="false">8f77b0f6ecba7677aec235170e8eee4f</string>
-
+    <string name="google_client_id">820183663553-nvqhlgvgia362k2vihncgefvj0nltr4m.apps.googleusercontent.com</string>
     <string name="api_root_oauth">%s/oauth/</string>
 </resources>

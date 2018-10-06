@@ -15,23 +15,30 @@
       },
       "oauth_client": [
         {
-          "client_id": "820183663553-l7p8s54ekppbp44dl058a67v6fh7ls5o.apps.googleusercontent.com",
+          "client_id": "820183663553-s6ma8nce3durqo7924bkfpb6ejokj53h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "lt.vilnius.tvarkau",
-            "certificate_hash": "8254950CEECCB88CD35B78C9792443C3DCF91420"
+            "certificate_hash": "8254950ceeccb88cd35b78c9792443c3dcf91420"
           }
         },
         {
-          "client_id": "820183663553-p0dffoeg1rdjgpc71jjrrhkuf1tsshr4.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "820183663553-lu6bg7mgih4u9nv04gfjhoko0b5da846.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lt.vilnius.tvarkau",
+            "certificate_hash": "7491c392b44f9a4aa95b232f460ae193e486b5f6"
+          }
         },
         {
-          "client_id": "820183663553-tibj1vsehsdhjj6bj6icqdfc99jud1vr.apps.googleusercontent.com",
+          "client_id": "820183663553-qhrrdrg43apgv129jotl9v62ihu74mnh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
+        {
+          "current_key": "AIzaSyApXCWjpxXs54y-KCcFVmX2wylp9AbZDQE"
+        },
         {
           "current_key": "AIzaSyCEZwH3WbDkR3K6OY-BMwh1HhyFIS1vQ7A"
         }
@@ -44,7 +51,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "820183663553-p0dffoeg1rdjgpc71jjrrhkuf1tsshr4.apps.googleusercontent.com",
+              "client_id": "820183663553-qhrrdrg43apgv129jotl9v62ihu74mnh.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -30,8 +30,8 @@ class RestAdapterModule {
     @Provides
     @ApiOAuth
     fun provideOAuthEndpoint(
-            application: Application,
-            @Named(HOST) host: String
+        application: Application,
+        @Named(HOST) host: String
     ): ApiEndpoint {
         return ApiEndpoint(application.getString(R.string.api_root_oauth).format(host))
     }
@@ -39,7 +39,7 @@ class RestAdapterModule {
     @Provides
     @Api
     fun provideApiV2Endpoint(
-            @Named(HOST) host: String
+        @Named(HOST) host: String
     ): ApiEndpoint {
         return ApiEndpoint(host.plus("/"))
     }
@@ -47,49 +47,65 @@ class RestAdapterModule {
     @Provides
     @GuestToken
     fun provideGuestTokenOAuthBuilder(
-            @ApiOAuth endpoint: ApiEndpoint,
-            @RawOkHttpClient client: OkHttpClient
+        @ApiOAuth endpoint: ApiEndpoint,
+        @RawOkHttpClient client: OkHttpClient
     ): OAuth2Client.Builder {
         return OAuth2Client.Builder(
-                OAUTH_CLIENT_ID,
-                "",
-                endpoint.url + OAUTH_TOKEN_ENDPOINT
+            OAUTH_CLIENT_ID,
+            "",
+            endpoint.url + OAUTH_TOKEN_ENDPOINT
         )
-                .grantType("client_credentials")
-                .scope("user")
-                .okHttpClient(client)
+            .grantType("client_credentials")
+            .scope("user")
+            .okHttpClient(client)
+    }
+
+    @Provides
+    @ThirdPartyToken
+    fun provideSocialSignInOAuthBuilder(
+        @ApiOAuth endpoint: ApiEndpoint,
+        @RawOkHttpClient client: OkHttpClient
+    ): OAuth2Client.Builder {
+        return OAuth2Client.Builder(
+            OAUTH_CLIENT_ID,
+            "",
+            endpoint.url + OAUTH_TOKEN_ENDPOINT
+        )
+            .grantType("assertion")
+            .scope("user")
+            .okHttpClient(client)
     }
 
     @Provides
     @RefreshToken
     fun provideRefreshTokenOAuthBuilder(
-            @ApiOAuth endpoint: ApiEndpoint,
-            @RawOkHttpClient client: OkHttpClient
+        @ApiOAuth endpoint: ApiEndpoint,
+        @RawOkHttpClient client: OkHttpClient
     ): OAuth2Client.Builder {
         return OAuth2Client.Builder(
-                OAUTH_CLIENT_ID,
-                "",
-                endpoint.url + OAUTH_TOKEN_ENDPOINT
+            OAUTH_CLIENT_ID,
+            "",
+            endpoint.url + OAUTH_TOKEN_ENDPOINT
         )
-                .grantType("refresh_token")
-                .okHttpClient(client)
+            .grantType("refresh_token")
+            .okHttpClient(client)
     }
 
     @Provides
     @Api
     @Singleton
     fun provideApi2Retrofit(
-            @Api endpoint: ApiEndpoint,
-            @IoScheduler ioScheduler: Scheduler,
-            @Api client: OkHttpClient,
-            gson: Gson
+        @Api endpoint: ApiEndpoint,
+        @IoScheduler ioScheduler: Scheduler,
+        @Api client: OkHttpClient,
+        gson: Gson
     ): Retrofit {
         return Retrofit.Builder()
-                .client(client)
-                .baseUrl(endpoint.url)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(ioScheduler))
-                .build()
+            .client(client)
+            .baseUrl(endpoint.url)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(ioScheduler))
+            .build()
     }
 
     companion object {
@@ -110,3 +126,7 @@ annotation class GuestToken
 @Qualifier
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class RefreshToken
+
+@Qualifier
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class ThirdPartyToken
