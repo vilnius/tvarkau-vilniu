@@ -9,7 +9,7 @@ android:
     - platform-tools
     - tools
     - android-27
-    - build-tools-27.0.3
+    - build-tools-28.0.2
     - extra-android-support
     - extra
   licenses:
