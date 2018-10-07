@@ -1,7 +1,7 @@
 object Versions {
-    const val kotlin = "1.2.60"
-    const val fabric = "1.25.1"
-    const val build_tools = "3.1.2"
+    const val kotlin = "1.2.71"
+    const val fabric = "1.25.4"
+    const val build_tools = "3.2.0"
     const val rx_java_2 = "2.1.10"
     const val rx_android_2 = "2.0.2"
     const val rx_kotlin = "2.2.0"
@@ -90,6 +90,7 @@ object Libs {
     const val maps = "com.google.android.gms:play-services-maps:${Versions.play_services}"
     const val location = "com.google.android.gms:play-services-location:${Versions.play_services}"
     const val places = "com.google.android.gms:play-services-places:${Versions.play_services}"
+    const val google_auth = "com.google.android.gms:play-services-auth:${Versions.play_services}"
 
     const val firebase_core = "com.google.firebase:firebase-core:${Versions.firebase}"
     const val firebase_perf = "com.google.firebase:firebase-perf:${Versions.firebase_perf}"

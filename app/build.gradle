@@ -81,6 +81,7 @@ dependencies {
     implementation Libs.maps
     implementation Libs.location
     implementation Libs.places
+    implementation Libs.google_auth
 
     implementation Libs.firebase_core
     implementation Libs.firebase_perf
