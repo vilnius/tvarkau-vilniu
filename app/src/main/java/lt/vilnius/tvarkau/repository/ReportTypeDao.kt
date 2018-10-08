@@ -14,4 +14,7 @@ interface ReportTypeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertAll(reportTypes: List<ReportType>)
+
+    @Query("SELECT * FROM report_types")
+    abstract fun getAll() : List<ReportType>
 }

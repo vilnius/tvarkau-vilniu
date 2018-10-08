@@ -1,7 +1,11 @@
 package lt.vilnius.tvarkau.fragments
 
 import android.Manifest
-import android.app.*
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.app.ProgressDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
@@ -12,7 +16,13 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
 import android.util.Patterns
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TimePicker
@@ -24,9 +34,15 @@ import kotlinx.android.synthetic.main.fragment_new_report.*
 import kotlinx.android.synthetic.main.image_picker_dialog.view.*
 import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.activity.*
+import lt.vilnius.tvarkau.activity.ActivityConstants
+import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
+import lt.vilnius.tvarkau.activity.available
+import lt.vilnius.tvarkau.activity.googlePlayServicesAvailability
+import lt.vilnius.tvarkau.activity.resolutionDialog
+import lt.vilnius.tvarkau.activity.resultCode
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Profile
+import lt.vilnius.tvarkau.entity.ReportType
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.visible
@@ -39,8 +55,12 @@ import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
 import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
 import lt.vilnius.tvarkau.mvp.views.NewReportView
 import lt.vilnius.tvarkau.rx.RxBus
-import lt.vilnius.tvarkau.utils.*
+import lt.vilnius.tvarkau.utils.FieldAwareValidator
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
+import lt.vilnius.tvarkau.utils.KeyboardUtils
+import lt.vilnius.tvarkau.utils.PermissionUtils
+import lt.vilnius.tvarkau.utils.PersonalCodeValidator
+import lt.vilnius.tvarkau.utils.SharedPrefsManager
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
@@ -50,7 +70,11 @@ import pl.aprilapps.easyphotopicker.EasyImage
 import timber.log.Timber
 import java.io.File
 import java.util.*
-import java.util.Calendar.*
+import java.util.Calendar.DAY_OF_MONTH
+import java.util.Calendar.HOUR_OF_DAY
+import java.util.Calendar.MINUTE
+import java.util.Calendar.MONTH
+import java.util.Calendar.YEAR
 
 /**
  * @author Martynas Jurkus
@@ -592,10 +616,12 @@ class NewReportFragment : BaseFragment(),
         const val KEY_REPORT_TYPE = "report_type"
         const val KEY_TAKE_PHOTO = "take_photo"
 
-        fun newInstance(problemType: String): NewReportFragment {
+
+        fun newInstance(reportType: ReportType): NewReportFragment {
             return NewReportFragment().apply {
-                arguments = Bundle()
-                arguments!!.putString(KEY_REPORT_TYPE, problemType)
+                arguments = Bundle().apply {
+                    putParcelable(KEY_REPORT_TYPE, reportType)
+                }
             }
         }
     }

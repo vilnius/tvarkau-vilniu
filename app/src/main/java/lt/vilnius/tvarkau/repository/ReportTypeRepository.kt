@@ -10,17 +10,21 @@ class ReportTypeRepository @Inject constructor(
     private val api: TvarkauMiestaApi
 ) {
 
+    fun getReportTypes() : List<ReportType> {
+        return dao.getAll()
+    }
+
     fun getById(reportTypeId: Int): ReportType {
         val reportType = dao.getById(reportTypeId)
 
         return if (reportType != null) {
             reportType
         } else {
-            api.getReportTypes()
+            val reportTypes = api.getReportTypes()
                 .map { it.reportTypes }
-                .doOnSuccess { dao.insertAll(it) }
                 .blockingGet()
 
+            dao.insertAll(reportTypes)
             dao.getById(reportTypeId)!!
         }
     }
