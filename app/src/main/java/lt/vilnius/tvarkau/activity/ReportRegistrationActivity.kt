@@ -2,6 +2,7 @@ package lt.vilnius.tvarkau.activity
 
 import android.os.Bundle
 import lt.vilnius.tvarkau.BaseActivity
+import lt.vilnius.tvarkau.entity.ReportType
 import lt.vilnius.tvarkau.fragments.NewReportFragment
 import lt.vilnius.tvarkau.fragments.PhotoInstructionsFragment
 import lt.vilnius.tvarkau.fragments.ReportTypeListFragment
@@ -18,7 +19,7 @@ class ReportRegistrationActivity : BaseActivity() {
         }
     }
 
-    fun onTypeSelected(reportType: String) {
+    fun onTypeSelected(reportType: ReportType) {
         supportFragmentManager
                 .beginTransaction()
                 .replace(android.R.id.content, NewReportFragment.newInstance(reportType))
