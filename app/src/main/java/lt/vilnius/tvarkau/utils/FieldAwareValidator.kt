@@ -4,13 +4,14 @@ import io.reactivex.Single
 import io.reactivex.Single.defer
 import io.reactivex.Single.just
 
-/**
- * @author Martynas Jurkus
- */
 class FieldAwareValidator<T> private constructor(
-        private val obj: T,
-        private val exception: ValidationException? = null
+    private val obj: T,
+    private val exception: ValidationException? = null
 ) {
+
+    fun validate(predicate: (T) -> Boolean, viewId: Int, message: CharSequence): FieldAwareValidator<T> {
+        return validate(predicate, viewId, message.toString())
+    }
 
     fun validate(predicate: (T) -> Boolean, viewId: Int, message: String): FieldAwareValidator<T> {
         if (exception == null && !predicate(obj)) {

@@ -8,6 +8,7 @@ import dagger.Provides
 import io.reactivex.Scheduler
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.api.ApiEndpoint
+import lt.vilnius.tvarkau.api.AppRxAdapterFactory
 import lt.vilnius.tvarkau.dagger.Api
 import lt.vilnius.tvarkau.dagger.IoScheduler
 import okhttp3.OkHttpClient
@@ -100,11 +101,12 @@ class RestAdapterModule {
         @Api client: OkHttpClient,
         gson: Gson
     ): Retrofit {
+        val factory = RxJava2CallAdapterFactory.createWithScheduler(ioScheduler)
         return Retrofit.Builder()
             .client(client)
             .baseUrl(endpoint.url)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(ioScheduler))
+            .addCallAdapterFactory(AppRxAdapterFactory(factory))
             .build()
     }
 

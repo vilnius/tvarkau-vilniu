@@ -6,8 +6,9 @@ import lt.vilnius.tvarkau.utils.SharedPrefsManager
 /**
  * @author Martynas Jurkus
  */
+@Deprecated("Should be replaced with User")
 class PersonalDataInteractorImpl(
-        private val sharedPrefsManager: SharedPrefsManager
+    private val sharedPrefsManager: SharedPrefsManager
 ) : PersonalDataInteractor {
 
     override fun getPersonalData(): Profile? {

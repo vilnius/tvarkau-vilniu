@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import lt.vilnius.tvarkau.viewmodel.LoginViewModel
+import lt.vilnius.tvarkau.viewmodel.NewReportViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportDetailsViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportTypeListViewModel
@@ -38,4 +39,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReportTypeListViewModel::class)
     internal abstract fun reportTypeListViewModel(viewModel: ReportTypeListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewReportViewModel::class)
+    internal abstract fun newReportViewModel(viewModel: NewReportViewModel): ViewModel
 }

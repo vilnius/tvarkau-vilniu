@@ -9,12 +9,15 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
+import lt.vilnius.tvarkau.api.NewReportRequest
 import lt.vilnius.tvarkau.api.ReportsResponse
 import lt.vilnius.tvarkau.api.TvarkauMiestaApi
 import lt.vilnius.tvarkau.dagger.DbScheduler
 import lt.vilnius.tvarkau.dagger.UiScheduler
+import lt.vilnius.tvarkau.entity.NewReport
 import lt.vilnius.tvarkau.entity.Report
 import lt.vilnius.tvarkau.entity.ReportEntity
+import lt.vilnius.tvarkau.mvp.presenters.NewReportData
 import javax.inject.Inject
 
 
@@ -89,6 +92,14 @@ class ReportsRepository @Inject constructor(
             },
             refreshState = refreshState
         )
+    }
+
+    //TODO should be moved to MyReportsRepository. In next PR.
+    fun submitReport(reportData: NewReportData): Single<ReportEntity> {
+        val newReport = NewReport.from(reportData)
+
+        return api.submitReport(NewReportRequest(newReport))
+            .map { mapReportEntity(it.report) }
     }
 
     private fun mapReportEntity(report: Report): ReportEntity {
