@@ -1,7 +1,9 @@
 package lt.vilnius.tvarkau.api
 
 import io.reactivex.Single
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -20,6 +22,9 @@ interface TvarkauMiestaApi {
         @Query("per_page") perPage: Int = 20,
         @Query("page") page: Int
     ): Single<ReportsResponse>
+
+    @POST("reports")
+    fun submitReport(@Body body: NewReportRequest): Single<ReportResponse>
 
     @GET("report_types")
     fun getReportTypes(): Single<ReportTypeResponse>

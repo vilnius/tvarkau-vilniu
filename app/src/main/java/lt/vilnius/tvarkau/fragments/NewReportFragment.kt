@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.app.TimePickerDialog
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
@@ -40,27 +41,24 @@ import lt.vilnius.tvarkau.activity.available
 import lt.vilnius.tvarkau.activity.googlePlayServicesAvailability
 import lt.vilnius.tvarkau.activity.resolutionDialog
 import lt.vilnius.tvarkau.activity.resultCode
+import lt.vilnius.tvarkau.api.ApiError
 import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Profile
+import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.entity.ReportType
-import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.observe
+import lt.vilnius.tvarkau.extensions.observeNonNull
 import lt.vilnius.tvarkau.extensions.visible
-import lt.vilnius.tvarkau.fragments.interactors.SharedPreferencesMyReportsInteractor
-import lt.vilnius.tvarkau.mvp.interactors.NewReportInteractorImpl
-import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractorImpl
-import lt.vilnius.tvarkau.mvp.interactors.ReportPhotoProviderImpl
+import lt.vilnius.tvarkau.extensions.withViewModel
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
-import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenter
-import lt.vilnius.tvarkau.mvp.presenters.NewReportPresenterImpl
-import lt.vilnius.tvarkau.mvp.views.NewReportView
-import lt.vilnius.tvarkau.rx.RxBus
 import lt.vilnius.tvarkau.utils.FieldAwareValidator
 import lt.vilnius.tvarkau.utils.FormatUtils.formatLocalDateTime
 import lt.vilnius.tvarkau.utils.KeyboardUtils
 import lt.vilnius.tvarkau.utils.PermissionUtils
 import lt.vilnius.tvarkau.utils.PersonalCodeValidator
-import lt.vilnius.tvarkau.utils.SharedPrefsManager
+import lt.vilnius.tvarkau.utils.ProgressState
+import lt.vilnius.tvarkau.viewmodel.NewReportViewModel
 import lt.vilnius.tvarkau.views.adapters.NewProblemPhotosPagerAdapter
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
@@ -75,63 +73,45 @@ import java.util.Calendar.HOUR_OF_DAY
 import java.util.Calendar.MINUTE
 import java.util.Calendar.MONTH
 import java.util.Calendar.YEAR
+import javax.inject.Inject
 
-/**
- * @author Martynas Jurkus
- */
-@Screen(navigationMode = NavigationMode.BACK,
-        trackingScreenName = ActivityConstants.SCREEN_NEW_REPORT)
+@Screen(
+    navigationMode = NavigationMode.BACK,
+    trackingScreenName = ActivityConstants.SCREEN_NEW_REPORT
+)
 class NewReportFragment : BaseFragment(),
-        NewProblemPhotosPagerAdapter.OnPhotoClickedListener,
-        NewReportView {
+    NewProblemPhotosPagerAdapter.OnPhotoClickedListener {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var googlePlayServicesResolutionDialog: Dialog? = null
+
+    private lateinit var viewModel: NewReportViewModel
 
     var locationCords: LatLng? = null
     var imageFiles = ArrayList<File>()
 
-    private val presenter: NewReportPresenter by lazy {
-        NewReportPresenterImpl(
-                NewReportInteractorImpl(
-                        legacyApiService,
-                        SharedPreferencesMyReportsInteractor(myProblemsPreferences),
-                        ReportPhotoProviderImpl(context!!),
-                        ioScheduler,
-                        getString(R.string.report_description_timestamp_template),
-                        analytics
-                ),
-                PersonalDataInteractorImpl(
-                        SharedPrefsManager.getInstance(context!!)
-                ),
-                this,
-                uiScheduler,
-                analytics
-        )
-    }
-
     private var progressDialog: ProgressDialog? = null
 
     private val validateParkingViolationData: Boolean
-        get() = reportType == PARKING_VIOLATIONS
+        get() = reportType.isParkingViolation
 
     private val shouldDisplayPhotoInstructions: Boolean
         get() {
             val delta = System.currentTimeMillis() - appPreferences.photoInstructionsLastSeen.get()
-            return reportType == PARKING_VIOLATIONS && Duration.ofMillis(delta).toDays() >= 1
+            return reportType.isParkingViolation && Duration.ofMillis(delta).toDays() >= 1
         }
 
-    private lateinit var reportType: String
+    private val reportType by lazy { arguments!!.getParcelable<ReportType>(KEY_REPORT_TYPE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         savedInstanceState?.let {
             locationCords = it.getParcelable(SAVE_LOCATION)
             imageFiles = it.getSerializable(SAVE_PHOTOS) as ArrayList<File>
 
         }
-
-        reportType = arguments!!.getString(KEY_REPORT_TYPE)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -145,7 +125,7 @@ class NewReportFragment : BaseFragment(),
         with(activity!! as AppCompatActivity) {
             setSupportActionBar(toolbar)
 
-            supportActionBar?.title = reportType
+            supportActionBar?.title = reportType.title
         }
 
         problem_images_view_pager.adapter = NewProblemPhotosPagerAdapter(imageFiles, this)
@@ -153,15 +133,9 @@ class NewReportFragment : BaseFragment(),
         problem_images_view_pager_indicator.setViewPager(problem_images_view_pager)
         problem_images_view_pager_indicator.gone()
 
-        report_problem_location.setOnClickListener { view ->
-            onProblemLocationClicked(view)
-        }
-
+        report_problem_location.setOnClickListener { onProblemLocationClicked(it) }
         report_problem_take_photo.setOnClickListener { onTakePhotoClicked() }
-
-        report_problem_date_time.setOnClickListener {
-            onProblemDateTimeClicked()
-        }
+        report_problem_date_time.setOnClickListener { onProblemDateTimeClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -170,27 +144,35 @@ class NewReportFragment : BaseFragment(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 onGoBack()
-                return true
+                true
             }
             R.id.action_send -> {
                 activity!!.currentFocus?.let {
                     KeyboardUtils.closeSoftKeyboard(activity!!, it)
                 }
 
-                presenter.submitProblem(createValidator())
-                return true
+                viewModel.submit(createValidator())
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        presenter.onAttach()
-        presenter.initWithReportType(reportType)
+
+        viewModel = withViewModel(viewModelFactory) {
+            observeNonNull(errorEvents, ::showError)
+            observeNonNull(validationError, ::showValidationError)
+            observeNonNull(progressState, ::handleProgressState)
+            observeNonNull(submittedReport, ::onReportSubmitted)
+            observe(personalData, ::showParkingViolationFields)
+        }
+
+        viewModel.initWith(reportType)
 
         EasyImage.configuration(context!!).setAllowMultiplePickInGallery(true)
     }
@@ -199,7 +181,7 @@ class NewReportFragment : BaseFragment(),
         component.inject(this)
     }
 
-    override fun showParkingViolationFields(profile: Profile?) {
+    private fun showParkingViolationFields(profile: Profile?) {
         new_report_date_time_container.visible()
         new_report_licence_plate_container.visible()
 
@@ -234,62 +216,84 @@ class NewReportFragment : BaseFragment(),
 
     private fun createValidator(): FieldAwareValidator<NewReportData> {
         val data = NewReportData(
-                reportType = reportType,
-                description = report_problem_description.text.toString(),
-                address = report_problem_location.text.toString(),
-                latitude = locationCords?.latitude,
-                longitude = locationCords?.longitude,
-                dateTime = report_problem_date_time.text.toString(),
-                email = report_problem_submitter_email.text.toString(),
-                name = report_problem_submitter_name.text.toString(),
-                personalCode = report_problem_submitter_personal_code.text.toString(),
-                photoUrls = imageFiles,
-                licencePlate = report_problem_licence_plate_number.text.toString()
+            reportType = reportType,
+            description = report_problem_description.text.toString(),
+            address = report_problem_location.text.toString(),
+            latitude = locationCords?.latitude,
+            longitude = locationCords?.longitude,
+            dateTime = report_problem_date_time.text.toString(),
+            email = report_problem_submitter_email.text.toString(),
+            name = report_problem_submitter_name.text.toString(),
+            personalCode = report_problem_submitter_personal_code.text.toString(),
+            photoUrls = imageFiles,
+            licencePlate = report_problem_licence_plate_number.text.toString()
         )
 
         var validator = FieldAwareValidator.of(data)
-                .validate({ it.address.isNotBlank() },
-                        report_problem_location_wrapper.id,
-                        getText(R.string.error_problem_location_is_empty).toString())
-                .validate({ report_problem_description.text.isNotBlank() },
-                        report_problem_description_wrapper.id,
-                        getText(R.string.error_problem_description_is_empty).toString())
+            .validate(
+                { it.address.isNotBlank() },
+                report_problem_location_wrapper.id,
+                getText(R.string.error_problem_location_is_empty)
+            )
+            .validate(
+                { report_problem_description.text.isNotBlank() },
+                report_problem_description_wrapper.id,
+                getText(R.string.error_problem_description_is_empty)
+            )
 
         if (validateParkingViolationData) {
             validator = validator
-                    .validate({ it.licencePlate?.isNotBlank() ?: false },
-                            report_problem_licence_plate_number_wrapper.id,
-                            getString(R.string.error_new_report_fill_licence_plate))
-                    .validate({ it.dateTime?.isNotBlank() ?: false },
-                            report_problem_date_time_wrapper.id,
-                            getString(R.string.error_report_fill_date_time))
-                    .validate({ it.email?.isNotBlank() ?: false },
-                            report_problem_submitter_email_wrapper.id,
-                            getString(R.string.error_profile_fill_email))
-                    .validate({ Patterns.EMAIL_ADDRESS.matcher(it.email).matches() },
-                            report_problem_submitter_email_wrapper.id,
-                            getString(R.string.error_profile_email_invalid))
-                    .validate({ it.name?.isNotBlank() ?: false },
-                            report_problem_submitter_name_wrapper.id,
-                            getText(R.string.error_profile_fill_name).toString())
-                    .validate({ it.name!!.split(" ").size >= 2 },
-                            report_problem_submitter_name_wrapper.id,
-                            getText(R.string.error_profile_name_invalid).toString())
-                    .validate({ it.personalCode?.isNotBlank() ?: false },
-                            report_problem_submitter_personal_code_wrapper.id,
-                            getText(R.string.error_new_report_enter_personal_code).toString())
-                    .validate({ PersonalCodeValidator.validate(it.personalCode!!) },
-                            report_problem_submitter_personal_code_wrapper.id,
-                            getText(R.string.error_new_report_invalid_personal_code).toString())
-                    .validate({ it.photoUrls.size >= 2 },
-                            0,
-                            getText(R.string.error_minimum_photo_requirement).toString())
+                .validate(
+                    { it.licencePlate?.isNotBlank() ?: false },
+                    report_problem_licence_plate_number_wrapper.id,
+                    getString(R.string.error_new_report_fill_licence_plate)
+                )
+                .validate(
+                    { it.dateTime?.isNotBlank() ?: false },
+                    report_problem_date_time_wrapper.id,
+                    getString(R.string.error_report_fill_date_time)
+                )
+                .validate(
+                    { it.email?.isNotBlank() ?: false },
+                    report_problem_submitter_email_wrapper.id,
+                    getString(R.string.error_profile_fill_email)
+                )
+                .validate(
+                    { Patterns.EMAIL_ADDRESS.matcher(it.email).matches() },
+                    report_problem_submitter_email_wrapper.id,
+                    getString(R.string.error_profile_email_invalid)
+                )
+                .validate(
+                    { it.name?.isNotBlank() ?: false },
+                    report_problem_submitter_name_wrapper.id,
+                    getText(R.string.error_profile_fill_name).toString()
+                )
+                .validate(
+                    { it.name!!.split(" ").size >= 2 },
+                    report_problem_submitter_name_wrapper.id,
+                    getText(R.string.error_profile_name_invalid).toString()
+                )
+                .validate(
+                    { it.personalCode?.isNotBlank() ?: false },
+                    report_problem_submitter_personal_code_wrapper.id,
+                    getText(R.string.error_new_report_enter_personal_code).toString()
+                )
+                .validate(
+                    { PersonalCodeValidator.validate(it.personalCode!!) },
+                    report_problem_submitter_personal_code_wrapper.id,
+                    getText(R.string.error_new_report_invalid_personal_code).toString()
+                )
+                .validate(
+                    { it.photoUrls.size >= 2 },
+                    0,
+                    getText(R.string.error_minimum_photo_requirement).toString()
+                )
         }
 
         return validator
     }
 
-    override fun showValidationError(error: FieldAwareValidator.ValidationException) {
+    private fun showValidationError(error: FieldAwareValidator.ValidationException) {
         report_problem_location_wrapper.isErrorEnabled = false
         report_problem_description_wrapper.isErrorEnabled = false
         report_problem_date_time_wrapper.isErrorEnabled = false
@@ -303,13 +307,17 @@ class NewReportFragment : BaseFragment(),
         } ?: Toast.makeText(context!!, error.message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showError(error: Throwable) {
-        Toast.makeText(context!!, R.string.error_submitting_problem, Toast.LENGTH_SHORT).show()
+    private fun showError(error: Throwable) {
+        val message = if (error is ApiError && error.isValidationError) {
+            error.firstErrorMessage
+        } else {
+            getString(R.string.error_submitting_problem)
+        }
+
+        Toast.makeText(context!!, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showSuccess() {
-        RxBus.publish(NewProblemAddedEvent())
-
+    private fun onReportSubmitted(report: ReportEntity) {
         activity!!.currentFocus?.run {
             KeyboardUtils.closeSoftKeyboard(activity!!, this)
         }
@@ -318,11 +326,13 @@ class NewReportFragment : BaseFragment(),
         (activity!! as ReportRegistrationActivity).onReportSubmitted()
     }
 
-    override fun fillReportDateTime(dateTime: String) {
+    //TODO restore after image upload implemented
+    private fun fillReportDateTime(dateTime: String) {
         report_problem_date_time.setText(dateTime)
     }
 
-    override fun displayImages(imageFiles: List<File>) {
+    //TODO restore after image upload implemented
+    private fun displayImages(imageFiles: List<File>) {
         this.imageFiles.addAll(imageFiles)
 
         problem_images_view_pager.adapter!!.notifyDataSetChanged()
@@ -361,12 +371,12 @@ class NewReportFragment : BaseFragment(),
         }
 
         imagePickerDialogBuilder
-                .setTitle(R.string.add_photos)
-                .setView(view)
-                .setPositiveButton(R.string.cancel) { dialog, whichButton ->
-                    dialog.dismiss()
-                }
-                .create()
+            .setTitle(R.string.add_photos)
+            .setView(view)
+            .setPositiveButton(R.string.cancel) { dialog, whichButton ->
+                dialog.dismiss()
+            }
+            .create()
 
         val imagePickerDialog = imagePickerDialogBuilder.show()
 
@@ -383,12 +393,20 @@ class NewReportFragment : BaseFragment(),
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS -> if (PermissionUtils.isAllPermissionsGranted(activity!!, TAKE_PHOTO_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_TAKE_PHOTO_PERMISSIONS -> if (PermissionUtils.isAllPermissionsGranted(
+                    activity!!,
+                    TAKE_PHOTO_PERMISSIONS
+                )
+            ) {
                 openPhotoSelectorDialog(shouldDisplayPhotoInstructions)
             } else {
                 Toast.makeText(context!!, R.string.error_need_camera_and_storage_permission, Toast.LENGTH_SHORT).show()
             }
-            ActivityConstants.REQUEST_CODE_MAP_PERMISSION -> if (PermissionUtils.isAllPermissionsGranted(activity!!, MAP_PERMISSIONS)) {
+            ActivityConstants.REQUEST_CODE_MAP_PERMISSION -> if (PermissionUtils.isAllPermissionsGranted(
+                    activity!!,
+                    MAP_PERMISSIONS
+                )
+            ) {
                 showPlacePicker(view!!)
             } else {
                 Toast.makeText(context!!, R.string.error_need_location_permission, Toast.LENGTH_SHORT).show()
@@ -399,8 +417,8 @@ class NewReportFragment : BaseFragment(),
 
     private fun isEditedByUser(): Boolean {
         return report_problem_description.text.isNotBlank()
-                || report_problem_location.text.isNotBlank()
-                || imageFiles.isNotEmpty()
+            || report_problem_location.text.isNotBlank()
+            || imageFiles.isNotEmpty()
     }
 
     private fun onGoBack() {
@@ -409,12 +427,12 @@ class NewReportFragment : BaseFragment(),
         }
         if (isEditedByUser()) {
             AlertDialog.Builder(context!!, R.style.MyDialogTheme)
-                    .setMessage(getString(R.string.discard_changes_title))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.discard_changes_positive) { dialog, whichButton ->
-                        activity!!.onBackPressed()
-                    }
-                    .setNegativeButton(R.string.discard_changes_negative, null).show()
+                .setMessage(getString(R.string.discard_changes_title))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.discard_changes_positive) { dialog, whichButton ->
+                    activity!!.onBackPressed()
+                }
+                .setNegativeButton(R.string.discard_changes_negative, null).show()
         } else {
             activity!!.onBackPressed()
         }
@@ -428,7 +446,7 @@ class NewReportFragment : BaseFragment(),
             }
 
             override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
-                presenter.onImagesPicked(imageFiles)
+                viewModel.onImagesPicked(imageFiles)
             }
 
             override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
@@ -468,9 +486,9 @@ class NewReportFragment : BaseFragment(),
                         // Mostly when Geocoder throws IOException
                         // backup solution which in not 100% reliable
                         val addressSlice = place.address
-                                ?.split(", ".toRegex())
-                                ?.dropLastWhile(String::isEmpty)
-                                ?.toTypedArray()
+                            ?.split(", ".toRegex())
+                            ?.dropLastWhile(String::isEmpty)
+                            ?.toTypedArray()
 
                         val addressText = if (addressSlice == null || addressSlice.isEmpty()) {
                             locationCords?.let {
@@ -533,27 +551,28 @@ class NewReportFragment : BaseFragment(),
         val day = calendar.get(DAY_OF_MONTH)
 
         val dialogDatePicker = DatePickerDialog(
-                activity!!,
-                { datePicker: DatePicker, year: Int, month: Int, day: Int ->
-                    calendar.set(YEAR, year)
-                    calendar.set(MONTH, month)
-                    calendar.set(DAY_OF_MONTH, day)
+            activity!!,
+            { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                calendar.set(YEAR, selectedYear)
+                calendar.set(MONTH, selectedMonth)
+                calendar.set(DAY_OF_MONTH, selectedDay)
 
-                    TimePickerDialog(activity!!, { timePicker: TimePicker, hour: Int, minutes: Int ->
-                        calendar.set(HOUR_OF_DAY, hour)
-                        calendar.set(MINUTE, minutes)
+                TimePickerDialog(activity!!, { _: TimePicker, hour: Int, minutes: Int ->
+                    calendar.set(HOUR_OF_DAY, hour)
+                    calendar.set(MINUTE, minutes)
 
-                        val dateTime = LocalDateTime.of(
-                                calendar.get(YEAR),
-                                calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
-                                calendar.get(DAY_OF_MONTH),
-                                calendar.get(HOUR_OF_DAY),
-                                calendar.get(MINUTE)
-                        )
+                    val dateTime = LocalDateTime.of(
+                        calendar.get(YEAR),
+                        calendar.get(MONTH) + 1, //LocalDateTime expects month starting from 1 instead of 0
+                        calendar.get(DAY_OF_MONTH),
+                        calendar.get(HOUR_OF_DAY),
+                        calendar.get(MINUTE)
+                    )
 
-                        report_problem_date_time.setText(formatLocalDateTime(dateTime))
-                    }, 0, 0, true).show()
-                }, year, month, day)
+                    report_problem_date_time.setText(formatLocalDateTime(dateTime))
+                }, 0, 0, true).show()
+            }, year, month, day
+        )
 
         dialogDatePicker.datePicker.maxDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
         dialogDatePicker.setTitle(null)
@@ -568,7 +587,14 @@ class NewReportFragment : BaseFragment(),
         startActivity(intent)
     }
 
-    override fun showProgress() {
+    private fun handleProgressState(progressState: ProgressState) {
+        when (progressState) {
+            ProgressState.show -> showProgress()
+            ProgressState.hide -> hideProgress()
+        }
+    }
+
+    private fun showProgress() {
         if (progressDialog == null) {
             progressDialog = ProgressDialog(context!!).apply {
                 setMessage(getString(R.string.sending_problem))
@@ -580,7 +606,7 @@ class NewReportFragment : BaseFragment(),
         progressDialog?.show()
     }
 
-    override fun hideProgress() {
+    private fun hideProgress() {
         progressDialog?.dismiss()
     }
 
@@ -599,7 +625,6 @@ class NewReportFragment : BaseFragment(),
 
     override fun onDestroyView() {
         progressDialog?.dismiss()
-        presenter.onDetach()
         super.onDestroyView()
     }
 

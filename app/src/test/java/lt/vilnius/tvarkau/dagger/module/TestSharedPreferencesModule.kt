@@ -11,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.entity.City
+import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.Preferences
 import lt.vilnius.tvarkau.prefs.Preferences.MY_PROBLEMS_PREFERENCES
@@ -49,4 +50,7 @@ class TestSharedPreferencesModule {
             override val selectedCity: ObjectPreference<City> = mock()
         }
     }
+
+    @Provides
+    fun providePersonalData(application: Application): PersonalDataInteractor = mock()
 }

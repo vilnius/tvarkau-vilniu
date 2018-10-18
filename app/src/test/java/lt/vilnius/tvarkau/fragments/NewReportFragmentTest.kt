@@ -16,14 +16,13 @@ import java.io.File
 import javax.inject.Inject
 import kotlin.test.assertEquals
 
-/**
- * @author Martynas Jurkus
- */
-@Ignore
 class NewReportFragmentTest : BaseRobolectricTest() {
 
     @Inject
     lateinit var api: LegacyApiService
+
+    private val reportType = ReportType(id = 1, title = "Report Title")
+    private val reportTypeParkingViolation = ReportType(id = 1, title = "Report Title")
 
     override fun setUp() {
         super.setUp()
@@ -32,7 +31,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
 
     @Test
     fun init_anyReportType_correctLayout() {
-        val fragment = setUpFragment("any")
+        val fragment = setUpFragment(reportType)
 
         assertThat(fragment.report_problem_description_wrapper).isVisible
         assertThat(fragment.report_problem_location_wrapper).isVisible
@@ -43,8 +42,9 @@ class NewReportFragmentTest : BaseRobolectricTest() {
     }
 
     @Test
+    @Ignore
     fun init_parkingViolations_correctLayout() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         assertThat(fragment.report_problem_location_wrapper).isVisible
         assertThat(fragment.report_problem_description_wrapper).isVisible
@@ -56,7 +56,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
 
     @Test
     fun submit_simpleReport_locationValidationFails() {
-        val fragment = setUpFragment("any")
+        val fragment = setUpFragment(reportType)
 
         fragment.doSubmitReport()
 
@@ -65,7 +65,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
 
     @Test
     fun submit_simpleReport_descriptionValidationFails() {
-        val fragment = setUpFragment("any")
+        val fragment = setUpFragment(reportType)
         fragment.report_problem_location.setText("Some location")
 
         fragment.doSubmitReport()
@@ -75,7 +75,7 @@ class NewReportFragmentTest : BaseRobolectricTest() {
 
     @Test
     fun submit_simpleReport_validationReset() {
-        val fragment = setUpFragment("any")
+        val fragment = setUpFragment(reportType)
 
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_location_wrapper).hasError(R.string.error_problem_location_is_empty)
@@ -87,89 +87,94 @@ class NewReportFragmentTest : BaseRobolectricTest() {
 
         assertThat(fragment.report_problem_location_wrapper).noError()
         assertThat(fragment.report_problem_description_wrapper)
-                .hasError(R.string.error_problem_description_is_empty)
+            .hasError(R.string.error_problem_description_is_empty)
     }
 
+    @Ignore("Waiting for parking violation type backend support")
     @Test
     fun submit_parkingViolation_validateName() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         fillAllFields(fragment)
         fragment.report_problem_submitter_name.setText("")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_name_wrapper)
-                .hasError(R.string.error_profile_fill_name)
+            .hasError(R.string.error_profile_fill_name)
 
         fragment.report_problem_submitter_name.setText("myname")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_name_wrapper)
-                .hasError(R.string.error_profile_name_invalid)
+            .hasError(R.string.error_profile_name_invalid)
 
         fragment.report_problem_submitter_name.setText("valid name")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_name_wrapper).noError()
     }
 
+    @Ignore("Waiting for parking violation type backend support")
     @Test
     fun submit_parkingViolation_validateEmail() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         fillAllFields(fragment)
         fragment.report_problem_submitter_email.setText("")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_email_wrapper)
-                .hasError(R.string.error_profile_fill_email)
+            .hasError(R.string.error_profile_fill_email)
 
         fragment.report_problem_submitter_email.setText("invalidemail")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_email_wrapper)
-                .hasError(R.string.error_profile_email_invalid)
+            .hasError(R.string.error_profile_email_invalid)
 
         fragment.report_problem_submitter_email.setText("valid@email.com")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_email_wrapper).noError()
     }
 
+    @Ignore("Waiting for parking violation type backend support")
     @Test
     fun submit_parkingViolation_validatePersonalCode() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         fillAllFields(fragment)
         fragment.report_problem_submitter_personal_code.setText("")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_personal_code_wrapper)
-                .hasError(R.string.error_new_report_enter_personal_code)
+            .hasError(R.string.error_new_report_enter_personal_code)
 
         fragment.report_problem_submitter_personal_code.setText("zoom")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_personal_code_wrapper)
-                .hasError(R.string.error_new_report_invalid_personal_code)
+            .hasError(R.string.error_new_report_invalid_personal_code)
 
         fragment.report_problem_submitter_personal_code.setText("34508028198")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_submitter_personal_code_wrapper)
-                .noError()
+            .noError()
     }
 
+    @Ignore("Waiting for parking violation type backend support")
     @Test
     fun submit_parkingViolation_validateDateTime() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         fillAllFields(fragment)
         fragment.report_problem_date_time.setText("")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_date_time_wrapper)
-                .hasError(R.string.error_report_fill_date_time)
+            .hasError(R.string.error_report_fill_date_time)
 
         fragment.report_problem_date_time.setText("2017-01-01 00:00")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_date_time_wrapper)
-                .noError()
+            .noError()
     }
 
+    @Ignore("Waiting for parking violation type backend support")
     @Test
     fun submit_parkingViolation_validatePhotos() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         fillAllFields(fragment)
         fragment.imageFiles.add(File("some file"))
@@ -177,25 +182,28 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         fragment.doSubmitReport()
 
         ShadowLooper.idleMainLooper()
-        assertEquals(activity.getString(R.string.error_minimum_photo_requirement),
-                ShadowToast.getTextOfLatestToast())
+        assertEquals(
+            activity.getString(R.string.error_minimum_photo_requirement),
+            ShadowToast.getTextOfLatestToast()
+        )
     }
 
+    @Ignore("Waiting for parking violation type backend support")
     @Test
     fun submit_parkingViolation_validateLacencePlate() {
-        val fragment = setUpFragment(NewReportFragment.PARKING_VIOLATIONS)
+        val fragment = setUpFragment(reportTypeParkingViolation)
 
         fillAllFields(fragment)
         fragment.report_problem_licence_plate_number.setText("")
         fragment.doSubmitReport()
 
         assertThat(fragment.report_problem_licence_plate_number_wrapper)
-                .hasError(R.string.error_new_report_fill_licence_plate)
+            .hasError(R.string.error_new_report_fill_licence_plate)
 
         fragment.report_problem_licence_plate_number.setText("AAA111")
         fragment.doSubmitReport()
         assertThat(fragment.report_problem_licence_plate_number_wrapper)
-                .noError()
+            .noError()
     }
 
     private fun fillAllFields(fragment: NewReportFragment) {
@@ -218,8 +226,8 @@ class NewReportFragmentTest : BaseRobolectricTest() {
         this.onOptionsItemSelected(item)
     }
 
-    private fun setUpFragment(reportType: String): NewReportFragment {
-        return NewReportFragment.newInstance(ReportType(id =1, title = "Title")).apply {
+    private fun setUpFragment(reportType: ReportType): NewReportFragment {
+        return NewReportFragment.newInstance(reportType).apply {
             setFragment(this)
         }
     }

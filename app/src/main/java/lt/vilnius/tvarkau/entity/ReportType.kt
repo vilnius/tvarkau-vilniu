@@ -2,8 +2,10 @@ package lt.vilnius.tvarkau.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @Entity(
@@ -16,4 +18,9 @@ data class ReportType(
     val id: Int,
     @ColumnInfo(name = "title")
     val title: String
-) : Parcelable
+) : Parcelable {
+
+    @IgnoredOnParcel
+    @Ignore
+    var isParkingViolation = false
+}
