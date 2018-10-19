@@ -1,18 +1,24 @@
 package lt.vilnius.tvarkau.navigation
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import lt.vilnius.tvarkau.MainActivity
 import lt.vilnius.tvarkau.ProfileEditActivity
 import lt.vilnius.tvarkau.ReportDetailsActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
 import lt.vilnius.tvarkau.entity.ReportEntity
-import lt.vilnius.tvarkau.fragments.*
+import lt.vilnius.tvarkau.fragments.AllReportsListFragment
+import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment
+import lt.vilnius.tvarkau.fragments.MyReportsListFragment
+import lt.vilnius.tvarkau.fragments.ReportFilterFragment
+import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment
+import lt.vilnius.tvarkau.fragments.SettingsFragment
 
 class NavigationManagerImpl(
-        private val activity: AppCompatActivity,
-        private val executor: FragmentTransactionExecutor
+    private val activity: MainActivity
 ) : NavigationManager {
+
+    private val executor = FragmentTransactionExecutor(activity.supportFragmentManager)
 
     override fun navigateToMenuItem(menuItem: NavigationManager.TabItem) {
         when (menuItem) {

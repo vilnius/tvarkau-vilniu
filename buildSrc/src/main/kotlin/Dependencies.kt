@@ -1,12 +1,12 @@
 object Versions {
     const val kotlin = "1.2.71"
     const val fabric = "1.25.4"
-    const val build_tools = "3.2.0"
+    const val build_tools = "3.2.1"
     const val rx_java_2 = "2.1.10"
     const val rx_android_2 = "2.0.2"
     const val rx_kotlin = "2.2.0"
     const val robolectric = "3.7.1"
-    const val dagger = "2.16"
+    const val dagger = "2.17"
     const val lifecycle = "1.1.1"
     const val room = "1.1.1"
     const val paging = "1.0.1"
@@ -61,6 +61,10 @@ object Libs {
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
     const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
     const val dagger_compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
+    const val dagger_android = "com.google.dagger:dagger-android:${Versions.dagger}"
+    const val dagger_android_support = "com.google.dagger:dagger-android-support:${Versions.dagger}"
+    const val dagger_android_support_compiler = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
+
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
 

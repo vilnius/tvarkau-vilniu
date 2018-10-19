@@ -14,15 +14,24 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fab_new_report.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.entity.Problem
+import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.views.adapters.MapsInfoWindowAdapter
+import javax.inject.Inject
 
 abstract class BaseMapFragment : BaseFragment(),
-        GoogleMap.OnMarkerClickListener,
-        GoogleApiClient.ConnectionCallbacks {
+    GoogleMap.OnMarkerClickListener,
+    GoogleApiClient.ConnectionCallbacks {
+
+    @Inject
+    lateinit var navigationManager: NavigationManager
 
     protected var googleMap: GoogleMap? = null
 
@@ -58,9 +67,9 @@ abstract class BaseMapFragment : BaseFragment(),
 
         if (googleApi == null) {
             googleApi = GoogleApiClient.Builder(context!!)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(this)
-                    .build()
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .build()
         }
 
         mapView?.getMapAsync {
@@ -86,19 +95,26 @@ abstract class BaseMapFragment : BaseFragment(),
         googleMap?.setOnMarkerClickListener(this)
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(VILNIUS_LAT_LNG, 10f))
 
-        if (ActivityCompat.checkSelfPermission(activity!!,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity!!,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                activity!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                activity!!,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PERMISSION_GRANTED
+        ) {
             googleMap?.isMyLocationEnabled = true
         }
     }
 
     protected fun zoomToMyLocation(map: GoogleMap, lastLocation: Location) {
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+        map.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
                 LatLng(lastLocation.latitude, lastLocation.longitude),
                 DEFAULT_ZOOM_LEVEL
-        ))
+            )
+        )
     }
 
     private fun setMarkerInfoWindowAdapter() {
@@ -154,8 +170,15 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onConnected(bundle: Bundle?) {
-        if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                activity!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(
+                activity!!,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PERMISSION_GRANTED
+        ) {
             return
         }
 
@@ -164,8 +187,10 @@ abstract class BaseMapFragment : BaseFragment(),
 
         lastLocation?.let {
             val results = FloatArray(1)
-            Location.distanceBetween(lastLocation.latitude, lastLocation.longitude,
-                    VILNIUS_LAT_LNG.latitude, VILNIUS_LAT_LNG.longitude, results)
+            Location.distanceBetween(
+                lastLocation.latitude, lastLocation.longitude,
+                VILNIUS_LAT_LNG.latitude, VILNIUS_LAT_LNG.longitude, results
+            )
 
             isInCityBoundaries = results[0] <= CITY_BOUNDARY_DISTANCE
         }

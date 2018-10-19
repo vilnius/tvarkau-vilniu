@@ -99,6 +99,9 @@ dependencies {
 
     implementation Libs.dagger
     kapt Libs.dagger_compiler
+    implementation Libs.dagger_android
+    implementation Libs.dagger_android_support
+    kapt Libs.dagger_android_support_compiler
 
     compileOnly Libs.javax_annotation
 

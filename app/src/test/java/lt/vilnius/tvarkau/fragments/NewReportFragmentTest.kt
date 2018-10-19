@@ -3,7 +3,6 @@ package lt.vilnius.tvarkau.fragments
 import kotlinx.android.synthetic.main.fragment_new_report.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.assertj.TextInputLayoutAssert.Companion.assertThat
-import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.base.BaseRobolectricTest
 import lt.vilnius.tvarkau.entity.ReportType
 import org.assertj.android.api.Assertions.assertThat
@@ -13,21 +12,12 @@ import org.robolectric.fakes.RoboMenuItem
 import org.robolectric.shadows.ShadowLooper
 import org.robolectric.shadows.ShadowToast
 import java.io.File
-import javax.inject.Inject
 import kotlin.test.assertEquals
 
 class NewReportFragmentTest : BaseRobolectricTest() {
 
-    @Inject
-    lateinit var api: LegacyApiService
-
     private val reportType = ReportType(id = 1, title = "Report Title")
     private val reportTypeParkingViolation = ReportType(id = 1, title = "Report Title")
-
-    override fun setUp() {
-        super.setUp()
-        activity.getTestComponent().inject(this)
-    }
 
     @Test
     fun init_anyReportType_correctLayout() {

@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,15 +16,19 @@ import lt.vilnius.tvarkau.FullscreenImageActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.ReportMapActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.decorators.TextViewDecorator
 import lt.vilnius.tvarkau.entity.ReportEntity
-import lt.vilnius.tvarkau.extensions.*
+import lt.vilnius.tvarkau.extensions.applyReportStatusLabel
+import lt.vilnius.tvarkau.extensions.gone
+import lt.vilnius.tvarkau.extensions.goneIf
+import lt.vilnius.tvarkau.extensions.observe
+import lt.vilnius.tvarkau.extensions.observeNonNull
+import lt.vilnius.tvarkau.extensions.visible
+import lt.vilnius.tvarkau.extensions.withViewModel
 import lt.vilnius.tvarkau.utils.GlobalConsts
 import lt.vilnius.tvarkau.utils.PermissionUtils
 import lt.vilnius.tvarkau.viewmodel.ReportDetailsViewModel
 import lt.vilnius.tvarkau.views.adapters.ProblemImagesPagerAdapter
-import javax.inject.Inject
 
 @Screen(
     titleRes = R.string.problem_description_title,
@@ -36,9 +39,6 @@ class ReportDetailsFragment : BaseFragment() {
 
     private val reportId: Int
         get() = arguments!!.getInt(ARG_REPORT_ID)
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: ReportDetailsViewModel
 
@@ -69,10 +69,6 @@ class ReportDetailsFragment : BaseFragment() {
 
             initWith(reportId = reportId)
         }
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     private fun showError(throwable: Throwable?) {

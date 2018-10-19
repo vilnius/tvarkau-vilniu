@@ -1,12 +1,12 @@
 package lt.vilnius.tvarkau.dagger.module
 
-import android.app.Application
 import ca.mimic.oauth2library.OAuth2Client
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.api.ApiEndpoint
 import lt.vilnius.tvarkau.api.AppRxAdapterFactory
 import lt.vilnius.tvarkau.dagger.Api
@@ -31,7 +31,7 @@ class RestAdapterModule {
     @Provides
     @ApiOAuth
     fun provideOAuthEndpoint(
-        application: Application,
+        application: TvarkauApplication,
         @Named(HOST) host: String
     ): ApiEndpoint {
         return ApiEndpoint(application.getString(R.string.api_root_oauth).format(host))

@@ -4,18 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.dagger.IoScheduler
+import lt.vilnius.tvarkau.dagger.PreferenceDaggerFragment
 import lt.vilnius.tvarkau.dagger.UiScheduler
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent
 import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.prefs.Preferences
@@ -24,13 +21,12 @@ import lt.vilnius.tvarkau.utils.DeviceUtils
 import lt.vilnius.tvarkau.utils.SharedPrefsManager
 import javax.inject.Inject
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : PreferenceDaggerFragment() {
 
     @field:[Inject IoScheduler]
     lateinit var ioScheduler: Scheduler
     @field:[Inject UiScheduler]
     lateinit var uiScheduler: Scheduler
-
     @Inject
     lateinit var navigationManager: NavigationManager
 
@@ -43,8 +39,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        ActivityComponent.init((activity!!.application as TvarkauApplication).component, activity!! as AppCompatActivity).inject(this)
-
         // Do we really need to use our shared prefs manager ???
         // Can we override preferenceManager from PreferenceFragmentCompat
         prefsManager = SharedPrefsManager.getInstance(context)
@@ -88,19 +82,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         activity!!.setTitle(R.string.title_settings)
 
         RxBus.observable
-                .filter { it is NewProblemAddedEvent }
-                .take(1)
-                .subscribeOn(ioScheduler)
-                .observeOn(uiScheduler)
-                .subscribe({
-                    updateLastImportTime()
-                }).apply { disposable = this }
+            .filter { it is NewProblemAddedEvent }
+            .take(1)
+            .subscribeOn(ioScheduler)
+            .observeOn(uiScheduler)
+            .subscribe({
+                updateLastImportTime()
+            }).apply { disposable = this }
     }
 
     private fun updateLastImportTime() {
         if (prefsManager.userLastReportImport != null) {
             preferenceImportReports.summary =
-                    "${resources.getString(R.string.last_import)}  ${prefsManager.userLastReportImport}"
+                "${resources.getString(R.string.last_import)}  ${prefsManager.userLastReportImport}"
         }
     }
 

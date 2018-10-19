@@ -6,7 +6,6 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.app.TimePickerDialog
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
@@ -42,7 +41,6 @@ import lt.vilnius.tvarkau.activity.googlePlayServicesAvailability
 import lt.vilnius.tvarkau.activity.resolutionDialog
 import lt.vilnius.tvarkau.activity.resultCode
 import lt.vilnius.tvarkau.api.ApiError
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Profile
 import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.entity.ReportType
@@ -73,7 +71,6 @@ import java.util.Calendar.HOUR_OF_DAY
 import java.util.Calendar.MINUTE
 import java.util.Calendar.MONTH
 import java.util.Calendar.YEAR
-import javax.inject.Inject
 
 @Screen(
     navigationMode = NavigationMode.BACK,
@@ -81,9 +78,6 @@ import javax.inject.Inject
 )
 class NewReportFragment : BaseFragment(),
     NewProblemPhotosPagerAdapter.OnPhotoClickedListener {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var googlePlayServicesResolutionDialog: Dialog? = null
 
@@ -175,10 +169,6 @@ class NewReportFragment : BaseFragment(),
         viewModel.initWith(reportType)
 
         EasyImage.configuration(context!!).setAllowMultiplePickInGallery(true)
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     private fun showParkingViolationFields(profile: Profile?) {

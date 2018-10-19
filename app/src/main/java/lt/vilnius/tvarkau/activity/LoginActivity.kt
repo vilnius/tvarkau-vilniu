@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_login.*
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.MainActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.User
 import lt.vilnius.tvarkau.extensions.goneIf
 import lt.vilnius.tvarkau.extensions.observeNonNull
@@ -66,10 +65,6 @@ class LoginActivity : BaseActivity() {
             }
             observeNonNull(loggedInUser, ::onSuccessfulSignIn)
         }
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     private fun onSuccessfulSignIn(user: User) {

@@ -1,15 +1,13 @@
 package lt.vilnius.tvarkau.dagger.module
 
-import android.support.v7.app.AppCompatActivity
-import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
-import dagger.Provides
-import lt.vilnius.tvarkau.navigation.NavigationManager
+import dagger.android.ContributesAndroidInjector
+import lt.vilnius.tvarkau.fragments.NewReportFragment
 
 @Module
-class TestActivityModule(private val activity: AppCompatActivity) {
+abstract class TestActivityModule {
 
-    @Provides
-    fun provideNavManager(): NavigationManager = mock()
+    @ContributesAndroidInjector
+    abstract fun newReportFragment(): NewReportFragment
 }
 

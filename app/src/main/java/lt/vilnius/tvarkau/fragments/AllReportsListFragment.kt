@@ -1,12 +1,16 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.paging.PagedList
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
@@ -14,12 +18,12 @@ import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.ReportDetailsActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.observe
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.extensions.withViewModel
+import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.repository.NetworkState
 import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
 import lt.vilnius.tvarkau.views.adapters.ReportListAdapter
@@ -32,7 +36,7 @@ import javax.inject.Inject
 class AllReportsListFragment : BaseFragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var navigationManager: NavigationManager
 
     private lateinit var viewModel: ReportListViewModel
     private var lastState: Parcelable? = null
@@ -83,10 +87,6 @@ class AllReportsListFragment : BaseFragment() {
 
     private fun updateNetworkState(networkState: NetworkState?) {
         //TOOD show network state in UI
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {

@@ -1,39 +1,29 @@
 package lt.vilnius.tvarkau.fragments
 
+import android.arch.lifecycle.ViewModelProvider
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.squareup.leakcanary.RefWatcher
+import dagger.android.support.DaggerFragment
 import io.reactivex.Scheduler
 import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.analytics.Analytics
-import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.dagger.IoScheduler
 import lt.vilnius.tvarkau.dagger.UiScheduler
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.fragments.presenters.ConnectivityProvider
 import lt.vilnius.tvarkau.interfaces.OnBackPressed
-import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.prefs.Preferences
 import javax.inject.Inject
 import javax.inject.Named
 
-/**
- * @author Martynas Jurkus
- */
-
-
-abstract class BaseFragment : Fragment(), OnBackPressed {
+abstract class BaseFragment : DaggerFragment(), OnBackPressed {
 
     protected var screen: Screen? = null
 
-    @Inject
-    lateinit var legacyApiService: LegacyApiService
     @field:[Inject Named(Preferences.MY_PROBLEMS_PREFERENCES)]
     lateinit var myProblemsPreferences: SharedPreferences
     @Inject
@@ -49,26 +39,14 @@ abstract class BaseFragment : Fragment(), OnBackPressed {
     @Inject
     lateinit var connectivityProvider: ConnectivityProvider
     @Inject
-    lateinit var navigationManager: NavigationManager
-
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     protected val baseActivity: BaseActivity?
         get() = activity!! as BaseActivity?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         screen = this::class.java.annotations.find { it is Screen } as Screen?
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        onInject(ActivityComponent.init((activity!!.application as TvarkauApplication).component, activity!! as AppCompatActivity))
-    }
-
-    protected open fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     override fun onResume() {
