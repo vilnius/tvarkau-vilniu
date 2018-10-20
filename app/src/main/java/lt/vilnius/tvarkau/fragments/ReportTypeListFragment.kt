@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,21 +10,16 @@ import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.ReportType
 import lt.vilnius.tvarkau.extensions.observeNonNull
 import lt.vilnius.tvarkau.extensions.withViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportTypeListViewModel
 import lt.vilnius.tvarkau.views.adapters.ReportTypesListAdapter
-import javax.inject.Inject
 
 @Screen(titleRes = R.string.title_choose_problem_type,
         navigationMode = NavigationMode.BACK,
         trackingScreenName = ActivityConstants.SCREEN_REPORT_TYPE_LIST)
 class ReportTypeListFragment : BaseFragment() {
-
-    @Inject
-    lateinit var viewModelFactory : ViewModelProvider.Factory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_report_type_list, container, false)
@@ -57,10 +51,6 @@ class ReportTypeListFragment : BaseFragment() {
         report_types_recycler_view.adapter = ReportTypesListAdapter(reportTypes) {
             onReportTypeSelected(it)
         }
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     private fun onReportTypeSelected(reportType: ReportType) {

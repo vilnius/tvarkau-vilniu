@@ -1,10 +1,10 @@
 package lt.vilnius.tvarkau.dagger.module
 
-import android.app.Application
 import android.arch.persistence.room.Room
 import android.os.Debug
 import dagger.Module
 import dagger.Provides
+import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.database.AppDatabase
 import javax.inject.Singleton
 
@@ -14,7 +14,7 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideDatabase(context: Application): AppDatabase {
+    fun provideDatabase(context: TvarkauApplication): AppDatabase {
         val builder = Room.databaseBuilder(
             context,
             AppDatabase::class.java,

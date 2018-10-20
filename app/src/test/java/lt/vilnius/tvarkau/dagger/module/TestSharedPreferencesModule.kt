@@ -1,6 +1,5 @@
 package lt.vilnius.tvarkau.dagger.module
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.nhaarman.mockito_kotlin.mock
@@ -9,6 +8,7 @@ import com.vinted.preferx.ObjectPreference
 import com.vinted.preferx.StringPreference
 import dagger.Module
 import dagger.Provides
+import lt.vilnius.tvarkau.TestTvarkauApplication
 import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.entity.City
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
@@ -24,14 +24,14 @@ class TestSharedPreferencesModule {
     @Provides
     @Singleton
     @Named(Preferences.COMMON_PREFERENCES)
-    fun providerApplicationPreferences(application: Application): SharedPreferences {
+    fun providerApplicationPreferences(application: TestTvarkauApplication): SharedPreferences {
         return application.getSharedPreferences(Preferences.COMMON_PREFERENCES, Context.MODE_PRIVATE)
     }
 
     @Provides
     @Singleton
     @Named(MY_PROBLEMS_PREFERENCES)
-    fun provideMyProblemPreferences(application: Application): SharedPreferences {
+    fun provideMyProblemPreferences(application: TestTvarkauApplication): SharedPreferences {
         return application.getSharedPreferences(MY_PROBLEMS_PREFERENCES, Context.MODE_PRIVATE)
     }
 
@@ -52,5 +52,5 @@ class TestSharedPreferencesModule {
     }
 
     @Provides
-    fun providePersonalData(application: Application): PersonalDataInteractor = mock()
+    fun providePersonalData(application: TestTvarkauApplication): PersonalDataInteractor = mock()
 }

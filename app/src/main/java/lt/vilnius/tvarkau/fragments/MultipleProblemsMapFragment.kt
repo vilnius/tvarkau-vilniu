@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_map_fragment.*
 import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.extensions.gone
@@ -60,10 +59,6 @@ class MultipleProblemsMapFragment : BaseMapFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {

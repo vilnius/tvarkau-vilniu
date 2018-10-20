@@ -1,10 +1,10 @@
 package lt.vilnius.tvarkau.dagger.module
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
+import lt.vilnius.tvarkau.TvarkauApplication
 import lt.vilnius.tvarkau.data.GsonSerializer
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractor
 import lt.vilnius.tvarkau.mvp.interactors.PersonalDataInteractorImpl
@@ -22,14 +22,14 @@ class SharedPreferencesModule {
     @Provides
     @Singleton
     @Named(COMMON_PREFERENCES)
-    fun providerApplicationPreferences(application: Application): SharedPreferences {
+    fun providerApplicationPreferences(application: TvarkauApplication): SharedPreferences {
         return application.getSharedPreferences(COMMON_PREFERENCES, Context.MODE_PRIVATE)
     }
 
     @Provides
     @Singleton
     @Named(MY_PROBLEMS_PREFERENCES)
-    fun provideMyProblemPreferences(application: Application): SharedPreferences {
+    fun provideMyProblemPreferences(application: TvarkauApplication): SharedPreferences {
         return application.getSharedPreferences(MY_PROBLEMS_PREFERENCES, Context.MODE_PRIVATE)
     }
 
@@ -44,7 +44,7 @@ class SharedPreferencesModule {
 
 
     @Provides
-    internal fun providePersonalData(application: Application): PersonalDataInteractor {
+    internal fun providePersonalData(application: TvarkauApplication): PersonalDataInteractor {
         return PersonalDataInteractorImpl(SharedPrefsManager.getInstance(application))
     }
 }

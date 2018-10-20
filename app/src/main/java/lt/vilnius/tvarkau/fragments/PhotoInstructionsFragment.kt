@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_photo_instructions.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent
 
 /**
  * @author Martynas Jurkus
@@ -30,10 +29,6 @@ class PhotoInstructionsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         appPreferences.photoInstructionsLastSeen.set(System.currentTimeMillis())
-    }
-
-    override fun onInject(component: ActivityComponent) {
-        component.inject(this)
     }
 
     companion object {

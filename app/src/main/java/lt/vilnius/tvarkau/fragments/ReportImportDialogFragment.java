@@ -6,45 +6,23 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.threeten.bp.LocalDateTime;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerAppCompatDialogFragment;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import lt.vilnius.tvarkau.R;
-import lt.vilnius.tvarkau.TvarkauApplication;
 import lt.vilnius.tvarkau.analytics.Analytics;
-import lt.vilnius.tvarkau.backend.ApiMethod;
-import lt.vilnius.tvarkau.backend.ApiRequest;
-import lt.vilnius.tvarkau.backend.ApiResponse;
-import lt.vilnius.tvarkau.backend.GetProblemsParams;
-import lt.vilnius.tvarkau.backend.GetVilniusSignParams;
-import lt.vilnius.tvarkau.backend.LegacyApiService;
-import lt.vilnius.tvarkau.dagger.component.ActivityComponent;
+import lt.vilnius.tvarkau.backend.*;
 import lt.vilnius.tvarkau.entity.LoginResponse;
 import lt.vilnius.tvarkau.entity.Problem;
 import lt.vilnius.tvarkau.events_listeners.NewProblemAddedEvent;
@@ -56,9 +34,15 @@ import lt.vilnius.tvarkau.utils.EncryptUtils;
 import lt.vilnius.tvarkau.utils.FormatUtils;
 import lt.vilnius.tvarkau.utils.KeyboardUtils;
 import lt.vilnius.tvarkau.utils.SharedPrefsManager;
+import org.threeten.bp.LocalDateTime;
 import timber.log.Timber;
 
-public class ReportImportDialogFragment extends DialogFragment {
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ReportImportDialogFragment extends DaggerAppCompatDialogFragment {
 
     @Inject
     LegacyApiService legacyApiService;
@@ -108,8 +92,6 @@ public class ReportImportDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ActivityComponent.Companion.init(((TvarkauApplication) getActivity().getApplication()).getComponent(), (AppCompatActivity) getActivity()).inject(this);
-
         myReportsInteractor = new SharedPreferencesMyReportsInteractor(myProblemsPreferences);
     }
 
