@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector
 import lt.vilnius.tvarkau.fragments.AllReportsListFragment
 import lt.vilnius.tvarkau.fragments.MultipleProblemsMapFragment
 import lt.vilnius.tvarkau.fragments.MyReportsListFragment
+import lt.vilnius.tvarkau.fragments.ReportDetailsFragment
 import lt.vilnius.tvarkau.fragments.ReportFilterFragment
 import lt.vilnius.tvarkau.fragments.ReportImportDialogFragment
 import lt.vilnius.tvarkau.fragments.SettingsFragment
@@ -30,5 +31,8 @@ abstract class MainActivityModule {
 
     @ContributesAndroidInjector
     abstract fun reportImportFragment(): ReportImportDialogFragment
+
+    @ContributesAndroidInjector
+    abstract fun reportDetailsFragment(): ReportDetailsFragment
 }
 

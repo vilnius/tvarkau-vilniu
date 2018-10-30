@@ -5,7 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface TvarkauMiestaApi {
 
@@ -16,12 +16,7 @@ interface TvarkauMiestaApi {
     fun getCities(): Single<CitiesResponse>
 
     @GET("reports")
-    fun getReports(
-        @Query("type") type: Int? = null,
-        @Query("status") status: Int? = null,
-        @Query("per_page") perPage: Int = 20,
-        @Query("page") page: Int
-    ): Single<ReportsResponse>
+    fun getReports(@QueryMap params: Map<String, String>): Single<ReportsResponse>
 
     @POST("reports")
     fun submitReport(@Body body: NewReportRequest): Single<ReportResponse>
