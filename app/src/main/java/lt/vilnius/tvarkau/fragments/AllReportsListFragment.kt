@@ -1,49 +1,35 @@
 package lt.vilnius.tvarkau.fragments
 
-import android.arch.paging.PagedList
 import android.os.Bundle
-import android.os.Parcelable
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
-import kotlinx.android.synthetic.main.loading_indicator.*
 import lt.vilnius.tvarkau.R
-import lt.vilnius.tvarkau.ReportDetailsActivity
 import lt.vilnius.tvarkau.activity.ActivityConstants
-import lt.vilnius.tvarkau.entity.ReportEntity
-import lt.vilnius.tvarkau.extensions.gone
 import lt.vilnius.tvarkau.extensions.observe
+import lt.vilnius.tvarkau.extensions.observeNonNull
 import lt.vilnius.tvarkau.extensions.visible
 import lt.vilnius.tvarkau.extensions.withViewModel
 import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.repository.NetworkState
 import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
-import lt.vilnius.tvarkau.views.adapters.ReportListAdapter
 import javax.inject.Inject
 
 @Screen(
     titleRes = R.string.title_problem_list,
     trackingScreenName = ActivityConstants.SCREEN_ALL_REPORTS_LIST
 )
-class AllReportsListFragment : BaseFragment() {
+class AllReportsListFragment : BaseReportListFragment() {
 
     @Inject
     lateinit var navigationManager: NavigationManager
 
     private lateinit var viewModel: ReportListViewModel
-    private var lastState: Parcelable? = null
-
-    val adapter = ReportListAdapter(ReportDiffUtilCallback()) { view, reportId ->
-        onReportClicked(reportId, view)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,23 +56,31 @@ class AllReportsListFragment : BaseFragment() {
 
         viewModel = withViewModel(viewModelFactory) {
             observe(reports, ::showReports)
-            observe(networkState, ::updateNetworkState)
+            observeNonNull(networkState, ::updateNetworkState)
             observe(refreshState) {
                 swipe_container.isRefreshing = it == NetworkState.LOADING
             }
+            observeNonNull(errorEvents, ::showError)
         }
 
         swipe_container.setOnRefreshListener {
             viewModel.refresh()
         }
 
-        report_list.adapter = adapter
-        lastState = savedInstanceState?.getParcelable(STATE_LINEAR_LAYOUT)
-        viewModel.getReports(savedInstanceState?.getInt(STATE_LAST_LOAD_KEY))
+        viewModel.getReports()
     }
 
-    private fun updateNetworkState(networkState: NetworkState?) {
-        //TOOD show network state in UI
+    private fun updateNetworkState(networkState: NetworkState) {
+        when (networkState) {
+            NetworkState.LOADING -> {
+                if (adapter.itemCount == 0) {
+                    swipe_container.isRefreshing = true
+                }
+            }
+            NetworkState.LOADED -> {
+                swipe_container.isRefreshing = false
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -104,46 +98,7 @@ class AllReportsListFragment : BaseFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        val lastKey = adapter.currentList?.lastKey as Int
-
-        outState.putInt(STATE_LAST_LOAD_KEY, lastKey)
-        outState.putParcelable(STATE_LINEAR_LAYOUT, report_list.layoutManager.onSaveInstanceState())
-    }
-
-    private fun showReports(pagedList: PagedList<ReportEntity>?) {
-        loading_indicator.gone()
-        adapter.submitList(pagedList)
-
-        lastState?.let {
-            report_list.layoutManager.onRestoreInstanceState(lastState)
-            lastState = null
-        }
-    }
-
-    private fun onReportClicked(reportId: Int, view: View) {
-        val intent = ReportDetailsActivity.getStartActivityIntent(activity!!, reportId)
-        val bundle = ActivityOptionsCompat.makeScaleUpAnimation(
-            view,
-            0,
-            0,
-            view.width,
-            view.height
-        ).toBundle()
-
-        ActivityCompat.startActivity(context!!, intent, bundle)
-    }
-
-    fun showError(error: String) {
-        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-    }
-
     companion object {
-        private const val STATE_LINEAR_LAYOUT = "linear_layout_state"
-        private const val STATE_LAST_LOAD_KEY = "last_key"
-
         fun newInstance() = AllReportsListFragment()
     }
 }

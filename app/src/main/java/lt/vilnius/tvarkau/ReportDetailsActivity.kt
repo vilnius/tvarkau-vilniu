@@ -3,12 +3,11 @@ package lt.vilnius.tvarkau
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.app_bar.*
 import lt.vilnius.tvarkau.fragments.ReportDetailsFragment
 
-class ReportDetailsActivity : AppCompatActivity() {
+class ReportDetailsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

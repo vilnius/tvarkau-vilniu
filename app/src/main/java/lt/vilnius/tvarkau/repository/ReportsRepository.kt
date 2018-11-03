@@ -3,9 +3,10 @@ package lt.vilnius.tvarkau.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.arch.paging.RxPagedListBuilder
-import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
@@ -13,11 +14,12 @@ import lt.vilnius.tvarkau.api.NewReportRequest
 import lt.vilnius.tvarkau.api.ReportsResponse
 import lt.vilnius.tvarkau.api.TvarkauMiestaApi
 import lt.vilnius.tvarkau.dagger.DbScheduler
-import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.entity.NewReport
 import lt.vilnius.tvarkau.entity.Report
 import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
+import lt.vilnius.tvarkau.session.UserSession
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -26,35 +28,10 @@ class ReportsRepository @Inject constructor(
     private val reportTypeRepository: ReportTypeRepository,
     private val reportStatusRepository: ReportStatusRepository,
     private val api: TvarkauMiestaApi,
-    @UiScheduler
-    private val uiScheduler: Scheduler,
     @DbScheduler
-    private val dbScheduler: Scheduler
+    private val dbScheduler: Scheduler,
+    private val userSession: UserSession
 ) {
-
-    private val boundaryCallback by lazy {
-        ReportsBoundaryCallback(
-            api = api,
-            handleResponse = this::insertResultIntoDb
-        )
-    }
-
-    private fun refresh(): LiveData<NetworkState> {
-        val networkState = MutableLiveData<NetworkState>()
-        networkState.value = NetworkState.LOADING
-
-        api.getReports(page = 1)
-            .doOnSuccess { reportsDao.deleteAll() }
-            .doOnSuccess(this::insertResultIntoDb)
-            .doOnSuccess { boundaryCallback.onRefresh() }
-            .observeOn(uiScheduler)
-            .subscribeBy(
-                onSuccess = { networkState.postValue(NetworkState.LOADED) },
-                onError = { networkState.value = NetworkState.error(it.message) }
-            )
-
-        return networkState
-    }
 
     fun getReportById(reportId: Int): Single<ReportEntity> {
         return reportsDao.getById(reportId)
@@ -62,11 +39,47 @@ class ReportsRepository @Inject constructor(
             .subscribeOn(dbScheduler)
     }
 
-    fun reports(initialLoadKey: Int?): Listing<ReportEntity> {
-        val dataSourceFactory = reportsDao.reportsDataSourceFactory()
+    fun reportsForCurrentUser(): Listing<ReportEntity> {
+        val user = userSession.user.value!!
+        val boundaryCallback = ReportsBoundaryCallback(
+            api = api,
+            handleResponse = this::insertResultIntoDb,
+            additionalParams = mapOf("user_id" to "${user.id}")
+        )
+
+        val dataSourceFactory = reportsDao.reportsForUser(user.id)
             .map(::mapReportEntity)
 
-        val builder = RxPagedListBuilder(
+        return buildReportListing(dataSourceFactory, boundaryCallback)
+    }
+
+    fun reports(): Listing<ReportEntity> {
+        val boundaryCallback = ReportsBoundaryCallback(
+            api = api,
+            handleResponse = this::insertResultIntoDb
+        )
+
+        val user = userSession.user.value!!
+        val dataSourceFactory = reportsDao.reports(user.id)
+            .map(::mapReportEntity)
+
+        return buildReportListing(dataSourceFactory, boundaryCallback)
+    }
+
+    fun submitReport(reportData: NewReportData): Single<ReportEntity> {
+        val newReport = NewReport.from(reportData)
+
+        return api.submitReport(NewReportRequest(newReport))
+            .map { it.report }
+            .doOnSuccess { reportsDao.insertAll(listOf(it)) }
+            .map(::mapReportEntity)
+    }
+
+    private fun buildReportListing(
+        dataSourceFactory: DataSource.Factory<Int, ReportEntity>,
+        boundaryCallback: ReportsBoundaryCallback
+    ): Listing<ReportEntity> {
+        val builder = LivePagedListBuilder(
             dataSourceFactory,
             PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
@@ -75,31 +88,36 @@ class ReportsRepository @Inject constructor(
                 .setPrefetchDistance(60)
                 .build()
         )
-            .setInitialLoadKey(initialLoadKey)
             .setBoundaryCallback(boundaryCallback)
-            .setNotifyScheduler(uiScheduler)
 
         val refreshTrigger = MutableLiveData<Unit>()
         val refreshState = Transformations.switchMap(refreshTrigger) {
-            refresh()
+            refresh(boundaryCallback)
         }
 
         return Listing(
-            pagedList = builder.buildFlowable(BackpressureStrategy.LATEST),
-            networkState = MutableLiveData(), //TODO provide network state to display network errors if needed
-            refresh = {
-                refreshTrigger.value = null
-            },
+            pagedList = builder.build(),
+            networkState = boundaryCallback.networkState,
+            refresh = { refreshTrigger.value = null },
             refreshState = refreshState
         )
     }
 
-    //TODO should be moved to MyReportsRepository. In next PR.
-    fun submitReport(reportData: NewReportData): Single<ReportEntity> {
-        val newReport = NewReport.from(reportData)
+    private fun refresh(boundaryCallback: ReportsBoundaryCallback): LiveData<NetworkState> {
+        val refreshState = MutableLiveData<NetworkState>()
+        refreshState.postValue(NetworkState.LOADING)
 
-        return api.submitReport(NewReportRequest(newReport))
-            .map { mapReportEntity(it.report) }
+        Completable.create {
+            boundaryCallback.onRefresh()
+            reportsDao.deleteAll()
+
+            it.onComplete()
+        }
+            .subscribeOn(dbScheduler)
+            .doFinally { refreshState.postValue(NetworkState.LOADED) }
+            .subscribeBy(onError = { Timber.e(it) })
+
+        return refreshState
     }
 
     private fun mapReportEntity(report: Report): ReportEntity {

@@ -20,26 +20,16 @@ import lt.vilnius.tvarkau.extensions.goneIf
 import lt.vilnius.tvarkau.extensions.observeNonNull
 import lt.vilnius.tvarkau.extensions.visibleIf
 import lt.vilnius.tvarkau.extensions.withViewModel
-import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.repository.Status
 import lt.vilnius.tvarkau.viewmodel.LoginViewModel
-import javax.inject.Inject
 
 class LoginActivity : BaseActivity() {
-
-    @Inject
-    lateinit var appPreferences: AppPreferences
 
     private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        if (appPreferences.apiToken.isSet()) {
-            startMainActivity()
-            return
-        }
 
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {

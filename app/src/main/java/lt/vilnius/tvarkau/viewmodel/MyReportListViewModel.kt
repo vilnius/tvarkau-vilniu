@@ -9,14 +9,14 @@ import lt.vilnius.tvarkau.repository.Listing
 import lt.vilnius.tvarkau.repository.ReportsRepository
 import javax.inject.Inject
 
-class ReportListViewModel @Inject constructor(
+class MyReportListViewModel @Inject constructor(
     private val repository: ReportsRepository
 ) : BaseViewModel() {
 
     private val reportsResult = MutableLiveData<Listing<ReportEntity>>()
 
-    val networkState = switchMap(reportsResult, Listing<ReportEntity>::networkState)!!
     val refreshState = switchMap(reportsResult, Listing<ReportEntity>::refreshState)!!
+    val networkState = switchMap(reportsResult, Listing<ReportEntity>::networkState)!!
     val reports: LiveData<PagedList<ReportEntity>> = switchMap(reportsResult) { it.pagedList }
 
     fun refresh() {
@@ -24,6 +24,6 @@ class ReportListViewModel @Inject constructor(
     }
 
     fun getReports() {
-        reportsResult.value = repository.reports()
+        reportsResult.value = repository.reportsForCurrentUser()
     }
 }

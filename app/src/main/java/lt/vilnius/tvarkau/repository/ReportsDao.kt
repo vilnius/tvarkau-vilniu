@@ -11,8 +11,11 @@ import lt.vilnius.tvarkau.entity.Report
 @Dao
 abstract class ReportsDao {
 
-    @Query("SELECT * FROM reports")
-    abstract fun reportsDataSourceFactory(): DataSource.Factory<Int, Report>
+    @Query("SELECT * FROM reports WHERE user_id = :userId ORDER BY id DESC")
+    abstract fun reportsForUser(userId: Int): DataSource.Factory<Int, Report>
+
+    @Query("SELECT * FROM reports WHERE user_id != :userId ORDER BY id DESC")
+    abstract fun reports(userId: Int): DataSource.Factory<Int, Report>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertAll(reports: List<Report>)
