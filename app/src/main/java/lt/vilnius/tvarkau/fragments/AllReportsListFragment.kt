@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fab_new_report.*
 import kotlinx.android.synthetic.main.include_report_list_recycler_view.*
 import lt.vilnius.tvarkau.R
 import lt.vilnius.tvarkau.activity.ActivityConstants
+import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
 import lt.vilnius.tvarkau.extensions.observe
 import lt.vilnius.tvarkau.extensions.observeNonNull
 import lt.vilnius.tvarkau.extensions.visible
@@ -18,6 +19,7 @@ import lt.vilnius.tvarkau.extensions.withViewModel
 import lt.vilnius.tvarkau.navigation.NavigationManager
 import lt.vilnius.tvarkau.repository.NetworkState
 import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
+import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
 
 @Screen(
@@ -68,6 +70,11 @@ class AllReportsListFragment : BaseReportListFragment() {
         }
 
         viewModel.getReports()
+    }
+
+    @Subscribe
+    fun onFilterParamsChanged(event: RefreshReportFilterEvent) {
+        viewModel.refresh()
     }
 
     private fun updateNetworkState(networkState: NetworkState) {

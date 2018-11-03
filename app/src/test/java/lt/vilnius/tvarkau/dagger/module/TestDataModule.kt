@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
-import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.io.File

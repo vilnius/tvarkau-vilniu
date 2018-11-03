@@ -14,8 +14,6 @@ import lt.vilnius.tvarkau.dagger.Api
 import lt.vilnius.tvarkau.dagger.IoScheduler
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractor
 import lt.vilnius.tvarkau.fragments.interactors.MultipleReportsMapInteractorImpl
-import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractor
-import lt.vilnius.tvarkau.mvp.interactors.ReportTypesInteractorImpl
 import lt.vilnius.tvarkau.prefs.AppPreferences
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -28,15 +26,6 @@ import javax.inject.Singleton
 
 @Module
 class DataModule {
-
-    @Provides
-    @Singleton
-    fun provideReportTypesInteractor(
-        legacyApi: LegacyApiService,
-        @IoScheduler ioScheduler: Scheduler
-    ): ReportTypesInteractor {
-        return ReportTypesInteractorImpl(legacyApi, ioScheduler)
-    }
 
     @Provides
     @Singleton

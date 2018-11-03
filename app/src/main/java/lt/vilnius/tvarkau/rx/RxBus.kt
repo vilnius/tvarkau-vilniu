@@ -4,9 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 
-/**
- * @author Martynas Jurkus
- */
 object RxBus {
 
     private val rxBus = PublishSubject.create<Any>().toSerialized()

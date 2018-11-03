@@ -1,8 +1,8 @@
 package lt.vilnius.tvarkau.prefs
 
+import com.vinted.preferx.IntPreference
 import com.vinted.preferx.LongPreference
 import com.vinted.preferx.ObjectPreference
-import com.vinted.preferx.StringPreference
 import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.entity.City
 
@@ -13,13 +13,13 @@ interface AppPreferences {
 
     val photoInstructionsLastSeen: LongPreference
 
-    val reportStatusSelectedFilter: StringPreference
+    val reportStatusSelectedFilter: IntPreference
 
-    val reportTypeSelectedFilter: StringPreference
+    val reportTypeSelectedFilter: IntPreference
 
-    val reportStatusSelectedListFilter: StringPreference
+    val reportStatusSelectedListFilter: IntPreference
 
-    val reportTypeSelectedListFilter: StringPreference
+    val reportTypeSelectedListFilter: IntPreference
 
     val selectedCity: ObjectPreference<City>
 }

@@ -10,17 +10,21 @@ class ReportStatusRepository @Inject constructor(
     private val api: TvarkauMiestaApi
 ) {
 
+    fun getAll(): List<ReportStatus> {
+        return dao.getAll()
+    }
+
     fun getById(reportStatusId: Int): ReportStatus {
         val reportStatus = dao.getById(reportStatusId)
 
         return if (reportStatus != null) {
             reportStatus
         } else {
-            api.getReportStatuses()
+            val statuses = api.getReportStatuses()
                 .map { it.reportStatuses }
-                .doOnSuccess { dao.insertAll(it) }
                 .blockingGet()
 
+            dao.insertAll(statuses)
             dao.getById(reportStatusId)!!
         }
     }

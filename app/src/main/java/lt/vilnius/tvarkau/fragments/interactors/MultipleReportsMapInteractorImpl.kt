@@ -1,6 +1,6 @@
 package lt.vilnius.tvarkau.fragments.interactors
 
-import com.vinted.preferx.StringPreference
+import com.vinted.preferx.IntPreference
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import lt.vilnius.tvarkau.backend.GetProblemsParams
@@ -8,15 +8,14 @@ import lt.vilnius.tvarkau.backend.LegacyApiService
 import lt.vilnius.tvarkau.backend.requests.GetReportListRequest
 import lt.vilnius.tvarkau.entity.Problem
 import lt.vilnius.tvarkau.events_listeners.RefreshReportFilterEvent
-import lt.vilnius.tvarkau.extensions.emptyToNull
 import lt.vilnius.tvarkau.rx.RxBus
 
 class MultipleReportsMapInteractorImpl(
-        private val api: LegacyApiService,
-        private val ioScheduler: Scheduler,
-        private val reportType: StringPreference,
-        private val reportStatus: StringPreference,
-        private val allReportTypes: String
+    private val api: LegacyApiService,
+    private val ioScheduler: Scheduler,
+    private val reportType: IntPreference,
+    private val reportStatus: IntPreference,
+    private val allReportTypes: String
 ) : MultipleReportsMapInteractor {
 
     private val cachedReports = mutableListOf<Problem>()
@@ -40,26 +39,26 @@ class MultipleReportsMapInteractorImpl(
     }
 
     private fun newRequest(): Single<List<Problem>> {
-        val mappedStatus = reportStatus.get().emptyToNull()
+//        val mappedStatus = reportStatus.get().emptyToNull()
 
-        val mappedType = when (reportType.get()) {
-            allReportTypes -> null
-            else -> reportType.get().emptyToNull()
-        }
+//        val mappedType = when (reportType.get()) {
+//            allReportTypes -> null
+//            else -> reportType.get().emptyToNull()
+//        }
 
         val params = GetProblemsParams.Builder()
                 .setStart(0)
                 .setLimit(PROBLEM_COUNT_LIMIT_IN_MAP)
-                .setStatusFilter(mappedStatus)
-                .setTypeFilter(mappedType)
+//                .setStatusFilter(mappedStatus)
+//                .setTypeFilter(mappedType)
                 .create()
 
         return api.getProblems(GetReportListRequest(params))
                 .map { it.result }
                 .doOnSuccess { reports ->
                     if (reports.isEmpty()) {
-                        val msg = "Empty report list returned for status: $mappedStatus type: $mappedType"
-                        throw NoMapReportsError(msg)
+//                        val msg = "Empty report list returned for status: $mappedStatus type: $mappedType"
+//                        throw NoMapReportsError(msg)
                     }
                 }
                 .doOnSuccess {

@@ -9,6 +9,7 @@ import lt.vilnius.tvarkau.viewmodel.LoginViewModel
 import lt.vilnius.tvarkau.viewmodel.MyReportListViewModel
 import lt.vilnius.tvarkau.viewmodel.NewReportViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportDetailsViewModel
+import lt.vilnius.tvarkau.viewmodel.ReportFilterViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportListViewModel
 import lt.vilnius.tvarkau.viewmodel.ReportTypeListViewModel
 import lt.vilnius.tvarkau.viewmodel.ViewModelFactory
@@ -49,4 +50,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MyReportListViewModel::class)
     internal abstract fun myReportsListViewModel(viewModel: MyReportListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReportFilterViewModel::class)
+    internal abstract fun reportFilterViewModel(viewModel: ReportFilterViewModel): ViewModel
 }

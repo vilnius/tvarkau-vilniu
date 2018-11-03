@@ -18,6 +18,7 @@ import lt.vilnius.tvarkau.entity.NewReport
 import lt.vilnius.tvarkau.entity.Report
 import lt.vilnius.tvarkau.entity.ReportEntity
 import lt.vilnius.tvarkau.mvp.presenters.NewReportData
+import lt.vilnius.tvarkau.prefs.AppPreferences
 import lt.vilnius.tvarkau.session.UserSession
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,6 +29,7 @@ class ReportsRepository @Inject constructor(
     private val reportTypeRepository: ReportTypeRepository,
     private val reportStatusRepository: ReportStatusRepository,
     private val api: TvarkauMiestaApi,
+    private val appPreferences: AppPreferences,
     @DbScheduler
     private val dbScheduler: Scheduler,
     private val userSession: UserSession
@@ -54,9 +56,22 @@ class ReportsRepository @Inject constructor(
     }
 
     fun reports(): Listing<ReportEntity> {
+        val reportStatusId = appPreferences.reportStatusSelectedListFilter.get().takeIf { it != 0 }
+        val reportTypeId = appPreferences.reportTypeSelectedListFilter.get().takeIf { it != 0 }
+        val additionalParams = mutableMapOf<String, String>()
+
+        if (reportStatusId != null) {
+            additionalParams += "status" to reportStatusId.toString()
+        }
+
+        if (reportTypeId != null) {
+            additionalParams += "type" to reportTypeId.toString()
+        }
+
         val boundaryCallback = ReportsBoundaryCallback(
             api = api,
-            handleResponse = this::insertResultIntoDb
+            handleResponse = this::insertResultIntoDb,
+            additionalParams = additionalParams
         )
 
         val user = userSession.user.value!!

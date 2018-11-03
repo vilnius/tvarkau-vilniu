@@ -17,6 +17,7 @@
         android:text="@string/report_filter_statuses_title" />
 
     <LinearLayout
+        android:id="@+id/filter_report_status_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -28,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/report_filter_status_new" />
+            tools:text="Registruota" />
 
         <TextView
             android:id="@+id/filter_report_status_registered"
@@ -38,7 +39,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:text="@string/report_filter_status_registered" />
+            tools:text="Nagrinėjama" />
 
         <TextView
             android:id="@+id/filter_report_status_completed"
@@ -46,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/report_filter_status_completed" />
+            tools:text="Išnagrinėta" />
     </LinearLayout>
 
     <TextView

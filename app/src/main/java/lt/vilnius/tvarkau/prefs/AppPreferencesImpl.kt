@@ -2,9 +2,9 @@ package lt.vilnius.tvarkau.prefs
 
 import android.content.SharedPreferences
 import com.vinted.preferx.PreferxSerializer
+import com.vinted.preferx.intPreference
 import com.vinted.preferx.longPreference
 import com.vinted.preferx.objectPreference
-import com.vinted.preferx.stringPreference
 import lt.vilnius.tvarkau.auth.ApiToken
 import lt.vilnius.tvarkau.data.GsonSerializer
 import lt.vilnius.tvarkau.entity.City
@@ -39,19 +39,19 @@ class AppPreferencesImpl(
         preferences.longPreference(LAST_DISPLAYED_PHOTO_INSTRUCTIONS, 0L)
     }
     override val reportStatusSelectedFilter by lazy {
-        preferences.stringPreference(SELECTED_FILTER_REPORT_STATUS, "")
+        preferences.intPreference(SELECTED_FILTER_REPORT_STATUS, 0)
     }
 
     override val reportTypeSelectedFilter by lazy {
-        preferences.stringPreference(SELECTED_FILTER_REPORT_TYPE, "")
+        preferences.intPreference(SELECTED_FILTER_REPORT_TYPE, 0)
     }
 
     override val reportStatusSelectedListFilter by lazy {
-        preferences.stringPreference(LIST_SELECTED_FILTER_REPORT_STATUS, "")
+        preferences.intPreference(LIST_SELECTED_FILTER_REPORT_STATUS, 0)
     }
 
     override val reportTypeSelectedListFilter by lazy {
-        preferences.stringPreference(LIST_SELECTED_FILTER_REPORT_TYPE, "")
+        preferences.intPreference(LIST_SELECTED_FILTER_REPORT_TYPE, 0)
     }
 
     override val selectedCity by lazy {
@@ -66,10 +66,10 @@ class AppPreferencesImpl(
     companion object {
         const val API_TOKEN = "api_token"
         const val SELECTED_CITY = "selected_city"
-        const val SELECTED_FILTER_REPORT_STATUS = "filter_report_status"
-        const val SELECTED_FILTER_REPORT_TYPE = "filter_report_type"
-        const val LIST_SELECTED_FILTER_REPORT_STATUS = "list_filter_report_status"
-        const val LIST_SELECTED_FILTER_REPORT_TYPE = "list_filter_report_type"
+        const val SELECTED_FILTER_REPORT_STATUS = "filter_report_status_2"
+        const val SELECTED_FILTER_REPORT_TYPE = "filter_report_type_2"
+        const val LIST_SELECTED_FILTER_REPORT_STATUS = "list_filter_report_status_2"
+        const val LIST_SELECTED_FILTER_REPORT_TYPE = "list_filter_report_type_2"
         const val LAST_DISPLAYED_PHOTO_INSTRUCTIONS = "last_displayed_photo_instructions"
     }
 }
