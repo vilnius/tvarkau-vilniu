@@ -118,17 +118,17 @@ class RestAdapterModule {
 }
 
 @Qualifier
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class ApiOAuth
 
 @Qualifier
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class GuestToken
 
 @Qualifier
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class RefreshToken
 
 @Qualifier
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class ThirdPartyToken

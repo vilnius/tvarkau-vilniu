@@ -10,4 +10,6 @@ interface SessionToken {
     fun refreshGuestToken(): Completable
 
     fun refreshCurrentToken(token: ApiToken): Completable
+
+    fun refreshViispToken(ticket: String): Completable
 }

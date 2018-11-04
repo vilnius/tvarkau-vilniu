@@ -42,6 +42,7 @@ class LoginActivity : BaseActivity() {
         email_sign_in_button.setOnClickListener { viewModel.attemptLogin() }
         skip_sign_in_button.setOnClickListener { viewModel.signInGuestUser() }
         google_sign_in_button.setOnClickListener { signInWithGoogle() }
+        viisp_sign_in_button.setOnClickListener { signInWithViisp() }
 
         viewModel = withViewModel(viewModelFactory) {
             observeNonNull(errorEvents) {
@@ -66,6 +67,10 @@ class LoginActivity : BaseActivity() {
         finish()
     }
 
+    private fun signInWithViisp() {
+        startActivityForResult(Intent(this, ViispLoginActivity::class.java), RC_VIISP_SIGN_IN)
+    }
+
     private fun signInWithGoogle() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -84,6 +89,7 @@ class LoginActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             RC_SIGN_IN -> viewModel.signInWithGoogle(data)
+            RC_VIISP_SIGN_IN -> viewModel.signInWithViisp(data)
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -114,5 +120,8 @@ class LoginActivity : BaseActivity() {
 
     companion object {
         private const val RC_SIGN_IN = 1001
+        private const val RC_VIISP_SIGN_IN = 1002
+
+        const val RESULT_TICKET = "ticket"
     }
 }
