@@ -108,6 +108,10 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <activity
+            android:name=".activity.ViispLoginActivity"
+            android:screenOrientation="portrait" />
+
         <receiver
             android:name="com.mixpanel.android.mpmetrics.InstallReferrerReceiver"
             android:exported="true">

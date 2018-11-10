@@ -9,6 +9,7 @@ import com.google.android.gms.common.api.ApiException
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
+import lt.vilnius.tvarkau.activity.LoginActivity
 import lt.vilnius.tvarkau.auth.SessionToken
 import lt.vilnius.tvarkau.dagger.UiScheduler
 import lt.vilnius.tvarkau.entity.SocialNetworkUser
@@ -24,7 +25,7 @@ class LoginViewModel @Inject constructor(
     private val uiScheduler: Scheduler,
     private val sessionToken: SessionToken,
     private val userSession: UserSession,
-    private val appPreferences: AppPreferences
+    appPreferences: AppPreferences
 ) : BaseViewModel() {
 
     val networkState: LiveData<NetworkState> = map(_networkState) { it }
@@ -65,6 +66,11 @@ class LoginViewModel @Inject constructor(
         refreshTokenAndRetrieveUser(sessionToken.refreshGuestToken())
     }
 
+    fun signInWithViisp(data: Intent?) {
+        val ticket = data?.getStringExtra(LoginActivity.RESULT_TICKET) ?: return
+        refreshTokenAndRetrieveUser(sessionToken.refreshViispToken(ticket))
+    }
+
     private fun refreshUser() {
         userSession.refreshUser()
             .observeOn(uiScheduler)
@@ -81,7 +87,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun refreshTokenAndRetrieveUser(tokenCompletable: Completable) {
-        tokenCompletable.andThen(userSession.refreshUser())
+        tokenCompletable.andThen { userSession.refreshUser() }
             .observeOn(uiScheduler)
             .doOnSubscribe { _networkState.value = NetworkState.LOADING }
             .subscribeBy(

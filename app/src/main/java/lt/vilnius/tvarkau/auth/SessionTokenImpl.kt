@@ -48,6 +48,21 @@ class SessionTokenImpl @Inject constructor(
         }
     }
 
+    override fun refreshViispToken(ticket: String): Completable {
+        val params = mapOf(
+            "provider" to "viisp",
+            "assertion" to ticket
+        )
+
+        return Completable.create { emitter ->
+            thirdPartyToken.parameters(params)
+                .build()
+                .requestAccessToken {
+                    handleAccessToken(it, emitter)
+                }
+        }
+    }
+
     private fun handleAccessToken(response: OAuthResponse, emitter: CompletableEmitter) {
         if (response.isSuccessful) {
             appPreferences.apiToken.set(gsonSerializer.fromJson(response.body, ApiToken::class.java))

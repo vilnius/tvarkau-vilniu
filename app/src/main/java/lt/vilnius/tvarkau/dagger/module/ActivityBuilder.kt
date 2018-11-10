@@ -7,6 +7,7 @@ import lt.vilnius.tvarkau.MainActivity
 import lt.vilnius.tvarkau.ReportDetailsActivity
 import lt.vilnius.tvarkau.activity.LoginActivity
 import lt.vilnius.tvarkau.activity.ReportRegistrationActivity
+import lt.vilnius.tvarkau.activity.ViispLoginActivity
 
 @Module
 abstract class ActivityBuilder {
@@ -25,4 +26,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     abstract fun aboutActivity(): AboutActivity
+
+    @ContributesAndroidInjector
+    abstract fun viispLoginActivity(): ViispLoginActivity
 }

@@ -8,6 +8,7 @@
     <string name="title_my_profile">Mano profilis</string>
     <string name="title_new_problem">Naujas pranešimas</string>
     <string name="title_choose_problem_type">Pranešimo tipas</string>
+    <string name="title_sign_in_with_viisp">Prisijunkite</string>
 
     <string name="choose_problem_type">Tipas</string>
 
@@ -203,5 +204,6 @@
     <string name="prompt_email">El. paštas</string>
     <string name="prompt_password">Slaptažodis</string>
     <string name="action_sign_in">Prisijungti</string>
+    <string name="action_viisp_sign_in">El. valdžios vartai</string>
     <string name="action_skip_sign_in">Ne dabar</string>
 </resources>

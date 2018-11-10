@@ -1,3 +1,3 @@
 package lt.vilnius.tvarkau.auth
 
-class OAuthException(errorDescription: String?) : Throwable()
+class OAuthException(errorDescription: String?) : Throwable(errorDescription)
