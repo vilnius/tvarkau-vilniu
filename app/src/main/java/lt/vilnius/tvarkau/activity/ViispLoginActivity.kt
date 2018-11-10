@@ -6,20 +6,27 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_viisp_login.*
 import kotlinx.android.synthetic.main.app_bar.*
+import lt.vilnius.tvarkau.BaseActivity
 import lt.vilnius.tvarkau.R
+import lt.vilnius.tvarkau.dagger.module.RestAdapterModule
 import lt.vilnius.tvarkau.extensions.gone
 import okhttp3.HttpUrl
+import javax.inject.Inject
+import javax.inject.Named
 
-class ViispLoginActivity : AppCompatActivity() {
+class ViispLoginActivity : BaseActivity() {
+
+    @field:[Inject Named(RestAdapterModule.VIISP_AUTH_URI)]
+    lateinit var viispAuthUri: String
 
     @SuppressLint("SetJavaScriptEnabled")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_viisp_login)
@@ -49,7 +56,7 @@ class ViispLoginActivity : AppCompatActivity() {
                 super.onReceivedTitle(view, title)
 
                 if (title.isNullOrEmpty()) return
-                if (title!!.startsWith(VIISP_AUTH_URI)) return
+                if (title!!.startsWith(viispAuthUri)) return
                 this@ViispLoginActivity.title = title
             }
         }
@@ -73,7 +80,7 @@ class ViispLoginActivity : AppCompatActivity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                if (url != null && !url.startsWith(VIISP_AUTH_URI)) {
+                if (url != null && !url.startsWith(viispAuthUri)) {
                     progress_bar.gone()
                 }
                 super.onPageFinished(view, url)
@@ -81,7 +88,7 @@ class ViispLoginActivity : AppCompatActivity() {
         }
 
         web_view.post {
-            val parsed = HttpUrl.parse(VIISP_AUTH_URI)!!
+            val parsed = HttpUrl.parse(viispAuthUri)!!
                 .newBuilder()
                 .addQueryParameter("redirect_uri", CALLBACK_URI)
                 .build()
@@ -99,7 +106,6 @@ class ViispLoginActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val VIISP_AUTH_URI = "https://api.tvarkaumiesta.lt/auth/viisp/new"
         private const val CALLBACK_URI = "lt.tvarkauvilniu://viisp/callback"
     }
 }

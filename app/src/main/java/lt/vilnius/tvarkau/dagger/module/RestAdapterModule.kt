@@ -29,6 +29,14 @@ class RestAdapterModule {
     }
 
     @Provides
+    @Named(VIISP_AUTH_URI)
+    fun provideViispAuthUri(
+        @Named(HOST) host: String
+    ): String {
+        return "$host/auth/viisp/new"
+    }
+
+    @Provides
     @ApiOAuth
     fun provideOAuthEndpoint(
         application: TvarkauApplication,
@@ -112,6 +120,7 @@ class RestAdapterModule {
 
     companion object {
         const val HOST = "host"
+        const val VIISP_AUTH_URI = "viisp"
         const val OAUTH_CLIENT_ID = "android"
         const val OAUTH_TOKEN_ENDPOINT = "token"
     }

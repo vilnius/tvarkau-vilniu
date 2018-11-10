@@ -65,7 +65,7 @@ class SessionTokenImpl @Inject constructor(
 
     private fun handleAccessToken(response: OAuthResponse, emitter: CompletableEmitter) {
         if (response.isSuccessful) {
-            appPreferences.apiToken.set(gsonSerializer.fromJson(response.body, ApiToken::class.java), commit = true)
+            appPreferences.apiToken.set(gsonSerializer.fromJson(response.body, ApiToken::class.java))
             Timber.d("Token was set to ${appPreferences.apiToken.get()}")
             emitter.onComplete()
         } else {
